@@ -1,4 +1,4 @@
-import LinkButton from '../ui/LinkButton'
+﻿import LinkButton from '../ui/LinkButton'
 import Card from '../ui/Card'
 import type { MouseEvent } from 'react'
 
@@ -33,7 +33,7 @@ export default function InvitationPreviewCard() {
 
       <div className="pb-invitePreview__actions">
         <div className="pb-invitePreview__small">
-          Pozvani ne trebaju imati aplikaciju.
+          Pozvani vide javni pregled i prijavljuju se za pristup.
         </div>
         <LinkButton
           variant="amber"
@@ -47,4 +47,5 @@ export default function InvitationPreviewCard() {
     </Card>
   )
 }
+
 

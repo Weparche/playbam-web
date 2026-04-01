@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+﻿import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
@@ -26,8 +26,8 @@ export default function LandingPage() {
         q: 'Treba li aplikaciju za otvoriti pozivnicu?',
         a: (
           <>
-            Ne. Gosti mogu vidjeti sve informacije iz web pozivnice, bez
-            instaliranja aplikacije.
+            Ne. Gosti mogu otvoriti javni pregled web pozivnice bez
+            instaliranja aplikacije, a privatni dio se otključava tek nakon prijave i odobrenja.
           </>
         ),
       },
@@ -35,8 +35,7 @@ export default function LandingPage() {
         q: 'Mogu li gosti potvrditi dolazak bez aplikacije?',
         a: (
           <>
-            U demo verziji potvrdu simuliramo odmah na stranici. U stvarnoj
-            aplikaciji potvrde se šalju kroz Playbam.
+            Potvrda dolaska, lista želja i rezervacija poklona dostupni su tek nakon prijave i odobrenja organizatora.
           </>
         ),
       },
@@ -86,7 +85,7 @@ export default function LandingPage() {
               </h1>
 
               <p className="pb-hero__subtitle">
-                Igraonice, slobodni termini, paketi i digitalne pozivnice —
+                Igraonice, slobodni termini, paketi i digitalne pozivnice -
                 sve na jednom mjestu.
               </p>
 
@@ -125,6 +124,7 @@ export default function LandingPage() {
                 step="01"
                 title="Pronađi igraonicu"
                 description="U par sekundi pregledaj lokacije, pakete i dostupne opcije."
+                revealDelayMs={220}
                 icon={
                   <Icon>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -148,6 +148,7 @@ export default function LandingPage() {
                 step="02"
                 title="Odaberi slobodan termin"
                 description="Biraj datum i vrijeme, vidi pakete i potvrdi rezervaciju."
+                revealDelayMs={2200}
                 icon={
                   <Icon>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -183,7 +184,8 @@ export default function LandingPage() {
               <FeatureStep
                 step="03"
                 title="Pošalji digitalnu pozivnicu gostima"
-                description="Gosti dobivaju web pozivnicu i mogu potvrditi dolazak."
+                description="Gosti dobivaju web poveznicu, vide javni pregled i traže pristup pozivnici."
+                revealDelayMs={2400}
                 icon={
                   <Icon>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -227,6 +229,7 @@ export default function LandingPage() {
               <ValueCard
                 title="Slobodni termini"
                 description="Brzo provjeri dostupnost i rezerviraj bez izgubljenog vremena."
+                revealDelayMs={2000}
                 icon={
                   <Icon>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -255,6 +258,7 @@ export default function LandingPage() {
               <ValueCard
                 title="Cijene paketa"
                 description="Transparentne cijene paketa i što dobivaš u svakom terminu."
+                revealDelayMs={320}
                 icon={
                   <Icon>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -277,6 +281,7 @@ export default function LandingPage() {
               <ValueCard
                 title="Uzrasti"
                 description="Programi i paketi prilagođeni djeci različitih uzrasta."
+                revealDelayMs={420}
                 icon={
                   <Icon>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -298,6 +303,7 @@ export default function LandingPage() {
               <ValueCard
                 title="Lokacija i parking"
                 description="Jednostavno dođi: lokacija, upute i informacije o parkingu."
+                revealDelayMs={520}
                 icon={
                   <Icon>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -319,7 +325,8 @@ export default function LandingPage() {
               />
               <ValueCard
                 title="Digitalne pozivnice"
-                description="Slikovita web pozivnica koja se automatski prikazuje gostima."
+                description="Slikovita web pozivnica s javnim pregledom i privatnim pristupom nakon odobrenja."
+                revealDelayMs={620}
                 icon={
                   <Icon>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -341,7 +348,8 @@ export default function LandingPage() {
               />
               <ValueCard
                 title="Potvrde dolaska"
-                description="Praćenje tko dolazi — da planiranje bude lakše."
+                description="Praćenje tko dolazi - da planiranje bude lakše."
+                revealDelayMs={720}
                 icon={
                   <Icon>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -368,8 +376,7 @@ export default function LandingPage() {
                 <header className="pb-sectionHeader">
                   <h2 className="pb-title">Digitalne pozivnice</h2>
                   <p className="pb-subtitle">
-                    Pozvani ne trebaju imati aplikaciju. Sve informacije (datum, vrijeme,
-                    lokacija i tema) vide odmah kroz web pozivnicu.
+                    Pozvani ne trebaju imati aplikaciju. Javni pregled prikazuje sigurne informacije, a privatni dio pozivnice otključava se tek nakon prijave i odobrenja.
                   </p>
                 </header>
 
@@ -380,7 +387,7 @@ export default function LandingPage() {
                   </div>
                   <div className="pb-bullet">
                     <span className="pb-bullet__dot" aria-hidden="true" />
-                    Jednostavna potvrda “Dolazim / Ne dolazim”
+                    Prijava, obiteljski profil i zahtjev za pristup u nekoliko koraka
                   </div>
                   <div className="pb-bullet">
                     <span className="pb-bullet__dot" aria-hidden="true" />
@@ -438,7 +445,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="pb-download__note">
-                  U demo-u je web pozivnica dostupna i bez aplikacije.
+                  U demo-u možeš otvoriti javni pregled bez aplikacije, a zatim testirati prijavu i odobrenje pristupa.
                 </div>
               </div>
 
@@ -492,4 +499,8 @@ export default function LandingPage() {
     </>
   )
 }
+
+
+
+
 

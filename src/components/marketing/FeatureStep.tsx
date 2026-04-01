@@ -6,11 +6,12 @@ type Props = {
   title: string
   description: string
   icon: ReactNode
+  revealDelayMs?: number
 }
 
-export default function FeatureStep({ step, title, description, icon }: Props) {
+export default function FeatureStep({ step, title, description, icon, revealDelayMs = 0 }: Props) {
   return (
-    <Card hover className="pb-step">
+    <Card hover className="pb-step pb-cardReveal" style={{ animationDelay: `${revealDelayMs}ms` }}>
       <div className="pb-step__top">
         <div className="pb-step__icon" aria-hidden="true">
           {icon}
@@ -22,4 +23,3 @@ export default function FeatureStep({ step, title, description, icon }: Props) {
     </Card>
   )
 }
-

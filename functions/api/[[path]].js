@@ -14,6 +14,7 @@ export async function onRequest(context) {
   const upstreamUrl = new URL(`${backendOrigin}${url.pathname}${url.search}`)
   const requestHeaders = new Headers(context.request.headers)
 
+  requestHeaders.delete('host')
   requestHeaders.set('x-forwarded-host', url.host)
   requestHeaders.set('x-forwarded-proto', url.protocol.replace(':', ''))
 

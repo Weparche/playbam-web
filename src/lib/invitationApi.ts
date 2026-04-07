@@ -1,7 +1,30 @@
-﻿import type { TemporaryWebIdentity } from './tempWebIdentity'
+import type { TemporaryWebIdentity } from './tempWebIdentity'
 import { buildTemporaryIdentityHeaders, readStoredTemporaryIdentity } from './tempWebIdentity'
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000').replace(/\/$/, '')
+/**
+ * U devu: prazan base → zahtjevi na isti origin (Vite proxy šalje /api na backend).
+ * U produkciji: obavezno VITE_API_BASE_URL (npr. https://api.playbam.hr).
+ */
+const API_BASE = import.meta.env.DEV
+  ? ''
+  : (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+
+/** Samo u `npm run dev`: šalje Bearer kao seed host (vidi backend PLAYBAM_HOST_AUTH_TOKEN). */
+const DEV_HOST_AUTH_TOKEN =
+  typeof import.meta.env.VITE_DEV_HOST_AUTH_TOKEN === 'string'
+    ? import.meta.env.VITE_DEV_HOST_AUTH_TOKEN.trim()
+    : ''
+
+/** Javni GET-evi ne smiju nositi Bearer (CORS). Kad postoji gost u sesiji, također ne — backend bi inače prihvatio host Bearer prije X-Playbam zaglavlja. */
+function shouldAttachDevHostBearer(path: string, hasGuestIdentity: boolean): boolean {
+  if (path.startsWith('/api/public/')) {
+    return false
+  }
+  if (hasGuestIdentity) {
+    return false
+  }
+  return true
+}
 
 type RequestOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -130,6 +153,9 @@ export type InvitationWishlistItem = {
   imageUrl: string | null
   priorityOrder: number
   isActive: boolean
+  addedByUserId?: string | null
+  addedByName?: string | null
+  addedForChildName?: string | null
   createdAt: string
   updatedAt: string
   reservation: InvitationWishlistReservation
@@ -168,13 +194,22 @@ function parseJsonResponse(text: string) {
 }
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const identity = options.identity ?? readStoredTemporaryIdentity()
+  const identity =
+    options.identity !== undefined ? options.identity : readStoredTemporaryIdentity()
   const headers = new Headers({
     Accept: 'application/json',
   })
 
   if (options.body) {
     headers.set('Content-Type', 'application/json')
+  }
+
+  if (
+    import.meta.env.DEV &&
+    DEV_HOST_AUTH_TOKEN &&
+    shouldAttachDevHostBearer(path, Boolean(identity))
+  ) {
+    headers.set('Authorization', `Bearer ${DEV_HOST_AUTH_TOKEN}`)
   }
 
   const identityHeaders = buildTemporaryIdentityHeaders(identity)
@@ -203,7 +238,10 @@ export function isApiError(error: unknown, status?: number) {
 }
 
 export function getPublicInvitation(token: string) {
-  return request<PublicInvitation>(`/api/public/invitations/${encodeURIComponent(token)}`)
+  // Bez identity zaglavlja — jednostavan GET, nema CORS preflighta
+  return request<PublicInvitation>(`/api/public/invitations/${encodeURIComponent(token)}`, {
+    identity: null,
+  })
 }
 
 export function getInvitationAccess(invitationId: string, identity?: TemporaryWebIdentity | null) {

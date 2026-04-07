@@ -1,5 +1,21 @@
 :root {
   --primary: #1e7be6;
+  --invite-purple: #6b46c1;
+  --invite-purple-dark: #553c9a;
+  --invite-accent-teal: #0f766e;
+  --invite-accent-sun: #d97706;
+  --invite-page-bg: #fff9f4;
+  --invite-primary: #6d5ef7;
+  --invite-primary-dark: #4f46d8;
+  --invite-coral: #ff8a5b;
+  --invite-mint: #39c6b4;
+  --invite-text: #1f2430;
+  --invite-text-muted: #667085;
+  /* Pozivnica: playful display i dekorativni naslov za hero */
+  --invite-display-font: 'Lilita One', 'Sour Gummy', 'Fredoka', 'Nunito', system-ui, sans-serif;
+  --invite-script-font: 'Merienda', 'Lilita One', 'Sour Gummy', 'Fredoka', 'Nunito', system-ui, sans-serif;
+  --invite-font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --invite-font-meta: 'Nunito', 'Plus Jakarta Sans', system-ui, sans-serif;
   --amber: #f4b400;
   --orange: #fb923c;
 
@@ -40,6 +56,10 @@ body {
   font-family: var(--sans);
   color: var(--text);
   background: var(--bg);
+}
+
+body:has(.pb-main--demo) {
+  font-family: var(--invite-font);
 }
 
 a {
@@ -199,4 +219,3 @@ img {
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
-

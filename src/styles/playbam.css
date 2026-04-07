@@ -842,9 +842,160 @@
   }
 }
 
-/* Invitation demo page */
+/* Invitation page — topla pozadina, mobile-first */
 .pb-main--demo {
+  position: relative;
+  /* Horizontalno 0: PNG ide rub do ruba kao na webu; padding samo u .pb-container */
   padding: 22px 0 40px;
+  background-color: #ffffff;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  font-family: var(--invite-font);
+  overflow-x: clip;
+}
+
+/* Tipografija pozivnice: Plus Jakarta UI; Fredoka display naslov u kartici */
+.pb-main--demo .pb-btn,
+.pb-main--demo button {
+  font-family: var(--invite-font);
+}
+
+.pb-main--demo .pb-btn-primary,
+.pb-main--demo .pb-btn-primary span,
+.pb-main--demo .pb-btn-primary > span,
+.pb-main--demo .pb-btn-primary * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff;
+}
+
+.pb-main--demo .pb-modalDialog,
+.pb-main--demo .pb-modalDialog__title,
+.pb-main--demo .pb-modalDialog__body,
+.pb-main--demo .pb-modalDialog__lead {
+  font-family: var(--invite-font);
+}
+
+.pb-main--demo .pb-flowCard__title,
+.pb-main--demo .pb-flowCard__text {
+  font-family: var(--invite-font);
+}
+
+.pb-main--demo .pb-flowCard__title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.pb-main--demo .pb-flowCard__text {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.55;
+}
+
+.pb-main--demo .pb-inlineNote {
+  font-family: var(--invite-font);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+
+/* Sadržaj: safe-area; kartica ostaje unutar, pozadina maina je full-bleed */
+.pb-main--demo .pb-container {
+  padding-left: max(14px, env(safe-area-inset-left, 0px));
+  padding-right: max(14px, env(safe-area-inset-right, 0px));
+}
+
+.pb-invitePage__blobs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.pb-invitePage__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(64px);
+  opacity: 0.38;
+  transform: translateZ(0);
+}
+
+.pb-invitePage__blob--1 {
+  width: min(300px, 75vw);
+  height: min(300px, 75vw);
+  background: radial-gradient(circle at 30% 30%, rgba(109, 94, 247, 0.55), rgba(109, 94, 247, 0.12) 55%, transparent 70%);
+  top: -10%;
+  right: -18%;
+}
+
+.pb-invitePage__blob--2 {
+  width: min(260px, 65vw);
+  height: min(260px, 65vw);
+  background: radial-gradient(circle at 40% 40%, rgba(57, 198, 180, 0.38), rgba(57, 198, 180, 0.12) 55%, transparent 72%);
+  bottom: 18%;
+  left: -22%;
+}
+
+.pb-invitePage__blob--3 {
+  width: min(200px, 50vw);
+  height: min(200px, 50vw);
+  background: radial-gradient(circle at 35% 35%, rgba(255, 138, 91, 0.32), rgba(255, 138, 91, 0.1) 55%, transparent 72%);
+  bottom: -8%;
+  right: 4%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-invitePage__blobs {
+    display: none;
+  }
+}
+
+.pb-main--demo .pb-flowLayout {
+  position: relative;
+  z-index: 1;
+}
+
+/* Outer-edge confetti / strokes (no extra markup) */
+.pb-main--demo::before,
+.pb-main--demo::after {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+  background-repeat: no-repeat;
+  background-size: 220px 220px, 240px 240px, 180px 180px, 220px 220px;
+}
+
+.pb-main--demo::before {
+  background-image:
+    radial-gradient(circle at 12px 12px, rgba(109, 94, 247, 0.35) 0 2px, transparent 3px),
+    radial-gradient(circle at 20px 20px, rgba(255, 138, 91, 0.3) 0 2px, transparent 3px),
+    radial-gradient(circle at 18px 18px, rgba(57, 198, 180, 0.28) 0 2px, transparent 3px),
+    radial-gradient(circle at 10px 10px, rgba(243, 166, 74, 0.25) 0 2px, transparent 3px);
+  background-position: 0% 6%, 100% 14%, 6% 100%, 98% 94%;
+  filter: blur(0.2px);
+}
+
+.pb-main--demo::after {
+  opacity: 0.35;
+  background-image:
+    radial-gradient(60px 60px at 14% 18%, rgba(109, 94, 247, 0.16), transparent 65%),
+    radial-gradient(60px 60px at 86% 22%, rgba(255, 138, 91, 0.14), transparent 65%),
+    radial-gradient(70px 70px at 10% 82%, rgba(57, 198, 180, 0.12), transparent 68%),
+    radial-gradient(70px 70px at 90% 86%, rgba(243, 166, 74, 0.12), transparent 68%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-main--demo::before,
+  .pb-main--demo::after {
+    display: none;
+  }
 }
 
 .pb-backRow {
@@ -857,8 +1008,156 @@
   font-weight: 1000;
   color: rgba(14, 53, 90, 0.92);
 }
+
+.pb-main--demo .pb-backLink {
+  font-family: var(--invite-font);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
 .pb-backLink:hover {
   text-decoration: underline;
+}
+
+.pb-inviteSessionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(107, 70, 193, 0.14);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  margin-bottom: 14px;
+}
+
+.pb-inviteSessionBar__text {
+  font-family: var(--invite-font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: rgba(30, 27, 75, 0.82);
+}
+
+.pb-inviteSessionBar__role {
+  font-weight: 800;
+  color: #2563eb;
+}
+
+.pb-inviteSessionBar__email {
+  font-weight: 800;
+  color: #111111;
+}
+
+.pb-modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+@media (min-width: 520px) {
+  .pb-modalOverlay {
+    align-items: center;
+    padding: 24px;
+  }
+}
+
+.pb-modalDialog {
+  width: 100%;
+  max-width: 28rem;
+  max-height: min(92vh, 720px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.5rem 1.5rem 0 0;
+  background: #fffaf5;
+  border: 1px solid rgba(107, 70, 193, 0.12);
+  box-shadow: 0 -8px 40px rgba(15, 23, 42, 0.18);
+}
+
+@media (min-width: 520px) {
+  .pb-modalDialog {
+    border-radius: 1.75rem;
+  }
+}
+
+.pb-modalDialog__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 0;
+}
+
+.pb-modalDialog__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1e1b4b;
+  padding-right: 8px;
+}
+
+.pb-modalDialog__close {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(107, 70, 193, 0.08);
+  color: #4338ca;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.pb-modalDialog__close:hover {
+  background: rgba(107, 70, 193, 0.14);
+}
+
+.pb-modalDialog__close:focus-visible {
+  outline: 3px solid rgba(107, 70, 193, 0.45);
+  outline-offset: 2px;
+}
+
+.pb-modalDialog__body {
+  padding: 14px 18px 22px;
+  overflow-y: auto;
+}
+
+.pb-modalDialog__lead {
+  margin: 0 0 16px;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: rgba(30, 27, 75, 0.78);
+  font-weight: 500;
+}
+
+.pb-flowActions--modal {
+  margin-top: 8px;
+}
+
+.pb-helperText--modal {
+  margin-top: 12px;
+  font-size: 0.8125rem;
+}
+
+.pb-summaryCard--modal {
+  margin-bottom: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-modalOverlay {
+    backdrop-filter: none;
+  }
 }
 
 .pb-fallbackCard {
@@ -894,218 +1193,1264 @@
   border-color: rgba(22, 24, 35, 0.18);
 }
 
-.pb-inviteCard {
-  border-radius: var(--radius-xl);
+/* --- Premium javna pozivnica (jedna centralna kartica) --- */
+.pb-inviteCard--premium {
+  max-width: 28rem;
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+}
+
+@media (max-width: 520px) {
+  .pb-inviteCard--premium {
+    max-width: none;
+  }
+}
+
+.pb-inviteCard__shell {
+  position: relative;
+  border-radius: clamp(24px, 5vw, 32px);
+  padding: 1px;
   overflow: hidden;
-  border: 1px solid rgba(22, 24, 35, 0.10);
-  background: rgba(255, 255, 255, 0.86);
-  box-shadow: var(--shadow-soft);
+  background: linear-gradient(
+    145deg,
+    rgba(109, 94, 247, 0.2),
+    rgba(255, 255, 255, 0.92) 42%,
+    rgba(57, 198, 180, 0.14)
+  );
+  box-shadow:
+    0 10px 38px rgba(31, 36, 48, 0.08),
+    0 2px 6px rgba(31, 36, 48, 0.04);
 }
 
-.pb-inviteCard__banner {
-  padding: 18px;
-  background: linear-gradient(135deg, rgba(30, 123, 230, 0.14), rgba(251, 146, 60, 0.16));
-  border-bottom: 1px solid rgba(22, 24, 35, 0.08);
-  position: relative;
+@media (min-width: 480px) {
+  .pb-inviteCard__shell {
+    border-radius: 2.25rem;
+  }
 }
 
-.pb-inviteCard__bannerPattern {
+.pb-inviteCard__layer {
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(30, 123, 230, 0.18), transparent 35%),
-    radial-gradient(circle at 80% 30%, rgba(251, 146, 60, 0.20), transparent 40%),
-    radial-gradient(circle at 45% 80%, rgba(244, 180, 0, 0.18), transparent 38%);
+  border-radius: inherit;
   pointer-events: none;
+  inset: 0;
 }
 
-.pb-inviteCard__bannerInner {
+/* Istra pozadina + meki overlay — tekst ostaje na .pb-inviteCard__surface iznad glow sloja */
+.pb-inviteCard__layer--back {
+  inset: 2px;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(255, 249, 244, 0.6) 45%,
+      rgba(255, 255, 255, 0.78) 100%
+    ),
+    url('/pozivnica-bg.png');
+  /* Pozadina preko cijele kartice */
+  background-size: cover, cover;
+  background-position: center center, center center;
+  background-repeat: no-repeat, no-repeat;
+}
+
+/*
+  Mobile: širina PNG-a = širina kartice; isti motiv ponavlja se vertikalno kroz cijelu visinu
+  (gradient ostaje jedan sloj preko cijelog).
+*/
+@media (max-width: 520px) {
+  .pb-inviteCard__layer--back {
+    background-size: 100% 100%, 100% auto;
+    background-repeat: no-repeat, repeat-y;
+    background-position: center center, center top;
+  }
+}
+
+.pb-inviteCard__layer--glow {
+  inset: 2px;
+  opacity: 0.45;
+  background:
+    radial-gradient(ellipse 85% 55% at 50% -10%, rgba(109, 94, 247, 0.26), transparent 58%),
+    radial-gradient(ellipse 65% 40% at 15% 0%, rgba(255, 138, 91, 0.12), transparent 58%),
+    radial-gradient(ellipse 65% 40% at 85% 18%, rgba(57, 198, 180, 0.1), transparent 58%);
+  animation: pb-inviteGlow 10s ease-in-out infinite alternate;
+}
+
+@keyframes pb-inviteGlow {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 0.52;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-inviteCard__layer--glow {
+    animation: none;
+    opacity: 0.4;
+  }
+}
+
+.pb-inviteCard__surface {
   position: relative;
-  display: grid;
-  gap: 10px;
+  border-radius: calc(2rem - 1px);
+  padding: 1.55rem 1.35rem 1.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (max-width: 520px) {
+  .pb-inviteCard__surface {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (min-width: 480px) {
+  .pb-inviteCard__surface {
+    padding: 2rem 1.75rem 1.75rem;
+    border-radius: calc(2.25rem - 1px);
+    gap: 1.5rem;
+  }
+}
+
+/* Hero (javni dio kartice — iznad RSVP) */
+.pb-inviteCard__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
 }
 
 .pb-inviteCard__badge {
   display: inline-flex;
+  align-self: center;
   align-items: center;
-  gap: 10px;
-  font-weight: 1100;
-  padding: 10px 12px;
+  font-family: var(--invite-font);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--invite-primary-dark, #4f46d8);
+  background: linear-gradient(135deg, rgba(109, 94, 247, 0.12), rgba(57, 198, 180, 0.1));
+  padding: 0.4rem 0.75rem;
   border-radius: 999px;
-  width: fit-content;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.68);
-  color: rgba(14, 53, 90, 0.95);
-}
-
-.pb-inviteCard__badgeDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 4px;
-  background: linear-gradient(135deg, var(--amber), var(--orange));
-  box-shadow: 0 12px 22px rgba(251, 146, 60, 0.25);
-}
-
-.pb-inviteCard__title {
+  border: 1px solid rgba(109, 94, 247, 0.15);
   margin: 0;
-  font-size: 22px;
-  color: #0f2742;
-  letter-spacing: -0.02em;
-  font-weight: 1200;
 }
 
-.pb-inviteCard__subtitle {
+.pb-inviteCard__kicker {
   margin: 0;
-  color: rgba(16, 24, 40, 0.68);
+  text-align: center;
+  font-family: var(--invite-font);
+  font-size: clamp(0.9375rem, 2.5vw, 1.0625rem);
+  font-weight: 600;
+  color: var(--invite-text-muted, #667085);
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+/* Glavni naslov: Lukin / 6. rođendan — Fredoka display, mekana premium ljubičasta dubina */
+.pb-inviteCard__heroName {
+  margin: 0 auto;
+  padding: 0 0.18rem;
+  box-sizing: content-box;
+  max-width: min(100%, 19rem);
+  text-align: center;
+  font-family: var(--invite-display-font);
   font-weight: 800;
-  line-height: 1.55;
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  text-wrap: balance;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  filter: drop-shadow(0 10px 24px rgba(91, 61, 245, 0.18));
+  position: relative;
 }
 
-.pb-inviteCard__content {
-  padding: 18px;
+.pb-inviteCard__heroNamePrimary {
+  display: block;
+  font-family: inherit;
+  position: relative;
+  z-index: 1;
+  font-size: clamp(3.4rem, 11vw, 6rem);
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 34%),
+    linear-gradient(180deg, #7b61ff 0%, #6b4ef7 42%, #5736e8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 -1px 0 rgba(255, 255, 255, 0.14);
 }
 
-.pb-inviteCard__grid {
-  display: grid;
-  gap: 14px;
+.pb-inviteCard__heroNameSecondary {
+  display: block;
+  font-family: inherit;
+  position: relative;
+  z-index: 1;
+  margin-top: -0.1em;
+  font-size: clamp(2.2rem, 7.2vw, 3.8rem);
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: -0.024em;
+  text-wrap: balance;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 36%),
+    linear-gradient(180deg, #7b61ff 0%, #6b4ef7 42%, #5736e8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 -1px 0 rgba(255, 255, 255, 0.12);
 }
 
-@media (min-width: 900px) {
-  .pb-inviteCard__grid {
-    grid-template-columns: 1fr 0.95fr;
-    align-items: start;
+.pb-inviteCard__heroName::before {
+  content: '';
+  position: absolute;
+  inset: -0.15rem 0.75rem auto;
+  height: clamp(1rem, 5vw, 1.5rem);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0));
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+@supports not (background-clip: text) {
+  .pb-inviteCard__heroNamePrimary,
+  .pb-inviteCard__heroNameSecondary {
+    color: var(--invite-purple, #6b46c1);
+    -webkit-text-fill-color: var(--invite-purple, #6b46c1);
+    background: none;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.24), 0 10px 24px rgba(91, 61, 245, 0.14);
   }
 }
 
-.pb-inviteCard__details {
+.pb-inviteCard__eventTitle {
+  margin: 0;
+  text-align: center;
+  font-family: var(--invite-font);
+  font-size: clamp(0.9375rem, 2.5vw, 1.0625rem);
+  font-weight: 600;
+  color: var(--invite-text-muted, #667085);
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+}
+
+.pb-inviteCard__infoRows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
-.pb-inviteField {
-  padding: 12px 14px;
-  border-radius: 18px;
-  border: 1px solid rgba(22, 24, 35, 0.10);
-  background: rgba(255, 255, 255, 0.72);
-}
-
-.pb-inviteField__label {
-  font-size: 12px;
-  font-weight: 1100;
-  color: rgba(16, 24, 40, 0.55);
-}
-
-.pb-inviteField__value {
-  margin-top: 6px;
-  font-weight: 1000;
-  color: rgba(16, 24, 40, 0.92);
-  line-height: 1.25;
-}
-
-.pb-inviteRSVP {
+.pb-inviteCard__infoRow {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.pb-rsvpBtn {
-  flex: 1 1 180px;
-  padding: 12px 14px;
+  gap: 0.75rem;
+  align-items: flex-start;
+  font-family: var(--invite-font);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--invite-text, #1f2430);
+  padding: 0.9rem 0.95rem;
   border-radius: 18px;
-  border: 1px solid rgba(22, 24, 35, 0.12);
-  background: rgba(255, 255, 255, 0.7);
-  font-weight: 1100;
-  cursor: pointer;
-  color: rgba(16, 24, 40, 0.86);
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
-}
-
-.pb-rsvpBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-soft);
-}
-
-.pb-rsvpBtn.is-active {
-  border-color: rgba(30, 123, 230, 0.26);
-  background: rgba(30, 123, 230, 0.10);
-  color: rgba(11, 63, 134, 0.98);
-}
-
-.pb-inviteRSVP__note {
-  color: rgba(16, 24, 40, 0.68);
-  font-weight: 900;
-}
-
-.pb-inviteCard__mapWrap {
-  border-radius: var(--radius-lg);
-  border: 1px dashed rgba(22, 24, 35, 0.18);
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.65);
-}
-
-.pb-inviteCard__mapLabel {
-  font-weight: 1100;
-  color: rgba(16, 24, 40, 0.78);
-  margin-bottom: 10px;
-}
-
-.pb-mapPlaceholder {
-  border-radius: 20px;
-  height: 176px;
-  border: 1px solid rgba(22, 24, 35, 0.12);
-  background: linear-gradient(135deg, rgba(30, 123, 230, 0.12), rgba(251, 146, 60, 0.08));
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  box-shadow: 0 6px 18px rgba(31, 36, 48, 0.05);
   position: relative;
   overflow: hidden;
 }
 
-.pb-mapPlaceholder::after {
+/* Color-coded pill-cards (Datum/Vrijeme/Lokacija) */
+.pb-inviteCard__infoRow:nth-child(1) {
+  background: linear-gradient(145deg, rgba(109, 94, 247, 0.12), rgba(255, 255, 255, 0.9));
+  border-color: rgba(109, 94, 247, 0.14);
+}
+.pb-inviteCard__infoRow:nth-child(2) {
+  background: linear-gradient(145deg, rgba(255, 138, 91, 0.14), rgba(255, 255, 255, 0.9));
+  border-color: rgba(255, 138, 91, 0.16);
+}
+.pb-inviteCard__infoRow:nth-child(3) {
+  background: linear-gradient(145deg, rgba(57, 198, 180, 0.13), rgba(255, 255, 255, 0.9));
+  border-color: rgba(57, 198, 180, 0.18);
+}
+
+.pb-inviteCard__infoRow::after {
   content: '';
   position: absolute;
-  inset: -40%;
+  inset: 0;
+  background: radial-gradient(120px 70px at 20% 0%, rgba(255, 255, 255, 0.5), transparent 60%);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.pb-inviteCard__infoIcon {
+  flex-shrink: 0;
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  box-shadow: 0 8px 20px rgba(31, 36, 48, 0.08);
+  color: var(--invite-primary, #6d5ef7);
+}
+
+.pb-inviteCard__infoRow:nth-child(1) .pb-inviteCard__infoIcon {
+  color: var(--invite-primary, #6d5ef7);
+  background: rgba(109, 94, 247, 0.12);
+  border-color: rgba(109, 94, 247, 0.18);
+}
+.pb-inviteCard__infoRow:nth-child(2) .pb-inviteCard__infoIcon {
+  color: var(--invite-coral, #ff8a5b);
+  background: rgba(255, 138, 91, 0.14);
+  border-color: rgba(255, 138, 91, 0.2);
+}
+.pb-inviteCard__infoRow:nth-child(3) .pb-inviteCard__infoIcon {
+  color: var(--invite-mint, #39c6b4);
+  background: rgba(57, 198, 180, 0.14);
+  border-color: rgba(57, 198, 180, 0.22);
+}
+
+.pb-inviteCard__infoIcon svg {
+  filter: drop-shadow(0 3px 8px rgba(31, 36, 48, 0.1));
+}
+
+.pb-inviteCard__infoBody {
+  padding-top: 0.1rem;
+  min-width: 0;
+}
+
+.pb-inviteCard__infoLabel {
+  display: block;
+  font-family: var(--invite-font-meta);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--invite-text-muted, #667085);
+  margin-bottom: 0.28rem;
+}
+
+.pb-inviteCard__infoValue {
+  display: block;
+  font-family: var(--invite-font);
+  font-size: 0.96875rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.pb-inviteCard__address {
+  margin: 0;
+  font-family: var(--invite-font);
+  font-size: 0.96875rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  font-style: normal;
+}
+
+.pb-inviteCard__note {
+  margin: 0;
+  padding: 1.05rem 1.15rem;
+  border-radius: 18px;
   background:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.32),
-      rgba(255, 255, 255, 0.32) 8px,
-      transparent 8px,
-      transparent 20px
-    );
-  opacity: 0.25;
-  transform: rotate(8deg);
+    radial-gradient(120px 60px at 15% 0%, rgba(255, 255, 255, 0.7), transparent 60%),
+    linear-gradient(145deg, rgba(109, 94, 247, 0.075), rgba(255, 255, 255, 0.96));
+  border: 1px solid rgba(109, 94, 247, 0.12);
 }
 
-.pb-mapPin {
-  width: 34px;
-  height: 34px;
-  border-radius: 16px 16px 16px 0;
-  transform: rotate(-45deg);
-  background: linear-gradient(135deg, var(--amber), var(--orange));
-  box-shadow: 0 18px 36px rgba(251, 146, 60, 0.35);
+.pb-inviteCard__noteText {
+  margin: 0;
+  font-family: var(--invite-font);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: var(--invite-text, #1f2430);
+}
+
+.pb-inviteCard__footnote {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.8125rem;
+}
+
+.pb-inviteCard__footnoteLabel {
+  font-family: var(--invite-font-meta);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--invite-text-muted, #667085);
+}
+
+.pb-inviteCard__footnoteValue {
+  font-family: var(--invite-font);
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--invite-coral, #ff8a5b);
+}
+
+.pb-inviteCard__access {
+  padding: 0.85rem 1rem;
+  border-radius: 1.15rem;
+  border: 1px dashed rgba(107, 70, 193, 0.22);
+  background: rgba(107, 70, 193, 0.04);
+}
+
+.pb-inviteCard__access--private {
+  border-style: solid;
+  border-color: rgba(13, 148, 136, 0.28);
+  background: rgba(13, 148, 136, 0.07);
+}
+
+.pb-inviteCard__accessLabel {
+  display: block;
+  font-family: var(--invite-font-meta);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(30, 27, 75, 0.5);
+  margin-bottom: 0.35rem;
+}
+
+.pb-inviteCard__accessText {
+  margin: 0;
+  font-family: var(--invite-font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: rgba(30, 27, 75, 0.72);
+}
+
+.pb-inviteCard__rsvp {
+  padding-top: 0.25rem;
+}
+
+.pb-inviteCard__rsvpTitle {
+  margin: 0 0 0.75rem;
+  font-family: var(--invite-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--invite-primary-dark, #4f46d8);
+  text-align: center;
+}
+
+.pb-inviteRSVP {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pb-rsvpBtn {
+  flex: 1 1 7rem;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(109, 94, 247, 0.22);
+  background: rgba(255, 255, 255, 0.98);
+  font-family: var(--invite-font);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  color: var(--invite-primary-dark, #4f46d8);
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease;
+}
+
+.pb-rsvpBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(109, 94, 247, 0.12);
+}
+
+.pb-rsvpBtn:focus {
+  outline: none;
+}
+
+.pb-rsvpBtn:focus-visible {
+  outline: 3px solid var(--invite-mint, #39c6b4);
+  outline-offset: 3px;
+}
+
+.pb-rsvpBtn.is-active {
+  border-color: rgba(109, 94, 247, 0.55);
+  background: linear-gradient(180deg, rgba(109, 94, 247, 0.14), rgba(109, 94, 247, 0.06));
+  color: var(--invite-primary-dark, #4f46d8);
+}
+
+.pb-inviteRSVP__note {
+  margin: 0.65rem 0 0;
+  text-align: center;
+  font-family: var(--invite-font-meta);
+  color: rgba(30, 27, 75, 0.62);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+}
+
+.pb-inviteCard__rsvpHint {
+  margin: 0 0 0.25rem;
+  text-align: center;
+  font-family: var(--invite-font);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--invite-coral, #ff8a5b);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-rsvpBtn {
+    transition: none;
+  }
+  .pb-rsvpBtn:hover {
+    transform: none;
+  }
+}
+
+/* --- Privatni dio (gost) — premium blokovi nakon logina --- */
+.pb-invitePrivateStack {
+  display: grid;
+  gap: clamp(1.25rem, 4vw, 2rem);
+  width: min(100%, 44rem);
+  max-width: 44rem;
+  margin: clamp(-7.4rem, -18vw, -5.2rem) auto 0;
+  font-family: var(--invite-font);
   position: relative;
-  z-index: 1;
+  z-index: 4;
 }
 
-.pb-mapPin::after {
+.pb-invitePrivateStack > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.pb-card.pb-inviteHostPanel {
+  border-radius: clamp(22px, 4vw, 26px);
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  box-shadow:
+    0 4px 24px rgba(31, 36, 48, 0.06),
+    0 1px 3px rgba(31, 36, 48, 0.04);
+  background: #fff;
+}
+
+.pb-invitePrivateCard {
+  background: #fff;
+  border-radius: clamp(24px, 5vw, 28px);
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  box-shadow:
+    0 4px 24px rgba(31, 36, 48, 0.06),
+    0 1px 3px rgba(31, 36, 48, 0.04);
+  padding: clamp(1.25rem, 4vw, 1.75rem);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pb-invitePrivateCard--intro {
+  width: min(100%, 17rem);
+  margin: -0.82rem auto 0;
+  padding: 0.62rem 0.82rem 0.66rem;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow:
+    0 10px 32px rgba(109, 94, 247, 0.12),
+    0 3px 10px rgba(31, 36, 48, 0.05);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pb-invitePrivateCard:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 40px rgba(109, 94, 247, 0.1),
+      0 4px 12px rgba(31, 36, 48, 0.06);
+  }
+}
+
+.pb-invitePrivateCard__header {
+  margin-bottom: 1rem;
+}
+
+.pb-invitePrivateCard__title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.125rem, 3.2vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--invite-text, #1f2430);
+}
+
+.pb-invitePrivateCard--intro .pb-invitePrivateCard__title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.pb-invitePrivateCard--intro .pb-invitePrivateCard__title::before,
+#private-details-toggle::before,
+#private-wishlist-toggle::before,
+#private-venue-toggle::before {
   content: '';
-  width: 12px;
-  height: 12px;
+  width: 2.1rem;
+  height: 2.1rem;
+  flex-shrink: 0;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.95);
-  position: absolute;
-  left: 11px;
-  top: 11px;
+  background-color: rgba(109, 94, 247, 0.12);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 1.05rem 1.05rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 6px 18px rgba(109, 94, 247, 0.1);
 }
 
-.pb-mapCaption {
-  margin-top: 10px;
-  font-weight: 850;
-  color: rgba(16, 24, 40, 0.6);
-  font-size: 13px;
+.pb-invitePrivateCard--intro .pb-invitePrivateCard__title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46d8' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 4v5c0 4.5-2.9 7.8-7 9-4.1-1.2-7-4.5-7-9V7l7-4z'/%3E%3Cpath d='M9.5 12l1.6 1.6 3.4-3.7'/%3E%3C/svg%3E");
 }
 
+.pb-invitePrivateCard--intro .pb-invitePrivateCard__title {
+  margin-bottom: 0.12rem;
+  font-size: clamp(0.76rem, 2.2vw, 0.88rem);
+  text-align: center;
+  gap: 0.36rem;
+  transform: translateX(-0.18rem);
+}
+
+.pb-invitePrivateCard__lead,
+.pb-invitePrivateCard__subtitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: var(--invite-text-muted, #667085);
+}
+
+.pb-invitePrivateCard__subtitle {
+  margin-top: 0.35rem;
+}
+
+.pb-invitePrivateCard--intro .pb-invitePrivateCard__lead {
+  display: block;
+  font-size: 0.66rem;
+  line-height: 1.12;
+  white-space: nowrap;
+  text-align: center;
+  transform: translateX(-0.18rem);
+}
+
+.pb-invitePrivateCard--intro .pb-invitePrivateCard__title::before {
+  width: 1.82rem;
+  height: 1.82rem;
+  background-size: 0.9rem 0.9rem;
+}
+
+.pb-invitePrivateCard--accordion {
+  width: min(100%, 42.5rem);
+  max-width: 42.5rem;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0;
+  margin-inline: auto;
+}
+
+.pb-invitePrivateCard--intro + .pb-invitePrivateCard--accordion {
+  margin-top: 0.38rem;
+}
+
+.pb-privateToggle {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: none;
+  border-radius: 0;
+  padding: 1rem 1.05rem;
+  cursor: pointer;
+  text-align: left;
+  background:
+    radial-gradient(130px 70px at 18% 0%, rgba(255, 255, 255, 0.8), transparent 60%),
+    linear-gradient(145deg, rgba(109, 94, 247, 0.1), rgba(57, 198, 180, 0.08));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+#private-details-toggle::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46d8' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 4v3'/%3E%3Cpath d='M16 4v3'/%3E%3Crect x='4' y='6.5' width='16' height='13.5' rx='3'/%3E%3Cpath d='M4 10.5h16'/%3E%3C/svg%3E");
+}
+
+#private-wishlist-toggle::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46d8' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20s-6.5-4.4-8.5-8.1C1.8 8.7 3.5 5 7.2 5c2 0 3.2 1 4.8 2.7C13.6 6 14.8 5 16.8 5c3.7 0 5.4 3.7 3.7 6.9C18.5 15.6 12 20 12 20z'/%3E%3C/svg%3E");
+}
+
+#private-venue-toggle::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46d8' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s6-5.5 6-11a6 6 0 10-12 0c0 5.5 6 11 6 11z'/%3E%3Ccircle cx='12' cy='10' r='2.3'/%3E%3C/svg%3E");
+}
+
+.pb-privateToggle__copy {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.pb-privateToggle__eyebrow {
+  font-family: var(--invite-font-meta);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(79, 70, 216, 0.66);
+}
+
+.pb-privateToggle__title {
+  font-size: clamp(1rem, 3.5vw, 1.18rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--invite-text, #1f2430);
+}
+
+.pb-privateToggle__arrow {
+  flex-shrink: 0;
+  width: 2.1rem;
+  height: 2.1rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--invite-primary-dark, #4f46d8);
+  font-size: 1.05rem;
+  transition: transform 220ms ease;
+}
+
+.pb-privateToggle.is-open .pb-privateToggle__arrow {
+  transform: rotate(180deg);
+}
+
+.pb-privateAccordionBody {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin-top: 0;
+  padding: 0 1rem 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.pb-privateDetails,
+.pb-privateVenue {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 1rem;
+}
+
+.pb-privateWishlist {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 22px;
+  background: url('/listazelja.jpeg') center top / 100% auto repeat-y;
+  padding: 1rem;
+}
+
+.pb-privateVenue__gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.pb-privateVenue__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  box-shadow: 0 8px 22px rgba(31, 36, 48, 0.06);
+}
+
+.pb-privateVenue__description {
+  margin: 0 0 0.9rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: var(--invite-text-muted, #667085);
+}
+
+.pb-partyFacts--venue {
+  gap: 0.7rem;
+}
+
+.pb-partyFacts {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.pb-partyFact {
+  border-radius: 16px;
+  padding: 0.8rem 0.9rem;
+  background:
+    radial-gradient(90px 46px at 15% 0%, rgba(255, 255, 255, 0.75), transparent 60%),
+    linear-gradient(145deg, rgba(109, 94, 247, 0.06), rgba(255, 255, 255, 0.96));
+  border: 1px solid rgba(109, 94, 247, 0.08);
+}
+
+.pb-partyFact__label {
+  font-family: var(--invite-font-meta);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(79, 70, 216, 0.64);
+  margin-bottom: 0.22rem;
+}
+
+.pb-partyFact__value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  color: var(--invite-text, #1f2430);
+}
+
+.pb-inviteWishlist {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.875rem;
+}
+
+.pb-inviteWishlist > .pb-inviteWish:first-child {
+  margin-top: clamp(5.25rem, 15vw, 6.5rem);
+}
+
+.pb-inviteWish {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  gap: 0.45rem 0.75rem;
+  align-items: start;
+  padding: 0.72rem 0.8rem;
+  border-radius: 16px;
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92));
+  box-shadow: 0 6px 22px rgba(31, 36, 48, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pb-inviteWish:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 34px rgba(31, 36, 48, 0.08);
+}
+
+.pb-inviteWish--compact {
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.pb-inviteWish__thumbWrap {
+  align-self: start;
+}
+
+.pb-inviteWish__thumb {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(109, 94, 247, 0.12), rgba(57, 198, 180, 0.12));
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.pb-inviteWish__thumbImage {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  box-shadow: 0 6px 18px rgba(31, 36, 48, 0.06);
+}
+
+.pb-inviteWish__body {
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+  align-content: start;
+}
+
+.pb-inviteWish__title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.24;
+  color: var(--invite-text, #1f2430);
+}
+
+.pb-inviteWish__desc,
+.pb-inviteWish__meta,
+.pb-inviteWish__hint {
+  margin: 0;
+  font-size: 0.765rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--invite-text-muted, #667085);
+}
+
+.pb-inviteWish__addedBy {
+  margin: 0 0 0.18rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: #1f2430;
+}
+
+.pb-inviteWish__purchaseMeta {
+  margin: 0.14rem 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  color: #1f2430;
+}
+
+.pb-inviteWish__purchaseIcon {
+  width: 1rem;
+  height: 1rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(111, 207, 104, 0.18);
+  color: #2d7a32;
+  font-size: 0.84rem;
+  font-weight: 900;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.pb-inviteWish__guestAdd {
+  margin-top: 1rem;
+}
+
+.pb-inviteWish__guestForm {
+  margin-bottom: 1rem;
+}
+
+.pb-inviteWish__uploadHint {
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--invite-text-muted, #667085);
+}
+
+.pb-inviteWish__uploadPreview {
+  margin-top: 0.55rem;
+}
+
+.pb-inviteWish__uploadPreviewImage {
+  width: 5.25rem;
+  height: 5.25rem;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 1px solid rgba(31, 36, 48, 0.08);
+  box-shadow: 0 8px 20px rgba(31, 36, 48, 0.08);
+}
+
+.pb-inviteWish__addIcon {
+  width: 1.22rem;
+  height: 1.22rem;
+  min-width: 1.22rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #2f7d32;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 1px 4px rgba(32, 88, 35, 0.18);
+  flex-shrink: 0;
+}
+
+.pb-inviteWish__addIconMark {
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0;
+  display: block;
+  transform: translateY(-0.05rem);
+}
+
+.pb-inviteWish__hint--you {
+  color: var(--invite-primary-dark, #4f46d8);
+  font-weight: 600;
+}
+
+.pb-inviteWish__link {
+  color: var(--invite-primary, #6d5ef7);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pb-inviteWish__link:focus-visible {
+  outline: 2px solid var(--invite-mint, #39c6b4);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.pb-inviteWish__status {
+  font-family: var(--invite-font-meta);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.46rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  justify-self: end;
+  align-self: start;
+}
+
+.pb-inviteWish__side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  height: 100%;
+  align-self: stretch;
+  justify-self: end;
+  justify-items: end;
+  align-items: flex-end;
+}
+
+.pb-inviteWish__status--available {
+  background: rgba(111, 207, 104, 0.18);
+  color: #2d7a32;
+}
+
+.pb-inviteWish__status--reserved {
+  background: rgba(243, 166, 74, 0.2);
+  color: #b35f14;
+}
+
+.pb-inviteWish__status--you {
+  background: rgba(109, 94, 247, 0.15);
+  color: var(--invite-primary-dark, #4f46d8);
+}
+
+.pb-inviteWish__status--neutral {
+  background: rgba(199, 201, 217, 0.45);
+  color: #4b5060;
+}
+
+.pb-inviteWish__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  margin-top: auto;
+  justify-self: end;
+  align-self: start;
+}
+
+.pb-inviteWish__img {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.pb-inviteWish__btnRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+.pb-inviteWish__btnRow .pb-btn {
+  min-height: 2.05rem;
+  padding: 0.48rem 0.72rem;
+  font-size: 0.76rem;
+  border-radius: 999px;
+}
+
+.pb-inviteWish__deleteBtn.pb-btn-ghost {
+  background: rgba(229, 72, 77, 0.12);
+  border-color: rgba(229, 72, 77, 0.18);
+  color: #b42318;
+}
+
+.pb-inviteSavings {
+  background:
+    radial-gradient(180px 90px at 18% 0%, rgba(255, 255, 255, 0.7), transparent 60%),
+    linear-gradient(145deg, rgba(109, 94, 247, 0.08), rgba(255, 255, 255, 0.96));
+  border-radius: clamp(24px, 5vw, 28px);
+  border: 1px solid rgba(31, 36, 48, 0.06);
+  box-shadow:
+    0 4px 24px rgba(31, 36, 48, 0.06),
+    0 1px 3px rgba(31, 36, 48, 0.04);
+  padding: clamp(1.25rem, 4vw, 1.75rem);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pb-inviteSavings:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 40px rgba(109, 94, 247, 0.1),
+      0 4px 12px rgba(31, 36, 48, 0.06);
+  }
+}
+
+.pb-inviteSavings__grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 520px) {
+  .pb-inviteSavings__grid {
+    grid-template-columns: minmax(100px, 140px) 1fr;
+    align-items: center;
+  }
+}
+
+.pb-inviteSavings__art svg {
+  width: 100%;
+  height: auto;
+  max-width: 140px;
+  margin: 0 auto;
+  display: block;
+}
+
+.pb-inviteSavings__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.0625rem, 2.9vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--invite-text, #1f2430);
+}
+
+.pb-inviteSavings__text {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: var(--invite-text-muted, #667085);
+}
+
+.pb-inviteSavings__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 22rem;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: var(--invite-font);
+  letter-spacing: -0.02em;
+  color: #fff;
+  background:
+    radial-gradient(120px 60px at 25% 0%, rgba(255, 255, 255, 0.22), transparent 55%),
+    linear-gradient(180deg, var(--invite-primary, #6d5ef7) 0%, var(--invite-primary-dark, #4f46d8) 100%);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow:
+    0 10px 26px rgba(79, 70, 216, 0.28),
+    0 2px 6px rgba(31, 36, 48, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pb-inviteSavings__cta:focus-visible {
+  outline: 3px solid var(--invite-mint, #39c6b4);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pb-inviteSavings__cta:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 28px rgba(79, 70, 216, 0.4);
+  }
+}
+
+.pb-inviteSavings__hint {
+  margin: 0.5rem 0 0;
+  font-family: var(--invite-font-meta);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--invite-text-muted, #667085);
+}
+
+.pb-inviteStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 999px;
+  background: rgba(31, 36, 48, 0.04);
+  border: 1px solid rgba(31, 36, 48, 0.06);
+}
+
+.pb-inviteStrip__text {
+  margin: 0;
+  font-family: var(--invite-font-meta);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--invite-text-muted, #667085);
+}
+
+.pb-inviteStrip__brand {
+  font-family: var(--invite-font);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--invite-primary-dark, #4f46d8);
+}
 
 .pb-fallbackCard__meta {
   font-size: 14px;
@@ -1199,6 +2544,10 @@
   padding: 12px 14px;
   font: inherit;
   color: var(--text);
+}
+
+.pb-input--file {
+  padding: 0.85rem 0.95rem;
 }
 
 .pb-input:focus-visible {
@@ -1376,16 +2725,6 @@
   color: #9d174d;
 }
 
-.pb-inviteField--accent {
-  background: rgba(30, 123, 230, 0.08);
-  border-color: rgba(30, 123, 230, 0.16);
-}
-
-.pb-inviteField--muted {
-  background: rgba(251, 146, 60, 0.08);
-  border-color: rgba(251, 146, 60, 0.16);
-}
-
 @media (min-width: 768px) {
   .pb-sessionCard__row,
   .pb-wishlistItem,
@@ -1406,5 +2745,476 @@
   .pb-childEditor {
     grid-template-columns: 1fr 220px;
     align-items: end;
+  }
+}
+
+/* Public invitation hero layout on top of the provided mobile illustration */
+.pb-inviteCard--premium {
+  max-width: 28rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.pb-inviteCard__stack {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.pb-inviteHero {
+  width: 100%;
+}
+
+.pb-inviteHero__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: clamp(28px, 7vw, 36px);
+  overflow: hidden;
+  box-shadow:
+    0 18px 44px rgba(82, 65, 173, 0.16),
+    0 4px 14px rgba(31, 36, 48, 0.06);
+  background: #fdf5ff;
+}
+
+.pb-inviteHero__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.pb-inviteHero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.pb-inviteHero__titleWrap {
+  position: absolute;
+  top: 7.5%;
+  left: 50%;
+  width: min(82%, 18rem);
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.pb-inviteHero__title {
+  margin: 0;
+  font-family: var(--invite-script-font);
+  font-size: clamp(1.8rem, 7.83vw, 3.015rem);
+  font-weight: 800;
+  line-height: 0.97;
+  letter-spacing: -0.025em;
+  color: #7652dd;
+  text-wrap: balance;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8),
+    0 12px 24px rgba(123, 97, 255, 0.16);
+}
+
+.pb-inviteHero__titleLine {
+  display: block;
+}
+
+.pb-inviteHero__titleLine--secondary {
+  margin-top: 0.08em;
+}
+
+.pb-inviteHero__cardCopy {
+  position: absolute;
+  top: 38.3%;
+  left: 50%;
+  width: min(63%, 15.75rem);
+  transform: translateX(-50%);
+  text-align: center;
+  display: grid;
+  gap: clamp(0.38rem, 1.6vw, 0.55rem);
+}
+
+.pb-inviteHero__detail,
+.pb-inviteHero__message,
+.pb-inviteHero__detailRow {
+  margin: 0;
+  color: #745abf;
+  text-wrap: balance;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.pb-inviteHero__detailRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  text-decoration: none;
+}
+
+.pb-inviteHero__detailRow--date {
+  transform: translate(-10%, -4px);
+}
+
+.pb-inviteHero__detailRow--time {
+  transform: translate(-10%, -1px);
+}
+
+.pb-inviteHero__detailRow--venue {
+  transform: translate(-5%, 0);
+  white-space: nowrap;
+}
+
+.pb-inviteHero__detailRow--venue .pb-inviteHero__detailIcon {
+  width: 1.38rem;
+  height: 1.38rem;
+  color: #6d5ef7;
+  transform: translateY(-4px);
+  filter:
+    drop-shadow(0 0 6px rgba(109, 94, 247, 0.28))
+    drop-shadow(0 0 14px rgba(109, 94, 247, 0.18));
+}
+
+.pb-inviteHero__detailRow--venue .pb-inviteHero__detailIcon svg {
+  width: 120%;
+  height: 120%;
+}
+
+.pb-inviteHero__detailIcon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.38rem;
+  height: 1.38rem;
+  color: #745abf;
+}
+
+.pb-inviteHero__venueTextWrap {
+  display: grid;
+  gap: 0.08rem;
+  text-align: center;
+  justify-items: center;
+}
+
+.pb-inviteHero__detail {
+  font-family: var(--invite-font-meta);
+  font-size: clamp(1.1rem, 4.025vw, 1.36rem);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+}
+
+.pb-inviteHero__detail--venue {
+  font-size: clamp(1.06rem, 3.74vw, 1.24rem);
+  white-space: nowrap;
+}
+
+.pb-inviteHero__venueHint {
+  font-family: var(--invite-font-meta);
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: rgba(109, 94, 247, 0.9);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.38);
+  transform: translateX(-10%);
+}
+
+.pb-inviteHero__message {
+  margin-top: clamp(0.3rem, 1.4vw, 0.6rem);
+  font-family: var(--invite-font-meta);
+  font-size: clamp(0.88rem, 3.15vw, 1rem);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.18),
+    0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.pb-inviteHero__messageFineTune {
+  transform: translate(-5%, -6px);
+}
+
+.pb-inviteHero__rsvpBlock {
+  margin-top: 2.1rem;
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  align-self: center;
+  width: min(100%, 14.5rem);
+  margin-inline: auto;
+  transform: translateX(-6%);
+}
+
+.pb-inviteHero__rsvpTitle {
+  margin: 0;
+  font-family: var(--invite-script-font);
+  font-size: 1.23rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #745abf;
+  -webkit-text-fill-color: #745abf;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.45),
+    0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.pb-inviteHero__rsvpButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  width: min(100%, 14.5rem);
+  justify-items: center;
+}
+
+.pb-rsvpBtn--hero {
+  min-height: 2.55rem;
+  padding: 0.68rem 0.9rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.pb-rsvpBtn--heroHalf {
+  width: 100%;
+}
+
+.pb-rsvpBtn--heroFull {
+  grid-column: 1 / -1;
+  width: min(100%, 8.75rem);
+}
+
+.pb-inviteHero__rsvpHint {
+  margin: 0;
+  font-family: var(--invite-font-meta);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1.35;
+  color: #fff3ef;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.18),
+    0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.pb-inviteHero__rsvpNote {
+  margin: 0.15rem 0 0;
+  font-family: var(--invite-font-meta);
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: rgba(17, 24, 39, 0.96);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.pb-inviteCard__panel {
+  position: relative;
+  overflow: hidden;
+  padding: 1.1rem 1rem 1rem;
+  border-radius: 1.6rem;
+  border: 1px solid rgba(124, 92, 228, 0.14);
+  background:
+    radial-gradient(120px 64px at 18% 0%, rgba(255, 255, 255, 0.72), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(249, 244, 255, 0.98));
+  box-shadow:
+    0 14px 32px rgba(91, 61, 245, 0.08),
+    0 3px 10px rgba(31, 36, 48, 0.04);
+}
+
+.pb-inviteCard__panel::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(123, 97, 255, 0), rgba(123, 97, 255, 0.28), rgba(123, 97, 255, 0));
+}
+
+.pb-inviteCard__panel--private {
+  border-color: rgba(57, 198, 180, 0.18);
+  background:
+    radial-gradient(120px 64px at 18% 0%, rgba(255, 255, 255, 0.72), transparent 60%),
+    linear-gradient(180deg, rgba(245, 255, 252, 0.98), rgba(243, 250, 255, 0.98));
+}
+
+.pb-inviteCard__panelHead {
+  display: grid;
+  gap: 0.28rem;
+  margin-bottom: 0.85rem;
+  text-align: center;
+}
+
+.pb-inviteCard__panelHead--compact {
+  margin-bottom: 0.55rem;
+}
+
+.pb-inviteCard__panelEyebrow {
+  font-family: var(--invite-font-meta);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(83, 54, 177, 0.62);
+}
+
+.pb-inviteCard__rsvpTitle,
+.pb-inviteCard__accessHeading {
+  margin: 0;
+  font-family: var(--invite-display-font);
+  font-size: clamp(1.2rem, 4.6vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  color: #5b3df5;
+  text-align: center;
+}
+
+.pb-inviteRSVP {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0;
+}
+
+.pb-rsvpBtn {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.8rem 1rem;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(109, 94, 247, 0.2);
+  background: rgba(255, 255, 255, 0.98);
+  font-family: var(--invite-font-meta);
+  font-size: 0.96rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #5b3df5;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.pb-rsvpBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(109, 94, 247, 0.12);
+}
+
+.pb-rsvpBtn.is-active {
+  border-color: rgba(34, 197, 94, 0.42);
+  background: linear-gradient(180deg, rgba(134, 239, 172, 0.3), rgba(220, 252, 231, 0.9));
+  color: #166534;
+  box-shadow: 0 10px 22px rgba(34, 197, 94, 0.12);
+}
+
+.pb-rsvpBtn--notGoing.is-active {
+  border-color: rgba(248, 113, 113, 0.42);
+  background: linear-gradient(180deg, rgba(254, 202, 202, 0.34), rgba(254, 242, 242, 0.92));
+  color: #b91c1c;
+  box-shadow: 0 10px 22px rgba(239, 68, 68, 0.1);
+}
+
+.pb-rsvpBtn--maybe.is-active {
+  border-color: rgba(250, 204, 21, 0.42);
+  background: linear-gradient(180deg, rgba(254, 240, 138, 0.38), rgba(254, 249, 195, 0.92));
+  color: #a16207;
+  box-shadow: 0 10px 22px rgba(234, 179, 8, 0.1);
+}
+
+.pb-inviteCard__rsvpHint,
+.pb-inviteRSVP__note,
+.pb-inviteCard__accessText {
+  margin: 0;
+  text-align: center;
+  font-family: var(--invite-font-meta);
+  letter-spacing: -0.01em;
+}
+
+.pb-inviteCard__rsvpHint {
+  margin-top: 0.75rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #e07d67;
+}
+
+.pb-inviteRSVP__note {
+  margin-top: 0.5rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: rgba(79, 70, 216, 0.72);
+}
+
+.pb-inviteCard__accessText {
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.55;
+  color: rgba(63, 46, 121, 0.78);
+}
+
+.pb-inviteCard__accessActions {
+  margin-top: 0.95rem;
+  display: flex;
+  justify-content: center;
+  transform: translateY(-2%);
+  position: relative;
+  z-index: 2;
+}
+
+.pb-inviteCard__accessActions .pb-btn {
+  min-width: min(100%, 13rem);
+}
+
+.pb-inviteCard__accessBtn {
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+}
+
+.pb-inviteCard__accessBtnText {
+  position: relative;
+  z-index: 3;
+  display: inline-block;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.16),
+    0 0 1px rgba(0, 0, 0, 0.18);
+}
+
+.pb-inviteCard__footnote {
+  margin-top: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.pb-inviteCard__footnoteLabel {
+  font-family: var(--invite-font-meta);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(77, 67, 139, 0.64);
+}
+
+.pb-inviteCard__footnoteValue {
+  font-family: var(--invite-font-meta);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #ff8a5b;
+}
+
+@media (min-width: 520px) {
+  .pb-inviteCard__stack {
+    gap: 1.15rem;
+  }
+
+  .pb-inviteCard__panel {
+    padding: 1.2rem 1.15rem 1.1rem;
   }
 }

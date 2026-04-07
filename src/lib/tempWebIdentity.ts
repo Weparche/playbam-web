@@ -53,6 +53,6 @@ export function buildTemporaryIdentityHeaders(identity: TemporaryWebIdentity | n
 
   return {
     'X-Playbam-User-Email': identity.email,
-    'X-Playbam-User-Name': identity.parentName,
+    'X-Playbam-User-Name': encodeURIComponent(identity.parentName),
   }
 }

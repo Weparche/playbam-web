@@ -54,11 +54,12 @@
 }
 
 .pb-brand__mark {
-  width: 240px;
-  height: 240px;
+  width: 216px;
+  height: 216px;
   border-radius: 14px;
   object-fit: contain;
-  margin-top: 28px;
+  margin-top: 24px;
+  margin-left: -14px;
 }
 
 .pb-brand__text {
@@ -3250,6 +3251,29 @@
   color: rgba(16, 24, 40, 0.6);
 }
 
+.pb-inviteWishModal__metaRow--stack {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.pb-inviteWishModal__participants {
+  width: 100%;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.pb-inviteWishModal__participant {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.2rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(109, 94, 247, 0.08);
+  color: #4a43c5;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
 /* Javna pozivnica — Partiful-inspirirani layout (cover + bijeli panel) */
 .pb-inviteCard__stack {
   display: grid;
@@ -3822,17 +3846,18 @@
 
 .pb-inviteHero__logo {
   position: absolute;
-  top: 2.2%;
-  left: 5.2%;
-  width: 37%;
-  max-width: 8.6rem;
+  top: 1.8%;
+  left: 50%;
+  width: 28%;
+  max-width: 6.9rem;
   height: auto;
   object-fit: contain;
+  transform: translateX(-50%);
 }
 
 .pb-inviteHero__titleWrap--storybook {
   position: absolute;
-  top: 11.2%;
+  top: 10.1%;
   left: 50%;
   width: 72%;
   transform: translateX(-50%);
@@ -3846,14 +3871,14 @@
   font-weight: 800;
   line-height: 0.95;
   letter-spacing: -0.03em;
-  color: #7252e2;
-  -webkit-text-fill-color: #7252e2;
+  color: #336fd6;
+  -webkit-text-fill-color: #336fd6;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .pb-inviteHero__infoBlock {
   position: absolute;
-  top: 42.4%;
+  top: 39.9%;
   left: 50%;
   width: 77%;
   transform: translateX(-50%);
@@ -3867,7 +3892,7 @@
   justify-content: center;
   gap: 0.45rem;
   text-decoration: none;
-  color: #6a56d8;
+  color: #2f6fdd;
   margin: 0;
 }
 
@@ -3880,7 +3905,7 @@
   place-items: center;
   width: 1.15rem;
   height: 1.15rem;
-  color: #6a56d8;
+  color: #2f6fdd;
 }
 
 .pb-inviteHero__infoValue {
@@ -3889,7 +3914,7 @@
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  color: #6a56d8;
+  color: #2f6fdd;
   text-align: center;
 }
 
@@ -3903,7 +3928,7 @@
   font-family: var(--invite-font-meta);
   font-size: 0.62rem;
   font-weight: 800;
-  color: #6a56d8;
+  color: #2f6fdd;
   line-height: 1;
 }
 
@@ -3927,7 +3952,7 @@
 
 .pb-inviteHero__rsvpBlock--storybook {
   position: absolute;
-  top: 64.8%;
+  top: 63.3%;
   left: 50%;
   width: 71%;
   margin: 0;
@@ -3946,8 +3971,8 @@
   line-height: 1;
   letter-spacing: -0.02em;
   text-transform: none;
-  color: #6b55d8;
-  -webkit-text-fill-color: #6b55d8;
+  color: #2f6fdd;
+  -webkit-text-fill-color: #2f6fdd;
 }
 
 .pb-inviteHero__rsvpButtons--storybook {
@@ -3968,7 +3993,7 @@
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  color: #5f52f1;
+  color: #2f6fdd;
 }
 
 .pb-rsvpBtn--storybookGoing {
@@ -3994,7 +4019,7 @@
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.35;
-  color: #8f4f58;
+  color: #2f6fdd;
 }
 
 .pb-inviteHero__accessCard {

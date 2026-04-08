@@ -33,6 +33,18 @@ function wishlistBadgeLabel(status: InvitationWishlistItem['reservation']['statu
   return 'Na listi'
 }
 
+function isGroupGift(item: InvitationWishlistItem) {
+  return (item.reservation.participants?.length ?? 0) > 1
+}
+
+function getWishModalStatusLabel(item: InvitationWishlistItem) {
+  if (isGroupGift(item)) {
+    return 'Grupni poklon'
+  }
+
+  return wishlistBadgeLabel(item.reservation.status)
+}
+
 function wishlistPurchaseLabel(item: InvitationWishlistItem) {
   const reservationStatus = item.reservation.status
   const buyerName = item.reservation.reservedByName?.trim()
@@ -285,6 +297,7 @@ export default function PrivateInvitationGuest({
                         Boolean(currentGuestName) &&
                         item.addedByName?.trim().toLowerCase() === currentGuestName?.trim().toLowerCase()
                       const canReserve = reservationStatus === 'available'
+                      const canParticipate = reservationStatus === 'available' || reservationStatus === 'reserved'
                       const canDelete = reservationStatus === 'reserved_by_you' && isAddedByCurrentGuest
                       const canCancel = reservationStatus === 'reserved_by_you' && !isAddedByCurrentGuest
                       const imageUrl = resolveWishlistImageUrl(item)
@@ -335,16 +348,18 @@ export default function PrivateInvitationGuest({
                                     <Button type="button" onClick={() => onReserve(item)} disabled={isBusy}>
                                       {isBusy ? 'Spremamo...' : 'Rezerviraj'}
                                     </Button>
-                                    <Button
-                                      variant="ghost"
-                                      type="button"
-                                      className="pb-inviteWish__participateBtn"
-                                      onClick={() => onParticipate(item)}
-                                      disabled={isBusy}
-                                    >
-                                      {isBusy ? 'Spremamo...' : 'Sudjeluj'}
-                                    </Button>
                                   </>
+                                ) : null}
+                                {canParticipate ? (
+                                  <Button
+                                    variant="ghost"
+                                    type="button"
+                                    className="pb-inviteWish__participateBtn"
+                                    onClick={() => onParticipate(item)}
+                                    disabled={isBusy}
+                                  >
+                                    {isBusy ? 'Spremamo...' : 'Sudjeluj'}
+                                  </Button>
                                 ) : null}
                                 {canCancel ? (
                                   <Button variant="ghost" type="button" onClick={() => onCancel(item)} disabled={isBusy}>
@@ -533,13 +548,33 @@ export default function PrivateInvitationGuest({
                 <div className="pb-inviteWishModal__metaRow">
                   <span className="pb-inviteWishModal__metaLabel">Status</span>
                   <span className={wishlistBadgeClass(selectedWishItem.reservation.status)}>
-                    {wishlistBadgeLabel(selectedWishItem.reservation.status)}
+                    {getWishModalStatusLabel(selectedWishItem)}
                   </span>
                 </div>
+                {selectedWishItem.url ? (
+                  <div className="pb-inviteWishModal__metaRow">
+                    <span className="pb-inviteWishModal__metaLabel">Link</span>
+                    <a href={selectedWishItem.url} target="_blank" rel="noreferrer" className="pb-inviteWish__link">
+                      Pogledaj poklon
+                    </a>
+                  </div>
+                ) : null}
                 {selectedWishPurchaseLabel ? (
                   <div className="pb-inviteWishModal__metaRow">
                     <span className="pb-inviteWishModal__metaLabel">Poklon</span>
                     <span>{selectedWishPurchaseLabel}</span>
+                  </div>
+                ) : null}
+                {isGroupGift(selectedWishItem) ? (
+                  <div className="pb-inviteWishModal__metaRow pb-inviteWishModal__metaRow--stack">
+                    <span className="pb-inviteWishModal__metaLabel">Sudjeluju</span>
+                    <div className="pb-inviteWishModal__participants">
+                      {selectedWishItem.reservation.participants?.map((participant) => (
+                        <span key={participant.id} className="pb-inviteWishModal__participant">
+                          {participant.childName ? `${participant.name} - ${participant.childName}` : participant.name}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 ) : null}
               </div>

@@ -1278,13 +1278,19 @@ function groupHostRequestsByRsvpClean(requests: MembershipRequest[]) {
 
 function getGuestGiftSummaries(request: MembershipRequest, wishlistItems: InvitationWishlistItem[]) {
   return wishlistItems
-    .filter((item) => item.reservation.reservedByUserId === request.userId)
+    .filter(
+      (item) =>
+        item.reservation.reservedByUserId === request.userId ||
+        Boolean(item.reservation.participants?.some((participant) => participant.userId === request.userId)),
+    )
     .map((item) => ({
       id: item.id,
       title: item.title,
       details:
-        item.reservation.note?.trim() ||
-        (item.reservation.reservedForChildName ? `Za dijete: ${item.reservation.reservedForChildName}` : 'Kupuje poklon'),
+        item.reservation.reservedByUserId === request.userId
+          ? item.reservation.note?.trim() ||
+            (item.reservation.reservedForChildName ? `Za dijete: ${item.reservation.reservedForChildName}` : 'Kupuje poklon')
+          : 'Sudjeluje u grupnom poklonu',
     }))
 }
 

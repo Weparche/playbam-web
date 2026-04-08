@@ -173,6 +173,14 @@ export type InvitationWishlistReservation = {
   reservedByName?: string
   reservedForChildName?: string | null
   note?: string | null
+  participants?: Array<{
+    id: string
+    userId: string
+    name: string
+    childName?: string | null
+    createdAt: string
+    updatedAt: string
+  }>
   createdAt?: string
   updatedAt?: string
 }

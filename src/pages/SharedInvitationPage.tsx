@@ -563,7 +563,7 @@ export default function SharedInvitationPage() {
     } catch (caughtError) {
       setRequestError(
         isApiError(caughtError, 409)
-          ? 'Zahtjev je ve? poslan organizatoru.'
+          ? 'Zahtjev je već poslan organizatoru.'
           : 'Slanje zahtjeva trenutno nije uspjelo.',
       )
     } finally {
@@ -779,7 +779,7 @@ export default function SharedInvitationPage() {
       resetWishlistForm()
       await refreshWishlist(user)
     } catch {
-      setWishlistFormError('Spremanje ?elje trenutno nije uspjelo.')
+      setWishlistFormError('Spremanje želje trenutno nije uspjelo.')
     } finally {
       setSavingWishlistItem(false)
     }
@@ -1031,17 +1031,17 @@ export default function SharedInvitationPage() {
                     >
                       <span className="pb-privateToggle__copy">
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
-                        <span className="pb-privateToggle__title">Lista ?elja</span>
+                        <span className="pb-privateToggle__title">Lista želja</span>
                       </span>
                       <span className="pb-privateToggle__arrow" aria-hidden>
-                        ?
+                        →
                       </span>
                     </button>
 
                     {hostWishlistOpen ? (
                       <div className="pb-privateAccordionBody">
                         <p className="pb-flowCard__text pb-flowCard__text--hostWishlist">
-                          Dodaj, uredi i organiziraj ?elje za poklone. Ovdje vidi? i tko je ?to rezervirao.
+                          Dodaj, uredi i organiziraj želje za poklone. Ovdje vidiš i tko je što rezervirao.
                         </p>
 
                         <div className="pb-inviteHostAddWrap">

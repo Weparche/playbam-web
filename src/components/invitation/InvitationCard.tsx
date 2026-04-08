@@ -30,11 +30,12 @@ export default function InvitationCard({
   const dateText = invitation.date.trim() || 'Datum uskoro'
   const timeText = invitation.time.trim() || 'Vrijeme uskoro'
   const venueText = invitation.location.trim() || 'Lokacija uskoro'
-  const backgroundImage = invitation.coverImage?.trim() || '/pozivnica-bg.png'
-  const rsvpNote =
-    access === 'private' || guestRsvpHint
-      ? null
-      : 'Sva tri gumba vode na prijavu i privatni dio pozivnice s listom želja i ostalim detaljima rođendana.'
+  const backgroundImage = '/rocko.png'
+  const accessTitle = access === 'private' ? 'Privatni dio pozivnice' : 'Privatni dio pozivnice'
+  const accessText =
+    access === 'private'
+      ? 'Odluku možeš promijeniti do 24h prije rođendana.'
+      : 'Prijavi se za listu želja, potvrdu dolaska i privatne detalje.'
 
   const handleRsvpClick = (choice: 'going' | 'not_going' | 'maybe') => {
     if (rsvpActive) {
@@ -48,7 +49,7 @@ export default function InvitationCard({
   }
 
   return (
-    <section className="pb-inviteCard pb-inviteCard--premium" aria-label="Web pozivnica za rođendan">
+    <section className="pb-inviteCard pb-inviteCard--storybook" aria-label="Web pozivnica za rođendan">
       <div className="pb-inviteCard__stack">
         <PublicInvitationHero
           celebrantTitle={celebrantTitle}
@@ -60,8 +61,9 @@ export default function InvitationCard({
           showRsvp={showGuestRsvp}
           rsvp={rsvp}
           guestRsvpHint={guestRsvpHint}
-          rsvpNote={rsvpNote}
           onRsvpClick={handleRsvpClick}
+          accessTitle={accessTitle}
+          accessText={accessText}
         />
       </div>
     </section>

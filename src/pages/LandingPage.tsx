@@ -90,6 +90,9 @@ export default function LandingPage() {
               </p>
 
               <div className="pb-hero__ctaRow">
+                <LinkButton variant="amber" href="/kreiraj-pozivnicu">
+                  Kreiraj pozivnicu
+                </LinkButton>
                 <LinkButton variant="primary" href="#download">
                   Preuzmi aplikaciju
                 </LinkButton>
@@ -396,6 +399,9 @@ export default function LandingPage() {
                 </div>
 
                 <div className="pb-ctaRow pb-ctaRow--stack">
+                  <LinkButton variant="amber" href="/kreiraj-pozivnicu">
+                    Kreiraj pozivnicu
+                  </LinkButton>
                   <LinkButton variant="primary" href="/pozivnica-demo">
                     Otvori demo pozivnicu
                   </LinkButton>
@@ -462,8 +468,8 @@ export default function LandingPage() {
                     <div className="pb-downloadCard__item">Potvrde dolaska</div>
                   </div>
                   <div className="pb-downloadCard__cta">
-                    <LinkButton variant="amber" href="/pozivnica-demo">
-                      Pogledaj demo pozivnicu
+                    <LinkButton variant="amber" href="/kreiraj-pozivnicu">
+                      Kreiraj pozivnicu
                     </LinkButton>
                   </div>
                 </div>

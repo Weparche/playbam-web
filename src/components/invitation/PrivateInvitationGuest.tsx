@@ -10,6 +10,7 @@ type Props = {
   wishlistActionId: string | null
   currentGuestName: string | null
   onReserve: (item: InvitationWishlistItem) => void
+  onParticipate: (item: InvitationWishlistItem) => void
   onCancel: (item: InvitationWishlistItem) => void
   onAddWishlistItem: (payload: InvitationWishlistPayload) => void
   onDeleteWishlistItem: (item: InvitationWishlistItem) => void
@@ -74,10 +75,10 @@ const PARTY_DETAILS = [
 ]
 
 const VENUE_GALLERY = [
-  'https://jogica.com.hr/Galerija/slika2.jpg',
-  'https://jogica.com.hr/Galerija/slika3.jpg',
-  'https://jogica.com.hr/Galerija/slika4.jpg',
-  'https://jogica.com.hr/Galerija/slika5.jpg',
+  'https://jogica.com.hr/wp-content/uploads/2026/04/20260216_175918.jpg',
+  'https://jogica.com.hr/wp-content/uploads/2026/04/20260216_183628.jpg',
+  'https://jogica.com.hr/wp-content/uploads/2026/04/20260401_182003.jpg',
+  'https://jogica.com.hr/wp-content/uploads/2026/04/jogica-1.jpg',
 ]
 
 const VENUE_DETAILS = [
@@ -95,6 +96,7 @@ export default function PrivateInvitationGuest({
   wishlistActionId,
   currentGuestName,
   onReserve,
+  onParticipate,
   onCancel,
   onAddWishlistItem,
   onDeleteWishlistItem,
@@ -329,9 +331,20 @@ export default function PrivateInvitationGuest({
                             <div className="pb-inviteWish__actions" onClick={(event) => event.stopPropagation()}>
                               <div className="pb-inviteWish__btnRow">
                                 {canReserve ? (
-                                  <Button type="button" onClick={() => onReserve(item)} disabled={isBusy}>
-                                    {isBusy ? 'Spremamo...' : 'Rezerviraj'}
-                                  </Button>
+                                  <>
+                                    <Button type="button" onClick={() => onReserve(item)} disabled={isBusy}>
+                                      {isBusy ? 'Spremamo...' : 'Rezerviraj'}
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      type="button"
+                                      className="pb-inviteWish__participateBtn"
+                                      onClick={() => onParticipate(item)}
+                                      disabled={isBusy}
+                                    >
+                                      {isBusy ? 'Spremamo...' : 'Sudjeluj'}
+                                    </Button>
+                                  </>
                                 ) : null}
                                 {canCancel ? (
                                   <Button variant="ghost" type="button" onClick={() => onCancel(item)} disabled={isBusy}>

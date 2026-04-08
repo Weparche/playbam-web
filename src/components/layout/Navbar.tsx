@@ -25,10 +25,6 @@ export default function Navbar() {
       <div className="pb-container pb-nav__inner">
         <div className="pb-brand" aria-label="Playbam.hr">
           <img src="/playbam-logo.png" alt="Playbam.hr" className="pb-brand__mark" />
-          {/* <div className="pb-brand__text">
-            <span className="pb-brand__name">Playbam.hr</span>
-            <span className="pb-brand__tag">dječji rođendani</span>
-          </div> */}
         </div>
 
         <nav className="pb-nav__links" aria-label="Glavna navigacija">
@@ -43,13 +39,9 @@ export default function Navbar() {
           <Link to="/pozivnica-demo" className="pb-nav__demoLink">
             Pogledaj demo
           </Link>
-          <a
-            href="#download"
-            className="pb-nav__download"
-            onClick={() => setOpen(false)}
-          >
-            Preuzmi aplikaciju
-          </a>
+          <Link to="/kreiraj-pozivnicu" className="pb-nav__download">
+            Kreiraj pozivnicu
+          </Link>
         </div>
 
         <button
@@ -89,11 +81,11 @@ export default function Navbar() {
               </LinkButton>
               <LinkButton
                 variant="amber"
-                href="#download"
+                href="/kreiraj-pozivnicu"
                 onClick={() => setOpen(false)}
                 className="pb-nav__mobileBtn"
               >
-                Preuzmi aplikaciju
+                Kreiraj pozivnicu
               </LinkButton>
             </div>
           </div>

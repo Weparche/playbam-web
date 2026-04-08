@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
 import { AuthProvider } from './context/AuthContext'
+import CreateInvitationPage from './pages/CreateInvitationPage'
 import LandingPage from './pages/LandingPage'
 import SharedInvitationPage from './pages/SharedInvitationPage'
 
@@ -22,6 +23,7 @@ export default function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/kreiraj-pozivnicu" element={<CreateInvitationPage />} />
           <Route path="/pozivnica-demo" element={<Navigate to="/pozivnica/luka-istrazivaci" replace />} />
           <Route path="/pozivnica/:token" element={<SharedInvitationPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

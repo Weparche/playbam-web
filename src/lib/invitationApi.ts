@@ -62,6 +62,24 @@ export type PublicInvitation = {
   webShareUrl: string
 }
 
+export type CreateInvitationPayload = {
+  title: string
+  celebrantName: string
+  date: string
+  time: string
+  location: string
+  message?: string | null
+  coverImage?: string | null
+  theme?: string | null
+}
+
+export type CreateInvitationResponse = {
+  id: string
+  shareToken: string
+  publicSlug: string
+  webShareUrl: string
+}
+
 export type InvitationAccess = {
   invitationId: string
   publicAccess: boolean
@@ -263,6 +281,14 @@ export function getPublicInvitation(token: string) {
   // Bez identity zaglavlja — jednostavan GET, nema CORS preflighta
   return request<PublicInvitation>(`/api/public/invitations/${encodeURIComponent(token)}`, {
     identity: null,
+  })
+}
+
+export function createInvitation(payload: CreateInvitationPayload, identity?: TemporaryWebIdentity | null) {
+  return request<CreateInvitationResponse>('/api/invitations', {
+    method: 'POST',
+    body: payload,
+    identity,
   })
 }
 

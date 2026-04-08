@@ -8,7 +8,7 @@ type Props = {
   rsvp?: 'going' | 'not_going' | 'maybe' | null
   canSubmitRsvp?: boolean
   onRsvpChange?: (response: 'going' | 'not_going' | 'maybe') => void
-  onGuestRsvpIntent?: () => void
+  onGuestRsvpIntent?: (choice: 'going' | 'not_going' | 'maybe') => void
   guestRsvpHint?: string | null
 }
 
@@ -43,7 +43,7 @@ export default function InvitationCard({
     }
 
     if (rsvpGate) {
-      onGuestRsvpIntent()
+      onGuestRsvpIntent(choice)
     }
   }
 

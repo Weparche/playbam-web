@@ -2420,6 +2420,12 @@
   color: #b42318;
 }
 
+.pb-inviteWish__participateBtn.pb-btn-ghost {
+  background: rgba(109, 94, 247, 0.12);
+  border-color: rgba(109, 94, 247, 0.22);
+  color: #5b3df5;
+}
+
 .pb-inviteSavings {
   background:
     radial-gradient(180px 90px at 18% 0%, rgba(255, 255, 255, 0.7), transparent 60%),
@@ -2759,6 +2765,66 @@
   margin-top: clamp(1.35rem, 6vw, 2rem);
 }
 
+.pb-createInvitePage {
+  display: grid;
+  gap: 1rem;
+  max-width: 48rem;
+}
+
+.pb-createInvitePage__session {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.pb-createInvitePage__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.pb-createInvitePage__chip {
+  min-height: 2.4rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(30, 123, 230, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: rgba(16, 24, 40, 0.8);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.pb-createInvitePage__chip.is-active {
+  border-color: rgba(30, 123, 230, 0.28);
+  background: rgba(30, 123, 230, 0.1);
+  color: #0b3f86;
+  box-shadow: 0 10px 24px rgba(30, 123, 230, 0.12);
+}
+
+.pb-createInvitePage__dateTime {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.pb-createInvitePage__textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+}
+
+@media (min-width: 720px) {
+  .pb-createInvitePage__session {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pb-createInvitePage__dateTime {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .pb-wishlistItem {
   display: grid;
   gap: 12px;
@@ -2843,6 +2909,22 @@
   border-radius: 16px;
   border: 1px solid rgba(22, 24, 35, 0.1);
   background: rgba(255, 255, 255, 0.78);
+}
+
+.pb-hostRequestItem--clickable {
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.pb-hostRequestItem--clickable:hover {
+  transform: translateY(-1px);
+  border-color: rgba(91, 61, 245, 0.2);
+  box-shadow: 0 10px 24px rgba(91, 61, 245, 0.08);
+}
+
+.pb-hostRequestItem--clickable:focus-visible {
+  outline: 3px solid rgba(91, 61, 245, 0.24);
+  outline-offset: 3px;
 }
 
 .pb-hostRequestItem__main {
@@ -2941,6 +3023,69 @@
 .pb-hostRequestItem__removeBtn.pb-btn-ghost,
 .pb-hostRequestItem .pb-flowActions--compact .pb-btn {
   align-self: start;
+}
+
+.pb-hostGuestModal {
+  width: min(92vw, 31rem);
+}
+
+.pb-hostGuestModal__body {
+  display: grid;
+  gap: 1rem;
+}
+
+.pb-hostGuestModal__card {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: rgba(248, 248, 252, 0.96);
+  border: 1px solid rgba(22, 24, 35, 0.06);
+}
+
+.pb-hostGuestModal__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+.pb-hostGuestModal__label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: rgba(16, 24, 40, 0.6);
+}
+
+.pb-hostGuestModal__sectionTitle {
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: rgba(16, 24, 40, 0.88);
+}
+
+.pb-hostGuestModal__giftList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.pb-hostGuestModal__giftItem {
+  border-radius: 14px;
+  padding: 0.8rem 0.9rem;
+  background: #fff;
+  border: 1px solid rgba(22, 24, 35, 0.06);
+}
+
+.pb-hostGuestModal__giftTitle {
+  font-size: 0.88rem;
+  font-weight: 900;
+  color: rgba(16, 24, 40, 0.88);
+}
+
+.pb-hostGuestModal__giftMeta,
+.pb-hostGuestModal__empty {
+  margin-top: 0.22rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(16, 24, 40, 0.64);
 }
 
 .pb-hostWishlistItem__actions {

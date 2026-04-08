@@ -4001,12 +4001,21 @@
   border: 1px solid rgba(122, 122, 220, 0.22);
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 8px 18px rgba(148, 136, 217, 0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
   font-family: var(--invite-font-meta);
   font-size: 0.9rem;
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: #4f5d79;
+}
+
+.pb-rsvpBtn__emoji {
+  font-size: 1.2em;
+  line-height: 1;
 }
 
 .pb-rsvpBtn--storybookGoing {

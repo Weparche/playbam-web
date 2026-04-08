@@ -143,21 +143,24 @@ export default function PublicInvitationHero({
                   className={`pb-rsvpBtn pb-rsvpBtn--storybook pb-rsvpBtn--storybookGoing ${rsvp === 'going' ? 'is-active' : ''}`}
                   onClick={() => onRsvpClick?.('going')}
                 >
-                  🥳 Dolazimo
+                  <span className="pb-rsvpBtn__emoji" aria-hidden>🥳</span>
+                  <span>Dolazimo</span>
                 </button>
                 <button
                   type="button"
                   className={`pb-rsvpBtn pb-rsvpBtn--storybook pb-rsvpBtn--storybookNotGoing ${rsvp === 'not_going' ? 'is-active' : ''}`}
                   onClick={() => onRsvpClick?.('not_going')}
                 >
-                  ❤️ Ne dolazimo
+                  <span className="pb-rsvpBtn__emoji" aria-hidden>💔</span>
+                  <span>Ne dolazimo</span>
                 </button>
                 <button
                   type="button"
                   className={`pb-rsvpBtn pb-rsvpBtn--storybook pb-rsvpBtn--storybookMaybe ${rsvp === 'maybe' ? 'is-active' : ''}`}
                   onClick={() => onRsvpClick?.('maybe')}
                 >
-                  ✨ Možda
+                  <span className="pb-rsvpBtn__emoji" aria-hidden>🤔</span>
+                  <span>Možda</span>
                 </button>
               </div>
               {guestRsvpHint ? <p className="pb-inviteHero__rsvpHint pb-inviteHero__rsvpHint--storybook">{guestRsvpHint}</p> : null}

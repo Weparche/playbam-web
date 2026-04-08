@@ -13,36 +13,37 @@ type Props = {
   onRsvpClick?: (choice: 'going' | 'not_going' | 'maybe') => void
   accessTitle: string
   accessText: string
+  showAccessCard?: boolean
 }
 
 function IconCalendar() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="2.35" />
+      <path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" strokeWidth="2.35" strokeLinecap="round" />
     </svg>
   )
 }
 
 function IconClock() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
-      <path d="M12 7v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.35" />
+      <path d="M12 7v6l4 2" stroke="currentColor" strokeWidth="2.35" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
 
 function IconPin() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10Z"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="2.45"
         strokeLinejoin="round"
       />
-      <circle cx="12" cy="11" r="2.4" fill="currentColor" />
+      <circle cx="12" cy="11" r="2.7" fill="currentColor" />
     </svg>
   )
 }
@@ -69,8 +70,9 @@ export default function PublicInvitationHero({
   onRsvpClick,
   accessTitle,
   accessText,
+  showAccessCard = true,
 }: Props) {
-  const fallbackImage = '/pozivnica-boys.png'
+  const fallbackImage = '/pozivnica-bg.png'
   const [heroImage, setHeroImage] = useState(backgroundImage || fallbackImage)
   const [titlePrimary, titleSecondary = ''] = celebrantTitle.split('|')
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venueText)}`
@@ -120,7 +122,7 @@ export default function PublicInvitationHero({
             </div>
 
             <a className="pb-inviteHero__infoRow pb-inviteHero__infoRow--venue" href={mapsUrl} target="_blank" rel="noreferrer">
-              <span className="pb-inviteHero__infoIcon" aria-hidden>
+              <span className="pb-inviteHero__infoIcon pb-inviteHero__infoIcon--venue" aria-hidden>
                 <IconPin />
               </span>
               <span className="pb-inviteHero__infoVenueWrap">
@@ -162,15 +164,17 @@ export default function PublicInvitationHero({
             </div>
           ) : null}
 
-          <div className="pb-inviteHero__accessCard">
-            <div className="pb-inviteHero__accessIcon" aria-hidden>
-              <IconLock />
+          {showAccessCard ? (
+            <div className="pb-inviteHero__accessCard">
+              <div className="pb-inviteHero__accessIcon" aria-hidden>
+                <IconLock />
+              </div>
+              <div className="pb-inviteHero__accessBody">
+                <div className="pb-inviteHero__accessTitle">{accessTitle}</div>
+                <div className="pb-inviteHero__accessText">{accessText}</div>
+              </div>
             </div>
-            <div className="pb-inviteHero__accessBody">
-              <div className="pb-inviteHero__accessTitle">{accessTitle}</div>
-              <div className="pb-inviteHero__accessText">{accessText}</div>
-            </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </section>

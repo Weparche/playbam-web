@@ -51,7 +51,7 @@ export default function InvitationCard({
   onGuestRsvpIntent,
   guestRsvpHint = null,
 }: Props) {
-  const message = invitation.message?.trim() || 'Veselimo se druženju s vama!'
+  const message = 'Vidimo se na tulumu!'
   const showGuestRsvp = !isHost
   const rsvpActive = canSubmitRsvp && typeof onRsvpChange === 'function'
   const rsvpGate = showGuestRsvp && typeof onGuestRsvpIntent === 'function'
@@ -59,7 +59,7 @@ export default function InvitationCard({
   const dateText = formatInvitationDate(invitation.date.trim())
   const timeText = formatInvitationTime(invitation.time.trim())
   const venueText = invitation.location.trim() || 'Lokacija uskoro'
-  const backgroundImage = '/pozivnica-boys.png'
+  const backgroundImage = '/pozivnica-bg.png'
   const accessTitle = 'Privatni dio pozivnice'
   const accessText =
     access === 'private'
@@ -93,6 +93,7 @@ export default function InvitationCard({
           onRsvpClick={handleRsvpClick}
           accessTitle={accessTitle}
           accessText={accessText}
+          showAccessCard={access !== 'private'}
         />
       </div>
     </section>

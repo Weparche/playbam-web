@@ -326,6 +326,34 @@ export default function SharedInvitationPage() {
     }
   }, [guestModalOpen, isHost])
 
+  useEffect(() => {
+    if (!hostRequestsOpen || !invitation || (!user && !hasHostSession) || !isHost) {
+      return
+    }
+
+    const currentInvitation = invitation
+    let cancelled = false
+
+    async function refreshHostRequests() {
+      try {
+        const requests = await listMembershipRequests(currentInvitation.id, user ?? undefined)
+        if (!cancelled) {
+          setHostRequests(requests)
+        }
+      } catch {
+        if (!cancelled) {
+          setHostError('Zahtjevi za pristup trenutno nisu dostupni.')
+        }
+      }
+    }
+
+    void refreshHostRequests()
+
+    return () => {
+      cancelled = true
+    }
+  }, [hostRequestsOpen, invitation, user, hasHostSession, isHost])
+
   const resetWishlistForm = () => {
     setWishlistDraft(createWishlistDraft())
     setEditingWishlistItemId(null)
@@ -903,6 +931,115 @@ export default function SharedInvitationPage() {
                 guestRsvpHint={guestRsvpHint}
               />
 
+              {(user || hasHostSession) && !loadingPrivateState && isHost ? (
+                <>
+                  <section
+                    className="pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel"
+                    aria-labelledby="host-requests-toggle"
+                  >
+                    <button
+                      id="host-requests-toggle"
+                      type="button"
+                      className={`pb-privateToggle ${hostRequestsOpen ? 'is-open' : ''}`}
+                      onClick={() => setHostRequestsOpen((current) => !current)}
+                      aria-expanded={hostRequestsOpen}
+                    >
+                      <span className="pb-privateToggle__copy">
+                        <span className="pb-privateToggle__eyebrow">Organizator</span>
+                        <span className="pb-privateToggle__title">Zahtjevi za pristup</span>
+                      </span>
+                      <span className="pb-privateToggle__arrow" aria-hidden>
+                        v
+                      </span>
+                    </button>
+                    {hostRequestsOpen ? (
+                      <div className="pb-privateAccordionBody">
+                        <div className="pb-privateDetails">
+                          {hostError ? <div className="pb-inlineNote pb-inlineNote--error">{hostError}</div> : null}
+                          <HostRequestList
+                            requests={hostRequests}
+                            reviewingRequestId={reviewingRequestId}
+                            onReview={handleReview}
+                          />
+                        </div>
+                      </div>
+                    ) : null}
+                  </section>
+                  <section
+                    className="pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel"
+                    aria-labelledby="host-wishlist-toggle"
+                  >
+                    <button
+                      id="host-wishlist-toggle"
+                      type="button"
+                      className={`pb-privateToggle ${hostWishlistOpen ? 'is-open' : ''}`}
+                      onClick={() => setHostWishlistOpen((current) => !current)}
+                      aria-expanded={hostWishlistOpen}
+                    >
+                      <span className="pb-privateToggle__copy">
+                        <span className="pb-privateToggle__eyebrow">Organizator</span>
+                        <span className="pb-privateToggle__title">Lista zelja</span>
+                      </span>
+                      <span className="pb-privateToggle__arrow" aria-hidden>
+                        v
+                      </span>
+                    </button>
+                    {hostWishlistOpen ? (
+                      <div className="pb-privateAccordionBody">
+                        <div className="pb-privateWishlist pb-privateWishlist--host">
+                          <section className="pb-inviteHostAddWrap">
+                            <button
+                              type="button"
+                              className={`pb-privateToggle pb-privateToggle--inner ${hostAddGiftOpen ? 'is-open' : ''}`}
+                              onClick={() => setHostAddGiftOpen((current) => !current)}
+                              aria-expanded={hostAddGiftOpen}
+                            >
+                              <span className="pb-privateToggle__copy">
+                                <span className="pb-privateToggle__eyebrow">Organizator</span>
+                                <span className="pb-privateToggle__title">Dodaj poklon</span>
+                              </span>
+                              <span className="pb-privateToggle__arrow" aria-hidden>
+                                v
+                              </span>
+                            </button>
+                            {hostAddGiftOpen ? (
+                              <div className="pb-inviteHostAddBody">
+                                <WishlistForm
+                                  draft={wishlistDraft}
+                                  error={wishlistFormError}
+                                  saving={savingWishlistItem}
+                                  isEditing={Boolean(editingWishlistItemId)}
+                                  imageName={hostWishlistImageName}
+                                  onChange={setWishlistDraft}
+                                  onSave={handleWishlistSave}
+                                  onCancel={resetWishlistForm}
+                                  onImageChange={handleHostWishlistImageChange}
+                                />
+                              </div>
+                            ) : null}
+                          </section>
+                          {wishlistError ? <div className="pb-inlineNote pb-inlineNote--error">{wishlistError}</div> : null}
+                          {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">Ucitavanje liste zelja...</div> : null}
+                          {!wishlistLoading && wishlistItems.length === 0 ? (
+                            <div className="pb-inlineNote pb-inlineNote--info">Jos nema dodanih zelja.</div>
+                          ) : null}
+                          {wishlistItems.length > 0 ? (
+                            <HostWishlistSection
+                              items={wishlistItems}
+                              actionItemId={wishlistActionId}
+                              editingItemId={editingWishlistItemId}
+                              onEdit={handleWishlistEdit}
+                              onDelete={handleWishlistDelete}
+                              onReleaseReservation={handleHostReleaseReservation}
+                            />
+                          ) : null}
+                        </div>
+                      </div>
+                    ) : null}
+                  </section>
+                </>
+              ) : null}
+
               {(user || hasHostSession) && loadingPrivateState ? (
                 <Card className="pb-flowCard">
                   <h2 className="pb-flowCard__title">Pripremamo tvoj pristup</h2>
@@ -974,7 +1111,7 @@ export default function SharedInvitationPage() {
                 </Card>
               ) : null}
 
-              {(user || hasHostSession) && !loadingPrivateState && isHost ? (
+              {false && (user || hasHostSession) && !loadingPrivateState && isHost ? (
                 <>
                   <section
                     className="pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel"
@@ -1242,15 +1379,15 @@ function HostRequestList({
 
   const getRsvpLabel = (request: MembershipRequest) => {
     if (!request.rsvp) {
-      return 'Gost još nije odgovorio'
+      return request.status === 'approved' ? 'Odgovor jos nije ucitan' : 'Gost jos nije odgovorio'
     }
     if (request.rsvp.status === 'going') {
-      return 'Dolazi'
+      return 'Dolazimo'
     }
     if (request.rsvp.status === 'not_going') {
-      return 'Ne dolazi'
+      return 'Ne dolazimo'
     }
-    return 'Možda'
+    return 'Mozda dolazimo'
   }
 
   return (

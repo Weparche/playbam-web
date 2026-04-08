@@ -54,8 +54,8 @@
 }
 
 .pb-brand__mark {
-  width: 216px;
-  height: 216px;
+  width: 173px;
+  height: 173px;
   border-radius: 14px;
   object-fit: contain;
   margin-top: 24px;
@@ -3848,8 +3848,8 @@
   position: absolute;
   top: 0.4%;
   left: 50%;
-  width: 33.6%;
-  max-width: 8.3rem;
+  width: 30.24%;
+  max-width: 7.45rem;
   height: auto;
   object-fit: contain;
   transform: translateX(-50%);
@@ -4006,28 +4006,28 @@
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  color: #2f6fdd;
+  color: #4f5d79;
 }
 
 .pb-rsvpBtn--storybookGoing {
-  color: #21734e;
-  background: linear-gradient(180deg, rgba(227, 253, 233, 0.95), rgba(214, 248, 221, 0.96));
-  border-color: rgba(104, 214, 148, 0.45);
+  color: #4f5d79;
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(122, 122, 220, 0.22);
 }
 
 .pb-rsvpBtn--storybookNotGoing {
-  color: #b24955;
-  background: linear-gradient(180deg, rgba(255, 239, 241, 0.96), rgba(255, 228, 232, 0.96));
-  border-color: rgba(228, 134, 149, 0.42);
+  color: #4f5d79;
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(122, 122, 220, 0.22);
 }
 
 .pb-rsvpBtn--storybookMaybe {
   grid-column: 1 / -1;
   width: calc(50% - 0.275rem);
   justify-self: center;
-  color: #a56b00;
-  background: linear-gradient(180deg, rgba(255, 248, 220, 0.96), rgba(255, 241, 186, 0.96));
-  border-color: rgba(233, 196, 87, 0.46);
+  color: #4f5d79;
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(122, 122, 220, 0.22);
 }
 
 .pb-rsvpBtn--storybook.is-active {
@@ -4037,15 +4037,27 @@
 }
 
 .pb-rsvpBtn--storybookNotGoing.is-active {
+  color: #b24955;
+  background: linear-gradient(180deg, rgba(255, 239, 241, 0.96), rgba(255, 228, 232, 0.96));
+  border-color: rgba(228, 134, 149, 0.42);
   box-shadow:
     0 12px 22px rgba(223, 124, 139, 0.2),
     inset 0 0 0 2px rgba(223, 124, 139, 0.22);
 }
 
 .pb-rsvpBtn--storybookMaybe.is-active {
+  color: #a56b00;
+  background: linear-gradient(180deg, rgba(255, 248, 220, 0.96), rgba(255, 241, 186, 0.96));
+  border-color: rgba(233, 196, 87, 0.46);
   box-shadow:
     0 12px 22px rgba(222, 186, 88, 0.22),
     inset 0 0 0 2px rgba(222, 186, 88, 0.24);
+}
+
+.pb-rsvpBtn--storybookGoing.is-active {
+  color: #21734e;
+  background: linear-gradient(180deg, rgba(227, 253, 233, 0.95), rgba(214, 248, 221, 0.96));
+  border-color: rgba(104, 214, 148, 0.45);
 }
 
 .pb-inviteHero__rsvpHint--storybook {

@@ -74,9 +74,9 @@ const PARTY_DETAILS = [
 ]
 
 const VENUE_GALLERY = [
-  'https://jogica.com.hr/Galerija/slika2.jpg',
-  'https://jogica.com.hr/Galerija/slika3.jpg',
-  'https://jogica.com.hr/Galerija/slika4.jpg',
+  '/pozivnica-bg1.png',
+  '/pozivnica-bg.png',
+  '/listazelja.jpeg',
 ]
 
 const VENUE_DETAILS = [

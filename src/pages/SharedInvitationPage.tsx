@@ -323,7 +323,7 @@ export default function SharedInvitationPage() {
             return
           }
 
-          setHostRequests(requests)
+          setHostRequests(requests.filter((request) => request.status !== 'rejected'))
           setWishlistItems(wishlist)
           setFamilyProfile(null)
           setMembershipRequest(null)
@@ -536,7 +536,7 @@ export default function SharedInvitationPage() {
     try {
       await reviewMembershipRequest(invitation.id, requestId, action, user ?? null)
       const requests = await listMembershipRequests(invitation.id, user ?? null)
-      setHostRequests(requests)
+      setHostRequests(requests.filter((request) => request.status !== 'rejected'))
     } catch {
       setHostError('Promjena statusa zahtjeva trenutno nije uspjela.')
     } finally {

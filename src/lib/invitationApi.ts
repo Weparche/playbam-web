@@ -122,6 +122,11 @@ export type MembershipRequest = {
     id: string
     parentName: string
   } | null
+  rsvp: {
+    status: 'going' | 'not_going' | 'maybe'
+    note: string | null
+    updatedAt: string
+  } | null
   children: Array<{
     id: string
     familyProfileId: string

@@ -2663,6 +2663,10 @@
   gap: 12px;
 }
 
+.pb-wishlist--host {
+  margin-top: 0.65rem;
+}
+
 .pb-wishlistItem {
   display: grid;
   gap: 12px;
@@ -2670,6 +2674,22 @@
   border-radius: 18px;
   border: 1px solid rgba(22, 24, 35, 0.1);
   background: rgba(255, 255, 255, 0.72);
+}
+
+.pb-wishlistItem--host {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.pb-wishlistItem__main {
+  min-width: 0;
+}
+
+.pb-wishlistItem__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .pb-wishlistItem__title {
@@ -2693,6 +2713,8 @@
 
 .pb-hostRequestItem {
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
   gap: 14px;
   padding: 14px;
   border-radius: 18px;
@@ -2700,9 +2722,23 @@
   background: rgba(255, 255, 255, 0.72);
 }
 
+.pb-hostRequestItem__main {
+  min-width: 0;
+}
+
+.pb-hostRequestItem__side {
+  display: grid;
+  justify-items: end;
+  align-content: start;
+  gap: 8px;
+  min-width: 9rem;
+}
+
 .pb-hostRequestItem .pb-flowActions--compact {
-  align-self: center;
+  align-self: start;
   justify-self: end;
+  margin-top: 0;
+  gap: 8px;
 }
 
 .pb-hostRequestItem__title {
@@ -2716,6 +2752,13 @@
   font-weight: 800;
 }
 
+.pb-hostRequestItem__rsvp {
+  font-size: 13px;
+  font-weight: 900;
+  color: rgba(16, 24, 40, 0.74);
+  text-align: right;
+}
+
 .pb-hostRequestItem__removeBtn.pb-btn-ghost {
   background: rgba(229, 72, 77, 0.12);
   border-color: rgba(229, 72, 77, 0.2);
@@ -2724,22 +2767,57 @@
 
 .pb-hostRequestItem__removeBtn.pb-btn-ghost,
 .pb-hostRequestItem .pb-flowActions--compact .pb-btn {
-  align-self: center;
+  align-self: start;
+}
+
+.pb-hostWishlistItem__actions {
+  display: grid;
+  justify-items: end;
+  align-content: start;
+  gap: 8px;
+  min-width: 8.75rem;
+}
+
+.pb-hostWishlistItem__image {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid rgba(22, 24, 35, 0.1);
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.08);
 }
 
 .pb-inviteHostPanel .pb-privateWishlist {
-  padding-top: calc(1rem + 15%);
+  padding: 0.95rem 1rem 1rem;
 }
 
-.pb-inviteHostPanel .pb-privateWishlist .pb-flowCard__text {
-  color: #1f2430;
-  margin-top: 0;
+.pb-flowCard__text--hostWishlist {
+  color: #111111;
+  margin-top: 0.75rem;
+  margin-bottom: 0.55rem;
 }
 
-.pb-inviteHostPanel .pb-privateWishlist .pb-profileForm,
-.pb-inviteHostPanel .pb-privateWishlist .pb-inlineNote,
-.pb-inviteHostPanel .pb-privateWishlist .pb-wishlist {
-  transform: translateY(15%);
+.pb-inviteHostAddWrap {
+  margin-top: 0.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.pb-privateToggle--inner {
+  border-radius: 18px;
+  padding: 0.88rem 0.95rem;
+  background:
+    radial-gradient(120px 60px at 18% 0%, rgba(255, 255, 255, 0.78), transparent 60%),
+    linear-gradient(145deg, rgba(109, 94, 247, 0.08), rgba(255, 255, 255, 0.94));
+  border: 1px solid rgba(109, 94, 247, 0.08);
+}
+
+.pb-inviteHostAddBody {
+  margin-top: 0.55rem;
+}
+
+.pb-inviteHostPanel .pb-wishlist,
+.pb-inviteHostPanel .pb-inlineNote {
+  margin-top: 0.55rem;
 }
 
 .pb-statusBadge {
@@ -2787,6 +2865,55 @@
     grid-template-columns: 1fr 220px;
     align-items: end;
   }
+}
+
+.pb-inviteWish--clickable {
+  cursor: pointer;
+}
+
+.pb-inviteWish--clickable:focus-visible {
+  outline: 3px solid rgba(109, 94, 247, 0.26);
+  outline-offset: 3px;
+}
+
+.pb-inviteWishModal {
+  width: min(92vw, 31rem);
+}
+
+.pb-inviteWishModal__body {
+  display: grid;
+  gap: 1rem;
+}
+
+.pb-inviteWishModal__image {
+  width: 100%;
+  aspect-ratio: 1.18 / 1;
+  object-fit: cover;
+  border-radius: 22px;
+  border: 1px solid rgba(22, 24, 35, 0.08);
+  box-shadow: 0 14px 32px rgba(16, 24, 40, 0.1);
+}
+
+.pb-inviteWishModal__meta {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.pb-inviteWishModal__metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 16px;
+  background: rgba(248, 248, 252, 0.96);
+  border: 1px solid rgba(22, 24, 35, 0.06);
+}
+
+.pb-inviteWishModal__metaLabel {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: rgba(16, 24, 40, 0.6);
 }
 
 /* Public invitation hero layout on top of the provided mobile illustration */

@@ -111,6 +111,7 @@ export default function PrivateInvitationGuest({
   const [giftImageUrl, setGiftImageUrl] = useState<string | null>(null)
   const [giftImageName, setGiftImageName] = useState('')
   const [giftFormError, setGiftFormError] = useState('')
+  const [selectedWishItem, setSelectedWishItem] = useState<InvitationWishlistItem | null>(null)
 
   const resetGiftForm = () => {
     setGiftTitle('')
@@ -170,7 +171,11 @@ export default function PrivateInvitationGuest({
     resetGiftForm()
   }
 
+  const selectedWishImageUrl = selectedWishItem ? resolveWishlistImageUrl(selectedWishItem) : null
+  const selectedWishPurchaseLabel = selectedWishItem ? wishlistPurchaseLabel(selectedWishItem) : null
+
   return (
+    <>
     <div className="pb-invitePrivateStack">
       <section className="pb-invitePrivateCard pb-invitePrivateCard--intro" aria-labelledby="private-invite-title">
         <h2 id="private-invite-title" className="pb-invitePrivateCard__title">
@@ -266,7 +271,19 @@ export default function PrivateInvitationGuest({
                     const purchaseLabel = wishlistPurchaseLabel(item)
 
                     return (
-                      <li key={item.id} className="pb-inviteWish pb-inviteWish--compact">
+                      <li
+                        key={item.id}
+                        className="pb-inviteWish pb-inviteWish--compact pb-inviteWish--clickable"
+                        onClick={() => setSelectedWishItem(item)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault()
+                            setSelectedWishItem(item)
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                      >
                         <div className="pb-inviteWish__thumbWrap">
                           {imageUrl ? (
                             <img src={imageUrl} alt="" className="pb-inviteWish__thumbImage" loading="lazy" />
@@ -291,7 +308,7 @@ export default function PrivateInvitationGuest({
 
                         <div className="pb-inviteWish__side">
                           <span className={wishlistBadgeClass(reservationStatus)}>{wishlistBadgeLabel(reservationStatus)}</span>
-                          <div className="pb-inviteWish__actions">
+                          <div className="pb-inviteWish__actions" onClick={(event) => event.stopPropagation()}>
                             <div className="pb-inviteWish__btnRow">
                             {canReserve ? (
                               <Button type="button" onClick={() => onReserve(item)} disabled={isBusy}>
@@ -435,5 +452,57 @@ export default function PrivateInvitationGuest({
         ) : null}
       </section>
     </div>
+    {selectedWishItem ? (
+      <div className="pb-modalOverlay" role="presentation" onClick={() => setSelectedWishItem(null)}>
+        <div
+          className="pb-modalDialog pb-inviteWishModal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="guest-wish-modal-title"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="pb-modalDialog__head">
+            <h2 id="guest-wish-modal-title" className="pb-modalDialog__title">
+              {selectedWishItem.title}
+            </h2>
+            <button
+              type="button"
+              className="pb-modalDialog__close"
+              onClick={() => setSelectedWishItem(null)}
+              aria-label="Zatvori detalje poklona"
+            >
+              ×
+            </button>
+          </div>
+          <div className="pb-modalDialog__body pb-inviteWishModal__body">
+            {selectedWishImageUrl ? (
+              <img src={selectedWishImageUrl} alt={selectedWishItem.title} className="pb-inviteWishModal__image" />
+            ) : null}
+            {selectedWishItem.description ? <p className="pb-modalDialog__lead">{selectedWishItem.description}</p> : null}
+            <div className="pb-inviteWishModal__meta">
+              {selectedWishItem.priceLabel ? (
+                <div className="pb-inviteWishModal__metaRow">
+                  <span className="pb-inviteWishModal__metaLabel">Cijena</span>
+                  <span>{selectedWishItem.priceLabel}</span>
+                </div>
+              ) : null}
+              <div className="pb-inviteWishModal__metaRow">
+                <span className="pb-inviteWishModal__metaLabel">Status</span>
+                <span className={wishlistBadgeClass(selectedWishItem.reservation.status)}>
+                  {wishlistBadgeLabel(selectedWishItem.reservation.status)}
+                </span>
+              </div>
+              {selectedWishPurchaseLabel ? (
+                <div className="pb-inviteWishModal__metaRow">
+                  <span className="pb-inviteWishModal__metaLabel">Poklon</span>
+                  <span>{selectedWishPurchaseLabel}</span>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </div>
+    ) : null}
+    </>
   )
 }

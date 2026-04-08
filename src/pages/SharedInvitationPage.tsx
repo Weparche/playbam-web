@@ -929,7 +929,7 @@ export default function SharedInvitationPage() {
 
                     {hostRequestsOpen ? (
                       <div className="pb-privateAccordionBody">
-                        <p className="pb-flowCard__text">Pregledaj tko traži pristup privatnom dijelu pozivnice i upravljaj gostima.</p>
+                        <p className="pb-flowCard__text">Pregledaj tko tra?i pristup privatnom dijelu pozivnice i upravljaj gostima.</p>
                         {hostError ? <div className="pb-inlineNote pb-inlineNote--error">{hostError}</div> : null}
                         <HostRequestList requests={hostRequests} reviewingRequestId={reviewingRequestId} onReview={handleReview} />
                       </div>
@@ -946,7 +946,7 @@ export default function SharedInvitationPage() {
                     >
                       <span className="pb-privateToggle__copy">
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
-                        <span className="pb-privateToggle__title">Lista želja</span>
+                        <span className="pb-privateToggle__title">Lista ?elja</span>
                       </span>
                       <span className="pb-privateToggle__arrow" aria-hidden>
                         ?
@@ -956,7 +956,7 @@ export default function SharedInvitationPage() {
                     {hostWishlistOpen ? (
                       <div className="pb-privateAccordionBody">
                         <p className="pb-flowCard__text pb-flowCard__text--hostWishlist">
-                          Dodaj, uredi i organiziraj želje za poklone. Ovdje vidiš i tko je što rezervirao.
+                          Dodaj, uredi i organiziraj ?elje za poklone. Ovdje vidi? i tko je ?to rezervirao.
                         </p>
 
                         <div className="pb-inviteHostAddWrap">
@@ -1098,62 +1098,91 @@ function getRsvpToneClass(status?: InvitationRsvp['status']) {
   return 'pb-hostRequestItem__rsvpBadge--pending'
 }
 
+function groupHostRequestsByRsvp(requests: MembershipRequest[]) {
+  return [
+    {
+      title: 'Dolaze',
+      className: 'pb-hostRequestGroup--going',
+      requests: requests.filter((request) => request.rsvp?.status === 'going'),
+    },
+    {
+      title: 'Možda',
+      className: 'pb-hostRequestGroup--maybe',
+      requests: requests.filter((request) => request.rsvp?.status === 'maybe'),
+    },
+    {
+      title: 'Ne dolaze',
+      className: 'pb-hostRequestGroup--notGoing',
+      requests: requests.filter((request) => request.rsvp?.status === 'not_going'),
+    },
+  ].filter((group) => group.requests.length > 0)
+}
+
 function HostRequestList({ requests, reviewingRequestId, onReview }: { requests: MembershipRequest[]; reviewingRequestId: string | null; onReview: (requestId: string, action: 'approve' | 'reject') => void }) {
   if (requests.length === 0) {
     return <div className="pb-inlineNote pb-inlineNote--info">Trenutačno nema novih zahtjeva.</div>
   }
 
+  const groupedRequests = groupHostRequestsByRsvp(requests)
+
   return (
-    <div className="pb-hostRequests">
-      {requests.map((request) => {
-        const isBusy = reviewingRequestId === request.id
-        const parentName = request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'
-        const childrenText = request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'
-        const rsvpLabel = rsvpStatusLabel(request.rsvp?.status)
-        const rsvpToneClass = getRsvpToneClass(request.rsvp?.status)
+    <div className="pb-hostRequestGroups">
+      {groupedRequests.map((group) => (
+        <section key={group.title} className={`pb-hostRequestGroup ${group.className}`}>
+          <h3 className="pb-hostRequestGroup__title">{group.title}</h3>
+          <div className="pb-hostRequests">
+            {group.requests.map((request) => {
+              const isBusy = reviewingRequestId === request.id
+              const parentName = request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'
+              const childrenText = request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'
+              const rsvpLabel = rsvpStatusLabel(request.rsvp?.status)
+              const rsvpToneClass = getRsvpToneClass(request.rsvp?.status)
 
-        return (
-          <div key={request.id} className="pb-hostRequestItem">
-            <div className="pb-hostRequestItem__main">
-              <div className="pb-hostRequestItem__title">{parentName}</div>
-              <div className="pb-hostRequestItem__meta">Djeca: {childrenText}</div>
-            </div>
+              return (
+                <div key={request.id} className="pb-hostRequestItem">
+                  <div className="pb-hostRequestItem__main">
+                    <div className="pb-hostRequestItem__title">{parentName}</div>
+                    <div className="pb-hostRequestItem__meta">Djeca: {childrenText}</div>
+                  </div>
 
-            <div className="pb-hostRequestItem__side">
-              {request.status === 'approved' ? (
-                <Button
-                  variant="ghost"
-                  type="button"
-                  className="pb-hostRequestItem__removeBtn"
-                  onClick={() => onReview(request.id, 'reject')}
-                  disabled={isBusy}
-                >
-                  {isBusy ? 'Spremamo...' : 'Izbaci'}
-                </Button>
-              ) : (
-                <div className="pb-flowActions pb-flowActions--compact">
-                  <Button type="button" onClick={() => onReview(request.id, 'approve')} disabled={isBusy}>
-                    Odobri
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    type="button"
-                    onClick={() => onReview(request.id, 'reject')}
-                    disabled={isBusy || request.status === 'rejected'}
-                  >
-                    {request.status === 'rejected' ? 'Odbijeno' : 'Odbij'}
-                  </Button>
+                  <div className="pb-hostRequestItem__side">
+                    {request.status === 'approved' ? (
+                      <Button
+                        variant="ghost"
+                        type="button"
+                        className="pb-hostRequestItem__removeBtn"
+                        onClick={() => onReview(request.id, 'reject')}
+                        disabled={isBusy}
+                      >
+                        {isBusy ? 'Spremamo...' : 'Izbaci'}
+                      </Button>
+                    ) : (
+                      <div className="pb-flowActions pb-flowActions--compact">
+                        <Button type="button" onClick={() => onReview(request.id, 'approve')} disabled={isBusy}>
+                          Odobri
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          type="button"
+                          onClick={() => onReview(request.id, 'reject')}
+                          disabled={isBusy || request.status === 'rejected'}
+                        >
+                          {request.status === 'rejected' ? 'Odbijeno' : 'Odbij'}
+                        </Button>
+                      </div>
+                    )}
+
+                    <div className={`pb-hostRequestItem__rsvpBadge ${rsvpToneClass}`}>
+                      <span className="pb-hostRequestItem__rsvpLabel">RSVP</span>
+                      <span className="pb-hostRequestItem__rsvpValue">{rsvpLabel}</span>
+                    </div>
+                  </div>
                 </div>
-              )}
-
-              <div className={`pb-hostRequestItem__rsvpBadge ${rsvpToneClass}`}>
-                <span className="pb-hostRequestItem__rsvpLabel">RSVP</span>
-                <span className="pb-hostRequestItem__rsvpValue">{rsvpLabel}</span>
-              </div>
-            </div>
+              )
+            })}
           </div>
-        )
-      })}
+        </section>
+      ))}
     </div>
   )
 }

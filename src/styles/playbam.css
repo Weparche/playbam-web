@@ -2731,21 +2731,52 @@
   font-weight: 800;
 }
 
-.pb-hostRequests {
-  margin-top: 16px;
+.pb-hostRequestGroups {
+  margin-top: 0.85rem;
   display: grid;
-  gap: 12px;
+  gap: 0.95rem;
+}
+
+.pb-hostRequestGroup {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.pb-hostRequestGroup__title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 1000;
+  letter-spacing: -0.02em;
+  color: rgba(16, 24, 40, 0.82);
+}
+
+.pb-hostRequestGroup--going .pb-hostRequestGroup__title {
+  color: #166534;
+}
+
+.pb-hostRequestGroup--maybe .pb-hostRequestGroup__title {
+  color: #a16207;
+}
+
+.pb-hostRequestGroup--notGoing .pb-hostRequestGroup__title {
+  color: #b91c1c;
+}
+
+.pb-hostRequests {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
 }
 
 .pb-hostRequestItem {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: 14px;
-  padding: 14px;
-  border-radius: 18px;
+  gap: 0.6rem;
+  padding: 0.8rem 0.85rem;
+  border-radius: 16px;
   border: 1px solid rgba(22, 24, 35, 0.1);
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.78);
 }
 
 .pb-hostRequestItem__main {
@@ -2754,28 +2785,31 @@
 
 .pb-hostRequestItem__side {
   display: grid;
-  justify-items: end;
+  justify-items: stretch;
   align-content: start;
-  gap: 0.6rem;
-  min-width: 9rem;
+  gap: 0.45rem;
+  min-width: 0;
 }
 
 .pb-hostRequestItem .pb-flowActions--compact {
-  align-self: start;
-  justify-self: end;
+  align-self: stretch;
+  justify-self: stretch;
   margin-top: 0;
-  gap: 8px;
+  gap: 0.45rem;
 }
 
 .pb-hostRequestItem__title {
   font-weight: 1000;
   color: rgba(16, 24, 40, 0.88);
+  font-size: 0.92rem;
 }
 
 .pb-hostRequestItem__meta {
-  margin-top: 6px;
+  margin-top: 0.28rem;
   color: rgba(16, 24, 40, 0.66);
   font-weight: 800;
+  font-size: 0.76rem;
+  line-height: 1.35;
 }
 
 .pb-hostRequestItem__rsvpBadge {
@@ -2783,8 +2817,8 @@
   display: grid;
   gap: 0.18rem;
   justify-items: center;
-  padding: 0.52rem 0.7rem;
-  border-radius: 14px;
+  padding: 0.45rem 0.6rem;
+  border-radius: 12px;
   border: 1px solid rgba(16, 24, 40, 0.08);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
@@ -2798,7 +2832,7 @@
 }
 
 .pb-hostRequestItem__rsvpValue {
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 1000;
   letter-spacing: -0.02em;
 }
@@ -2828,7 +2862,7 @@
 }
 
 .pb-hostRequestItem__removeBtn {
-  justify-self: end;
+  justify-self: stretch;
 }
 
 .pb-hostRequestItem__removeBtn.pb-btn-ghost {

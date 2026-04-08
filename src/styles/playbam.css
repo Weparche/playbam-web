@@ -1055,8 +1055,9 @@
   inset: 0;
   z-index: 200;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
   padding: 0;
   background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(6px);
@@ -1064,7 +1065,6 @@
 
 @media (min-width: 520px) {
   .pb-modalOverlay {
-    align-items: center;
     padding: 24px;
   }
 }
@@ -1072,7 +1072,7 @@
 .pb-modalDialog {
   width: 100%;
   max-width: 28rem;
-  max-height: min(92vh, 720px);
+  max-height: min(calc(100dvh - 2rem), 720px);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1084,6 +1084,7 @@
 
 @media (min-width: 520px) {
   .pb-modalDialog {
+    margin-top: 1rem;
     border-radius: 1.75rem;
   }
 }
@@ -2793,7 +2794,7 @@
 
 .pb-flowCard__text--hostWishlist {
   color: #111111;
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   margin-bottom: 0.55rem;
 }
 

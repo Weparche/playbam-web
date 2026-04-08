@@ -742,6 +742,8 @@ export default function SharedInvitationPage() {
   }
 
   const handleWishlistEdit = (item: InvitationWishlistItem) => {
+    setHostWishlistOpen(true)
+    setHostAddGiftOpen(true)
     setEditingWishlistItemId(item.id)
     setWishlistDraft(createWishlistDraft(item))
     setWishlistFormError('')

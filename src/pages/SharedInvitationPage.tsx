@@ -720,7 +720,10 @@ export default function SharedInvitationPage() {
         <div className="pb-container pb-flowLayout">
           <div className="pb-backRow">
             <Link className="pb-backLink" to="/">
-              ? Nazad na Playbam.hr
+              <span className="pb-backLink__icon" aria-hidden>
+                ?
+              </span>
+              <span>Nazad na Playbam.hr</span>
             </Link>
           </div>
 
@@ -862,7 +865,7 @@ export default function SharedInvitationPage() {
               ) : null}
 
               {(user || hasHostSession) && !loadingPrivateState && isHost ? (
-                <>
+                <div className="pb-invitePrivateStack pb-invitePrivateStack--host">
                   <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
                     <button
                       id="host-requests-toggle"
@@ -969,7 +972,7 @@ export default function SharedInvitationPage() {
                       </div>
                     ) : null}
                   </Card>
-                </>
+                </div>
               ) : null}
             </>
           ) : null}

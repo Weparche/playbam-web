@@ -526,7 +526,7 @@ export default function SharedInvitationPage() {
   }
 
   const handleReview = async (requestId: string, action: 'approve' | 'reject') => {
-    if (!user || !invitation) {
+    if (!invitation || (!user && !hasHostSession)) {
       return
     }
 
@@ -534,8 +534,8 @@ export default function SharedInvitationPage() {
     setHostError('')
 
     try {
-      await reviewMembershipRequest(invitation.id, requestId, action, user)
-      const requests = await listMembershipRequests(invitation.id, user)
+      await reviewMembershipRequest(invitation.id, requestId, action, user ?? null)
+      const requests = await listMembershipRequests(invitation.id, user ?? null)
       setHostRequests(requests)
     } catch {
       setHostError('Promjena statusa zahtjeva trenutno nije uspjela.')

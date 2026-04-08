@@ -1,5 +1,6 @@
 import type { TemporaryWebIdentity } from './tempWebIdentity'
 import { buildTemporaryIdentityHeaders, readStoredTemporaryIdentity } from './tempWebIdentity'
+import { readStoredHostToken } from './hostWebSession'
 
 /**
  * U devu: prazan base → zahtjevi na isti origin (Vite proxy šalje /api na backend).
@@ -17,6 +18,16 @@ const DEV_HOST_AUTH_TOKEN =
 
 /** Javni GET-evi ne smiju nositi Bearer (CORS). Kad postoji gost u sesiji, također ne — backend bi inače prihvatio host Bearer prije X-Playbam zaglavlja. */
 function shouldAttachDevHostBearer(path: string, hasGuestIdentity: boolean): boolean {
+  if (path.startsWith('/api/public/')) {
+    return false
+  }
+  if (hasGuestIdentity) {
+    return false
+  }
+  return true
+}
+
+function shouldAttachStoredHostBearer(path: string, hasGuestIdentity: boolean): boolean {
   if (path.startsWith('/api/public/')) {
     return false
   }
@@ -199,12 +210,18 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const headers = new Headers({
     Accept: 'application/json',
   })
+  const storedHostToken = readStoredHostToken()
 
   if (options.body) {
     headers.set('Content-Type', 'application/json')
   }
 
   if (
+    storedHostToken &&
+    shouldAttachStoredHostBearer(path, Boolean(identity))
+  ) {
+    headers.set('Authorization', `Bearer ${storedHostToken}`)
+  } else if (
     import.meta.env.DEV &&
     DEV_HOST_AUTH_TOKEN &&
     shouldAttachDevHostBearer(path, Boolean(identity))

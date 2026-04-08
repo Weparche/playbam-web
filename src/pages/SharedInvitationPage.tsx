@@ -38,6 +38,7 @@ import {
   type MembershipRequest,
   type PublicInvitation,
 } from '../lib/invitationApi'
+import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
 import type { TemporaryWebIdentity } from '../lib/tempWebIdentity'
 
 type WishlistDraft = {
@@ -189,6 +190,8 @@ function getPreferredChildName(
 export default function SharedInvitationPage() {
   const { token = '' } = useParams()
   const { user, login, logout } = useAuth()
+  const [hostToken, setHostToken] = useState(() => readStoredHostToken())
+  const [hostTokenDraft, setHostTokenDraft] = useState('')
   const [invitation, setInvitation] = useState<PublicInvitation | null>(null)
   const [access, setAccess] = useState<InvitationAccess | null>(null)
   const [familyProfile, setFamilyProfile] = useState<FamilyProfileResponse | null>(null)
@@ -207,6 +210,7 @@ export default function SharedInvitationPage() {
   const [profileDraft, setProfileDraft] = useState<FamilyProfileDraft>(createEmptyDraft(user?.parentName ?? ''))
   const [selectedChildIds, setSelectedChildIds] = useState<string[]>([])
   const [authError, setAuthError] = useState('')
+  const [hostAuthError, setHostAuthError] = useState('')
   const [profileError, setProfileError] = useState('')
   const [requestError, setRequestError] = useState('')
   const [hostError, setHostError] = useState('')
@@ -228,6 +232,10 @@ export default function SharedInvitationPage() {
       parentName: user?.parentName ?? '',
     })
   }, [user])
+
+  useEffect(() => {
+    setHostToken(readStoredHostToken())
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -261,6 +269,7 @@ export default function SharedInvitationPage() {
   }, [token])
 
   const hasFamilyProfile = Boolean(familyProfile?.profile)
+  const hasHostSession = Boolean(hostToken)
   const isHost = access?.isHost ?? false
   const hasPrivateAccess = access?.canAccessPrivateInvitation ?? false
   const canViewWishlist = access?.canViewWishlist ?? false
@@ -319,8 +328,8 @@ export default function SharedInvitationPage() {
     setWishlistFormError('')
   }
 
-  const refreshWishlist = async (identity = user) => {
-    if (!invitation || !identity || !canViewWishlist) {
+  const refreshWishlist = async (identity = user ?? undefined) => {
+    if (!invitation || !canViewWishlist) {
       return
     }
 
@@ -337,7 +346,7 @@ export default function SharedInvitationPage() {
   }
 
   useEffect(() => {
-    if (!invitation || !user) {
+    if (!invitation || (!user && !hasHostSession)) {
       setAccess(null)
       setFamilyProfile(null)
       setMembershipRequest(null)
@@ -351,6 +360,7 @@ export default function SharedInvitationPage() {
 
     const currentInvitation = invitation
     const currentUser = user
+    const currentIdentity = currentUser ?? undefined
     let cancelled = false
 
     async function loadPrivateState() {
@@ -360,7 +370,7 @@ export default function SharedInvitationPage() {
       setWishlistError('')
 
       try {
-        const nextAccess = await getInvitationAccess(currentInvitation.id, currentUser)
+        const nextAccess = await getInvitationAccess(currentInvitation.id, currentIdentity)
         if (cancelled) {
           return
         }
@@ -369,8 +379,8 @@ export default function SharedInvitationPage() {
 
         if (nextAccess.isHost) {
           const [requests, wishlist] = await Promise.all([
-            listMembershipRequests(currentInvitation.id, currentUser),
-            getInvitationWishlist(currentInvitation.id, currentUser),
+            listMembershipRequests(currentInvitation.id, currentIdentity),
+            getInvitationWishlist(currentInvitation.id, currentIdentity),
           ])
           if (cancelled) {
             return
@@ -382,6 +392,14 @@ export default function SharedInvitationPage() {
           setMembershipRequest(null)
           setRsvp(null)
           setSelectedChildIds([])
+          return
+        }
+
+        if (!currentUser) {
+          writeStoredHostToken(null)
+          setHostToken('')
+          setHostAuthError('Ovaj token nema organizatorski pristup za ovu pozivnicu.')
+          setLoadingPrivateState(false)
           return
         }
 
@@ -444,9 +462,14 @@ export default function SharedInvitationPage() {
           setFamilyProfile({ profile: null, children: [] })
           setMembershipRequest(null)
           setSelectedChildIds([])
-          setProfileDraft(createEmptyDraft(currentUser.parentName))
+          setProfileDraft(createEmptyDraft(currentUser?.parentName ?? ''))
         } else if (isApiError(caughtError, 401)) {
-          logout()
+          if (currentUser) {
+            logout()
+          }
+          writeStoredHostToken(null)
+          setHostToken('')
+          setHostAuthError('Host token nije valjan.')
         } else {
           setRequestError('Trenutačno ne možemo učitati privatni dio pozivnice.')
         }
@@ -463,7 +486,7 @@ export default function SharedInvitationPage() {
     return () => {
       cancelled = true
     }
-  }, [invitation, user, logout])
+  }, [invitation, user, hasHostSession, logout])
 
   const handleLogin = () => {
     const email = identityDraft.email.trim().toLowerCase()
@@ -476,6 +499,33 @@ export default function SharedInvitationPage() {
 
     login({ email, parentName })
     setAuthError('')
+  }
+
+  const handleHostLogin = () => {
+    const nextToken = hostTokenDraft.trim()
+
+    if (!nextToken) {
+      setHostAuthError('Upiši host token.')
+      return
+    }
+
+    logout()
+    writeStoredHostToken(nextToken)
+    setHostToken(nextToken)
+    setHostTokenDraft('')
+    setHostAuthError('')
+  }
+
+  const handleHostLogout = () => {
+    writeStoredHostToken(null)
+    setHostToken('')
+    setHostAuthError('')
+    setAccess(null)
+    setHostRequests([])
+    setWishlistItems([])
+    setRsvp(null)
+    setMembershipRequest(null)
+    setFamilyProfile(null)
   }
 
   const handleProfileSave = async () => {
@@ -541,7 +591,7 @@ export default function SharedInvitationPage() {
   }
 
   const handleReview = async (requestId: string, action: 'approve' | 'reject') => {
-    if (!user || !invitation) {
+    if (!invitation || (!user && !hasHostSession)) {
       return
     }
 
@@ -549,8 +599,9 @@ export default function SharedInvitationPage() {
     setHostError('')
 
     try {
-      await reviewMembershipRequest(invitation.id, requestId, action, user)
-      const requests = await listMembershipRequests(invitation.id, user)
+      const identity = user ?? undefined
+      await reviewMembershipRequest(invitation.id, requestId, action, identity)
+      const requests = await listMembershipRequests(invitation.id, identity)
       setHostRequests(requests)
     } catch {
       setHostError('Promjena statusa zahtjeva trenutno nije uspjela.')
@@ -620,7 +671,7 @@ export default function SharedInvitationPage() {
   }
 
   const handleWishlistSave = async () => {
-    if (!user || !invitation) {
+    if (!invitation || (!user && !hasHostSession)) {
       return
     }
 
@@ -636,12 +687,12 @@ export default function SharedInvitationPage() {
 
     try {
       if (editingWishlistItemId) {
-        await updateInvitationWishlistItem(invitation.id, editingWishlistItemId, payload, user)
+        await updateInvitationWishlistItem(invitation.id, editingWishlistItemId, payload, user ?? undefined)
       } else {
-        await createInvitationWishlistItem(invitation.id, payload, user)
+        await createInvitationWishlistItem(invitation.id, payload, user ?? undefined)
       }
       resetWishlistForm()
-      await refreshWishlist(user)
+      await refreshWishlist(user ?? undefined)
     } catch {
       setWishlistFormError('Spremanje želje trenutno nije uspjelo.')
     } finally {
@@ -692,7 +743,7 @@ export default function SharedInvitationPage() {
   }
 
   const handleWishlistDelete = async (item: InvitationWishlistItem) => {
-    if (!user || !invitation) {
+    if (!invitation || (!user && !hasHostSession)) {
       return
     }
 
@@ -700,11 +751,11 @@ export default function SharedInvitationPage() {
     setWishlistError('')
 
     try {
-      await deleteInvitationWishlistItem(invitation.id, item.id, user)
+      await deleteInvitationWishlistItem(invitation.id, item.id, user ?? undefined)
       if (editingWishlistItemId === item.id) {
         resetWishlistForm()
       }
-      await refreshWishlist(user)
+      await refreshWishlist(user ?? undefined)
     } catch (caughtError) {
       setWishlistError(getDeleteErrorMessage(caughtError))
     } finally {
@@ -713,7 +764,7 @@ export default function SharedInvitationPage() {
   }
 
   const handleHostReleaseReservation = async (item: InvitationWishlistItem) => {
-    if (!user || !invitation) {
+    if (!invitation || (!user && !hasHostSession)) {
       return
     }
 
@@ -721,8 +772,8 @@ export default function SharedInvitationPage() {
     setWishlistError('')
 
     try {
-      await cancelInvitationWishlistReservation(invitation.id, item.id, user)
-      await refreshWishlist(user)
+      await cancelInvitationWishlistReservation(invitation.id, item.id, user ?? undefined)
+      await refreshWishlist(user ?? undefined)
     } catch {
       setWishlistError('Otpuštanje rezervacije trenutno nije uspjelo.')
     } finally {
@@ -793,6 +844,18 @@ export default function SharedInvitationPage() {
                 </div>
               ) : null}
 
+              {!user && hasHostSession ? (
+                <div className="pb-inviteSessionBar">
+                  <span className="pb-inviteSessionBar__text">
+                    <span className="pb-inviteSessionBar__role">Organizator:</span>{' '}
+                    <span className="pb-inviteSessionBar__email">Host pristup aktivan</span>
+                  </span>
+                  <Button variant="ghost" onClick={handleHostLogout}>
+                    Odjavi host pristup
+                  </Button>
+                </div>
+              ) : null}
+
               <InvitationCard
                 invitation={invitation}
                 access={hasPrivateAccess ? 'private' : 'public'}
@@ -804,7 +867,7 @@ export default function SharedInvitationPage() {
                 guestRsvpHint={guestRsvpHint}
               />
 
-              {user && loadingPrivateState ? (
+              {(user || hasHostSession) && loadingPrivateState ? (
                 <Card className="pb-flowCard">
                   <h2 className="pb-flowCard__title">Pripremamo tvoj pristup</h2>
                   <p className="pb-flowCard__text">Provjeravamo profil obitelji, zahtjev za pristup i status odgovora.</p>
@@ -850,7 +913,32 @@ export default function SharedInvitationPage() {
                 onRequestSubmit={handleRequestSubmit}
               />
 
-              {user && !loadingPrivateState && isHost ? (
+              {!user && !hasHostSession ? (
+                <Card className="pb-flowCard pb-hostTokenCard">
+                  <h2 className="pb-flowCard__title">Organizator test login</h2>
+                  <p className="pb-flowCard__text">Unesi host token za odobravanje gostiju i uređivanje privatnog host dijela pozivnice.</p>
+                  <div className="pb-formGrid">
+                    <label className="pb-formField">
+                      <span className="pb-formLabel">Host token</span>
+                      <input
+                        className="pb-input"
+                        type="password"
+                        value={hostTokenDraft}
+                        onChange={(event) => setHostTokenDraft(event.target.value)}
+                        placeholder="playbam-prod-host-token"
+                      />
+                    </label>
+                  </div>
+                  <div className="pb-flowActions">
+                    <Button type="button" onClick={handleHostLogin}>
+                      Uđi kao organizator
+                    </Button>
+                  </div>
+                  {hostAuthError ? <div className="pb-inlineNote pb-inlineNote--error">{hostAuthError}</div> : null}
+                </Card>
+              ) : null}
+
+              {(user || hasHostSession) && !loadingPrivateState && isHost ? (
                 <>
                   <Card className="pb-flowCard pb-inviteHostPanel">
                     <h2 className="pb-flowCard__title">Zahtjevi za pristup</h2>

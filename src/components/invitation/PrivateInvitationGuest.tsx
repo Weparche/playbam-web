@@ -45,6 +45,14 @@ function getWishModalStatusLabel(item: InvitationWishlistItem) {
   return wishlistBadgeLabel(item.reservation.status)
 }
 
+function getWishCardStatusLabel(item: InvitationWishlistItem) {
+  if (isGroupGift(item)) {
+    return 'Grupni poklon'
+  }
+
+  return wishlistBadgeLabel(item.reservation.status)
+}
+
 function wishlistPurchaseLabel(item: InvitationWishlistItem) {
   const reservationStatus = item.reservation.status
   const buyerName = item.reservation.reservedByName?.trim()
@@ -340,7 +348,7 @@ export default function PrivateInvitationGuest({
                           </div>
 
                           <div className="pb-inviteWish__side">
-                            <span className={wishlistBadgeClass(reservationStatus)}>{wishlistBadgeLabel(reservationStatus)}</span>
+                            <span className={wishlistBadgeClass(reservationStatus)}>{getWishCardStatusLabel(item)}</span>
                             <div className="pb-inviteWish__actions" onClick={(event) => event.stopPropagation()}>
                               <div className="pb-inviteWish__btnRow">
                                 {canReserve ? (

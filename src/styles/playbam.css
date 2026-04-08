@@ -2019,7 +2019,7 @@
   box-sizing: border-box;
   overflow: hidden;
   border-radius: 22px;
-  background: url('/listazelja.jpeg') center top / 100% auto repeat-y;
+  background: url('/listazelja.jpeg') center center / cover no-repeat;
   padding: 1rem;
 }
 
@@ -4015,14 +4015,37 @@
   border-color: rgba(104, 214, 148, 0.45);
 }
 
+.pb-rsvpBtn--storybookNotGoing {
+  color: #b24955;
+  background: linear-gradient(180deg, rgba(255, 239, 241, 0.96), rgba(255, 228, 232, 0.96));
+  border-color: rgba(228, 134, 149, 0.42);
+}
+
 .pb-rsvpBtn--storybookMaybe {
   grid-column: 1 / -1;
+  width: calc(50% - 0.275rem);
+  justify-self: center;
+  color: #a56b00;
+  background: linear-gradient(180deg, rgba(255, 248, 220, 0.96), rgba(255, 241, 186, 0.96));
+  border-color: rgba(233, 196, 87, 0.46);
 }
 
 .pb-rsvpBtn--storybook.is-active {
   box-shadow:
     0 12px 22px rgba(123, 106, 220, 0.18),
     inset 0 0 0 2px rgba(123, 106, 220, 0.18);
+}
+
+.pb-rsvpBtn--storybookNotGoing.is-active {
+  box-shadow:
+    0 12px 22px rgba(223, 124, 139, 0.2),
+    inset 0 0 0 2px rgba(223, 124, 139, 0.22);
+}
+
+.pb-rsvpBtn--storybookMaybe.is-active {
+  box-shadow:
+    0 12px 22px rgba(222, 186, 88, 0.22),
+    inset 0 0 0 2px rgba(222, 186, 88, 0.24);
 }
 
 .pb-inviteHero__rsvpHint--storybook {

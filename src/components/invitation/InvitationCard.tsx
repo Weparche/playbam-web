@@ -32,7 +32,7 @@ export default function InvitationCard({
   const venueText = invitation.location.trim() || 'Lokacija uskoro'
   const backgroundImage = invitation.coverImage?.trim() || '/pozivnica-bg.png'
   const rsvpNote =
-    access === 'private'
+    access === 'private' || guestRsvpHint
       ? null
       : 'Sva tri gumba vode na prijavu i privatni dio pozivnice s listom želja i ostalim detaljima rođendana.'
 
@@ -63,7 +63,6 @@ export default function InvitationCard({
           rsvpNote={rsvpNote}
           onRsvpClick={handleRsvpClick}
         />
-
       </div>
     </section>
   )

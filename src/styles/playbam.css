@@ -2029,6 +2029,25 @@
   margin-bottom: 0.9rem;
 }
 
+.pb-privateVenue__galleryButton {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 16px;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.pb-privateVenue__galleryButton:hover {
+  transform: translateY(-1px);
+}
+
+.pb-privateVenue__galleryButton:focus-visible {
+  outline: 3px solid rgba(79, 70, 216, 0.35);
+  outline-offset: 3px;
+}
+
 .pb-privateVenue__image {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -2045,6 +2064,53 @@
   line-height: 1.6;
   letter-spacing: -0.01em;
   color: var(--invite-text-muted, #667085);
+}
+
+.pb-privateVenueModal {
+  max-width: min(34rem, calc(100vw - 1.5rem));
+}
+
+.pb-privateVenueModal__body {
+  display: grid;
+  gap: 1rem;
+}
+
+.pb-privateVenueModal__imageWrap {
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: rgba(79, 70, 216, 0.06);
+}
+
+.pb-privateVenueModal__image {
+  display: block;
+  width: 100%;
+  max-height: min(62dvh, 34rem);
+  object-fit: cover;
+}
+
+.pb-privateVenueModal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.pb-privateVenueModal__nav {
+  min-height: 2.5rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(79, 70, 216, 0.14);
+  border-radius: 999px;
+  background: rgba(79, 70, 216, 0.08);
+  color: #4338ca;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pb-privateVenueModal__counter {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #4b5060;
 }
 
 .pb-partyFacts--venue {

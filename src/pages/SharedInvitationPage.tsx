@@ -231,10 +231,10 @@ export default function SharedInvitationPage() {
       return 'Dovr?i profil obitelji u prozoru.'
     }
     if (membershipRequest?.status === 'pending') {
-      return '?ekamo odobrenje organizatora, zatim mo?e? potvrditi dolazak.'
+      return 'Čekanje na odobrenje organizatora, zatim možeš potvrditi dolazak.'
     }
     if (membershipRequest?.status === 'rejected') {
-      return 'Zahtjev za pristup je odbijen.'
+      return 'Zahtjev za pristup je odbijen. Možeš poslati novi zahtjev.'
     }
     return null
   }, [isHost, invitation, canSubmitRsvp, user, hasFamilyProfile, membershipRequest])
@@ -1099,21 +1099,29 @@ function getRsvpToneClass(status?: InvitationRsvp['status']) {
 }
 
 function groupHostRequestsByRsvp(requests: MembershipRequest[]) {
+  const pendingRequests = requests.filter((request) => request.status === 'pending')
+  const reviewedRequests = requests.filter((request) => request.status !== 'pending')
+
   return [
+    {
+      title: 'Čeka na odobrenje',
+      className: 'pb-hostRequestGroup--pending',
+      requests: pendingRequests,
+    },
     {
       title: 'Dolaze',
       className: 'pb-hostRequestGroup--going',
-      requests: requests.filter((request) => request.rsvp?.status === 'going'),
+      requests: reviewedRequests.filter((request) => request.rsvp?.status === 'going'),
     },
     {
       title: 'Možda',
       className: 'pb-hostRequestGroup--maybe',
-      requests: requests.filter((request) => request.rsvp?.status === 'maybe'),
+      requests: reviewedRequests.filter((request) => request.rsvp?.status === 'maybe'),
     },
     {
       title: 'Ne dolaze',
       className: 'pb-hostRequestGroup--notGoing',
-      requests: requests.filter((request) => request.rsvp?.status === 'not_going'),
+      requests: reviewedRequests.filter((request) => request.rsvp?.status === 'not_going'),
     },
   ].filter((group) => group.requests.length > 0)
 }

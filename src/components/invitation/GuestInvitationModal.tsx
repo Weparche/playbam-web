@@ -5,7 +5,7 @@ import FamilyProfileForm, { type FamilyProfileDraft } from './FamilyProfileForm'
 import type { TemporaryWebIdentity } from '../../lib/tempWebIdentity'
 import type { FamilyProfileResponse, MembershipRequest } from '../../lib/invitationApi'
 
-export type GuestModalStep = 'login' | 'profile' | 'request' | 'waiting' | 'rejected'
+export type GuestModalStep = 'login' | 'profile' | 'request' | 'waiting'
 
 export function getGuestModalStep(
   invitation: { id: string } | null,
@@ -26,9 +26,6 @@ export function getGuestModalStep(
   }
   if (membershipRequest?.status === 'pending') {
     return 'waiting'
-  }
-  if (membershipRequest?.status === 'rejected') {
-    return 'rejected'
   }
   return 'request'
 }
@@ -115,19 +112,13 @@ export default function GuestInvitationModal({
         }
       }}
     >
-      <div
-        className="pb-modalDialog"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-      >
+      <div className="pb-modalDialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="pb-modalDialog__head">
           <h2 id={titleId} className="pb-modalDialog__title">
             {step === 'login' && 'Prijava za potvrdu dolaska'}
             {step === 'profile' && 'Tvoja obitelj'}
             {step === 'request' && 'Zahtjev za pristup'}
             {step === 'waiting' && 'Zahtjev je poslan'}
-            {step === 'rejected' && 'Zahtjev nije odobren'}
           </h2>
           <button type="button" className="pb-modalDialog__close" onClick={onClose} aria-label="Zatvori">
             ×
@@ -170,13 +161,13 @@ export default function GuestInvitationModal({
                   Nastavi
                 </Button>
               </div>
-              <p className="pb-helperText pb-helperText--modal">Privremeni web identitet — kasnije zamjena pravom prijavom.</p>
+              <p className="pb-helperText pb-helperText--modal">Privremeni web identitet, kasnije zamjena pravom prijavom.</p>
             </>
           ) : null}
 
           {step === 'profile' ? (
             <>
-              <p className="pb-modalDialog__lead">Dodaj djecu koja dolaze na proslavu — podaci se koriste i za zahtjev organizatoru.</p>
+              <p className="pb-modalDialog__lead">Dodaj djecu koja dolaze na proslavu, podaci se koriste i za zahtjev organizatoru.</p>
               <FamilyProfileForm
                 draft={profileDraft}
                 error={profileError}
@@ -189,7 +180,11 @@ export default function GuestInvitationModal({
 
           {step === 'request' && familyProfile ? (
             <>
-              <p className="pb-modalDialog__lead">Odaberi koja djeca žele pristup privatnom dijelu pozivnice (lista želja i sl.). Organizator mora odobriti.</p>
+              <p className="pb-modalDialog__lead">
+                {membershipRequest?.status === 'rejected'
+                  ? 'Prijašnji zahtjev je odbijen. Možeš odabrati djecu i ponovno poslati novi zahtjev za pristup.'
+                  : 'Odaberi koja djeca žele pristup privatnom dijelu pozivnice (lista želja i sl.). Organizator mora odobriti.'}
+              </p>
               <div className="pb-summaryCard pb-summaryCard--modal">
                 <div className="pb-summaryCard__title">Obiteljski profil</div>
                 <div className="pb-summaryCard__line">Roditelj: {familyProfile.profile?.parentName}</div>
@@ -220,11 +215,9 @@ export default function GuestInvitationModal({
                 <Button
                   type="button"
                   onClick={onRequestSubmit}
-                  disabled={
-                    selectedChildIds.length === 0 || membershipRequest?.status === 'pending' || submittingRequest
-                  }
+                  disabled={selectedChildIds.length === 0 || membershipRequest?.status === 'pending' || submittingRequest}
                 >
-                  {submittingRequest ? 'Šaljemo...' : 'Pošalji zahtjev organizatoru'}
+                  {submittingRequest ? 'Šaljemo...' : membershipRequest?.status === 'rejected' ? 'Pošalji novi zahtjev' : 'Pošalji zahtjev organizatoru'}
                 </Button>
               </div>
             </>
@@ -238,17 +231,6 @@ export default function GuestInvitationModal({
               <div className="pb-flowActions pb-flowActions--modal">
                 <Button type="button" onClick={onClose}>
                   Razumijem
-                </Button>
-              </div>
-            </>
-          ) : null}
-
-          {step === 'rejected' ? (
-            <>
-              <p className="pb-modalDialog__lead">Organizator je odbio zahtjev za pristup ovoj pozivnici.</p>
-              <div className="pb-flowActions pb-flowActions--modal">
-                <Button type="button" onClick={onClose}>
-                  Zatvori
                 </Button>
               </div>
             </>

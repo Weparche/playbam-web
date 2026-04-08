@@ -1,4 +1,5 @@
 import type { PublicInvitation } from '../../lib/invitationApi'
+import { possessiveFirstNameForHero } from '../../lib/inviteHeroPossessive'
 import PublicInvitationHero from './PublicInvitationHero'
 
 type Props = {
@@ -22,13 +23,16 @@ export default function InvitationCard({
   onGuestRsvpIntent,
   guestRsvpHint = null,
 }: Props) {
-  const message = 'Veselimo se druženju s vama!'
+  const message = invitation.message?.trim() || 'Veselimo se druženju i proslavi.'
   const showGuestRsvp = !isHost
   const rsvpActive = canSubmitRsvp && typeof onRsvpChange === 'function'
   const rsvpGate = showGuestRsvp && typeof onGuestRsvpIntent === 'function'
-  const celebrantTitle = 'Luka slavi|6. rođendan!'
-  const dateText = 'Subota 15-06-2026'
-  const timeText = 'od 15:00 do 17:00h'
+  const showEventTitle =
+    Boolean(invitation.title?.trim()) && invitation.title?.trim() !== invitation.celebrantName?.trim()
+  const possessive = possessiveFirstNameForHero(invitation.celebrantName)
+  const celebrantTitle = possessive ? `${possessive}|6. rođendan` : 'Rođendan|6. rođendan'
+  const dateText = invitation.date.trim() || 'Datum uskoro'
+  const timeText = invitation.time.trim() || 'Vrijeme uskoro'
   const venueText = invitation.location.trim() || 'Lokacija uskoro'
   const backgroundImage = invitation.coverImage?.trim() || '/pozivnica-bg.png'
   const rsvpNote =
@@ -52,6 +56,7 @@ export default function InvitationCard({
       <div className="pb-inviteCard__stack">
         <PublicInvitationHero
           celebrantTitle={celebrantTitle}
+          eventTitle={showEventTitle ? invitation.title.trim() : null}
           dateText={dateText}
           timeText={timeText}
           venueText={venueText}

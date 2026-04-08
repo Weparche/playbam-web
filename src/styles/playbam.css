@@ -1208,7 +1208,7 @@
 
 /* --- Premium javna pozivnica (jedna centralna kartica) --- */
 .pb-inviteCard--premium {
-  max-width: 28rem;
+  max-width: 26rem;
   margin: 0 auto;
   position: relative;
   width: 100%;
@@ -1750,7 +1750,7 @@
   gap: clamp(1.25rem, 4vw, 2rem);
   width: min(100%, 44rem);
   max-width: 44rem;
-  margin: clamp(-7.4rem, -18vw, -5.2rem) auto 0;
+  margin: clamp(-2.25rem, -6vw, -1rem) auto 0;
   font-family: var(--invite-font);
   position: relative;
   z-index: 4;
@@ -1758,7 +1758,7 @@
 
 .pb-invitePrivateStack--host {
   gap: clamp(0.65rem, 2.2vw, 0.9rem);
-  margin: clamp(-11.8rem, -28vw, -9.2rem) auto 0;
+  margin: clamp(-3rem, -8vw, -1.5rem) auto 0;
 }
 
 .pb-invitePrivateStack > * {
@@ -3250,16 +3250,10 @@
   color: rgba(16, 24, 40, 0.6);
 }
 
-/* Public invitation hero layout on top of the provided mobile illustration */
-.pb-inviteCard--premium {
-  max-width: 28rem;
-  margin: 0 auto;
-  width: 100%;
-}
-
+/* Javna pozivnica — Partiful-inspirirani layout (cover + bijeli panel) */
 .pb-inviteCard__stack {
   display: grid;
-  gap: 0.72rem;
+  gap: 1rem;
 }
 
 .pb-inviteHero {
@@ -3267,54 +3261,65 @@
 }
 
 .pb-inviteHero__frame {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  aspect-ratio: 9 / 16;
-  border-radius: clamp(28px, 7vw, 36px);
+  border-radius: clamp(22px, 5.5vw, 30px);
   overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
   box-shadow:
-    0 18px 44px rgba(82, 65, 173, 0.16),
-    0 4px 14px rgba(31, 36, 48, 0.06);
-  background: #fdf5ff;
+    0 24px 48px rgba(15, 23, 42, 0.08),
+    0 8px 16px rgba(91, 61, 245, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+}
+
+.pb-inviteHero__media {
+  position: relative;
+  flex-shrink: 0;
+  aspect-ratio: 4 / 3;
+  max-height: min(52vw, 15.5rem);
+  background: linear-gradient(160deg, #ede9fe 0%, #fae8ff 50%, #fff 100%);
 }
 
 .pb-inviteHero__image {
-  position: absolute;
-  inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center center;
 }
 
-.pb-inviteHero__content {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
+.pb-inviteHero__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: clamp(1.15rem, 4vw, 1.45rem) clamp(1.05rem, 3.5vw, 1.35rem) clamp(1.25rem, 4vw, 1.55rem);
 }
 
-.pb-inviteHero__titleWrap {
-  position: absolute;
-  top: 7.5%;
-  left: 50%;
-  width: min(82%, 18rem);
-  transform: translateX(-50%);
+.pb-inviteHero__head {
   text-align: center;
+}
+
+.pb-inviteHero__eyebrow {
+  margin: 0 0 0.45rem;
+  font-family: var(--invite-font);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.45);
 }
 
 .pb-inviteHero__title {
   margin: 0;
-  font-family: var(--invite-script-font);
-  font-size: clamp(1.8rem, 7.83vw, 3.015rem);
+  font-family: var(--invite-display-font);
+  font-size: clamp(2rem, 8.5vw, 2.65rem);
   font-weight: 800;
-  line-height: 0.97;
-  letter-spacing: -0.025em;
-  color: #7652dd;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  color: #111827;
   text-wrap: balance;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.8),
-    0 12px 24px rgba(123, 97, 255, 0.16);
 }
 
 .pb-inviteHero__titleLine {
@@ -3322,195 +3327,245 @@
 }
 
 .pb-inviteHero__titleLine--secondary {
-  margin-top: 0.08em;
+  margin-top: 0.06em;
+  font-size: 0.88em;
+  font-weight: 800;
+  color: #4f46e5;
 }
 
-.pb-inviteHero__cardCopy {
-  position: absolute;
-  top: 38.3%;
-  left: 50%;
-  width: min(63%, 15.75rem);
-  transform: translateX(-50%);
-  text-align: center;
-  display: grid;
-  gap: clamp(0.38rem, 1.6vw, 0.55rem);
+.pb-inviteHero__eventTitle {
+  margin: 0.55rem 0 0;
+  font-family: var(--invite-font);
+  font-size: clamp(0.9375rem, 3.2vw, 1.0625rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: rgba(15, 23, 42, 0.55);
 }
 
-.pb-inviteHero__detail,
-.pb-inviteHero__message,
-.pb-inviteHero__detailRow {
-  margin: 0;
-  color: #745abf;
-  text-wrap: balance;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+.pb-inviteHero__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
 .pb-inviteHero__detailRow {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.42rem;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.72rem 0.85rem;
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(15, 23, 42, 0.05);
   text-decoration: none;
+  color: inherit;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.pb-inviteHero__detailRow--date {
-  transform: translate(-10%, -4px);
+.pb-inviteHero__detailRow--link:hover {
+  background: rgba(239, 246, 255, 0.98);
+  border-color: rgba(99, 102, 241, 0.18);
 }
 
-.pb-inviteHero__detailRow--time {
-  transform: translate(-10%, -1px);
-}
-
-.pb-inviteHero__detailRow--venue {
-  transform: translate(-5%, 0);
-  white-space: nowrap;
-}
-
-.pb-inviteHero__detailRow--venue .pb-inviteHero__detailIcon {
-  width: 1.38rem;
-  height: 1.38rem;
-  color: #6d5ef7;
-  transform: translateY(-4px);
-  filter:
-    drop-shadow(0 0 6px rgba(109, 94, 247, 0.28))
-    drop-shadow(0 0 14px rgba(109, 94, 247, 0.18));
-}
-
-.pb-inviteHero__detailRow--venue .pb-inviteHero__detailIcon svg {
-  width: 120%;
-  height: 120%;
+.pb-inviteHero__detailRow--link:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.45);
+  outline-offset: 2px;
 }
 
 .pb-inviteHero__detailIcon {
-  display: inline-grid;
-  place-items: center;
   flex-shrink: 0;
-  width: 1.38rem;
-  height: 1.38rem;
-  color: #745abf;
-}
-
-.pb-inviteHero__venueTextWrap {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
   display: grid;
-  gap: 0.08rem;
-  text-align: center;
-  justify-items: center;
+  place-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  color: #6366f1;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
 }
 
-.pb-inviteHero__detail {
-  font-family: var(--invite-font-meta);
-  font-size: clamp(1.1rem, 4.025vw, 1.36rem);
-  font-weight: 800;
-  line-height: 1.22;
+.pb-inviteHero__detailIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.pb-inviteHero__detailText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-top: 0.12rem;
+}
+
+.pb-inviteHero__detailLabel {
+  font-family: var(--invite-font);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.42);
+}
+
+.pb-inviteHero__detailValue {
+  font-family: var(--invite-font);
+  font-size: 0.96875rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: #111827;
 }
 
-.pb-inviteHero__detail--venue {
-  font-size: clamp(1.06rem, 3.74vw, 1.24rem);
-  white-space: nowrap;
+.pb-inviteHero__detailValue--venue {
+  word-break: break-word;
 }
 
 .pb-inviteHero__venueHint {
-  font-family: var(--invite-font-meta);
-  font-size: 0.66rem;
-  font-weight: 800;
-  line-height: 1.1;
+  font-family: var(--invite-font);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6366f1;
   letter-spacing: -0.01em;
-  color: rgba(109, 94, 247, 0.9);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.38);
-  transform: translateX(-10%);
 }
 
 .pb-inviteHero__message {
-  margin-top: clamp(0.3rem, 1.4vw, 0.6rem);
-  font-family: var(--invite-font-meta);
-  font-size: clamp(0.88rem, 3.15vw, 1rem);
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  color: #ffffff;
-  -webkit-text-fill-color: #ffffff;
-  text-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.18),
-    0 2px 10px rgba(0, 0, 0, 0.12);
-}
-
-.pb-inviteHero__messageFineTune {
-  transform: translate(-5%, -6px);
+  margin: 0;
+  padding: 0.85rem 0.95rem;
+  border-radius: 14px;
+  font-family: var(--invite-font);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.015em;
+  color: rgba(15, 23, 42, 0.78);
+  background: rgba(249, 250, 251, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  text-wrap: balance;
 }
 
 .pb-inviteHero__rsvpBlock {
-  margin-top: 2.1rem;
-  display: grid;
-  gap: 0.35rem;
-  justify-items: center;
-  align-self: center;
-  width: min(100%, 14.5rem);
-  margin-inline: auto;
-  transform: translateX(-9%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 0.15rem;
 }
 
 .pb-inviteHero__rsvpTitle {
   margin: 0;
-  font-family: var(--invite-script-font);
-  font-size: 1.23rem;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: #745abf;
-  -webkit-text-fill-color: #745abf;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.45),
-    0 2px 10px rgba(0, 0, 0, 0.08);
+  font-family: var(--invite-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.45);
+  text-align: center;
 }
 
 .pb-inviteHero__rsvpButtons {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
-  width: min(100%, 14.5rem);
-  justify-items: center;
-}
-
-.pb-rsvpBtn--hero {
-  min-height: 2.55rem;
-  padding: 0.68rem 0.9rem;
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.92);
-}
-
-.pb-rsvpBtn--heroHalf {
+  gap: 0.5rem;
   width: 100%;
 }
 
-.pb-rsvpBtn--heroFull {
+.pb-inviteHero .pb-rsvpBtn--hero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 3rem;
+  width: 100%;
+  padding: 0.75rem 0.65rem;
+  border-radius: 999px;
+  font-family: var(--invite-font);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #f8fafc;
+  color: #1e293b;
+  box-shadow: none;
+}
+
+.pb-inviteHero .pb-rsvpBtn--hero:hover {
+  background: #f1f5f9;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.pb-inviteHero .pb-rsvpBtn--going {
+  border-color: rgba(99, 102, 241, 0.35);
+  background: linear-gradient(180deg, #eef2ff 0%, #e0e7ff 100%);
+  color: #4338ca;
+}
+
+.pb-inviteHero .pb-rsvpBtn--going:hover {
+  background: linear-gradient(180deg, #e0e7ff 0%, #c7d2fe 100%);
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+.pb-rsvpBtn__emoji {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.pb-inviteHero .pb-rsvpBtn--heroHalf {
+  width: 100%;
+}
+
+.pb-inviteHero .pb-rsvpBtn--heroFull {
   grid-column: 1 / -1;
-  width: min(100%, 8.75rem);
+  width: 100%;
+}
+
+.pb-inviteHero .pb-rsvpBtn--going.is-active {
+  border-color: rgba(34, 197, 94, 0.42);
+  background: linear-gradient(180deg, rgba(134, 239, 172, 0.3), rgba(220, 252, 231, 0.9));
+  color: #166534;
+  box-shadow: 0 10px 22px rgba(34, 197, 94, 0.12);
+}
+
+.pb-inviteHero .pb-rsvpBtn--notGoing.is-active {
+  border-color: rgba(248, 113, 113, 0.42);
+  background: linear-gradient(180deg, rgba(254, 202, 202, 0.34), rgba(254, 242, 242, 0.92));
+  color: #b91c1c;
+  box-shadow: 0 10px 22px rgba(239, 68, 68, 0.1);
+}
+
+.pb-inviteHero .pb-rsvpBtn--maybe.is-active {
+  border-color: rgba(250, 204, 21, 0.42);
+  background: linear-gradient(180deg, rgba(254, 240, 138, 0.38), rgba(254, 249, 195, 0.92));
+  color: #a16207;
+  box-shadow: 0 10px 22px rgba(234, 179, 8, 0.1);
 }
 
 .pb-inviteHero__rsvpHint {
   margin: 0;
-  font-family: var(--invite-font-meta);
-  font-size: 0.75rem;
-  font-weight: 800;
-  line-height: 1.35;
-  color: #fff3ef;
-  text-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.18),
-    0 2px 10px rgba(0, 0, 0, 0.12);
+  font-family: var(--invite-font);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: center;
+  color: #c2410c;
 }
 
 .pb-inviteHero__rsvpNote {
-  margin: 0.15rem 0 0;
-  font-family: var(--invite-font-meta);
-  font-size: 0.76rem;
-  font-weight: 800;
-  line-height: 1.35;
+  margin: 0;
+  font-family: var(--invite-font);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.45;
   letter-spacing: -0.01em;
   text-align: center;
-  color: rgba(17, 24, 39, 0.96);
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.18);
+  color: rgba(15, 23, 42, 0.52);
+}
+
+@media (min-width: 480px) {
+  .pb-inviteHero__media {
+    max-height: 17rem;
+  }
 }
 
 .pb-inviteCard__panel {

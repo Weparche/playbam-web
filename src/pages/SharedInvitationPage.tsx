@@ -85,17 +85,6 @@ function createWishlistDraft(item?: InvitationWishlistItem | null): WishlistDraf
   }
 }
 
-function getMembershipStatusLabel(status: InvitationAccess['membershipStatus'] | MembershipRequest['status']) {
-  if (status === 'approved') {
-    return 'Odobreno'
-  }
-
-  if (status === 'rejected') {
-    return 'Odbijeno'
-  }
-
-  return 'Na ?ekanju'
-}
 
 function buildWishlistPayload(draft: WishlistDraft): InvitationWishlistPayload | null {
   const title = draft.title.trim()
@@ -118,7 +107,7 @@ function buildWishlistPayload(draft: WishlistDraft): InvitationWishlistPayload |
 
 function getReserveErrorMessage(error: unknown) {
   if (isApiError(error, 409)) {
-    return 'Ovaj poklon je u me?uvremenu ve? rezerviran.'
+    return 'Ovaj poklon je u međuvremenu već rezerviran.'
   }
 
   return 'Rezervacija poklona trenutno nije uspjela.'
@@ -126,7 +115,7 @@ function getReserveErrorMessage(error: unknown) {
 
 function getDeleteErrorMessage(error: unknown) {
   if (isApiError(error, 409)) {
-    return 'Poklon nije mogu?e obrisati dok ima aktivnu rezervaciju.'
+    return 'Poklon nije moguće obrisati dok ima aktivnu rezervaciju.'
   }
 
   return 'Brisanje poklona trenutno nije uspjelo.'
@@ -170,6 +159,9 @@ export default function SharedInvitationPage() {
   const [editingWishlistItemId, setEditingWishlistItemId] = useState<string | null>(null)
   const [savingWishlistItem, setSavingWishlistItem] = useState(false)
   const [guestModalOpen, setGuestModalOpen] = useState(false)
+  const [hostRequestsOpen, setHostRequestsOpen] = useState(false)
+  const [hostWishlistOpen, setHostWishlistOpen] = useState(false)
+  const [hostAddGiftOpen, setHostAddGiftOpen] = useState(false)
 
   useEffect(() => {
     setIdentityDraft({
@@ -236,10 +228,10 @@ export default function SharedInvitationPage() {
       return null
     }
     if (!hasFamilyProfile) {
-      return 'Dovr?i profil obitelji u prozoru.'
+      return 'Dovrši profil obitelji u prozoru.'
     }
     if (membershipRequest?.status === 'pending') {
-      return '?ekamo odobrenje organizatora, zatim mo?e? potvrditi dolazak.'
+      return 'Čekamo odobrenje organizatora, zatim možeš potvrditi dolazak.'
     }
     if (membershipRequest?.status === 'rejected') {
       return 'Zahtjev za pristup je odbijen.'
@@ -436,7 +428,7 @@ export default function SharedInvitationPage() {
     const parentName = identityDraft.parentName.trim()
 
     if (!email || !parentName) {
-      setAuthError("UpiÅ¡i e-mail adresu i ime roditelja.")
+      setAuthError('Upiši e-mail adresu i ime roditelja.')
       return
     }
 
@@ -448,7 +440,7 @@ export default function SharedInvitationPage() {
     const nextToken = hostTokenDraft.trim()
 
     if (!nextToken) {
-      setHostAuthError("UpiÅ¡i host token.")
+      setHostAuthError('Upiši host token.')
       return
     }
 
@@ -482,7 +474,7 @@ export default function SharedInvitationPage() {
       .filter((child) => child.name && Number.isFinite(child.age) && child.age > 0)
 
     if (!user || !parentName || children.length === 0) {
-      setProfileError("UpiÅ¡i ime roditelja i barem jedno dijete.")
+      setProfileError('Upiši ime roditelja i barem jedno dijete.')
       return
     }
 
@@ -501,7 +493,7 @@ export default function SharedInvitationPage() {
     } catch (caughtError) {
       setProfileError(
         isApiError(caughtError, 400)
-          ? "Provjeri podatke profila i pokuÅ¡aj ponovno."
+          ? 'Provjeri podatke profila i pokušaj ponovno.'
           : "Spremanje profila trenutno nije uspjelo.",
       )
     } finally {
@@ -862,7 +854,7 @@ export default function SharedInvitationPage() {
                   </div>
                   <div className="pb-flowActions">
                     <Button type="button" onClick={handleHostLogin}>
-                      U?i kao organizator
+                      Uđi kao organizator
                     </Button>
                   </div>
                   {hostAuthError ? <div className="pb-inlineNote pb-inlineNote--error">{hostAuthError}</div> : null}
@@ -871,39 +863,110 @@ export default function SharedInvitationPage() {
 
               {(user || hasHostSession) && !loadingPrivateState && isHost ? (
                 <>
-                  <Card className="pb-flowCard pb-inviteHostPanel">
-                    <h2 className="pb-flowCard__title">Zahtjevi za pristup</h2>
-                    <p className="pb-flowCard__text">Pregledaj tko tra?i pristup privatnom dijelu pozivnice i upravljaj gostima.</p>
-                    {hostError ? <div className="pb-inlineNote pb-inlineNote--error">{hostError}</div> : null}
-                    <HostRequestList requests={hostRequests} reviewingRequestId={reviewingRequestId} onReview={handleReview} />
+                  <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                    <button
+                      id="host-requests-toggle"
+                      type="button"
+                      className={`pb-privateToggle ${hostRequestsOpen ? 'is-open' : ''}`}
+                      onClick={() => setHostRequestsOpen((current) => !current)}
+                      aria-expanded={hostRequestsOpen}
+                    >
+                      <span className="pb-privateToggle__copy">
+                        <span className="pb-privateToggle__eyebrow">Organizator</span>
+                        <span className="pb-privateToggle__title">Zahtjevi za pristup</span>
+                      </span>
+                      <span className="pb-privateToggle__arrow" aria-hidden>
+                        ↓
+                      </span>
+                    </button>
+
+                    {hostRequestsOpen ? (
+                      <div className="pb-privateAccordionBody">
+                        <p className="pb-flowCard__text">Pregledaj tko traži pristup privatnom dijelu pozivnice i upravljaj gostima.</p>
+                        {hostError ? <div className="pb-inlineNote pb-inlineNote--error">{hostError}</div> : null}
+                        <HostRequestList requests={hostRequests} reviewingRequestId={reviewingRequestId} onReview={handleReview} />
+                      </div>
+                    ) : null}
                   </Card>
 
-                  <Card className="pb-flowCard pb-invitePrivateCard">
-                    <div className="pb-flowCard__headerRow">
-                      <h2 className="pb-flowCard__title">Lista ?elja</h2>
-                    </div>
-                    <p className="pb-flowCard__text">Dodaj, uredi i organiziraj ?elje za poklone. Ovdje vidi? i tko je ?to rezervirao.</p>
-                    <WishlistForm
-                      draft={wishlistDraft}
-                      error={wishlistFormError}
-                      saving={savingWishlistItem}
-                      isEditing={Boolean(editingWishlistItemId)}
-                      onChange={setWishlistDraft}
-                      onSave={handleWishlistSave}
-                      onCancel={resetWishlistForm}
-                    />
-                    {wishlistError ? <div className="pb-inlineNote pb-inlineNote--error">{wishlistError}</div> : null}
-                    {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">U?itavanje liste ?elja...</div> : null}
-                    {!wishlistLoading && wishlistItems.length === 0 ? <div className="pb-inlineNote pb-inlineNote--info">Jo? nema dodanih ?elja.</div> : null}
-                    {wishlistItems.length > 0 ? (
-                      <HostWishlistSection
-                        items={wishlistItems}
-                        actionItemId={wishlistActionId}
-                        editingItemId={editingWishlistItemId}
-                        onEdit={handleWishlistEdit}
-                        onDelete={handleWishlistDelete}
-                        onReleaseReservation={handleHostReleaseReservation}
-                      />
+                  <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                    <button
+                      id="host-wishlist-toggle"
+                      type="button"
+                      className={`pb-privateToggle ${hostWishlistOpen ? 'is-open' : ''}`}
+                      onClick={() => setHostWishlistOpen((current) => !current)}
+                      aria-expanded={hostWishlistOpen}
+                    >
+                      <span className="pb-privateToggle__copy">
+                        <span className="pb-privateToggle__eyebrow">Organizator</span>
+                        <span className="pb-privateToggle__title">Lista želja</span>
+                      </span>
+                      <span className="pb-privateToggle__arrow" aria-hidden>
+                        ↓
+                      </span>
+                    </button>
+
+                    {hostWishlistOpen ? (
+                      <div className="pb-privateAccordionBody">
+                        <p className="pb-flowCard__text pb-flowCard__text--hostWishlist">
+                          Dodaj, uredi i organiziraj želje za poklone. Ovdje vidiš i tko je što rezervirao.
+                        </p>
+
+                        <div className="pb-inviteHostAddWrap">
+                          <button
+                            id="host-add-toggle"
+                            type="button"
+                            className={`pb-privateToggle pb-privateToggle--inner ${hostAddGiftOpen ? 'is-open' : ''}`}
+                            onClick={() => setHostAddGiftOpen((current) => !current)}
+                            aria-expanded={hostAddGiftOpen}
+                          >
+                            <span className="pb-privateToggle__copy">
+                              <span className="pb-privateToggle__eyebrow">Organizator</span>
+                              <span className="pb-privateToggle__title">
+                                {editingWishlistItemId ? 'Uredi poklon' : 'Dodaj poklon'}
+                              </span>
+                            </span>
+                            <span className="pb-privateToggle__arrow" aria-hidden>
+                              +
+                            </span>
+                          </button>
+
+                          {hostAddGiftOpen ? (
+                            <div className="pb-inviteHostAddBody">
+                              <WishlistForm
+                                draft={wishlistDraft}
+                                error={wishlistFormError}
+                                saving={savingWishlistItem}
+                                isEditing={Boolean(editingWishlistItemId)}
+                                onChange={setWishlistDraft}
+                                onSave={handleWishlistSave}
+                                onCancel={() => {
+                                  resetWishlistForm()
+                                  setHostAddGiftOpen(false)
+                                }}
+                              />
+                            </div>
+                          ) : null}
+                        </div>
+
+                        {wishlistError ? <div className="pb-inlineNote pb-inlineNote--error">{wishlistError}</div> : null}
+                        {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">Učitavanje liste želja...</div> : null}
+                        {!wishlistLoading && wishlistItems.length === 0 ? <div className="pb-inlineNote pb-inlineNote--info">Još nema dodanih želja.</div> : null}
+                        {wishlistItems.length > 0 ? (
+                          <HostWishlistSection
+                            items={wishlistItems}
+                            actionItemId={wishlistActionId}
+                            editingItemId={editingWishlistItemId}
+                            onEdit={(item) => {
+                              handleWishlistEdit(item)
+                              setHostWishlistOpen(true)
+                              setHostAddGiftOpen(true)
+                            }}
+                            onDelete={handleWishlistDelete}
+                            onReleaseReservation={handleHostReleaseReservation}
+                          />
+                        ) : null}
+                      </div>
                     ) : null}
                   </Card>
                 </>
@@ -944,14 +1007,74 @@ function HostWishlistSection({ items, actionItemId, editingItemId, onEdit, onDel
 function rsvpStatusLabel(status: 'going' | 'not_going' | 'maybe' | null | undefined) {
   if (status === 'going') return 'Dolazi'
   if (status === 'not_going') return 'Ne dolazi'
-  if (status === 'maybe') return 'Možda'
-  return 'Odgovor još nije poslan'
+  if (status === 'maybe') return 'Mo?da'
+  return 'Odgovor jo? nije poslan'
+}
+
+function getRsvpToneClass(status?: InvitationRsvp['status']) {
+  if (status === 'going') return 'pb-hostRequestItem__rsvpBadge--going'
+  if (status === 'not_going') return 'pb-hostRequestItem__rsvpBadge--notGoing'
+  if (status === 'maybe') return 'pb-hostRequestItem__rsvpBadge--maybe'
+  return 'pb-hostRequestItem__rsvpBadge--pending'
 }
 
 function HostRequestList({ requests, reviewingRequestId, onReview }: { requests: MembershipRequest[]; reviewingRequestId: string | null; onReview: (requestId: string, action: 'approve' | 'reject') => void }) {
   if (requests.length === 0) {
-    return <div className="pb-inlineNote pb-inlineNote--info">Trenutačno nema novih zahtjeva.</div>
+    return <div className="pb-inlineNote pb-inlineNote--info">Trenuta?no nema novih zahtjeva.</div>
   }
 
-  return <div className="pb-hostRequests">{requests.map((request) => { const isBusy = reviewingRequestId === request.id; return <div key={request.id} className="pb-hostRequestItem"><div><div className="pb-hostRequestItem__title">{request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'}</div><div className="pb-hostRequestItem__meta">Djeca: {request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'}</div><div className="pb-hostRequestItem__meta">RSVP: {rsvpStatusLabel(request.rsvp?.status)}</div><div className={`pb-statusBadge pb-statusBadge--${request.status}`}>{getMembershipStatusLabel(request.status)}</div></div><div className="pb-flowActions pb-flowActions--compact">{request.status === 'approved' ? <Button variant="ghost" type="button" onClick={() => onReview(request.id, 'reject')} disabled={isBusy}>{isBusy ? 'Spremamo...' : 'Izbaci'}</Button> : <><Button type="button" onClick={() => onReview(request.id, 'approve')} disabled={isBusy}>Odobri</Button><Button variant="ghost" type="button" onClick={() => onReview(request.id, 'reject')} disabled={isBusy || request.status === 'rejected'}>{request.status === 'rejected' ? 'Odbijeno' : 'Odbij'}</Button></>}</div></div> })}</div>
+  return (
+    <div className="pb-hostRequests">
+      {requests.map((request) => {
+        const isBusy = reviewingRequestId === request.id
+        const parentName = request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'
+        const childrenText = request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'
+        const rsvpLabel = rsvpStatusLabel(request.rsvp?.status)
+        const rsvpToneClass = getRsvpToneClass(request.rsvp?.status)
+
+        return (
+          <div key={request.id} className="pb-hostRequestItem">
+            <div className="pb-hostRequestItem__main">
+              <div className="pb-hostRequestItem__title">{parentName}</div>
+              <div className="pb-hostRequestItem__meta">Djeca: {childrenText}</div>
+            </div>
+
+            <div className="pb-hostRequestItem__side">
+              {request.status === 'approved' ? (
+                <Button
+                  variant="ghost"
+                  type="button"
+                  className="pb-hostRequestItem__removeBtn"
+                  onClick={() => onReview(request.id, 'reject')}
+                  disabled={isBusy}
+                >
+                  {isBusy ? 'Spremamo...' : 'Izbaci'}
+                </Button>
+              ) : (
+                <div className="pb-flowActions pb-flowActions--compact">
+                  <Button type="button" onClick={() => onReview(request.id, 'approve')} disabled={isBusy}>
+                    Odobri
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    onClick={() => onReview(request.id, 'reject')}
+                    disabled={isBusy || request.status === 'rejected'}
+                  >
+                    {request.status === 'rejected' ? 'Odbijeno' : 'Odbij'}
+                  </Button>
+                </div>
+              )}
+
+              <div className={`pb-hostRequestItem__rsvpBadge ${rsvpToneClass}`}>
+                <span className="pb-hostRequestItem__rsvpLabel">RSVP</span>
+                <span className="pb-hostRequestItem__rsvpValue">{rsvpLabel}</span>
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
+

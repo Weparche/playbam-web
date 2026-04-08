@@ -95,7 +95,7 @@ export default function PublicInvitationHero({
         />
 
         <div className="pb-inviteHero__content pb-inviteHero__content--storybook">
-          <img className="pb-inviteHero__logo" src="/playbam-logo.png" alt="Playbam.hr" />
+          <img className="pb-inviteHero__logo" src="/logo.png" alt="Playbam.hr" />
 
           <header className="pb-inviteHero__titleWrap pb-inviteHero__titleWrap--storybook">
             <h1 className="pb-inviteHero__title pb-inviteHero__title--storybook">

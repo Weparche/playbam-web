@@ -24,7 +24,7 @@ export default function Navbar() {
     <header className="pb-nav">
       <div className="pb-container pb-nav__inner">
         <div className="pb-brand" aria-label="Playbam.hr">
-          <img src="/playbam-logo.png" alt="Playbam.hr" className="pb-brand__mark" />
+          <img src="/logo.png" alt="Playbam.hr" className="pb-brand__mark" />
         </div>
 
         <nav className="pb-nav__links" aria-label="Glavna navigacija">

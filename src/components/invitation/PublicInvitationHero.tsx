@@ -95,6 +95,7 @@ export default function PublicInvitationHero({
         />
 
         <div className="pb-inviteHero__content pb-inviteHero__content--storybook">
+          <div className="pb-inviteHero__mask pb-inviteHero__mask--title" aria-hidden />
           <header className="pb-inviteHero__titleWrap pb-inviteHero__titleWrap--storybook">
             <h1 className="pb-inviteHero__title pb-inviteHero__title--storybook">
               <span className="pb-inviteHero__titleLine">{titlePrimary}</span>
@@ -102,6 +103,7 @@ export default function PublicInvitationHero({
             </h1>
           </header>
 
+          <div className="pb-inviteHero__mask pb-inviteHero__mask--info" aria-hidden />
           <div className="pb-inviteHero__infoBlock">
             <div className="pb-inviteHero__infoRow pb-inviteHero__infoRow--date">
               <span className="pb-inviteHero__infoIcon" aria-hidden>
@@ -131,7 +133,10 @@ export default function PublicInvitationHero({
           </div>
 
           {showRsvp ? (
-            <div className="pb-inviteHero__rsvpBlock pb-inviteHero__rsvpBlock--storybook">
+            <>
+              <div className="pb-inviteHero__mask pb-inviteHero__mask--rsvpTitle" aria-hidden />
+              <div className="pb-inviteHero__mask pb-inviteHero__mask--rsvpButtons" aria-hidden />
+              <div className="pb-inviteHero__rsvpBlock pb-inviteHero__rsvpBlock--storybook">
               <h2 className="pb-inviteHero__rsvpTitle pb-inviteHero__rsvpTitle--storybook">Potvrdi dolazak</h2>
               <div className="pb-inviteHero__rsvpButtons pb-inviteHero__rsvpButtons--storybook">
                 <button
@@ -157,9 +162,11 @@ export default function PublicInvitationHero({
                 </button>
               </div>
               {guestRsvpHint ? <p className="pb-inviteHero__rsvpHint pb-inviteHero__rsvpHint--storybook">{guestRsvpHint}</p> : null}
-            </div>
+              </div>
+            </>
           ) : null}
 
+          <div className="pb-inviteHero__mask pb-inviteHero__mask--access" aria-hidden />
           <div className="pb-inviteHero__accessCard">
             <div className="pb-inviteHero__accessIcon" aria-hidden>
               <IconLock />

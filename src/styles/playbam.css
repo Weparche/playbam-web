@@ -2701,6 +2701,12 @@
   font-weight: 800;
 }
 
+.pb-hostRequestItem__removeBtn.pb-btn-ghost {
+  background: rgba(229, 72, 77, 0.12);
+  border-color: rgba(229, 72, 77, 0.2);
+  color: #b42318;
+}
+
 .pb-statusBadge {
   margin-top: 12px;
   display: inline-flex;

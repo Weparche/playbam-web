@@ -30,7 +30,7 @@ export default function InvitationCard({
   const dateText = invitation.date.trim() || 'Datum uskoro'
   const timeText = invitation.time.trim() || 'Vrijeme uskoro'
   const venueText = invitation.location.trim() || 'Lokacija uskoro'
-  const backgroundImage = '/rocko.png'
+  const backgroundImage = '/pozivnica-boys.png'
   const accessTitle = 'Privatni dio pozivnice'
   const accessText =
     access === 'private'

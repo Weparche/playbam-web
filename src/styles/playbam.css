@@ -3820,9 +3820,19 @@
   height: 100%;
 }
 
+.pb-inviteHero__logo {
+  position: absolute;
+  top: 2.2%;
+  left: 5.2%;
+  width: 37%;
+  max-width: 8.6rem;
+  height: auto;
+  object-fit: contain;
+}
+
 .pb-inviteHero__titleWrap--storybook {
   position: absolute;
-  top: 9.5%;
+  top: 11.2%;
   left: 50%;
   width: 72%;
   transform: translateX(-50%);

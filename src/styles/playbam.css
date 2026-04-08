@@ -3775,3 +3775,316 @@
     padding: 1.2rem 1.15rem 1.1rem;
   }
 }
+
+/* Deployment invitation layout override */
+.pb-inviteCard__stack {
+  gap: 0;
+  justify-items: center;
+}
+
+.pb-inviteHero__frame {
+  position: relative;
+  max-width: 28rem;
+  aspect-ratio: 9 / 16;
+  border-radius: clamp(28px, 7vw, 36px);
+  background: transparent;
+  border: 0;
+  box-shadow:
+    0 18px 44px rgba(82, 65, 173, 0.16),
+    0 4px 14px rgba(31, 36, 48, 0.06);
+}
+
+.pb-inviteHero__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.pb-inviteHero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.pb-inviteHero__titleWrap {
+  position: absolute;
+  top: 7.5%;
+  left: 50%;
+  width: min(82%, 18rem);
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.pb-inviteHero__title {
+  margin: 0;
+  font-family: var(--invite-script-font);
+  font-size: clamp(1.8rem, 7.83vw, 3.015rem);
+  font-weight: 800;
+  line-height: 0.97;
+  letter-spacing: -0.025em;
+  color: #7652dd;
+  -webkit-text-fill-color: #7652dd;
+  text-wrap: balance;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.88),
+    0 0 12px rgba(126, 92, 228, 0.12);
+}
+
+.pb-inviteHero__titleLine {
+  display: block;
+}
+
+.pb-inviteHero__titleLine--secondary {
+  margin-top: 0.08em;
+}
+
+.pb-inviteHero__cardCopy {
+  position: absolute;
+  top: 38.3%;
+  left: 50%;
+  width: min(63%, 15.75rem);
+  transform: translateX(-50%);
+  text-align: center;
+  display: grid;
+  gap: clamp(0.38rem, 1.6vw, 0.55rem);
+}
+
+.pb-inviteHero__detail,
+.pb-inviteHero__message,
+.pb-inviteHero__detailRow {
+  margin: 0;
+  color: #745abf;
+  text-wrap: balance;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.pb-inviteHero__detailRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  text-decoration: none;
+}
+
+.pb-inviteHero__detailRow--date {
+  transform: translate(-10%, -4px);
+}
+
+.pb-inviteHero__detailRow--time {
+  transform: translate(-10%, -1px);
+}
+
+.pb-inviteHero__detailRow--venue {
+  transform: translate(-5%, 0);
+  white-space: nowrap;
+}
+
+.pb-inviteHero__detailRow--venue .pb-inviteHero__detailIcon {
+  width: 1.38rem;
+  height: 1.38rem;
+  color: #6d5ef7;
+  transform: translateY(-4px);
+  filter:
+    drop-shadow(0 0 6px rgba(109, 94, 247, 0.28))
+    drop-shadow(0 0 14px rgba(109, 94, 247, 0.18));
+}
+
+.pb-inviteHero__detailRow--venue .pb-inviteHero__detailIcon svg {
+  width: 120%;
+  height: 120%;
+}
+
+.pb-inviteHero__detailIcon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.38rem;
+  height: 1.38rem;
+  color: #745abf;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.pb-inviteHero__detailIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.pb-inviteHero__venueTextWrap {
+  display: grid;
+  gap: 0.08rem;
+  text-align: center;
+  justify-items: center;
+}
+
+.pb-inviteHero__detail {
+  font-family: var(--invite-font-meta);
+  font-size: clamp(1.1rem, 4.025vw, 1.36rem);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+}
+
+.pb-inviteHero__detail--venue {
+  font-size: clamp(1.06rem, 3.74vw, 1.24rem);
+  white-space: nowrap;
+}
+
+.pb-inviteHero__venueHint {
+  font-family: var(--invite-font-meta);
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: rgba(109, 94, 247, 0.9);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.38);
+  transform: translateX(-10%);
+}
+
+.pb-inviteHero__message {
+  margin-top: clamp(0.3rem, 1.4vw, 0.6rem);
+  font-family: var(--invite-font-meta);
+  font-size: clamp(0.88rem, 3.15vw, 1rem);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.18),
+    0 0 10px rgba(255, 255, 255, 0.14);
+}
+
+.pb-inviteHero__messageFineTune {
+  transform: translate(-5%, -6px);
+}
+
+.pb-inviteHero__rsvpBlock {
+  margin-top: 2.1rem;
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  align-self: center;
+  width: min(100%, 14.5rem);
+  margin-inline: auto;
+  padding-top: 0;
+  transform: translateX(-6%);
+}
+
+.pb-inviteHero__rsvpTitle {
+  margin: 0;
+  font-family: var(--invite-script-font);
+  font-size: 1.23rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: #745abf;
+  -webkit-text-fill-color: #745abf;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.58);
+}
+
+.pb-inviteHero__rsvpButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  width: min(100%, 14.5rem);
+  justify-items: center;
+}
+
+.pb-inviteHero .pb-rsvpBtn--hero {
+  width: min(100%, 6.75rem);
+  min-height: 3.35rem;
+  padding: 0.68rem 0.7rem;
+  border-radius: 18px;
+  border: 1px solid rgba(141, 116, 222, 0.26);
+  background: rgba(255, 255, 255, 0.92);
+  color: #5b4de3;
+  font-family: var(--invite-font);
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  box-shadow:
+    0 6px 16px rgba(91, 77, 227, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+.pb-inviteHero .pb-rsvpBtn--hero:hover {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(109, 94, 247, 0.34);
+  box-shadow:
+    0 8px 20px rgba(91, 77, 227, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.pb-inviteHero .pb-rsvpBtn--going {
+  background: rgba(255, 255, 255, 0.96);
+  color: #5b4de3;
+}
+
+.pb-inviteHero .pb-rsvpBtn--heroHalf {
+  width: min(100%, 6.75rem);
+}
+
+.pb-inviteHero .pb-rsvpBtn--heroFull {
+  grid-column: 1 / -1;
+  width: min(100%, 13.9rem);
+}
+
+.pb-inviteHero .pb-rsvpBtn--going.is-active,
+.pb-inviteHero .pb-rsvpBtn--notGoing.is-active,
+.pb-inviteHero .pb-rsvpBtn--maybe.is-active {
+  border-color: rgba(91, 77, 227, 0.34);
+  background: rgba(255, 255, 255, 1);
+  color: #4c3fcb;
+  box-shadow:
+    0 10px 22px rgba(91, 77, 227, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.pb-inviteHero__rsvpHint {
+  margin: 0;
+  font-family: var(--invite-font-meta);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1.35;
+  color: #fff3ef;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.18),
+    0 0 10px rgba(255, 255, 255, 0.08);
+}
+
+.pb-inviteHero__rsvpNote {
+  margin: 0.15rem 0 0;
+  font-family: var(--invite-font-meta);
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: rgba(17, 24, 39, 0.96);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.45rem 0.7rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(31, 36, 48, 0.08);
+}
+
+@media (max-width: 520px) {
+  .pb-inviteHero__frame {
+    max-width: none;
+  }
+
+  .pb-inviteHero__cardCopy {
+    width: min(68%, 15rem);
+  }
+}

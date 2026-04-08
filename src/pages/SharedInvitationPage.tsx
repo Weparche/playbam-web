@@ -423,6 +423,50 @@ export default function SharedInvitationPage() {
       cancelled = true
     }
   }, [invitation, user, hasHostSession, logout])
+
+  useEffect(() => {
+    if (!invitation || !isHost || loadingPrivateState || (!user && !hasHostSession)) {
+      return
+    }
+
+    const identity = user ?? null
+    let disposed = false
+
+    const refreshHostPanels = async () => {
+      try {
+        const [requests, wishlist] = await Promise.all([
+          listMembershipRequests(invitation.id, identity),
+          getInvitationWishlist(invitation.id, identity),
+        ])
+
+        if (disposed) {
+          return
+        }
+
+        setHostRequests(requests.filter((request) => request.status !== 'rejected'))
+        setWishlistItems(wishlist)
+      } catch {
+        // Keep host polling silent to avoid flashing transient network errors.
+      }
+    }
+
+    const intervalId = window.setInterval(() => {
+      void refreshHostPanels()
+    }, 10_000)
+
+    const handleFocus = () => {
+      void refreshHostPanels()
+    }
+
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      disposed = true
+      window.clearInterval(intervalId)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [invitation, isHost, loadingPrivateState, user, hasHostSession])
+
   const handleLogin = () => {
     const email = identityDraft.email.trim().toLowerCase()
     const parentName = identityDraft.parentName.trim()

@@ -228,10 +228,10 @@ export default function SharedInvitationPage() {
       return null
     }
     if (!hasFamilyProfile) {
-      return 'Dovrši profil obitelji u prozoru.'
+      return 'Dovr?i profil obitelji u prozoru.'
     }
     if (membershipRequest?.status === 'pending') {
-      return 'Čekamo odobrenje organizatora, zatim možeš potvrditi dolazak.'
+      return '?ekamo odobrenje organizatora, zatim mo?e? potvrditi dolazak.'
     }
     if (membershipRequest?.status === 'rejected') {
       return 'Zahtjev za pristup je odbijen.'
@@ -276,7 +276,7 @@ export default function SharedInvitationPage() {
       const items = await getInvitationWishlist(invitation.id, identity)
       setWishlistItems(items)
     } catch {
-      setWishlistError('Lista ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¾elja trenutno nije dostupna.')
+      setWishlistError('Lista želja trenutno nije dostupna.')
     } finally {
       setWishlistLoading(false)
     }
@@ -380,7 +380,7 @@ export default function SharedInvitationPage() {
           } catch {
             if (!cancelled) {
               setWishlistItems([])
-              setWishlistError('Lista ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¾elja trenutno nije dostupna.')
+              setWishlistError('Lista želja trenutno nije dostupna.')
             }
           } finally {
             if (!cancelled) {
@@ -408,7 +408,7 @@ export default function SharedInvitationPage() {
           setHostToken("")
           setHostAuthError("Host token nije valjan.")
         } else {
-          setRequestError("Trenuta?no ne mo?emo u?itati privatni dio pozivnice.")
+          setRequestError("Trenutačno ne možemo učitati privatni dio pozivnice.")
         }
       } finally {
         if (!cancelled) {
@@ -472,7 +472,7 @@ export default function SharedInvitationPage() {
     const parentName = identityDraft.parentName.trim()
 
     if (!email || !parentName) {
-      setAuthError('Upiši e-mail adresu i ime roditelja.')
+      setAuthError('Upi?i e-mail adresu i ime roditelja.')
       return
     }
 
@@ -484,7 +484,7 @@ export default function SharedInvitationPage() {
     const nextToken = hostTokenDraft.trim()
 
     if (!nextToken) {
-      setHostAuthError('Upiši host token.')
+      setHostAuthError('Upi?i host token.')
       return
     }
 
@@ -518,7 +518,7 @@ export default function SharedInvitationPage() {
       .filter((child) => child.name && Number.isFinite(child.age) && child.age > 0)
 
     if (!user || !parentName || children.length === 0) {
-      setProfileError('Upiši ime roditelja i barem jedno dijete.')
+      setProfileError('Upi?i ime roditelja i barem jedno dijete.')
       return
     }
 
@@ -537,7 +537,7 @@ export default function SharedInvitationPage() {
     } catch (caughtError) {
       setProfileError(
         isApiError(caughtError, 400)
-          ? 'Provjeri podatke profila i pokušaj ponovno.'
+          ? 'Provjeri podatke profila i poku?aj ponovno.'
           : "Spremanje profila trenutno nije uspjelo.",
       )
     } finally {
@@ -561,7 +561,7 @@ export default function SharedInvitationPage() {
     } catch (caughtError) {
       setRequestError(
         isApiError(caughtError, 409)
-          ? 'Zahtjev je veÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ poslan organizatoru.'
+          ? 'Zahtjev je ve? poslan organizatoru.'
           : 'Slanje zahtjeva trenutno nije uspjelo.',
       )
     } finally {
@@ -701,7 +701,7 @@ export default function SharedInvitationPage() {
       resetWishlistForm()
       await refreshWishlist(user)
     } catch {
-      setWishlistFormError('Spremanje ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¾elje trenutno nije uspjelo.')
+      setWishlistFormError('Spremanje ?elje trenutno nije uspjelo.')
     } finally {
       setSavingWishlistItem(false)
     }
@@ -746,7 +746,7 @@ export default function SharedInvitationPage() {
       await cancelInvitationWishlistReservation(invitation.id, item.id, user)
       await refreshWishlist(user)
     } catch {
-      setWishlistError('OtpuÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡tanje rezervacije trenutno nije uspjelo.')
+      setWishlistError('Otpu?tanje rezervacije trenutno nije uspjelo.')
     } finally {
       setWishlistActionId(null)
     }
@@ -773,14 +773,14 @@ export default function SharedInvitationPage() {
 
           {loading ? (
             <Card className="pb-flowCard">
-              <h1 className="pb-flowCard__title">U?itavamo pozivnicu...</h1>
-              <p className="pb-flowCard__text">Dohva?amo javne podatke s Playbam backend API-ja.</p>
+              <h1 className="pb-flowCard__title">Učitavamo pozivnicu...</h1>
+              <p className="pb-flowCard__text">Dohvaćamo javne podatke s Playbam backend API-ja.</p>
             </Card>
           ) : null}
 
           {!loading && error === 'NOT_FOUND' ? (
             <Card className="pb-flowCard">
-              <h1 className="pb-flowCard__title">Pozivnica nije prona?ena.</h1>
+              <h1 className="pb-flowCard__title">Pozivnica nije pronađena.</h1>
               <p className="pb-flowCard__text">Provjeri poveznicu ili se vrati na naslovnicu.</p>
             </Card>
           ) : null}
@@ -788,7 +788,7 @@ export default function SharedInvitationPage() {
           {!loading && error === 'LOAD_FAILED' ? (
             <Card className="pb-flowCard">
               <h1 className="pb-flowCard__title">Pozivnica trenutno nije dostupna.</h1>
-              <p className="pb-flowCard__text">Nismo uspjeli dohvatiti podatke sa servisa. Poku?aj ponovno za nekoliko trenutaka.</p>
+              <p className="pb-flowCard__text">Nismo uspjeli dohvatiti podatke sa servisa. Pokušaj ponovno za nekoliko trenutaka.</p>
             </Card>
           ) : null}
 
@@ -901,7 +901,7 @@ export default function SharedInvitationPage() {
                   </div>
                   <div className="pb-flowActions">
                     <Button type="button" onClick={handleHostLogin}>
-                      U?i kao organizator
+                      Uđi kao organizator
                     </Button>
                   </div>
                   {hostAuthError ? <div className="pb-inlineNote pb-inlineNote--error">{hostAuthError}</div> : null}
@@ -923,13 +923,13 @@ export default function SharedInvitationPage() {
                         <span className="pb-privateToggle__title">Zahtjevi za pristup</span>
                       </span>
                       <span className="pb-privateToggle__arrow" aria-hidden>
-                        ↓
+                        ?
                       </span>
                     </button>
 
                     {hostRequestsOpen ? (
                       <div className="pb-privateAccordionBody">
-                        <p className="pb-flowCard__text">Pregledaj tko tra?i pristup privatnom dijelu pozivnice i upravljaj gostima.</p>
+                        <p className="pb-flowCard__text">Pregledaj tko traži pristup privatnom dijelu pozivnice i upravljaj gostima.</p>
                         {hostError ? <div className="pb-inlineNote pb-inlineNote--error">{hostError}</div> : null}
                         <HostRequestList requests={hostRequests} reviewingRequestId={reviewingRequestId} onReview={handleReview} />
                       </div>
@@ -946,17 +946,17 @@ export default function SharedInvitationPage() {
                     >
                       <span className="pb-privateToggle__copy">
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
-                        <span className="pb-privateToggle__title">Lista ?elja</span>
+                        <span className="pb-privateToggle__title">Lista želja</span>
                       </span>
                       <span className="pb-privateToggle__arrow" aria-hidden>
-                        ↓
+                        ?
                       </span>
                     </button>
 
                     {hostWishlistOpen ? (
                       <div className="pb-privateAccordionBody">
                         <p className="pb-flowCard__text pb-flowCard__text--hostWishlist">
-                          Dodaj, uredi i organiziraj ?elje za poklone. Ovdje vidi? i tko je ?to rezervirao.
+                          Dodaj, uredi i organiziraj želje za poklone. Ovdje vidiš i tko je što rezervirao.
                         </p>
 
                         <div className="pb-inviteHostAddWrap">
@@ -997,8 +997,8 @@ export default function SharedInvitationPage() {
                         </div>
 
                         {wishlistError ? <div className="pb-inlineNote pb-inlineNote--error">{wishlistError}</div> : null}
-                        {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">U?itavanje liste ?elja...</div> : null}
-                        {!wishlistLoading && wishlistItems.length === 0 ? <div className="pb-inlineNote pb-inlineNote--info">Jo? nema dodanih ?elja.</div> : null}
+                        {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">Učitavanje liste želja...</div> : null}
+                        {!wishlistLoading && wishlistItems.length === 0 ? <div className="pb-inlineNote pb-inlineNote--info">Još nema dodanih želja.</div> : null}
                         {wishlistItems.length > 0 ? (
                           <HostWishlistSection
                             items={wishlistItems}
@@ -1072,7 +1072,7 @@ function WishlistForm({ draft, error, saving, isEditing, onChange, onSave, onCan
         <label className="pb-formField"><span className="pb-formLabel">Redoslijed</span><input className="pb-input" type="number" min="0" value={draft.priorityOrder} onChange={(event) => onChange({ ...draft, priorityOrder: event.target.value })} /></label>
       </div>
       <div className="pb-flowActions">
-        <Button type="button" onClick={onSave} disabled={saving}>{saving ? 'Spremamo...' : isEditing ? 'Spremi' : 'Dodaj ?elju'}</Button>
+        <Button type="button" onClick={onSave} disabled={saving}>{saving ? 'Spremamo...' : isEditing ? 'Spremi' : 'Dodaj želju'}</Button>
         {isEditing ? <Button variant="ghost" type="button" onClick={onCancel}>Odustani</Button> : null}
       </div>
       {error ? <div className="pb-inlineNote pb-inlineNote--error">{error}</div> : null}
@@ -1081,14 +1081,14 @@ function WishlistForm({ draft, error, saving, isEditing, onChange, onSave, onCan
 }
 
 function HostWishlistSection({ items, actionItemId, editingItemId, onEdit, onDelete, onReleaseReservation }: { items: InvitationWishlistItem[]; actionItemId: string | null; editingItemId: string | null; onEdit: (item: InvitationWishlistItem) => void; onDelete: (item: InvitationWishlistItem) => void; onReleaseReservation: (item: InvitationWishlistItem) => void }) {
-  return <div className="pb-wishlist">{items.map((item) => { const isBusy = actionItemId === item.id; const hasActiveReservation = item.reservation.status === 'active'; return <div key={item.id} className="pb-wishlistItem"><div><div className="pb-wishlistItem__title">{item.title}</div>{item.description ? <div className="pb-wishlistItem__meta">{item.description}</div> : null}{item.priceLabel ? <div className="pb-wishlistItem__meta">Cijena: {item.priceLabel}</div> : null}{item.url ? <div className="pb-wishlistItem__meta"><a href={item.url} target="_blank" rel="noreferrer">Pogledaj link</a></div> : null}<div className="pb-wishlistItem__meta">Redoslijed: {item.priorityOrder}</div>{hasActiveReservation ? <><div className="pb-wishlistItem__reserved">Rezervirao/la: {item.reservation.reservedByName || 'Gost'}</div>{item.reservation.reservedForChildName ? <div className="pb-wishlistItem__meta">Za dijete: {item.reservation.reservedForChildName}</div> : null}{item.reservation.note ? <div className="pb-wishlistItem__meta">Napomena: {item.reservation.note}</div> : null}</> : <div className="pb-wishlistItem__reserved">Poklon je trenutno slobodan.</div>}</div><div style={{ display: 'grid', gap: 10 }}>{item.imageUrl ? <img src={item.imageUrl} alt={item.title} style={{ width: '100%', maxWidth: 180, borderRadius: 14, objectFit: 'cover' }} /> : null}<Button variant={editingItemId === item.id ? 'amber' : 'ghost'} type="button" onClick={() => onEdit(item)}>Uredi</Button><Button variant="ghost" type="button" onClick={() => onDelete(item)} disabled={isBusy}>{isBusy ? 'Brisanje...' : 'Obri?i'}</Button>{hasActiveReservation ? <Button type="button" onClick={() => onReleaseReservation(item)} disabled={isBusy}>{isBusy ? 'Spremamo...' : 'Otpusti rezervaciju'}</Button> : null}</div></div> })}</div>
+  return <div className="pb-wishlist">{items.map((item) => { const isBusy = actionItemId === item.id; const hasActiveReservation = item.reservation.status === 'active'; return <div key={item.id} className="pb-wishlistItem"><div><div className="pb-wishlistItem__title">{item.title}</div>{item.description ? <div className="pb-wishlistItem__meta">{item.description}</div> : null}{item.priceLabel ? <div className="pb-wishlistItem__meta">Cijena: {item.priceLabel}</div> : null}{item.url ? <div className="pb-wishlistItem__meta"><a href={item.url} target="_blank" rel="noreferrer">Pogledaj link</a></div> : null}<div className="pb-wishlistItem__meta">Redoslijed: {item.priorityOrder}</div>{hasActiveReservation ? <><div className="pb-wishlistItem__reserved">Rezervirao/la: {item.reservation.reservedByName || 'Gost'}</div>{item.reservation.reservedForChildName ? <div className="pb-wishlistItem__meta">Za dijete: {item.reservation.reservedForChildName}</div> : null}{item.reservation.note ? <div className="pb-wishlistItem__meta">Napomena: {item.reservation.note}</div> : null}</> : <div className="pb-wishlistItem__reserved">Poklon je trenutno slobodan.</div>}</div><div style={{ display: 'grid', gap: 10 }}>{item.imageUrl ? <img src={item.imageUrl} alt={item.title} style={{ width: '100%', maxWidth: 180, borderRadius: 14, objectFit: 'cover' }} /> : null}<Button variant={editingItemId === item.id ? 'amber' : 'ghost'} type="button" onClick={() => onEdit(item)}>Uredi</Button><Button variant="ghost" type="button" onClick={() => onDelete(item)} disabled={isBusy}>{isBusy ? 'Brisanje...' : 'Obriši'}</Button>{hasActiveReservation ? <Button type="button" onClick={() => onReleaseReservation(item)} disabled={isBusy}>{isBusy ? 'Spremamo...' : 'Otpusti rezervaciju'}</Button> : null}</div></div> })}</div>
 }
 
 function rsvpStatusLabel(status: 'going' | 'not_going' | 'maybe' | null | undefined) {
   if (status === 'going') return 'Dolazi'
   if (status === 'not_going') return 'Ne dolazi'
-  if (status === 'maybe') return 'Mo?da'
-  return 'Odgovor jo? nije poslan'
+  if (status === 'maybe') return 'Možda'
+  return 'Odgovor još nije poslan'
 }
 
 function getRsvpToneClass(status?: InvitationRsvp['status']) {
@@ -1100,7 +1100,7 @@ function getRsvpToneClass(status?: InvitationRsvp['status']) {
 
 function HostRequestList({ requests, reviewingRequestId, onReview }: { requests: MembershipRequest[]; reviewingRequestId: string | null; onReview: (requestId: string, action: 'approve' | 'reject') => void }) {
   if (requests.length === 0) {
-    return <div className="pb-inlineNote pb-inlineNote--info">Trenuta?no nema novih zahtjeva.</div>
+    return <div className="pb-inlineNote pb-inlineNote--info">Trenutačno nema novih zahtjeva.</div>
   }
 
   return (

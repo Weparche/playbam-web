@@ -59,7 +59,7 @@ export default function InvitationCard({
   const dateText = formatInvitationDate(invitation.date.trim())
   const timeText = formatInvitationTime(invitation.time.trim())
   const venueText = invitation.location.trim() || 'Lokacija uskoro'
-  const backgroundImage = '/pozivnica-bg.png'
+  const backgroundImage = '/pozivnica-boys.png'
   const accessTitle = 'Privatni dio pozivnice'
   const accessText =
     access === 'private'

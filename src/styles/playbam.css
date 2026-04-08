@@ -1758,7 +1758,7 @@
 
 .pb-invitePrivateStack--host {
   gap: clamp(0.65rem, 2.2vw, 0.9rem);
-  margin: clamp(-10.1rem, -23vw, -7.7rem) auto 0;
+  margin: clamp(-11.8rem, -28vw, -9.2rem) auto 0;
 }
 
 .pb-invitePrivateStack > * {

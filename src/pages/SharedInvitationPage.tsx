@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import InvitationCard from '../components/invitation/InvitationCard'
 import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGuest'
@@ -719,24 +719,24 @@ export default function SharedInvitationPage() {
         </div>
         <div className="pb-container pb-flowLayout">
           <div className="pb-backRow">
-            <Link className="pb-backLink" to="/">
+            <a className="pb-backLink" href="https://playbam.hr">
               <span className="pb-backLink__icon" aria-hidden>
-                ?
+                &larr;
               </span>
               <span>Nazad na Playbam.hr</span>
-            </Link>
+            </a>
           </div>
 
           {loading ? (
             <Card className="pb-flowCard">
-              <h1 className="pb-flowCard__title">U?itavamo pozivnicu...</h1>
-              <p className="pb-flowCard__text">Dohva?amo javne podatke s Playbam backend API-ja.</p>
+              <h1 className="pb-flowCard__title">Učitavamo pozivnicu...</h1>
+              <p className="pb-flowCard__text">Dohvaćamo javne podatke s Playbam backend API-ja.</p>
             </Card>
           ) : null}
 
           {!loading && error === 'NOT_FOUND' ? (
             <Card className="pb-flowCard">
-              <h1 className="pb-flowCard__title">Pozivnica nije prona?ena.</h1>
+              <h1 className="pb-flowCard__title">Pozivnica nije pronađena.</h1>
               <p className="pb-flowCard__text">Provjeri poveznicu ili se vrati na naslovnicu.</p>
             </Card>
           ) : null}
@@ -744,7 +744,7 @@ export default function SharedInvitationPage() {
           {!loading && error === 'LOAD_FAILED' ? (
             <Card className="pb-flowCard">
               <h1 className="pb-flowCard__title">Pozivnica trenutno nije dostupna.</h1>
-              <p className="pb-flowCard__text">Nismo uspjeli dohvatiti podatke sa servisa. Poku?aj ponovno za nekoliko trenutaka.</p>
+              <p className="pb-flowCard__text">Nismo uspjeli dohvatiti podatke sa servisa. Pokušaj ponovno za nekoliko trenutaka.</p>
             </Card>
           ) : null}
 

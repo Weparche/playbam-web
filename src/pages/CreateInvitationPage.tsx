@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import InvitationCreateShell from '../components/create/InvitationCreateShell'
+import InvitationLivePreview from '../components/create/InvitationLivePreview'
 import InvitationMainEditor from '../components/create/InvitationMainEditor'
 import InvitationPreviewCard from '../components/create/InvitationPreviewCard'
 import FloatingEditPanel from '../components/create/FloatingEditPanel'
@@ -13,6 +14,7 @@ import QuickTitleEditor from '../components/create/QuickTitleEditor'
 import QuickWishlistEditor from '../components/create/QuickWishlistEditor'
 import ShortcutRail from '../components/create/ShortcutRail'
 import {
+  buildTimeRangeValue,
   DEFAULT_CREATE_DRAFT,
   type AccentPalette,
   type CoverTheme,
@@ -93,8 +95,13 @@ export default function CreateInvitationPage() {
   }
 
   const handleCreateInvitation = async () => {
-    if (!draft.title.trim() || !draft.celebrantName.trim() || !draft.date.trim() || !draft.time.trim() || !draft.locationName.trim()) {
-      setFormError('Upiši naslov, ime slavljenika, datum, vrijeme i naziv lokacije.')
+    if (!draft.title.trim() || !draft.celebrantName.trim() || !draft.date.trim() || !draft.time.trim() || !draft.timeEnd.trim() || !draft.locationName.trim()) {
+      setFormError('Upiši naslov, ime slavljenika, datum, vrijeme od-do i naziv lokacije.')
+      return
+    }
+
+    if (draft.timeEnd <= draft.time) {
+      setFormError('Vrijeme završetka mora biti nakon vremena početka.')
       return
     }
 
@@ -106,7 +113,7 @@ export default function CreateInvitationPage() {
         title: draft.title.trim(),
         celebrantName: draft.celebrantName.trim(),
         date: draft.date,
-        time: draft.time,
+        time: buildTimeRangeValue(draft.time, draft.timeEnd),
         location: [draft.locationName.trim(), draft.locationAddress.trim()].filter(Boolean).join(', '),
         message: draft.message.trim() || undefined,
         coverImage: draft.theme,
@@ -227,7 +234,7 @@ export default function CreateInvitationPage() {
         return (
           <FloatingEditPanel
             open
-            title="Settings"
+            title="Postavke"
             description="Priprema za napredne postavke koje ćemo kasnije spojiti na backend draft logiku."
             onClose={() => setActiveShortcut(null)}
           >
@@ -254,11 +261,11 @@ export default function CreateInvitationPage() {
         return (
           <FloatingEditPanel
             open
-            title="Preview"
+            title="Pregled"
             description="Brzi pregled kako pozivnica izgleda gostu bez napuštanja editora."
             onClose={() => setActiveShortcut(null)}
           >
-            <InvitationPreviewCard draft={draft} compact />
+            <InvitationLivePreview draft={draft} compact />
           </FloatingEditPanel>
         )
       default:

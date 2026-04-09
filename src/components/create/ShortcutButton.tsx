@@ -15,10 +15,12 @@ export default function ShortcutButton({ id, icon, label, active, onClick }: Pro
       className={`pb-shortcutButton ${active ? 'is-active' : ''}`}
       data-label={label}
       aria-label={label}
+      aria-pressed={active}
       title={label}
       onClick={() => onClick(id)}
     >
       <span className="pb-shortcutButton__icon" aria-hidden="true">{icon}</span>
+      <span className="pb-shortcutButton__label">{label}</span>
     </button>
   )
 }

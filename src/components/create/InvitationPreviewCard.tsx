@@ -37,7 +37,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
         </div>
         <div className="pb-previewCard__infoCard">
           <span className="pb-previewCard__label">Vrijeme</span>
-          <strong>{formatPreviewTime(draft.time)}</strong>
+          <strong>{formatPreviewTime(draft.time, draft.timeEnd)}</strong>
         </div>
         <div className="pb-previewCard__infoCard pb-previewCard__infoCard--wide">
           <span className="pb-previewCard__label">Lokacija</span>

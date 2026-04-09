@@ -31,6 +31,7 @@ export type InvitationCreateDraft = {
   celebrantName: string
   date: string
   time: string
+  timeEnd: string
   locationName: string
   locationAddress: string
   locationType: LocationType
@@ -101,16 +102,12 @@ export const STYLE_PRESETS = [
 }>
 
 export const SHORTCUT_ITEMS = [
-  { id: 'title', label: 'Naslov', icon: '✍️' },
-  { id: 'dateTime', label: 'Datum', icon: '🗓️' },
-  { id: 'location', label: 'Lokacija', icon: '📍' },
   { id: 'theme', label: 'Tema', icon: '🎨' },
-  { id: 'message', label: 'Poruka', icon: '💬' },
-  { id: 'wishlist', label: 'Wishlist', icon: '🎁' },
+  { id: 'wishlist', label: 'Pokloni', icon: '🎁' },
   { id: 'rsvp', label: 'RSVP', icon: '🥳' },
   { id: 'style', label: 'Stil', icon: '✨' },
-  { id: 'settings', label: 'Settings', icon: '⚙️' },
-  { id: 'preview', label: 'Preview', icon: '👁️' },
+  { id: 'settings', label: 'Postavke', icon: '⚙️' },
+  { id: 'preview', label: 'Pregled', icon: '👁️' },
 ] as const satisfies ReadonlyArray<{ id: ShortcutId; label: string; icon: string }>
 
 export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
@@ -118,6 +115,7 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   celebrantName: 'Luka',
   date: '2026-06-15',
   time: '15:00',
+  timeEnd: '17:00',
   locationName: 'Igraonica Jogica',
   locationAddress: 'Lastovska 2, Zagreb',
   locationType: 'Igraonica / lokal',
@@ -156,8 +154,22 @@ export function formatShortDate(dateValue: string) {
     .replace(/^./u, (letter) => letter.toUpperCase())
 }
 
-export function formatPreviewTime(timeValue: string) {
-  return timeValue.trim() ? `${timeValue.trim()} h` : 'Vrijeme uskoro'
+export function formatPreviewTime(timeValue: string, timeEndValue = '') {
+  const start = timeValue.trim()
+  const end = timeEndValue.trim()
+
+  if (start && end) return `${start} - ${end}`
+  if (start) return `${start} - ...`
+  if (end) return `... - ${end}`
+  return 'Vrijeme uskoro'
+}
+
+export function buildTimeRangeValue(timeValue: string, timeEndValue: string) {
+  const start = timeValue.trim()
+  const end = timeEndValue.trim()
+
+  if (start && end) return `${start} - ${end}`
+  return start || end || ''
 }
 
 export function formatInputDate(date: Date) {

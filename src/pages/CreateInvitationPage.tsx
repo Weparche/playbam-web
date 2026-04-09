@@ -1,449 +1,294 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
 
+import InvitationCreateShell from '../components/create/InvitationCreateShell'
+import InvitationMainEditor from '../components/create/InvitationMainEditor'
+import InvitationPreviewCard from '../components/create/InvitationPreviewCard'
+import FloatingEditPanel from '../components/create/FloatingEditPanel'
+import QuickDateTimeEditor from '../components/create/QuickDateTimeEditor'
+import QuickLocationEditor from '../components/create/QuickLocationEditor'
+import QuickMessageEditor from '../components/create/QuickMessageEditor'
+import QuickRSVPEditor from '../components/create/QuickRSVPEditor'
+import QuickThemeEditor from '../components/create/QuickThemeEditor'
+import QuickTitleEditor from '../components/create/QuickTitleEditor'
+import QuickWishlistEditor from '../components/create/QuickWishlistEditor'
+import ShortcutRail from '../components/create/ShortcutRail'
+import {
+  DEFAULT_CREATE_DRAFT,
+  type AccentPalette,
+  type CoverTheme,
+  type EffectStyle,
+  type InvitationCreateDraft,
+  type ShortcutId,
+  type TitleFont,
+  type WishlistDraftItem,
+} from '../components/create/createTypes'
 import Footer from '../components/layout/Footer'
 import Navbar from '../components/layout/Navbar'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import { createInvitation } from '../lib/invitationApi'
 
-const LOCATION_TYPES = ['Igraonica / lokal', 'Kod kuće', 'Na otvorenom', 'Druga lokacija'] as const
-const COVER_THEMES = ['konfeti', 'baloni', 'zvjezdice'] as const
+const LOCAL_STORAGE_KEY = 'playbam.quick-create.draft'
 
-const COVER_THEME_META = {
-  konfeti: { label: 'Konfeti', eyebrow: 'Theme', description: 'Šaren i veseo poster za klasični party.' },
-  baloni: { label: 'Baloni', eyebrow: 'Theme', description: 'Lagani, prozračni vizual s više topline.' },
-  zvjezdice: { label: 'Zvjezdice', eyebrow: 'Theme', description: 'Čarobniji, sanjiviji smjer za posebniji vibe.' },
-} as const
-
-const TITLE_FONT_OPTIONS = [
-  { id: 'poster', label: 'Poster', description: 'Deblji naslov za hero riječ.', preview: 'Luka slavi!' },
-  { id: 'script', label: 'Rukopis', description: 'Više invitation osjećaja i topline.', preview: 'Luka slavi!' },
-  { id: 'clean', label: 'Clean', description: 'Najčišći i najsmireniji naslov.', preview: 'Luka slavi!' },
-] as const
-
-const EFFECT_OPTIONS = [
-  { id: 'confetti', label: 'Konfeti', description: 'Sitni party detalji preko postera.' },
-  { id: 'streamers', label: 'Trakice', description: 'Malo više kretanja na rubovima.' },
-  { id: 'glow', label: 'Glow', description: 'Mekši premium sjaj bez puno šuma.' },
-] as const
-
-const RSVP_STYLE_OPTIONS = [
-  { id: 'party', label: 'Party', description: 'Najrazigraniji set za klasični rođendan.', symbols: { going: '🥳', maybe: '🤔', not_going: '💔' } },
-  { id: 'sweet', label: 'Sweet', description: 'Mekši, slatki mood s više charactera.', symbols: { going: '🧁', maybe: '💭', not_going: '🥲' } },
-  { id: 'icons', label: 'Icons', description: 'Čistiji simboli za uredniji preview.', symbols: { going: '✦', maybe: '◌', not_going: '✕' } },
-  { id: 'spark', label: 'Spark', description: 'Malo sjaja i više editorial osjećaja.', symbols: { going: '✨', maybe: '👀', not_going: '🌧️' } },
-] as const
-
-const RSVP_CHOICES = [
-  { id: 'going', label: 'Dolazimo' },
-  { id: 'maybe', label: 'Možda' },
-  { id: 'not_going', label: 'Ne dolazimo' },
-] as const
-
-const STYLE_PRESETS = [
-  { id: 'birthday-pop', label: 'Birthday Pop', vibe: 'Šaren i vedar', theme: 'konfeti', font: 'poster', effect: 'confetti' },
-  { id: 'soft-party', label: 'Soft Party', vibe: 'Topliji i nježniji', theme: 'baloni', font: 'script', effect: 'glow' },
-  { id: 'magic-night', label: 'Magic Night', vibe: 'Malo čarobniji mood', theme: 'zvjezdice', font: 'clean', effect: 'streamers' },
-] as const
-
-type CoverTheme = (typeof COVER_THEMES)[number]
-type TitleFont = (typeof TITLE_FONT_OPTIONS)[number]['id']
-type EffectStyle = (typeof EFFECT_OPTIONS)[number]['id']
-type RsvpStyle = (typeof RSVP_STYLE_OPTIONS)[number]['id']
-type RsvpChoice = (typeof RSVP_CHOICES)[number]['id']
-
-function formatPreviewDate(dateValue: string) {
-  if (!dateValue.trim()) return 'Datum još nije odabran'
-  const parsedDate = new Date(`${dateValue}T12:00:00`)
-  if (Number.isNaN(parsedDate.getTime())) return dateValue
-  return parsedDate
-    .toLocaleDateString('hr-HR', { weekday: 'long', day: 'numeric', month: 'long' })
-    .replace(/^./u, (letter) => letter.toUpperCase())
-}
-
-function formatShortDate(dateValue: string) {
-  if (!dateValue.trim()) return 'Odaberi datum'
-  const parsedDate = new Date(`${dateValue}T12:00:00`)
-  if (Number.isNaN(parsedDate.getTime())) return dateValue
-  return parsedDate
-    .toLocaleDateString('hr-HR', { weekday: 'short', day: 'numeric', month: 'numeric' })
-    .replace(/^./u, (letter) => letter.toUpperCase())
-}
-
-function formatPreviewTime(timeValue: string) {
-  return timeValue.trim() ? `${timeValue.trim()} h` : 'Vrijeme uskoro'
-}
-
-function buildPreviewLocation(locationName: string, locationAddress: string, locationType: string) {
-  const details = [locationName.trim(), locationAddress.trim()].filter(Boolean)
-  return details.length > 0 ? details.join(' • ') : locationType.trim() || 'Lokacija uskoro'
-}
-
-function getRsvpSymbol(style: RsvpStyle, choice: RsvpChoice) {
-  const selectedStyle = RSVP_STYLE_OPTIONS.find((option) => option.id === style) ?? RSVP_STYLE_OPTIONS[0]
-  return selectedStyle.symbols[choice]
-}
-
-function formatInputDate(date: Date) {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
-function buildDateTime(date: string, time: string) {
-  return `${date}T${time || '15:00'}`
-}
-
-function getUpcomingDateOptions(referenceDate: string) {
-  const startDate = referenceDate ? new Date(`${referenceDate}T12:00:00`) : new Date()
-  const options: Array<{ value: string; label: string }> = []
-  for (let offset = 0; options.length < 4; offset += 1) {
-    const candidate = new Date(startDate)
-    candidate.setDate(startDate.getDate() + offset)
-    const day = candidate.getDay()
-    if (offset === 0 || day === 6 || day === 0) {
-      const value = formatInputDate(candidate)
-      options.push({ value, label: formatShortDate(value) })
-    }
+function readStoredDraft() {
+  if (typeof window === 'undefined') {
+    return DEFAULT_CREATE_DRAFT
   }
-  return options
+
+  try {
+    const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY)
+    if (!raw) return DEFAULT_CREATE_DRAFT
+    const parsed = JSON.parse(raw) as Partial<InvitationCreateDraft>
+    return {
+      ...DEFAULT_CREATE_DRAFT,
+      ...parsed,
+      wishlistItems: Array.isArray(parsed.wishlistItems) ? parsed.wishlistItems : DEFAULT_CREATE_DRAFT.wishlistItems,
+    }
+  } catch {
+    return DEFAULT_CREATE_DRAFT
+  }
 }
 
 export default function CreateInvitationPage() {
-  const navigate = useNavigate()
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
-  const defaultDateTime = `${today}T15:00`
-  const datePopoverRef = useRef<HTMLDivElement | null>(null)
-  const themeRef = useRef<HTMLDivElement | null>(null)
-  const effectRef = useRef<HTMLDivElement | null>(null)
-  const rsvpRef = useRef<HTMLDivElement | null>(null)
-  const settingsRef = useRef<HTMLDivElement | null>(null)
-
-  const [title, setTitle] = useState('')
-  const [celebrantName, setCelebrantName] = useState('')
-  const [dateTime, setDateTime] = useState(defaultDateTime)
-  const [locationName, setLocationName] = useState('')
-  const [locationAddress, setLocationAddress] = useState('')
-  const [locationType, setLocationType] = useState<(typeof LOCATION_TYPES)[number]>('Igraonica / lokal')
-  const [message, setMessage] = useState('Vidimo se na tulumu!')
-  const [showAdditionalOptions, setShowAdditionalOptions] = useState(false)
-  const [coverTheme, setCoverTheme] = useState<CoverTheme>('konfeti')
-  const [titleFont, setTitleFont] = useState<TitleFont>('poster')
-  const [effectStyle, setEffectStyle] = useState<EffectStyle>('confetti')
-  const [rsvpStyle, setRsvpStyle] = useState<RsvpStyle>('party')
-  const [saving, setSaving] = useState(false)
+  const [draft, setDraft] = useState<InvitationCreateDraft>(() => readStoredDraft())
+  const [activeShortcut, setActiveShortcut] = useState<ShortcutId | null>(null)
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('saved')
+  const [savingInvitation, setSavingInvitation] = useState(false)
   const [formError, setFormError] = useState('')
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
-
-  const themeMeta = COVER_THEME_META[coverTheme]
-  const resolvedTitle = title.trim() || (celebrantName.trim() ? `${celebrantName.trim()} slavi rođendan` : '')
-  const previewTitle = resolvedTitle || 'Tvoje slavlje uskoro stiže'
-  const [date = '', time = '15:00'] = dateTime.split('T')
-  const previewLocation = buildPreviewLocation(locationName, locationAddress, locationType)
-  const fullLocation = [locationName.trim(), locationAddress.trim()].filter(Boolean).join(', ')
-  const previewMessage = message.trim() || 'Vidimo se na tulumu!'
-  const quickDateOptions = useMemo(() => getUpcomingDateOptions(today), [today])
-  const activeStylePreset =
-    STYLE_PRESETS.find((preset) => preset.theme === coverTheme && preset.font === titleFont && preset.effect === effectStyle)?.id ?? null
 
   useEffect(() => {
-    if (!isDatePickerOpen) return undefined
-    const handlePointerDown = (event: MouseEvent) => {
-      if (!datePopoverRef.current?.contains(event.target as Node)) setIsDatePickerOpen(false)
-    }
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsDatePickerOpen(false)
-    }
-    document.addEventListener('mousedown', handlePointerDown)
-    document.addEventListener('keydown', handleEscape)
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown)
-      document.removeEventListener('keydown', handleEscape)
-    }
-  }, [isDatePickerOpen])
+    setSaveState('saving')
+    const timeoutId = window.setTimeout(() => {
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft))
+      setSaveState('saved')
+    }, 420)
 
-  const jumpTo = (ref: React.RefObject<HTMLDivElement | null>) => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  const handleDateChange = (nextDate: string) => setDateTime(buildDateTime(nextDate, time))
-  const handleTimeChange = (nextTime: string) => setDateTime(buildDateTime(date || today, nextTime))
-  const applyStylePreset = (theme: CoverTheme, font: TitleFont, effect: EffectStyle) => {
-    setCoverTheme(theme)
-    setTitleFont(font)
-    setEffectStyle(effect)
+    return () => window.clearTimeout(timeoutId)
+  }, [draft])
+
+  const autosaveLabel =
+    saveState === 'saving' ? 'Autosave u tijeku…' : 'Spremljeno lokalno'
+
+  const updateField = <K extends keyof InvitationCreateDraft>(field: K, value: InvitationCreateDraft[K]) => {
+    setDraft((current) => ({ ...current, [field]: value }))
   }
 
-  const handleCreate = async () => {
-    if (!resolvedTitle || !celebrantName.trim() || !date || !time || !locationName.trim()) {
+  const updateWishlistItems = (items: WishlistDraftItem[]) => {
+    setDraft((current) => ({ ...current, wishlistItems: items }))
+  }
+
+  const applyStylePreset = (theme: CoverTheme, font: TitleFont, effect: EffectStyle, accent: AccentPalette) => {
+    setDraft((current) => ({
+      ...current,
+      theme,
+      titleFont: font,
+      effect,
+      accentPalette: accent,
+    }))
+  }
+
+  const handleShortcutClick = (shortcut: ShortcutId) => {
+    setActiveShortcut((current) => (current === shortcut ? null : shortcut))
+  }
+
+  const handleCreateInvitation = async () => {
+    if (!draft.title.trim() || !draft.celebrantName.trim() || !draft.date.trim() || !draft.time.trim() || !draft.locationName.trim()) {
       setFormError('Upiši naslov, ime slavljenika, datum, vrijeme i naziv lokacije.')
       return
     }
-    setSaving(true)
+
+    setSavingInvitation(true)
     setFormError('')
+
     try {
       const created = await createInvitation({
-        title: resolvedTitle,
-        celebrantName: celebrantName.trim(),
-        date,
-        time,
-        location: fullLocation || locationName.trim(),
-        message: message.trim() || undefined,
-        coverImage: coverTheme,
-        theme: coverTheme,
+        title: draft.title.trim(),
+        celebrantName: draft.celebrantName.trim(),
+        date: draft.date,
+        time: draft.time,
+        location: [draft.locationName.trim(), draft.locationAddress.trim()].filter(Boolean).join(', '),
+        message: draft.message.trim() || undefined,
+        coverImage: draft.theme,
+        theme: draft.theme,
       })
-      navigate(`/pozivnica/${created.publicSlug || created.shareToken}`)
+
+      window.location.assign(`/pozivnica/${created.publicSlug || created.shareToken}`)
     } catch {
       setFormError('Spremanje pozivnice trenutno nije uspjelo.')
     } finally {
-      setSaving(false)
+      setSavingInvitation(false)
+    }
+  }
+
+  const renderPanel = () => {
+    switch (activeShortcut) {
+      case 'title':
+        return (
+          <FloatingEditPanel
+            open
+            title="Naslov i font"
+            description="Najvažniji dio editora. Ovdje nastaje prvi dojam pozivnice."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <QuickTitleEditor draft={draft} onFieldChange={updateField} onStylePreset={applyStylePreset} />
+          </FloatingEditPanel>
+        )
+      case 'dateTime':
+        return (
+          <FloatingEditPanel
+            open
+            title="Datum i vrijeme"
+            description="Brzi picker za osnovne informacije koje gost vidi prve."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <QuickDateTimeEditor draft={draft} today={today} onFieldChange={updateField} />
+          </FloatingEditPanel>
+        )
+      case 'location':
+        return (
+          <FloatingEditPanel
+            open
+            title="Lokacija"
+            description="Naziv igraonice, adresa i kontekst lokacije."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <QuickLocationEditor draft={draft} onFieldChange={updateField} />
+          </FloatingEditPanel>
+        )
+      case 'message':
+        return (
+          <FloatingEditPanel
+            open
+            title="Poruka"
+            description="Topla kratka poruka koja pozivnici daje osobni ton."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <QuickMessageEditor draft={draft} onFieldChange={updateField} />
+          </FloatingEditPanel>
+        )
+      case 'wishlist':
+        return (
+          <FloatingEditPanel
+            open
+            title="Wishlist i dodatci"
+            description="Uključi listu želja, dodaj prijedloge poklona i po želji grupni poklon."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <QuickWishlistEditor draft={draft} onFieldChange={updateField} onWishlistChange={updateWishlistItems} />
+          </FloatingEditPanel>
+        )
+      case 'theme':
+        return (
+          <FloatingEditPanel
+            open
+            title="Cover i tema"
+            description="Biraj poster smjer i osnovnu atmosferu pozivnice."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <QuickThemeEditor
+              draft={draft}
+              mode="theme"
+              onThemeChange={(value) => updateField('theme', value)}
+              onEffectChange={(value) => updateField('effect', value)}
+              onAccentChange={(value) => updateField('accentPalette', value)}
+            />
+          </FloatingEditPanel>
+        )
+      case 'style':
+        return (
+          <FloatingEditPanel
+            open
+            title="Stil i boje"
+            description="Fino podešavanje efekta i akcent boja bez gubljenja konteksta."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <QuickThemeEditor
+              draft={draft}
+              mode="style"
+              onThemeChange={(value) => updateField('theme', value)}
+              onEffectChange={(value) => updateField('effect', value)}
+              onAccentChange={(value) => updateField('accentPalette', value)}
+            />
+          </FloatingEditPanel>
+        )
+      case 'rsvp':
+        return (
+          <FloatingEditPanel
+            open
+            title="RSVP"
+            description="Uključi potvrdu dolaska i odaberi mood ikonica koje gost vidi."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <QuickRSVPEditor draft={draft} onFieldChange={updateField} />
+          </FloatingEditPanel>
+        )
+      case 'settings':
+        return (
+          <FloatingEditPanel
+            open
+            title="Settings"
+            description="Priprema za napredne postavke koje ćemo kasnije spojiti na backend draft logiku."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <div className="pb-quickEditor">
+              <label className="pb-quickEditor__toggle">
+                <input type="checkbox" checked={draft.rsvpEnabled} onChange={(event) => updateField('rsvpEnabled', event.target.checked)} />
+                <span>RSVP uključen</span>
+              </label>
+              <label className="pb-quickEditor__toggle">
+                <input type="checkbox" checked={draft.wishlistEnabled} onChange={(event) => updateField('wishlistEnabled', event.target.checked)} />
+                <span>Wishlist uključen</span>
+              </label>
+              <label className="pb-quickEditor__toggle">
+                <input type="checkbox" checked={draft.savingsEnabled} onChange={(event) => updateField('savingsEnabled', event.target.checked)} />
+                <span>Grupni poklon / štednja uključen</span>
+              </label>
+              <p className="pb-quickEditor__hint">Kasnije ovdje spajamo privatnost, share settings, reminder logiku i pravi autosave draft endpoint.</p>
+            </div>
+          </FloatingEditPanel>
+        )
+      case 'preview':
+        return (
+          <FloatingEditPanel
+            open
+            title="Preview"
+            description="Brzi pregled kako pozivnica izgleda gostu bez napuštanja editora."
+            onClose={() => setActiveShortcut(null)}
+          >
+            <InvitationPreviewCard draft={draft} compact />
+          </FloatingEditPanel>
+        )
+      default:
+        return null
     }
   }
 
   return (
     <>
       <Navbar />
-      <main className="pb-main pb-main--create">
-        <section className="pb-section pb-createStudio">
-          <div className="pb-createStudio__shell pb-createStudio__shell--dock">
-            <header className="pb-createStudio__hero pb-createStudio__hero--center">
-              <div className="pb-createStudio__heroCopy pb-createStudio__heroCopy--center">
-                <span className="pb-createStudio__eyebrow">VidimOse create</span>
-                <h1 className="pb-title pb-createStudio__title pb-createStudio__title--wide">Jednostavno kreiranje pozivnice za tulume!</h1>
-              </div>
-            </header>
+      <main className="pb-main pb-main--createV2">
+        <InvitationCreateShell
+          autosaveLabel={autosaveLabel}
+          rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={handleShortcutClick} />}
+        >
+          <InvitationMainEditor draft={draft} onOpenShortcut={handleShortcutClick} />
 
-            <div className="pb-createStudio__content">
-              <Card className="pb-flowCard pb-createStudio__panel">
-                <div className="pb-createStudio__sectionHeader">
-                  <div>
-                    <span className="pb-createStudio__sectionEyebrow">Osnove</span>
-                    <h2 className="pb-flowCard__title">Naslov i font</h2>
-                  </div>
-                </div>
-                <div className="pb-createStudio__stylePresetRow" aria-label="Style presets">
-                  {STYLE_PRESETS.map((preset) => (
-                    <button
-                      key={preset.id}
-                      type="button"
-                      className={`pb-createStudio__stylePreset ${activeStylePreset === preset.id ? 'is-active' : ''}`}
-                      onClick={() => applyStylePreset(preset.theme, preset.font, preset.effect)}
-                    >
-                      <span className={`pb-createStudio__stylePresetPoster pb-createStudio__stylePresetPoster--${preset.theme} pb-createStudio__stylePresetPoster--${preset.effect}`}>
-                        <span className={`pb-createStudio__stylePresetWord pb-createStudio__stylePresetWord--${preset.font}`}>{celebrantName.trim() || 'Luka'}</span>
-                      </span>
-                      <span className="pb-createStudio__stylePresetCopy">
-                        <strong>{preset.label}</strong>
-                        <span>{preset.vibe}</span>
-                      </span>
-                    </button>
-                  ))}
-                </div>
-                <div className="pb-createStudio__formGrid">
-                  <label className="pb-formField">
-                    <span className="pb-formLabel">Naslov pozivnice</span>
-                    <input className="pb-input" type="text" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="npr. Luka slavi 6. rođendan" />
-                  </label>
-                  <label className="pb-formField">
-                    <span className="pb-formLabel">Ime slavljenika</span>
-                    <input className="pb-input" type="text" value={celebrantName} onChange={(event) => setCelebrantName(event.target.value)} placeholder="Unesi ime slavljenika" />
-                  </label>
-                </div>
-                <div className="pb-createStudio__fontGrid">
-                  {TITLE_FONT_OPTIONS.map((option) => (
-                    <button key={option.id} type="button" className={`pb-createStudio__fontOption ${titleFont === option.id ? 'is-active' : ''}`} onClick={() => setTitleFont(option.id)}>
-                      <span className={`pb-createStudio__fontPreview pb-createStudio__fontPreview--${option.id}`}>{option.preview}</span>
-                      <span className="pb-createStudio__fontCopy">
-                        <strong>{option.label}</strong>
-                        <span>{option.description}</span>
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </Card>
-
-              <Card className="pb-flowCard pb-createStudio__panel pb-createStudio__panel--highlight">
-                <div className="pb-createStudio__sectionHeader">
-                  <div>
-                    <span className="pb-createStudio__sectionEyebrow">Kada i gdje</span>
-                    <h2 className="pb-flowCard__title">Termin i lokacija</h2>
-                  </div>
-                </div>
-                <div className="pb-createStudio__formGrid">
-                  <div className="pb-formField pb-createStudio__datePickerField" ref={datePopoverRef}>
-                    <span className="pb-formLabel">Datum i vrijeme</span>
-                    <button type="button" className={`pb-createStudio__datePickerTrigger ${isDatePickerOpen ? 'is-open' : ''}`} onClick={() => setIsDatePickerOpen((current) => !current)}>
-                      <span className="pb-createStudio__datePickerValue">
-                        <strong>{formatPreviewDate(date)}</strong>
-                        <span>{formatPreviewTime(time)}</span>
-                      </span>
-                      <span className="pb-createStudio__datePickerMeta">{isDatePickerOpen ? 'Zatvori' : 'Odaberi'}</span>
-                    </button>
-                    {isDatePickerOpen ? (
-                      <div className="pb-createStudio__datePopover">
-                        <div className="pb-createStudio__datePopoverHeader">
-                          <strong>Odaberi termin</strong>
-                          <button type="button" className="pb-createStudio__datePopoverClose" onClick={() => setIsDatePickerOpen(false)}>Gotovo</button>
-                        </div>
-                        <div className="pb-createStudio__quickDateGrid">
-                          {quickDateOptions.map((option) => (
-                            <button key={option.value} type="button" className={`pb-createStudio__quickDateChip ${date === option.value ? 'is-active' : ''}`} onClick={() => handleDateChange(option.value)}>
-                              {option.label}
-                            </button>
-                          ))}
-                        </div>
-                        <div className="pb-createStudio__popoverGrid">
-                          <label className="pb-formField">
-                            <span className="pb-formLabel">Datum</span>
-                            <input className="pb-input" type="date" min={today} value={date} onChange={(event) => handleDateChange(event.target.value)} />
-                          </label>
-                          <label className="pb-formField">
-                            <span className="pb-formLabel">Vrijeme</span>
-                            <input className="pb-input" type="time" value={time} onChange={(event) => handleTimeChange(event.target.value)} />
-                          </label>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                  <label className="pb-formField">
-                    <span className="pb-formLabel">Naziv lokacije</span>
-                    <input className="pb-input" type="text" value={locationName} onChange={(event) => setLocationName(event.target.value)} placeholder="npr. Igraonica Jogica" />
-                  </label>
-                </div>
-
-                <div className="pb-flowActions">
-                  <button type="button" className={`pb-createStudio__plusButton ${showAdditionalOptions ? 'is-open' : ''}`} onClick={() => setShowAdditionalOptions((current) => !current)}>
-                    <span className="pb-createStudio__plusMark" aria-hidden="true">+</span>
-                    <span>{showAdditionalOptions ? 'Sakrij dodatne opcije' : 'Dodaj dodatne opcije'}</span>
-                  </button>
-                </div>
-
-                {showAdditionalOptions ? (
-                  <div className="pb-createStudio__extraOptions">
-                    <div className="pb-formField">
-                      <span className="pb-formLabel">Tip lokacije</span>
-                      <div className="pb-createStudio__chips">
-                        {LOCATION_TYPES.map((option) => (
-                          <button key={option} type="button" className={`pb-createStudio__chip ${locationType === option ? 'is-active' : ''}`} onClick={() => setLocationType(option)}>{option}</button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="pb-createStudio__formGrid">
-                      <label className="pb-formField">
-                        <span className="pb-formLabel">Adresa / detalji lokacije</span>
-                        <input className="pb-input" type="text" value={locationAddress} onChange={(event) => setLocationAddress(event.target.value)} placeholder="Adresa ili kratki opis" />
-                      </label>
-                      <label className="pb-formField">
-                        <span className="pb-formLabel">Poruka za goste</span>
-                        <textarea className="pb-input pb-createStudio__textarea" value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Vidimo se na tulumu!" />
-                      </label>
-                    </div>
-                  </div>
-                ) : null}
-
-                <div className="pb-flowActions pb-flowActions--createMain">
-                  <Button variant="amber" type="button" onClick={handleCreate} disabled={saving}>{saving ? 'Spremamo...' : 'Izradi pozivnicu'}</Button>
-                </div>
-                {formError ? <div className="pb-inlineNote pb-inlineNote--error">{formError}</div> : null}
-              </Card>
-
-              <div ref={themeRef}>
-                <Card className="pb-flowCard pb-createStudio__panel">
-                  <div className="pb-createStudio__sectionHeader"><div><span className="pb-createStudio__sectionEyebrow">Theme</span><h2 className="pb-flowCard__title">Poster</h2></div></div>
-                  <div className="pb-createStudio__themeGrid">
-                    {COVER_THEMES.map((theme) => {
-                      const option = COVER_THEME_META[theme]
-                      return (
-                        <button key={theme} type="button" className={`pb-createStudio__themeOption pb-createStudio__themeOption--${theme} ${coverTheme === theme ? 'is-active' : ''}`} onClick={() => setCoverTheme(theme)}>
-                          <span className="pb-createStudio__themePreview" aria-hidden="true" />
-                          <span className="pb-createStudio__themeCopy"><strong>{option.label}</strong><span>{option.description}</span></span>
-                        </button>
-                      )
-                    })}
-                  </div>
-                </Card>
-              </div>
-
-              <div ref={effectRef}>
-                <Card className="pb-flowCard pb-createStudio__panel">
-                  <div className="pb-createStudio__sectionHeader"><div><span className="pb-createStudio__sectionEyebrow">Effect</span><h2 className="pb-flowCard__title">Vizualni sloj</h2></div></div>
-                  <div className="pb-createStudio__themeGrid">
-                    {EFFECT_OPTIONS.map((option) => (
-                      <button key={option.id} type="button" className={`pb-createStudio__themeOption ${effectStyle === option.id ? 'is-active' : ''}`} onClick={() => setEffectStyle(option.id)}>
-                        <span className={`pb-createStudio__themePreview pb-createStudio__themePreview--${option.id}`} aria-hidden="true" />
-                        <span className="pb-createStudio__themeCopy"><strong>{option.label}</strong><span>{option.description}</span></span>
-                      </button>
-                    ))}
-                  </div>
-                </Card>
-              </div>
-
-              <div ref={rsvpRef}>
-                <Card className="pb-flowCard pb-createStudio__panel">
-                  <div className="pb-createStudio__sectionHeader"><div><span className="pb-createStudio__sectionEyebrow">RSVP</span><h2 className="pb-flowCard__title">Mood picker</h2></div></div>
-                  <div className="pb-createStudio__rsvpStyleGrid">
-                    {RSVP_STYLE_OPTIONS.map((option) => (
-                      <button key={option.id} type="button" className={`pb-createStudio__rsvpStyleOption pb-createStudio__rsvpStyleOption--${option.id} ${rsvpStyle === option.id ? 'is-active' : ''}`} onClick={() => setRsvpStyle(option.id)}>
-                        <span className="pb-createStudio__rsvpStylePreview" aria-hidden="true">
-                          {RSVP_CHOICES.map((choice) => <span key={choice.id} className="pb-createStudio__rsvpStyleChip">{option.symbols[choice.id]}</span>)}
-                        </span>
-                        <span className="pb-createStudio__fontCopy"><strong>{option.label}</strong><span>{option.description}</span></span>
-                      </button>
-                    ))}
-                  </div>
-                </Card>
-              </div>
-
-              <div ref={settingsRef}>
-                <Card className="pb-flowCard pb-createStudio__panel">
-                  <div className="pb-createStudio__sectionHeader"><div><span className="pb-createStudio__sectionEyebrow">Settings</span><h2 className="pb-flowCard__title">Rezervirano za sljedeći korak</h2></div></div>
-                  <p className="pb-flowCard__text">Ovdje ćemo dodati dodatne postavke poput privatnosti, wishlist pravila, guest access ponašanja i reminder opcija.</p>
-                </Card>
-              </div>
+          <Card className="pb-createFooterAction">
+            <div className="pb-createFooterAction__copy">
+              <strong>Spremno za objavu</strong>
+              <span>Osnovni podaci i preview su povezani. Wishlist, stil i RSVP se već vide uživo u editoru.</span>
             </div>
+            <Button variant="amber" type="button" onClick={handleCreateInvitation} disabled={savingInvitation}>
+              {savingInvitation ? 'Spremamo…' : 'Izradi pozivnicu'}
+            </Button>
+          </Card>
 
-            <aside className="pb-createStudio__dock" aria-label="Create alati">
-              <button type="button" className="pb-createStudio__dockButton" onClick={() => jumpTo(themeRef)} aria-label="Theme"><span aria-hidden="true">🎨</span></button>
-              <button type="button" className="pb-createStudio__dockButton" onClick={() => jumpTo(effectRef)} aria-label="Effect"><span aria-hidden="true">✨</span></button>
-              <button type="button" className="pb-createStudio__dockButton" onClick={() => jumpTo(rsvpRef)} aria-label="RSVP"><span aria-hidden="true">🥳</span></button>
-              <button type="button" className="pb-createStudio__dockButton" onClick={() => jumpTo(settingsRef)} aria-label="Settings"><span aria-hidden="true">⚙️</span></button>
-              <button type="button" className="pb-createStudio__dockButton pb-createStudio__dockButton--preview" onClick={() => setIsPreviewOpen(true)} aria-label="Preview"><span aria-hidden="true">👁️</span></button>
-            </aside>
-          </div>
-        </section>
+          {formError ? <div className="pb-inlineNote pb-inlineNote--error">{formError}</div> : null}
+        </InvitationCreateShell>
+        {renderPanel()}
       </main>
       <Footer />
-
-      {isPreviewOpen ? (
-        <div className="pb-createStudio__previewOverlay" role="dialog" aria-modal="true" aria-label="Preview pozivnice">
-          <div className="pb-createStudio__previewDialog">
-            <button type="button" className="pb-createStudio__previewClose" onClick={() => setIsPreviewOpen(false)}>Zatvori</button>
-            <div className={`pb-createPreviewPhone pb-createPreviewPhone--${coverTheme}`}>
-              <div className={`pb-createPreviewPhone__poster pb-createPreviewPhone__poster--${effectStyle}`}>
-                <img className="pb-createPreviewPhone__logo" src="/logo.png" alt="Playbam.hr" />
-                <span className="pb-createPreviewPhone__themeEyebrow">{themeMeta.eyebrow}</span>
-                <span className="pb-createPreviewPhone__themeBadge">{themeMeta.label}</span>
-                <h2 className={`pb-createPreviewPhone__title pb-createPreviewPhone__title--${titleFont}`}>{previewTitle}</h2>
-                <p className="pb-createPreviewPhone__subtitle">{celebrantName.trim() ? `${celebrantName.trim()} je glavni gost dana` : 'Dodaj ime slavljenika da preview dobije pravi ton.'}</p>
-              </div>
-              <div className="pb-createPreviewPhone__body">
-                <div className="pb-createPreviewPhone__detail"><span className="pb-createPreviewPhone__detailLabel">Datum</span><strong className="pb-createPreviewPhone__detailValue">{formatPreviewDate(date)}</strong></div>
-                <div className="pb-createPreviewPhone__detail"><span className="pb-createPreviewPhone__detailLabel">Vrijeme</span><strong className="pb-createPreviewPhone__detailValue">{formatPreviewTime(time)}</strong></div>
-                <div className="pb-createPreviewPhone__detail"><span className="pb-createPreviewPhone__detailLabel">Lokacija</span><strong className="pb-createPreviewPhone__detailValue">{previewLocation}</strong></div>
-                <div className="pb-createPreviewPhone__message">{previewMessage}</div>
-                <div className="pb-createPreviewPhone__rsvpRow" aria-hidden="true">
-                  {RSVP_CHOICES.map((choice) => (
-                    <span key={choice.id} className={`pb-createPreviewPhone__rsvpPill pb-createPreviewPhone__rsvpPill--${choice.id.replace('_', '-')}`}>
-                      <span className="pb-createPreviewPhone__rsvpIcon">{getRsvpSymbol(rsvpStyle, choice.id)}</span>
-                      <span>{choice.label}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </>
   )
 }

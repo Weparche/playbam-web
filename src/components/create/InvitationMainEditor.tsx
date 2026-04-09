@@ -1,5 +1,4 @@
 import Card from '../ui/Card'
-import InvitationPreviewCard from './InvitationPreviewCard'
 import { buildPreviewLocation, formatPreviewDate, formatPreviewTime, type InvitationCreateDraft, type ShortcutId } from './createTypes'
 
 type Props = {
@@ -17,7 +16,9 @@ export default function InvitationMainEditor({ draft, onOpenShortcut }: Props) {
         <button type="button" className="pb-createEditor__ghostEdit" onClick={() => onOpenShortcut('title')}>
           <span className="pb-createEditor__eyebrow">Naslov pozivnice</span>
           <h2 className={`pb-createEditor__title pb-createEditor__title--${draft.titleFont}`}>{title}</h2>
-          <p className="pb-createEditor__subtitle">{draft.celebrantName.trim() ? `${draft.celebrantName.trim()} je glavni gost dana` : 'Dodaj ime slavljenika'}</p>
+          <p className="pb-createEditor__subtitle">
+            {draft.celebrantName.trim() ? `${draft.celebrantName.trim()} je glavni gost dana` : 'Dodaj ime slavljenika'}
+          </p>
         </button>
       </Card>
 
@@ -27,7 +28,9 @@ export default function InvitationMainEditor({ draft, onOpenShortcut }: Props) {
             <span className="pb-createEditor__eyebrow">Kada i gdje</span>
             <h3 className="pb-createEditor__sectionTitle">Najvažnije informacije</h3>
           </div>
-          <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('dateTime')}>Uredi</button>
+          <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('dateTime')}>
+            Uredi
+          </button>
         </div>
         <div className="pb-createEditor__facts">
           <button type="button" className="pb-createEditor__fact" onClick={() => onOpenShortcut('dateTime')}>
@@ -52,7 +55,9 @@ export default function InvitationMainEditor({ draft, onOpenShortcut }: Props) {
               <span className="pb-createEditor__eyebrow">Poruka</span>
               <h3 className="pb-createEditor__sectionTitle">Kratki opis za goste</h3>
             </div>
-            <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('message')}>Uredi</button>
+            <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('message')}>
+              Uredi
+            </button>
           </div>
           <p className="pb-createEditor__bodyText">{draft.message.trim() || 'Dodaj kratku poruku za goste.'}</p>
         </Card>
@@ -63,7 +68,9 @@ export default function InvitationMainEditor({ draft, onOpenShortcut }: Props) {
               <span className="pb-createEditor__eyebrow">Pokloni</span>
               <h3 className="pb-createEditor__sectionTitle">Wishlist i dodatci</h3>
             </div>
-            <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('wishlist')}>Uredi</button>
+            <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('wishlist')}>
+              Uredi
+            </button>
           </div>
           <p className="pb-createEditor__bodyText">
             {draft.wishlistEnabled
@@ -78,7 +85,9 @@ export default function InvitationMainEditor({ draft, onOpenShortcut }: Props) {
               <span className="pb-createEditor__eyebrow">RSVP</span>
               <h3 className="pb-createEditor__sectionTitle">Potvrda dolaska</h3>
             </div>
-            <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('rsvp')}>Uredi</button>
+            <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('rsvp')}>
+              Uredi
+            </button>
           </div>
           <p className="pb-createEditor__bodyText">
             {draft.rsvpEnabled ? draft.rsvpPrompt.trim() || 'RSVP je uključen po defaultu.' : 'RSVP je isključen.'}
@@ -91,15 +100,15 @@ export default function InvitationMainEditor({ draft, onOpenShortcut }: Props) {
               <span className="pb-createEditor__eyebrow">Stil</span>
               <h3 className="pb-createEditor__sectionTitle">Tema i akcenti</h3>
             </div>
-            <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('style')}>Uredi</button>
+            <button type="button" className="pb-createEditor__inlineAction" onClick={() => onOpenShortcut('style')}>
+              Uredi
+            </button>
           </div>
           <p className="pb-createEditor__bodyText">
             {draft.theme} · {draft.effect} · {draft.accentPalette}
           </p>
         </Card>
       </div>
-
-      <InvitationPreviewCard draft={draft} />
     </div>
   )
 }

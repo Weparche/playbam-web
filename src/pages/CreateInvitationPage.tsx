@@ -38,6 +38,7 @@ function readStoredDraft() {
   try {
     const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY)
     if (!raw) return DEFAULT_CREATE_DRAFT
+
     const parsed = JSON.parse(raw) as Partial<InvitationCreateDraft>
     return {
       ...DEFAULT_CREATE_DRAFT,
@@ -67,8 +68,7 @@ export default function CreateInvitationPage() {
     return () => window.clearTimeout(timeoutId)
   }, [draft])
 
-  const autosaveLabel =
-    saveState === 'saving' ? 'Autosave u tijeku…' : 'Spremljeno lokalno'
+  const autosaveLabel = saveState === 'saving' ? 'Autosave u tijeku…' : 'Spremljeno lokalno'
 
   const updateField = <K extends keyof InvitationCreateDraft>(field: K, value: InvitationCreateDraft[K]) => {
     setDraft((current) => ({ ...current, [field]: value }))
@@ -242,9 +242,11 @@ export default function CreateInvitationPage() {
               </label>
               <label className="pb-quickEditor__toggle">
                 <input type="checkbox" checked={draft.savingsEnabled} onChange={(event) => updateField('savingsEnabled', event.target.checked)} />
-                <span>Grupni poklon / štednja uključen</span>
+                <span>Grupni poklon / štednja uključena</span>
               </label>
-              <p className="pb-quickEditor__hint">Kasnije ovdje spajamo privatnost, share settings, reminder logiku i pravi autosave draft endpoint.</p>
+              <p className="pb-quickEditor__hint">
+                Kasnije ovdje spajamo privatnost, share settings, reminder logiku i pravi autosave draft endpoint.
+              </p>
             </div>
           </FloatingEditPanel>
         )
@@ -270,6 +272,7 @@ export default function CreateInvitationPage() {
       <main className="pb-main pb-main--createV2">
         <InvitationCreateShell
           autosaveLabel={autosaveLabel}
+          preview={<InvitationPreviewCard draft={draft} compact />}
           rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={handleShortcutClick} />}
         >
           <InvitationMainEditor draft={draft} onOpenShortcut={handleShortcutClick} />

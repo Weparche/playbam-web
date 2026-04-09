@@ -3866,7 +3866,7 @@
 }
 
 .pb-createShell {
-  width: min(1180px, 100%);
+  width: min(1320px, 100%);
   margin: 0 auto;
   padding: 1.4rem 1rem 6rem;
 }
@@ -3917,6 +3917,10 @@
 .pb-createShell__main {
   display: grid;
   gap: 1rem;
+}
+
+.pb-createShell__preview {
+  min-width: 0;
 }
 
 .pb-createEditor {
@@ -4014,13 +4018,25 @@
 }
 
 .pb-createEditor__inlineAction {
-  border: 0;
-  background: transparent;
-  color: #5b3df5;
-  font: inherit;
-  font-size: 0.88rem;
-  font-weight: 900;
+  min-height: 2.3rem;
+  padding: 0.35rem 0.85rem 0.3rem;
+  border: 1px solid rgba(61, 100, 245, 0.14);
+  border-radius: 999px;
+  background: rgba(241, 245, 255, 0.9);
+  color: #3358d4;
+  font-family: var(--invite-script-font);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 10px 24px rgba(61, 100, 245, 0.08);
   cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.pb-createEditor__inlineAction:hover {
+  transform: translateY(-1px);
+  border-color: rgba(61, 100, 245, 0.22);
+  box-shadow: 0 14px 28px rgba(61, 100, 245, 0.12);
 }
 
 .pb-createEditor__facts {
@@ -4071,7 +4087,8 @@
 }
 
 .pb-previewCard--compact {
-  max-width: 32rem;
+  width: 100%;
+  max-width: none;
 }
 
 .pb-previewCard__hero {
@@ -4606,9 +4623,22 @@
   }
 
   .pb-createShell__layout {
-    grid-template-columns: minmax(0, 1fr) 5.6rem;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 24rem) 5.6rem;
     align-items: start;
-    gap: 1.1rem;
+    gap: 1.2rem;
+  }
+
+  .pb-createShell__preview {
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+  }
+
+  .pb-createShell__preview .pb-previewCard {
+    padding: 0.9rem;
+    border-radius: 1.45rem;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 24px 56px rgba(16, 24, 40, 0.1);
   }
 
   .pb-shortcutRail {

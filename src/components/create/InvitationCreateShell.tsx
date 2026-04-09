@@ -2,11 +2,12 @@ import type { ReactNode } from 'react'
 
 type Props = {
   autosaveLabel: string
+  preview: ReactNode
   rail: ReactNode
   children: ReactNode
 }
 
-export default function InvitationCreateShell({ autosaveLabel, rail, children }: Props) {
+export default function InvitationCreateShell({ autosaveLabel, preview, rail, children }: Props) {
   return (
     <div className="pb-createShell">
       <header className="pb-createShell__header">
@@ -16,6 +17,7 @@ export default function InvitationCreateShell({ autosaveLabel, rail, children }:
       </header>
       <div className="pb-createShell__layout">
         <div className="pb-createShell__main">{children}</div>
+        <div className="pb-createShell__preview">{preview}</div>
         {rail}
       </div>
     </div>

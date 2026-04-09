@@ -24,7 +24,9 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
         <div className="pb-previewCard__heroText">
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
           <h3 className={`pb-previewCard__title pb-previewCard__title--${draft.titleFont}`}>{title}</h3>
-          <p className="pb-previewCard__celebrant">{draft.celebrantName.trim() ? `${draft.celebrantName.trim()} je zvijezda tuluma` : 'Dodaj ime slavljenika'}</p>
+          <p className="pb-previewCard__celebrant">
+            {draft.celebrantName.trim() ? `${draft.celebrantName.trim()} je zvijezda tuluma` : 'Dodaj ime slavljenika'}
+          </p>
         </div>
       </div>
 

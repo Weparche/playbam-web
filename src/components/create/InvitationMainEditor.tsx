@@ -86,6 +86,74 @@ function FontStripChevron({ direction }: { direction: 'left' | 'right' }) {
   )
 }
 
+function PaletteIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" className="pb-createEditor__cardIcon" aria-hidden="true">
+      <circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="7" cy="8" r="1.5" fill="currentColor" />
+      <circle cx="13" cy="8" r="1.5" fill="currentColor" />
+      <circle cx="10" cy="13" r="1.5" fill="currentColor" />
+    </svg>
+  )
+}
+
+function ChatBubbleIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" className="pb-createEditor__cardIcon" aria-hidden="true">
+      <path d="M4 5.5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8.5L5.5 15v-2.5H6a2 2 0 0 1-2-2v-5z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M7.5 7.5h5M7.5 10h3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function GiftIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" className="pb-createEditor__cardIcon" aria-hidden="true">
+      <rect x="3" y="8" width="14" height="3" rx="1" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="4.5" y="11" width="11" height="5.5" rx="1" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M10 8v8.5" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M10 8c-1-2.5-3.5-3-4-2s1.5 2 4 2zM10 8c1-2.5 3.5-3 4-2s-1.5 2-4 2z" stroke="currentColor" strokeWidth="1.3" fill="none" />
+    </svg>
+  )
+}
+
+function CheckCircleIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" className="pb-createEditor__cardIcon" aria-hidden="true">
+      <circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M6.5 10.5l2.5 2.5 5-5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function CalendarIcon({ ready }: { ready: boolean }) {
+  return (
+    <svg viewBox="0 0 18 18" width="18" height="18" fill="none" className={`pb-createEditor__factIcon ${ready ? 'is-ready' : ''}`} aria-hidden="true">
+      <rect x="2.5" y="3.5" width="13" height="11.5" rx="2" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M2.5 7.5h13" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M6 2v2.5M12 2v2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function ClockIcon({ ready }: { ready: boolean }) {
+  return (
+    <svg viewBox="0 0 18 18" width="18" height="18" fill="none" className={`pb-createEditor__factIcon ${ready ? 'is-ready' : ''}`} aria-hidden="true">
+      <circle cx="9" cy="9" r="7" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M9 5v4.5l3 2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function PinIcon({ ready }: { ready: boolean }) {
+  return (
+    <svg viewBox="0 0 18 18" width="18" height="18" fill="none" className={`pb-createEditor__factIcon ${ready ? 'is-ready' : ''}`} aria-hidden="true">
+      <path d="M9 16s-5.5-4.5-5.5-8a5.5 5.5 0 1 1 11 0c0 3.5-5.5 8-5.5 8z" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="9" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  )
+}
+
 function getFontScrollStep(scroller: HTMLDivElement) {
   const firstCard = scroller.querySelector<HTMLElement>('.pb-createEditor__fontCard')
   const styles = window.getComputedStyle(scroller)
@@ -361,6 +429,16 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             </div>
           </div>
         </div>
+
+        <button
+          type="button"
+          className="pb-createEditor__mobileThemeChip"
+          onClick={() => onOpenShortcut('theme')}
+          aria-label="Promijeni temu"
+        >
+          <PaletteIcon />
+          <span>Promijeni temu</span>
+        </button>
       </Card>
 
       <Card
@@ -389,9 +467,14 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             </button>
           </div>
         </div>
-        {/* <p className="pb-createEditor__cardNote">Klik na karticu otvara datum i vrijeme, a chevron vodi ravno na uređivanje lokacije.</p> */}
+        {!dateReady && !locationReady ? (
+          <div className="pb-createEditor__emptyHint">
+            <span>Klikni da dodaš datum, vrijeme i lokaciju</span>
+          </div>
+        ) : null}
         <div className="pb-createEditor__facts">
           <button type="button" className="pb-createEditor__fact" onClick={(event) => handleFactClick(event, 'dateTime')}>
+            <CalendarIcon ready={dateReady} />
             <span className="pb-createEditor__factBody">
               <span>Datum</span>
               <strong>{formatPreviewDate(draft.date)}</strong>
@@ -399,6 +482,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             <FactChevron />
           </button>
           <button type="button" className="pb-createEditor__fact" onClick={(event) => handleFactClick(event, 'dateTime')}>
+            <ClockIcon ready={dateReady} />
             <span className="pb-createEditor__factBody">
               <span>Vrijeme</span>
               <strong>{formatPreviewTime(draft.time, draft.timeEnd)}</strong>
@@ -406,6 +490,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             <FactChevron />
           </button>
           <button type="button" className="pb-createEditor__fact pb-createEditor__fact--wide" onClick={(event) => handleFactClick(event, 'location')}>
+            <PinIcon ready={locationReady} />
             <span className="pb-createEditor__factBody">
               <span>Lokacija</span>
               <strong>{location}</strong>
@@ -417,7 +502,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
 
       <div className="pb-createEditor__grid">
         <Card
-          className="pb-createEditor__infoCard pb-createEditor__panelCard"
+          className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--theme"
           role="button"
           tabIndex={0}
           aria-label="Uredi temu pozivnice"
@@ -426,7 +511,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
         >
           <div className="pb-createEditor__cardHeader">
             <div>
-              <span className="pb-createEditor__eyebrow">Tema</span>
+              <span className="pb-createEditor__eyebrow"><PaletteIcon /> Tema</span>
               <h3 className="pb-createEditor__sectionTitle">Naslovnica pozivnice</h3>
             </div>
             <div className="pb-createEditor__cardMeta">
@@ -434,11 +519,14 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               <EditorChevron />
             </div>
           </div>
-          <p className="pb-createEditor__bodyText">{getThemeLabel(draft.theme)}</p>
+          <div className="pb-createEditor__themePreviewRow">
+            <img className="pb-createEditor__themeThumbnail" src={heroThemeImage} alt="" aria-hidden="true" />
+            <p className="pb-createEditor__bodyText">{getThemeLabel(draft.theme)}</p>
+          </div>
         </Card>
 
         <Card
-          className="pb-createEditor__infoCard pb-createEditor__panelCard"
+          className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--message"
           role="button"
           tabIndex={0}
           aria-label="Uredi poruku za goste"
@@ -447,7 +535,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
         >
           <div className="pb-createEditor__cardHeader">
             <div>
-              <span className="pb-createEditor__eyebrow">Poruka</span>
+              <span className="pb-createEditor__eyebrow"><ChatBubbleIcon /> Poruka</span>
               <h3 className="pb-createEditor__sectionTitle">Kratki opis za goste</h3>
             </div>
             <div className="pb-createEditor__cardMeta">
@@ -459,7 +547,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
         </Card>
 
         <Card
-          className="pb-createEditor__infoCard pb-createEditor__panelCard"
+          className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--wishlist"
           role="button"
           tabIndex={0}
           aria-label="Uredi wishlist i dodatke"
@@ -468,7 +556,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
         >
           <div className="pb-createEditor__cardHeader">
             <div>
-              <span className="pb-createEditor__eyebrow">Pokloni</span>
+              <span className="pb-createEditor__eyebrow"><GiftIcon /> Pokloni</span>
               <h3 className="pb-createEditor__sectionTitle">Wishlist i dodatci</h3>
             </div>
             <div className="pb-createEditor__cardMeta">
@@ -484,7 +572,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
         </Card>
 
         <Card
-          className="pb-createEditor__infoCard pb-createEditor__panelCard"
+          className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--rsvp"
           role="button"
           tabIndex={0}
           aria-label="Uredi potvrdu dolaska"
@@ -493,7 +581,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
         >
           <div className="pb-createEditor__cardHeader">
             <div>
-              <span className="pb-createEditor__eyebrow">RSVP</span>
+              <span className="pb-createEditor__eyebrow"><CheckCircleIcon /> RSVP</span>
               <h3 className="pb-createEditor__sectionTitle">Potvrda dolaska</h3>
             </div>
             <div className="pb-createEditor__cardMeta">

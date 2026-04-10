@@ -15,20 +15,33 @@ export default function QuickThemeEditor({ draft, onThemeChange }: Props) {
       <div className="pb-quickEditor__block">
         <span className="pb-quickEditor__label">Tema</span>
         <div className="pb-quickEditor__themeGrid">
-          {COVER_THEME_OPTIONS.map((option) => (
-            <button
-              key={option.id}
-              type="button"
-              className={`pb-quickEditor__themeCard ${activeTheme === option.id ? 'is-active' : ''}`}
-              onClick={() => onThemeChange(option.id)}
-            >
-              <img className="pb-quickEditor__themeImage" src={option.image} alt="" aria-hidden="true" />
-              <div className="pb-quickEditor__themeCopy">
-                <strong>{option.label}</strong>
-                <span>{option.description}</span>
-              </div>
-            </button>
-          ))}
+          {COVER_THEME_OPTIONS.map((option) => {
+            const isActive = activeTheme === option.id
+            return (
+              <button
+                key={option.id}
+                type="button"
+                className={`pb-quickEditor__themeCard ${isActive ? 'is-active' : ''}`}
+                onClick={() => onThemeChange(option.id)}
+              >
+                <div className="pb-quickEditor__themeImageWrap">
+                  <img className="pb-quickEditor__themeImage" src={option.image} alt="" aria-hidden="true" />
+                  {isActive ? (
+                    <span className="pb-quickEditor__themeCheck" aria-hidden="true">
+                      <svg viewBox="0 0 20 20" width="20" height="20" fill="none">
+                        <circle cx="10" cy="10" r="9" fill="#5b3df5" />
+                        <path d="M6 10.5l2.8 2.8 5.2-5.6" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  ) : null}
+                </div>
+                <div className="pb-quickEditor__themeCopy">
+                  <strong>{option.label}</strong>
+                  <span>{option.description}</span>
+                </div>
+              </button>
+            )
+          })}
         </div>
       </div>
     </div>

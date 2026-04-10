@@ -208,9 +208,25 @@ export function formatInputDate(date: Date) {
   return `${year}-${month}-${day}`
 }
 
+function getRelativeDayLabel(offset: number, dayOfWeek: number) {
+  if (offset === 0) return 'Danas'
+  if (offset === 1) return 'Sutra'
+  if (offset <= 6) {
+    if (dayOfWeek === 6) return 'Ova subota'
+    if (dayOfWeek === 0) return 'Ova nedjelja'
+    return `Za ${offset} dana`
+  }
+  if (offset <= 13) {
+    if (dayOfWeek === 6) return 'Sljedeća sub.'
+    if (dayOfWeek === 0) return 'Sljedeća ned.'
+    return `Za ${offset} dana`
+  }
+  return `Za ${offset} dana`
+}
+
 export function getUpcomingDateOptions(referenceDate: string) {
   const startDate = referenceDate ? new Date(`${referenceDate}T12:00:00`) : new Date()
-  const options: Array<{ value: string; label: string }> = []
+  const options: Array<{ value: string; label: string; relative: string; dayNumber: number }> = []
 
   for (let offset = 0; options.length < 4; offset += 1) {
     const candidate = new Date(startDate)
@@ -218,7 +234,12 @@ export function getUpcomingDateOptions(referenceDate: string) {
     const day = candidate.getDay()
     if (offset === 0 || day === 6 || day === 0) {
       const value = formatInputDate(candidate)
-      options.push({ value, label: formatShortDate(value) })
+      options.push({
+        value,
+        label: formatShortDate(value),
+        relative: getRelativeDayLabel(offset, day),
+        dayNumber: candidate.getDate(),
+      })
     }
   }
 

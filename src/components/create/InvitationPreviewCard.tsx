@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import Card from '../ui/Card'
 import { resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
 import {
@@ -20,9 +21,27 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
   const backgroundImage = resolveInvitationBackgroundImage(draft.theme, draft.theme)
   const titleFont = normalizeTitleFont(draft.titleFont)
+  const [flash, setFlash] = useState(false)
+  const mountedRef = useRef(false)
+
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true
+      return
+    }
+    setFlash(true)
+    const timer = window.setTimeout(() => setFlash(false), 450)
+    return () => window.clearTimeout(timer)
+  }, [draft.title, draft.date, draft.time, draft.timeEnd, draft.locationName, draft.message, draft.theme, draft.titleFont, draft.rsvpMood])
+
+  const cardClass = [
+    'pb-previewCard',
+    compact ? 'pb-previewCard--compact' : '',
+    flash ? 'pb-previewCard--updated' : '',
+  ].filter(Boolean).join(' ')
 
   return (
-    <Card className={`pb-previewCard ${compact ? 'pb-previewCard--compact' : ''}`}>
+    <Card className={cardClass}>
       <div className="pb-previewCard__hero">
         <img className="pb-previewCard__heroImage" src={backgroundImage} alt="" aria-hidden="true" />
         <img className="pb-previewCard__logo" src="/logo.png" alt="Playbam.hr" />

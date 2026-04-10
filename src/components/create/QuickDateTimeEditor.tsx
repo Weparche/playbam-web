@@ -16,15 +16,17 @@ export default function QuickDateTimeEditor({ draft, today, onFieldChange }: Pro
         <span>{formatPreviewTime(draft.time, draft.timeEnd)}</span>
       </div>
 
-      <div className="pb-quickEditor__chipRow">
+      <div className="pb-quickEditor__chipRow pb-quickEditor__chipRow--dates">
         {dateOptions.map((option) => (
           <button
             key={option.value}
             type="button"
-            className={`pb-quickEditor__chip ${draft.date === option.value ? 'is-active' : ''}`}
+            className={`pb-quickEditor__dateChip ${draft.date === option.value ? 'is-active' : ''}`}
             onClick={() => onFieldChange('date', option.value)}
           >
-            {option.label}
+            <span className="pb-quickEditor__dateChipDay">{option.dayNumber}</span>
+            <span className="pb-quickEditor__dateChipLabel">{option.label}</span>
+            <span className="pb-quickEditor__dateChipRelative">{option.relative}</span>
           </button>
         ))}
       </div>

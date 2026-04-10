@@ -69,8 +69,23 @@ export default function CreateInvitationPage() {
   const [savingInvitation, setSavingInvitation] = useState(false)
   const [formError, setFormError] = useState('')
 
-  const { completedSteps, totalSteps, progressPercent } = buildCreateProgress(draft)
+  const { completedSteps, totalSteps, progressPercent, titleReady, dateReady, locationReady } = buildCreateProgress(draft)
   const progressLabel = completedSteps === totalSteps ? 'Spremno za objavu' : `${totalSteps - completedSteps} koraka do objave`
+
+  const missingSteps: string[] = []
+  if (!titleReady) missingSteps.push('naslov')
+  if (!dateReady) missingSteps.push('datum i vrijeme')
+  if (!locationReady) missingSteps.push('lokaciju')
+
+  const footerHeadline = completedSteps === totalSteps
+    ? 'Spremno za objavu'
+    : missingSteps.length > 0
+      ? `Popuni: ${missingSteps.join(', ')}`
+      : `Još ${totalSteps - completedSteps} koraka`
+
+  const footerDescription = completedSteps === totalSteps
+    ? 'Svi koraci su gotovi. Klikni za objavu pozivnice!'
+    : 'Naslov, datum, vrijeme i lokacija su obavezni za objavu.'
 
   useEffect(() => {
     setSaveState('saving')
@@ -251,6 +266,9 @@ export default function CreateInvitationPage() {
       <main className="pb-main pb-main--createV2">
         <InvitationCreateShell
           autosaveLabel={autosaveLabel}
+          saveState={saveState}
+          progressPercent={progressPercent}
+          progressLabel={progressLabel}
           preview={<InvitationPreviewCard draft={draft} compact />}
           rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={handleShortcutClick} />}
         >
@@ -270,8 +288,8 @@ export default function CreateInvitationPage() {
 
               <div className="pb-createFooterAction__row">
                 <div className="pb-createFooterAction__copy">
-                  <strong>Spremno za objavu</strong>
-                  <span>Naslov, tema i pregled su povezani. Pokloni i RSVP ostaju vidljivi uživo u editoru.</span>
+                  <strong>{footerHeadline}</strong>
+                  <span>{footerDescription}</span>
                 </div>
                 <Button variant="amber" type="button" onClick={handleCreateInvitation} disabled={savingInvitation}>
                   {savingInvitation ? 'Spremamo…' : 'Izradi pozivnicu'}

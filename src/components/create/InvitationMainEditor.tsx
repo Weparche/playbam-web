@@ -3,6 +3,7 @@ import {
   useRef,
   useState,
   type ChangeEvent,
+  type CSSProperties as ReactCSSProperties,
   type KeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
@@ -10,11 +11,13 @@ import {
 } from 'react'
 
 import Card from '../ui/Card'
+import { resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
 import {
   buildCreateProgress,
   buildPreviewLocation,
   formatPreviewDate,
   formatPreviewTime,
+  getRsvpSymbol,
   getThemeLabel,
   TITLE_FONT_OPTIONS,
   type InvitationCreateDraft,
@@ -257,13 +260,27 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
     onFieldChange('titleFont', fontId)
   }
 
+  const heroThemeImage = resolveInvitationBackgroundImage(draft.theme, draft.theme)
+
   return (
     <div className="pb-createEditor">
-      <Card className="pb-createEditor__heroCard">
+      <Card
+        className="pb-createEditor__heroCard pb-createEditor__heroCard--mobileTheme"
+        style={
+          {
+            ['--pb-create-hero-theme-url' as string]: `url(${JSON.stringify(heroThemeImage)})`,
+          } as ReactCSSProperties
+        }
+      >
         <div className="pb-createEditor__cardHeader pb-createEditor__cardHeader--hero">
-          <div>
-            <span className="pb-createEditor__eyebrow">Naslov pozivnice</span>
-            <label className="pb-createEditor__titleField">
+          <div className="pb-createEditor__heroHeaderStack">
+            <div className="pb-createEditor__heroTopRow">
+              <span className="pb-createEditor__eyebrow">Naslov pozivnice</span>
+              <div className="pb-createEditor__cardMeta pb-createEditor__cardMeta--heroChip">
+                <span className={getStatusChipClass(titleStatus.tone)}>{titleStatus.label}</span>
+              </div>
+            </div>
+            <label className="pb-createEditor__titleField pb-createEditor__titleField--hero">
               <span className="pb-visuallyHidden">Naslov pozivnice</span>
               <input
                 className={`pb-createEditor__titleInput pb-createEditor__title--${draft.titleFont}`}
@@ -272,9 +289,6 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
                 placeholder="Upiši naslov pozivnice"
               />
             </label>
-          </div>
-          <div className="pb-createEditor__cardMeta">
-            <span className={getStatusChipClass(titleStatus.tone)}>{titleStatus.label}</span>
           </div>
         </div>
 
@@ -319,6 +333,32 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             >
               <FontStripChevron direction="right" />
             </button>
+          </div>
+          <div
+            className="pb-createEditor__heroRsvpPreview"
+            role="button"
+            tabIndex={0}
+            aria-label="Uredi RSVP ikone"
+            onClick={() => onOpenShortcut('rsvp')}
+            onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('rsvp'))}
+          >
+            <div className="pb-createEditor__heroRsvpInner">
+              <div>
+                <span className="pb-createEditor__heroRsvpLabel">RSVP preview</span>
+                <div className="pb-previewCard__rsvpRow" aria-hidden="true">
+                  {(['going', 'maybe', 'not_going'] as const).map((choice) => (
+                    <span
+                      key={choice}
+                      className={`pb-previewCard__rsvpPill pb-previewCard__rsvpPill--${choice.replace('_', '-')}`}
+                    >
+                      <span className="pb-previewCard__rsvpGlyph">{getRsvpSymbol(draft.rsvpMood, choice)}</span>
+                      <span>{choice === 'going' ? 'Dolazimo' : choice === 'maybe' ? 'Možda' : 'Ne dolazimo'}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <EditorChevron />
+            </div>
           </div>
         </div>
       </Card>

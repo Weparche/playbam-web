@@ -15,9 +15,11 @@ export default function InvitationCreateShell({ autosaveLabel, preview, rail, ch
         <h1 className="pb-createShell__title">Jednostavno kreiranje pozivnice za tulume!</h1>
         <span className="pb-createShell__autosave">{autosaveLabel}</span>
       </header>
-      <div className="pb-createShell__layout">
-        <div className="pb-createShell__main">{children}</div>
-        <div className="pb-createShell__preview">{preview}</div>
+      <div className="pb-createShell__body">
+        <div className="pb-createShell__layout">
+          <div className="pb-createShell__main">{children}</div>
+          <div className="pb-createShell__preview">{preview}</div>
+        </div>
         {rail}
       </div>
     </div>

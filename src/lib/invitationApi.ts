@@ -480,3 +480,18 @@ export async function cancelInvitationWishlistReservation(
   )
   return data.item
 }
+
+export type UnfurlResult = {
+  title: string | null
+  image: string | null
+  domain: string | null
+  favicon: string | null
+}
+
+export async function unfurlLink(url: string): Promise<UnfurlResult> {
+  const response = await fetch(`${API_BASE}/api/unfurl?url=${encodeURIComponent(url)}`)
+  if (!response.ok) {
+    return { title: null, image: null, domain: null, favicon: null }
+  }
+  return response.json() as Promise<UnfurlResult>
+}

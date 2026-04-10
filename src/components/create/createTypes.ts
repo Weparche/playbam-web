@@ -24,11 +24,19 @@ export type ShortcutId =
   | 'settings'
   | 'preview'
 
+export type LinkMeta = {
+  title?: string
+  image?: string
+  domain?: string
+  favicon?: string
+}
+
 export type WishlistDraftItem = {
   id: string
   title: string
   note: string
   link: string
+  linkMeta?: LinkMeta
 }
 
 export type RsvpChoice = 'going' | 'maybe' | 'not_going'

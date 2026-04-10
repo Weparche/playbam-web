@@ -75,15 +75,29 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
             <span>{draft.wishlistItems.length} prijedloga</span>
           </div>
           <div className="pb-previewCard__wishlist">
-            {draft.wishlistItems.slice(0, 3).map((item) => (
-              <div key={item.id} className="pb-previewCard__wishlistItem">
-                <div className="pb-previewCard__wishlistLine">
-                  <strong>Naslov poklona:</strong>
-                  <span>{item.title || 'Novi poklon'}</span>
+            {draft.wishlistItems.slice(0, 3).map((item) => {
+              const thumbSrc = item.linkMeta?.image || item.linkMeta?.favicon
+              return (
+                <div key={item.id} className="pb-previewCard__wishlistItem">
+                  <div className="pb-previewCard__wishlistLine">
+                    {thumbSrc ? (
+                      <img
+                        className="pb-previewCard__wishlistThumb"
+                        src={thumbSrc}
+                        alt=""
+                        aria-hidden="true"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                      />
+                    ) : null}
+                    <div>
+                      <strong>{item.title || 'Novi poklon'}</strong>
+                      {item.linkMeta?.domain ? <span className="pb-previewCard__wishlistDomain">{item.linkMeta.domain}</span> : null}
+                    </div>
+                  </div>
+                  {item.note ? <p>{item.note}</p> : null}
                 </div>
-                {item.note ? <p>{item.note}</p> : null}
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       ) : null}

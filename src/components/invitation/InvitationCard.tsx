@@ -59,6 +59,7 @@ export default function InvitationCard({
       <div className="pb-inviteCard__stack">
         <PublicInvitationHero
           celebrantTitle={celebrantTitle}
+          titleFont={invitation.titleFont}
           dateText={dateText}
           timeText={timeText}
           venueText={venueText}

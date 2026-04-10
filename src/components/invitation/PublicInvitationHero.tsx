@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+
+import { normalizeTitleFont } from '../create/createTypes'
 
 type Props = {
   celebrantTitle: string
+  titleFont?: string | null
   dateText: string
   timeText: string
   venueText: string
@@ -59,6 +62,7 @@ function IconLock() {
 
 export default function PublicInvitationHero({
   celebrantTitle,
+  titleFont = null,
   dateText,
   timeText,
   venueText,
@@ -72,14 +76,13 @@ export default function PublicInvitationHero({
   accessText,
   showAccessCard = true,
 }: Props) {
-  const fallbackImage = '/pozivnica-bg.png'
-  const [heroImage, setHeroImage] = useState(backgroundImage || fallbackImage)
+  const fallbackImage = '/pozivnica-girl.png'
+  const resolvedImage = backgroundImage || fallbackImage
+  const [failedImage, setFailedImage] = useState<string | null>(null)
+  const heroImage = failedImage === resolvedImage ? fallbackImage : resolvedImage
+  const normalizedTitleFont = normalizeTitleFont(titleFont)
   const [titlePrimary, titleSecondary = ''] = celebrantTitle.split('|')
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venueText)}`
-
-  useEffect(() => {
-    setHeroImage(backgroundImage || fallbackImage)
-  }, [backgroundImage])
 
   return (
     <section className="pb-inviteHero pb-inviteHero--storybook" aria-label="Hero dio javne rođendanske pozivnice">
@@ -91,7 +94,7 @@ export default function PublicInvitationHero({
           aria-hidden="true"
           onError={() => {
             if (heroImage !== fallbackImage) {
-              setHeroImage(fallbackImage)
+              setFailedImage(resolvedImage)
             }
           }}
         />
@@ -100,7 +103,7 @@ export default function PublicInvitationHero({
           <img className="pb-inviteHero__logo" src="/logo.png" alt="Playbam.hr" />
 
           <header className="pb-inviteHero__titleWrap pb-inviteHero__titleWrap--storybook">
-            <h1 className="pb-inviteHero__title pb-inviteHero__title--storybook">
+            <h1 className={`pb-inviteHero__title pb-inviteHero__title--storybook pb-inviteHero__title--${normalizedTitleFont}`}>
               <span className="pb-inviteHero__titleLine">{titlePrimary}</span>
               {titleSecondary ? <span className="pb-inviteHero__titleLine">{titleSecondary}</span> : null}
             </h1>

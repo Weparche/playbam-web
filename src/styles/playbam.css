@@ -1261,7 +1261,7 @@
       rgba(255, 249, 244, 0.6) 45%,
       rgba(255, 255, 255, 0.78) 100%
     ),
-    url('/pozivnica-bg.png');
+    url('/pozivnica-girl.png');
   /* Pozadina preko cijele kartice */
   background-size: cover, cover;
   background-position: center center, center center;
@@ -4028,6 +4028,10 @@
     linear-gradient(145deg, rgba(255, 244, 236, 0.95), rgba(240, 246, 255, 0.92));
 }
 
+.pb-createFooterAction {
+  display: block;
+}
+
 .pb-createEditor__highlightCard {
   background:
     radial-gradient(180px 140px at 100% 0%, rgba(150, 176, 255, 0.18), transparent 72%),
@@ -4082,6 +4086,31 @@
   font-size: clamp(2rem, 7vw, 3.2rem);
 }
 
+.pb-createEditor__titleField {
+  display: block;
+  margin-top: 0.55rem;
+}
+
+.pb-createEditor__titleInput {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #17243b;
+  font: inherit;
+  font-size: clamp(2rem, 7vw, 3.2rem);
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+}
+
+.pb-createEditor__titleInput::placeholder {
+  color: rgba(23, 36, 59, 0.36);
+}
+
+.pb-createEditor__titleInput:focus {
+  outline: none;
+}
+
 .pb-createEditor__title--poster {
   font-family: var(--invite-display-font);
 }
@@ -4094,6 +4123,48 @@
 .pb-createEditor__title--clean {
   font-family: var(--invite-font);
   font-weight: 1000;
+}
+
+.pb-createEditor__title--lilita {
+  font-family: var(--invite-font-lilita);
+}
+
+.pb-createEditor__title--fredoka {
+  font-family: var(--invite-font-fredoka);
+}
+
+.pb-createEditor__title--gummy {
+  font-family: var(--invite-font-gummy);
+}
+
+.pb-createEditor__title--merienda {
+  font-family: var(--invite-font-merienda);
+  line-height: 1.02;
+}
+
+.pb-createEditor__title--great-vibes {
+  font-family: var(--invite-font-great-vibes);
+  line-height: 0.92;
+}
+
+.pb-createEditor__title--playfair {
+  font-family: var(--invite-font-playfair);
+  font-weight: 700;
+}
+
+.pb-createEditor__title--libre-baskerville {
+  font-family: var(--invite-font-libre-baskerville);
+  font-weight: 700;
+}
+
+.pb-createEditor__title--jakarta {
+  font-family: var(--invite-font-jakarta);
+  font-weight: 700;
+}
+
+.pb-createEditor__title--nunito {
+  font-family: var(--invite-font-nunito);
+  font-weight: 700;
 }
 
 .pb-createEditor__subtitle,
@@ -4139,6 +4210,93 @@
   flex: 0 0 auto;
   flex-wrap: nowrap;
   margin-left: auto;
+}
+
+.pb-createEditor__fontBlock {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.pb-createEditor__fontStrip {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.pb-createEditor__fontScrollerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border: 1px solid rgba(120, 138, 171, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 16px 32px rgba(34, 51, 84, 0.08);
+  color: #2d4a78;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.pb-createEditor__fontScrollerButton:hover,
+.pb-createEditor__fontScrollerButton:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(88, 114, 177, 0.3);
+  box-shadow: 0 18px 34px rgba(34, 51, 84, 0.12);
+}
+
+.pb-createEditor__fontScrollerButton.is-muted {
+  opacity: 0.52;
+}
+
+.pb-createEditor__fontScrollerButton:focus-visible {
+  outline: none;
+}
+
+.pb-createEditor__fontScrollerChevron {
+  display: block;
+  width: 1.18rem;
+  height: 1.18rem;
+}
+
+.pb-createEditor__fontScrollerChevron--left {
+  transform: rotate(180deg);
+}
+
+.pb-createEditor__fontScroller {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.08rem 0.08rem 0.24rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pinch-zoom;
+  overscroll-behavior-x: contain;
+  cursor: grab;
+}
+
+.pb-createEditor__fontScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.pb-createEditor__fontScroller.is-dragging {
+  cursor: grabbing;
+}
+
+.pb-createEditor__fontCard {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: fit-content;
+  max-width: none;
+  min-width: 0;
+  gap: 0;
+  padding: 0.78rem 1rem;
+  border-radius: 999px;
+  justify-content: flex-start;
+  user-select: none;
 }
 
 .pb-createEditor__statusChip {
@@ -4366,7 +4524,7 @@
 
 .pb-previewCard__hero {
   position: relative;
-  min-height: 13rem;
+  min-height: 14rem;
   border-radius: 1.35rem;
   padding: 1rem;
   display: flex;
@@ -4374,6 +4532,7 @@
   justify-content: flex-end;
   overflow: hidden;
   color: #ffffff;
+  isolation: isolate;
 }
 
 .pb-previewCard__hero::before,
@@ -4381,6 +4540,24 @@
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
+}
+
+.pb-previewCard__hero::before {
+  background: linear-gradient(180deg, rgba(15, 24, 42, 0.1) 0%, rgba(15, 24, 42, 0.48) 100%);
+}
+
+.pb-previewCard__hero::after {
+  background: radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.2), transparent 32%);
+}
+
+.pb-previewCard__heroImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
   z-index: 0;
 }
 
@@ -4424,7 +4601,7 @@
 .pb-previewCard__logo,
 .pb-previewCard__heroText {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .pb-previewCard__logo {
@@ -4464,7 +4641,48 @@
   font-weight: 1000;
 }
 
-.pb-previewCard__celebrant,
+.pb-previewCard__title--lilita {
+  font-family: var(--invite-font-lilita);
+}
+
+.pb-previewCard__title--fredoka {
+  font-family: var(--invite-font-fredoka);
+}
+
+.pb-previewCard__title--gummy {
+  font-family: var(--invite-font-gummy);
+}
+
+.pb-previewCard__title--merienda {
+  font-family: var(--invite-font-merienda);
+  line-height: 1.02;
+}
+
+.pb-previewCard__title--great-vibes {
+  font-family: var(--invite-font-great-vibes);
+  line-height: 0.92;
+}
+
+.pb-previewCard__title--playfair {
+  font-family: var(--invite-font-playfair);
+  font-weight: 700;
+}
+
+.pb-previewCard__title--libre-baskerville {
+  font-family: var(--invite-font-libre-baskerville);
+  font-weight: 700;
+}
+
+.pb-previewCard__title--jakarta {
+  font-family: var(--invite-font-jakarta);
+  font-weight: 700;
+}
+
+.pb-previewCard__title--nunito {
+  font-family: var(--invite-font-nunito);
+  font-weight: 700;
+}
+
 .pb-previewCard__section p,
 .pb-previewCard__wishlistItem span,
 .pb-previewCard__rsvpPrompt {
@@ -4487,6 +4705,13 @@
   border-radius: 1.15rem;
   background: rgba(248, 250, 252, 0.96);
   border: 1px solid rgba(16, 24, 40, 0.06);
+}
+
+.pb-previewCard__infoCard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+  align-items: baseline;
 }
 
 .pb-previewCard__infoCard strong,
@@ -4537,6 +4762,22 @@
   border-radius: 1rem;
   background: #ffffff;
   border: 1px solid rgba(16, 24, 40, 0.06);
+}
+
+.pb-previewCard__wishlistLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+
+.pb-previewCard__wishlistLine span {
+  margin: 0;
+  color: rgba(16, 24, 40, 0.78);
+}
+
+.pb-previewCard__wishlistItem p {
+  margin: 0.45rem 0 0;
 }
 
 .pb-previewCard__rsvpRow {
@@ -4723,11 +4964,29 @@
     border-radius: 1.4rem;
   }
 
+  .pb-createEditor__fontCard {
+    width: auto;
+  }
+
+  .pb-createEditor__fontStrip {
+    gap: 0.5rem;
+  }
+
+  .pb-createEditor__fontScrollerButton {
+    width: 2.45rem;
+    height: 2.45rem;
+  }
+
   .pb-createEditor__panelCard[role='button']:hover,
   .pb-createEditor__panelCard[role='button']:focus-visible,
   .pb-createEditor__fact:hover,
   .pb-createEditor__fact:focus-visible {
     transform: translateX(4px);
+  }
+
+  .pb-createFooterAction__row .pb-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -4743,7 +5002,7 @@
 
   .pb-shortcutRail {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     left: max(0.375rem, env(safe-area-inset-left, 0px) + 0.375rem);
     right: max(0.375rem, env(safe-area-inset-right, 0px) + 0.375rem);
     width: auto;
@@ -4766,6 +5025,20 @@
     overflow-wrap: anywhere;
     line-height: 1.02;
     letter-spacing: 0;
+  }
+
+  .pb-createEditor__fontCard {
+    width: auto;
+    padding-inline: 0.9rem;
+  }
+
+  .pb-createEditor__fontStrip {
+    gap: 0.35rem;
+  }
+
+  .pb-createEditor__fontScrollerButton {
+    width: 2.2rem;
+    height: 2.2rem;
   }
 }
 
@@ -4850,6 +5123,11 @@
   gap: 0.7rem;
 }
 
+.pb-quickEditor__themeGrid {
+  display: grid;
+  gap: 0.75rem;
+}
+
 .pb-quickEditor__preset,
 .pb-quickEditor__optionCard,
 .pb-quickEditor__fontCard {
@@ -4864,9 +5142,22 @@
   cursor: pointer;
 }
 
+.pb-quickEditor__themeCard {
+  display: grid;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(16, 24, 40, 0.08);
+  background: rgba(255, 255, 255, 0.96);
+  text-align: left;
+  cursor: pointer;
+}
+
 .pb-quickEditor__preset.is-active,
 .pb-quickEditor__optionCard.is-active,
 .pb-quickEditor__fontCard.is-active,
+.pb-quickEditor__themeCard.is-active,
 .pb-quickEditor__chip.is-active {
   border-color: rgba(91, 61, 245, 0.24);
   box-shadow: 0 12px 28px rgba(91, 61, 245, 0.1);
@@ -4874,13 +5165,15 @@
 
 .pb-quickEditor__preset strong,
 .pb-quickEditor__optionCard strong,
-.pb-quickEditor__fontCard strong {
+.pb-quickEditor__fontCard strong,
+.pb-quickEditor__themeCopy strong {
   color: #17243b;
 }
 
 .pb-quickEditor__preset span,
 .pb-quickEditor__optionCard span,
 .pb-quickEditor__fontCard span,
+.pb-quickEditor__themeCopy span,
 .pb-quickEditor__hint {
   color: rgba(16, 24, 40, 0.62);
   line-height: 1.5;
@@ -4888,13 +5181,97 @@
   font-weight: 700;
 }
 
+.pb-quickEditor__fontCard.pb-createEditor__fontCard {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: none;
+  min-width: 0;
+  gap: 0;
+  padding: 0.78rem 1rem;
+  border-radius: 999px;
+  justify-content: flex-start;
+}
+
+.pb-quickEditor__themeImage {
+  width: 100%;
+  aspect-ratio: 1.45 / 1;
+  border-radius: 1rem;
+  object-fit: cover;
+  object-position: center 30%;
+  background: rgba(240, 244, 255, 0.9);
+}
+
+.pb-quickEditor__themeCopy {
+  display: grid;
+  gap: 0.16rem;
+}
+
+.pb-quickEditor__fontCard .pb-fontOption__name,
+.pb-createEditor__fontCard .pb-fontOption__name {
+  display: inline-block;
+  color: #17243b;
+  font-size: clamp(1rem, 2vw, 1.28rem);
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+.pb-fontOption__name--lilita {
+  font-family: var(--invite-font-lilita);
+}
+
+.pb-fontOption__name--fredoka {
+  font-family: var(--invite-font-fredoka);
+}
+
+.pb-fontOption__name--gummy {
+  font-family: var(--invite-font-gummy);
+}
+
+.pb-fontOption__name--merienda {
+  font-family: var(--invite-font-merienda);
+  line-height: 1.04;
+  font-weight: 700;
+}
+
+.pb-fontOption__name--great-vibes {
+  font-family: var(--invite-font-great-vibes);
+  font-size: clamp(1.2rem, 2.5vw, 1.75rem);
+  line-height: 0.9;
+  font-weight: 400;
+}
+
+.pb-fontOption__name--playfair {
+  font-family: var(--invite-font-playfair);
+  font-weight: 600;
+}
+
+.pb-fontOption__name--libre-baskerville {
+  font-family: var(--invite-font-libre-baskerville);
+  font-weight: 400;
+}
+
+.pb-fontOption__name--jakarta {
+  font-family: var(--invite-font-jakarta);
+  font-weight: 600;
+}
+
+.pb-fontOption__name--nunito {
+  font-family: var(--invite-font-nunito);
+  font-weight: 600;
+}
+
 .pb-quickEditor__fontPreview {
+  display: inline-block;
   padding: 0.9rem 1rem;
   border-radius: 1rem;
   background: linear-gradient(135deg, rgba(255, 245, 236, 0.92), rgba(248, 241, 255, 0.94));
   color: #17243b;
   font-size: 1.45rem;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .pb-quickEditor__fontPreview--poster {
@@ -4908,6 +5285,33 @@
 .pb-quickEditor__fontPreview--clean {
   font-family: var(--invite-font);
   font-weight: 1000;
+}
+
+.pb-quickEditor__fontPreview--lilita {
+  font-family: var(--invite-font-lilita);
+}
+
+.pb-quickEditor__fontPreview--fredoka {
+  font-family: var(--invite-font-fredoka);
+}
+
+.pb-quickEditor__fontPreview--gummy {
+  font-family: var(--invite-font-gummy);
+}
+
+.pb-quickEditor__fontPreview--merienda {
+  font-family: var(--invite-font-merienda);
+  line-height: 1.02;
+}
+
+.pb-quickEditor__fontPreview--jakarta {
+  font-family: var(--invite-font-jakarta);
+  font-weight: 1000;
+}
+
+.pb-quickEditor__fontPreview--nunito {
+  font-family: var(--invite-font-nunito);
+  font-weight: 900;
 }
 
 .pb-quickEditor__summary {
@@ -4994,6 +5398,35 @@
   color: #17243b;
 }
 
+.pb-createFooterAction__stack {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.pb-createFooterAction__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pb-createFooterAction__progress {
+  margin-top: 0;
+}
+
+.pb-visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 @keyframes pbCreateSurfaceIn {
   from {
     opacity: 0;
@@ -5022,6 +5455,7 @@
   .pb-previewCard__grid,
   .pb-quickEditor__twoCol,
   .pb-quickEditor__presetGrid,
+  .pb-quickEditor__themeGrid,
   .pb-quickEditor__optionGrid,
   .pb-quickEditor__fontGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -6371,7 +6805,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 0%;
 }
 
 .pb-inviteHero__content--storybook {
@@ -6411,6 +6845,48 @@
   color: #336fd6;
   -webkit-text-fill-color: #336fd6;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.pb-inviteHero__title--lilita {
+  font-family: var(--invite-font-lilita);
+}
+
+.pb-inviteHero__title--fredoka {
+  font-family: var(--invite-font-fredoka);
+}
+
+.pb-inviteHero__title--gummy {
+  font-family: var(--invite-font-gummy);
+}
+
+.pb-inviteHero__title--merienda {
+  font-family: var(--invite-font-merienda);
+  line-height: 0.98;
+}
+
+.pb-inviteHero__title--great-vibes {
+  font-family: var(--invite-font-great-vibes);
+  line-height: 0.9;
+}
+
+.pb-inviteHero__title--playfair {
+  font-family: var(--invite-font-playfair);
+  font-weight: 700;
+}
+
+.pb-inviteHero__title--libre-baskerville {
+  font-family: var(--invite-font-libre-baskerville);
+  font-weight: 700;
+}
+
+.pb-inviteHero__title--jakarta {
+  font-family: var(--invite-font-jakarta);
+  font-weight: 700;
+}
+
+.pb-inviteHero__title--nunito {
+  font-family: var(--invite-font-nunito);
+  font-weight: 700;
 }
 
 .pb-inviteHero__infoBlock {

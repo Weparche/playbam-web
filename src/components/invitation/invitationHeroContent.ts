@@ -1,13 +1,17 @@
 type MaybeString = string | null | undefined
 
 const INVITATION_BACKGROUND_MAP: Record<string, string> = {
-  baloni: '/pozivnica-bg.png',
+  baloni: '/pozivnica-girl.png',
   konfeti: '/pozivnica-boys.png',
-  zvjezdice: '/pozivnica-bg1.png',
-  'pozivnica-bg': '/pozivnica-bg.png',
-  'pozivnica-bg1': '/pozivnica-bg1.png',
+  zvjezdice: '/pozivnica-mix.png',
+  'pozivnica-bg': '/pozivnica-girl.png',
+  'pozivnica-bg1': '/pozivnica-mix.png',
   'pozivnica-boys': '/pozivnica-boys.png',
-  'pozivnica-boys1': '/pozivnica-boys1.png',
+  'pozivnica-boys1': '/pozivnica-girls.png',
+  'pozivnica-girl': '/pozivnica-girl.png',
+  'pozivnica-boy': '/pozivnica-boy.png',
+  'pozivnica-girls': '/pozivnica-girls.png',
+  'pozivnica-mix': '/pozivnica-mix.png',
 }
 
 export function formatInvitationDateText(dateValue: string) {
@@ -35,7 +39,9 @@ export function formatInvitationTimeText(timeValue: string) {
   }
 
   if (normalized.includes('-') || /\bdo\b/i.test(normalized)) {
-    return normalized.replace(/\s*-\s*/g, ' - ')
+    return normalized
+      .replace(/\s*-\s*/g, ' - ')
+      .replace(/(\d{2}:\d{2})(?!h)/g, '$1h')
   }
 
   const [startHour = '15', startMinute = '00'] = normalized.split(':')
@@ -44,7 +50,7 @@ export function formatInvitationTimeText(timeValue: string) {
   const endHour = String(Math.floor(endTotalMinutes / 60)).padStart(2, '0')
   const endMinute = String(endTotalMinutes % 60).padStart(2, '0')
 
-  return `${normalized} - ${endHour}:${endMinute}`
+  return `${normalized}h - ${endHour}:${endMinute}h`
 }
 
 export function buildInvitationHeroTitle(title: string, celebrantName: string) {
@@ -79,5 +85,5 @@ export function resolveInvitationBackgroundImage(coverImage?: MaybeString, theme
     return INVITATION_BACKGROUND_MAP[themeKey]
   }
 
-  return '/pozivnica-bg.png'
+  return '/pozivnica-girl.png'
 }

@@ -1,26 +1,35 @@
-import type { KeyboardEvent, MouseEvent } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type KeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+  type WheelEvent as ReactWheelEvent,
+} from 'react'
 
 import Card from '../ui/Card'
-import { buildPreviewLocation, formatPreviewDate, formatPreviewTime, getThemeLabel, type InvitationCreateDraft, type ShortcutId } from './createTypes'
+import {
+  buildCreateProgress,
+  buildPreviewLocation,
+  formatPreviewDate,
+  formatPreviewTime,
+  getThemeLabel,
+  TITLE_FONT_OPTIONS,
+  type InvitationCreateDraft,
+  type ShortcutId,
+} from './createTypes'
 
 type Props = {
   draft: InvitationCreateDraft
+  onFieldChange: <K extends keyof InvitationCreateDraft>(field: K, value: InvitationCreateDraft[K]) => void
   onOpenShortcut: (shortcut: ShortcutId) => void
 }
 
 type StatusTone = 'ready' | 'accent' | 'pending' | 'muted'
 
-const EFFECT_LABELS = {
-  confetti: 'Konfeti',
-  streamers: 'Trakice',
-  glow: 'Glow',
-} as const
-
-const ACCENT_LABELS = {
-  berry: 'Berry',
-  sky: 'Sky',
-  mint: 'Mint',
-} as const
+const FONT_SCROLL_THRESHOLD = 6
 
 function handleActionKeyDown(event: KeyboardEvent<HTMLElement>, onActivate: () => void) {
   if (event.key === 'Enter' || event.key === ' ') {
@@ -64,80 +73,252 @@ function FactChevron() {
   )
 }
 
-export default function InvitationMainEditor({ draft, onOpenShortcut }: Props) {
-  const title = draft.title.trim() || `${draft.celebrantName.trim() || 'Slavljenik'} slavi rođendan`
+function FontStripChevron({ direction }: { direction: 'left' | 'right' }) {
+  return (
+    <ChevronIcon
+      className={`pb-createEditor__fontScrollerChevron ${
+        direction === 'left' ? 'pb-createEditor__fontScrollerChevron--left' : ''
+      }`}
+    />
+  )
+}
+
+function getFontScrollStep(scroller: HTMLDivElement) {
+  const firstCard = scroller.querySelector<HTMLElement>('.pb-createEditor__fontCard')
+  const styles = window.getComputedStyle(scroller)
+  const gap = Number.parseFloat(styles.columnGap || styles.gap || '0')
+  const cardWidth = firstCard?.getBoundingClientRect().width ?? scroller.clientWidth
+  const naturalStep = scroller.clientWidth * 0.34
+  const minimumStep = (cardWidth * 0.24) + (Number.isNaN(gap) ? 0 : gap)
+  return Math.max(naturalStep, minimumStep)
+}
+
+export default function InvitationMainEditor({ draft, onFieldChange, onOpenShortcut }: Props) {
+  const fontScrollerRef = useRef<HTMLDivElement | null>(null)
+  const dragPointerIdRef = useRef<number | null>(null)
+  const dragStartXRef = useRef(0)
+  const dragScrollLeftRef = useRef(0)
+  const dragMovedRef = useRef(false)
+  const [isDraggingFonts, setIsDraggingFonts] = useState(false)
+  const [canScrollFontsLeft, setCanScrollFontsLeft] = useState(false)
+  const [canScrollFontsRight, setCanScrollFontsRight] = useState(true)
+
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
-
-  const titleReady = Boolean(draft.title.trim() && draft.celebrantName.trim())
-  const dateReady = Boolean(draft.date.trim() && draft.time.trim() && draft.timeEnd.trim())
-  const locationReady = Boolean(draft.locationName.trim())
-  const messageReady = Boolean(draft.message.trim())
-  const wishlistReady = draft.wishlistEnabled ? draft.wishlistItems.length > 0 || draft.savingsEnabled : true
-  const rsvpReady = draft.rsvpEnabled ? Boolean(draft.rsvpPrompt.trim()) : true
-
-  const progressSteps = [titleReady, dateReady, locationReady, messageReady, wishlistReady, rsvpReady]
-  const completedSteps = progressSteps.filter(Boolean).length
-  const totalSteps = progressSteps.length
-  const progressPercent = Math.round((completedSteps / totalSteps) * 100)
+  const { titleReady, dateReady, locationReady, messageReady, rsvpReady } = buildCreateProgress(draft)
 
   const titleStatus = titleReady ? { label: 'Popunjeno', tone: 'ready' as const } : { label: 'Dodaj naslov', tone: 'pending' as const }
   const scheduleStatus = dateReady && locationReady
     ? { label: 'Spremno', tone: 'ready' as const }
     : { label: 'Nedostaje detalj', tone: 'pending' as const }
+  const themeStatus = { label: 'Odabrana tema', tone: 'accent' as const }
   const messageStatus = messageReady
     ? { label: 'Dodana poruka', tone: 'accent' as const }
     : { label: 'Dodaj poruku', tone: 'pending' as const }
   const wishlistStatus = draft.wishlistEnabled
     ? { label: draft.wishlistItems.length > 0 ? `${draft.wishlistItems.length} želje` : 'Wishlist uključen', tone: 'accent' as const }
     : { label: 'Isključen', tone: 'muted' as const }
-  const rsvpStatus = draft.rsvpEnabled
+  const rsvpStatus = rsvpReady
     ? { label: 'Aktivan', tone: 'accent' as const }
-    : { label: 'Isključen', tone: 'muted' as const }
-  const styleStatus = { label: 'Editorial', tone: 'accent' as const }
+    : { label: 'Dodaj tekst', tone: 'pending' as const }
 
-  const progressLabel = completedSteps === totalSteps ? 'Spremno za objavu' : `${totalSteps - completedSteps} koraka do objave`
+  useEffect(() => {
+    const scroller = fontScrollerRef.current
+    if (!scroller) {
+      return undefined
+    }
 
-  const handleFactClick = (event: MouseEvent<HTMLButtonElement>, shortcut: ShortcutId) => {
+    const syncScrollState = () => {
+      const maxScrollLeft = Math.max(scroller.scrollWidth - scroller.clientWidth, 0)
+      const nextCanScrollLeft = scroller.scrollLeft > FONT_SCROLL_THRESHOLD
+      const nextCanScrollRight = maxScrollLeft - scroller.scrollLeft > FONT_SCROLL_THRESHOLD
+
+      setCanScrollFontsLeft((current) => (current === nextCanScrollLeft ? current : nextCanScrollLeft))
+      setCanScrollFontsRight((current) => (current === nextCanScrollRight ? current : nextCanScrollRight))
+    }
+
+    syncScrollState()
+    scroller.addEventListener('scroll', syncScrollState, { passive: true })
+    window.addEventListener('resize', syncScrollState)
+
+    return () => {
+      scroller.removeEventListener('scroll', syncScrollState)
+      window.removeEventListener('resize', syncScrollState)
+    }
+  }, [draft.title, draft.titleFont])
+
+  useEffect(() => {
+    const handleWindowPointerMove = (event: PointerEvent) => {
+      if (dragPointerIdRef.current !== event.pointerId) {
+        return
+      }
+
+      const scroller = fontScrollerRef.current
+      if (!scroller) {
+        return
+      }
+
+      const delta = event.clientX - dragStartXRef.current
+      if (Math.abs(delta) <= 5) {
+        return
+      }
+
+      if (!dragMovedRef.current) {
+        dragMovedRef.current = true
+        setIsDraggingFonts(true)
+      }
+
+      scroller.scrollLeft = dragScrollLeftRef.current - delta
+      event.preventDefault()
+    }
+
+    const finishWindowPointer = (event: PointerEvent) => {
+      if (dragPointerIdRef.current !== event.pointerId) {
+        return
+      }
+
+      dragPointerIdRef.current = null
+      setIsDraggingFonts(false)
+
+      if (dragMovedRef.current) {
+        window.setTimeout(() => {
+          dragMovedRef.current = false
+        }, 0)
+      }
+    }
+
+    window.addEventListener('pointermove', handleWindowPointerMove)
+    window.addEventListener('pointerup', finishWindowPointer)
+    window.addEventListener('pointercancel', finishWindowPointer)
+
+    return () => {
+      window.removeEventListener('pointermove', handleWindowPointerMove)
+      window.removeEventListener('pointerup', finishWindowPointer)
+      window.removeEventListener('pointercancel', finishWindowPointer)
+    }
+  }, [])
+
+  const handleFactClick = (event: ReactMouseEvent<HTMLButtonElement>, shortcut: ShortcutId) => {
     event.stopPropagation()
     onOpenShortcut(shortcut)
   }
 
-  const handleChevronClick = (event: MouseEvent<HTMLButtonElement>, shortcut: ShortcutId) => {
+  const handleChevronClick = (event: ReactMouseEvent<HTMLButtonElement>, shortcut: ShortcutId) => {
     event.stopPropagation()
     onOpenShortcut(shortcut)
+  }
+
+  const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onFieldChange('title', event.target.value)
+  }
+
+  const handleFontStripPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) {
+      return
+    }
+
+    const scroller = fontScrollerRef.current
+    if (!scroller) {
+      return
+    }
+
+    dragPointerIdRef.current = event.pointerId
+    dragStartXRef.current = event.clientX
+    dragScrollLeftRef.current = scroller.scrollLeft
+    dragMovedRef.current = false
+  }
+
+  const handleFontStepScroll = (direction: 'left' | 'right') => {
+    const scroller = fontScrollerRef.current
+    if (!scroller) {
+      return
+    }
+
+    const step = getFontScrollStep(scroller)
+    const multiplier = direction === 'right' ? 1 : -1
+    scroller.scrollBy({ left: step * multiplier, behavior: 'smooth' })
+  }
+
+  const handleFontStripWheel = (event: ReactWheelEvent<HTMLDivElement>) => {
+    const scroller = fontScrollerRef.current
+    if (!scroller || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+      return
+    }
+
+    scroller.scrollBy({ left: event.deltaY, behavior: 'auto' })
+    event.preventDefault()
+  }
+
+  const handleFontSelect = (event: ReactMouseEvent<HTMLButtonElement>, fontId: InvitationCreateDraft['titleFont']) => {
+    if (dragMovedRef.current) {
+      event.preventDefault()
+      return
+    }
+
+    onFieldChange('titleFont', fontId)
   }
 
   return (
     <div className="pb-createEditor">
-      <Card
-        className="pb-createEditor__heroCard pb-createEditor__panelCard"
-        role="button"
-        tabIndex={0}
-        aria-label="Uredi naslov, ime slavljenika i font pozivnice"
-        onClick={() => onOpenShortcut('title')}
-        onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('title'))}
-      >
+      <Card className="pb-createEditor__heroCard">
         <div className="pb-createEditor__cardHeader pb-createEditor__cardHeader--hero">
           <div>
             <span className="pb-createEditor__eyebrow">Naslov pozivnice</span>
-            <h2 className={`pb-createEditor__title pb-createEditor__title--${draft.titleFont}`}>{title}</h2>
-            <p className="pb-createEditor__subtitle">
-              {draft.celebrantName.trim() ? `${draft.celebrantName.trim()} je glavni gost dana` : 'Dodaj ime slavljenika'}
-            </p>
+            <label className="pb-createEditor__titleField">
+              <span className="pb-visuallyHidden">Naslov pozivnice</span>
+              <input
+                className={`pb-createEditor__titleInput pb-createEditor__title--${draft.titleFont}`}
+                value={draft.title}
+                onChange={handleTitleChange}
+                placeholder="Upiši naslov pozivnice"
+              />
+            </label>
           </div>
           <div className="pb-createEditor__cardMeta">
             <span className={getStatusChipClass(titleStatus.tone)}>{titleStatus.label}</span>
-            <EditorChevron />
           </div>
         </div>
 
-        <div className="pb-createEditor__progress">
-          <div className="pb-createEditor__progressMeta">
-            <span>{completedSteps} od {totalSteps} koraka spremno</span>
-            <span>{progressLabel}</span>
-          </div>
-          <div className="pb-createEditor__progressTrack" aria-hidden="true">
-            <span className="pb-createEditor__progressFill" style={{ width: `${progressPercent}%` }} />
+        <div className="pb-createEditor__fontBlock">
+          <span className="pb-createEditor__eyebrow">Font preview</span>
+          <div className="pb-createEditor__fontStrip">
+            <button
+              type="button"
+              className={`pb-createEditor__fontScrollerButton ${!canScrollFontsLeft ? 'is-muted' : ''}`}
+              aria-label="Prethodni font"
+              onClick={() => handleFontStepScroll('left')}
+            >
+              <FontStripChevron direction="left" />
+            </button>
+
+            <div
+              ref={fontScrollerRef}
+              className={`pb-createEditor__fontScroller ${isDraggingFonts ? 'is-dragging' : ''}`}
+              role="list"
+              aria-label="Odabir fonta za naslov"
+              onWheel={handleFontStripWheel}
+              onPointerDown={handleFontStripPointerDown}
+            >
+              {TITLE_FONT_OPTIONS.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  className={`pb-quickEditor__fontCard pb-createEditor__fontCard ${draft.titleFont === option.id ? 'is-active' : ''}`}
+                  onClick={(event) => handleFontSelect(event, option.id)}
+                  draggable={false}
+                >
+                  <span className={`pb-fontOption__name pb-fontOption__name--${option.id}`}>{option.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className={`pb-createEditor__fontScrollerButton ${!canScrollFontsRight ? 'is-muted' : ''}`}
+              aria-label="Sljedeći font"
+              onClick={() => handleFontStepScroll('right')}
+            >
+              <FontStripChevron direction="right" />
+            </button>
           </div>
         </div>
       </Card>
@@ -195,6 +376,27 @@ export default function InvitationMainEditor({ draft, onOpenShortcut }: Props) {
       </Card>
 
       <div className="pb-createEditor__grid">
+        <Card
+          className="pb-createEditor__infoCard pb-createEditor__panelCard"
+          role="button"
+          tabIndex={0}
+          aria-label="Uredi temu pozivnice"
+          onClick={() => onOpenShortcut('theme')}
+          onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('theme'))}
+        >
+          <div className="pb-createEditor__cardHeader">
+            <div>
+              <span className="pb-createEditor__eyebrow">Tema</span>
+              <h3 className="pb-createEditor__sectionTitle">Naslovnica pozivnice</h3>
+            </div>
+            <div className="pb-createEditor__cardMeta">
+              <span className={getStatusChipClass(themeStatus.tone)}>{themeStatus.label}</span>
+              <EditorChevron />
+            </div>
+          </div>
+          <p className="pb-createEditor__bodyText">{getThemeLabel(draft.theme)}</p>
+        </Card>
+
         <Card
           className="pb-createEditor__infoCard pb-createEditor__panelCard"
           role="button"
@@ -259,32 +461,7 @@ export default function InvitationMainEditor({ draft, onOpenShortcut }: Props) {
               <EditorChevron />
             </div>
           </div>
-          <p className="pb-createEditor__bodyText">
-            {draft.rsvpEnabled ? draft.rsvpPrompt.trim() || 'RSVP je uključen po defaultu.' : 'RSVP je isključen.'}
-          </p>
-        </Card>
-
-        <Card
-          className="pb-createEditor__infoCard pb-createEditor__panelCard"
-          role="button"
-          tabIndex={0}
-          aria-label="Uredi stil i akcent boje"
-          onClick={() => onOpenShortcut('style')}
-          onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('style'))}
-        >
-          <div className="pb-createEditor__cardHeader">
-            <div>
-              <span className="pb-createEditor__eyebrow">Stil</span>
-              <h3 className="pb-createEditor__sectionTitle">Tema i akcenti</h3>
-            </div>
-            <div className="pb-createEditor__cardMeta">
-              <span className={getStatusChipClass(styleStatus.tone)}>{styleStatus.label}</span>
-              <EditorChevron />
-            </div>
-          </div>
-          <p className="pb-createEditor__bodyText">
-            {getThemeLabel(draft.theme)} · {EFFECT_LABELS[draft.effect]} · {ACCENT_LABELS[draft.accentPalette]}
-          </p>
+          <p className="pb-createEditor__bodyText">{draft.rsvpPrompt.trim() || 'RSVP je uključen po defaultu.'}</p>
         </Card>
       </div>
     </div>

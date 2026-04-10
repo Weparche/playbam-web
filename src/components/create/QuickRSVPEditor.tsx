@@ -8,11 +8,6 @@ type Props = {
 export default function QuickRSVPEditor({ draft, onFieldChange }: Props) {
   return (
     <div className="pb-quickEditor">
-      <label className="pb-quickEditor__toggle">
-        <input type="checkbox" checked={draft.rsvpEnabled} onChange={(event) => onFieldChange('rsvpEnabled', event.target.checked)} />
-        <span>RSVP uključen po defaultu</span>
-      </label>
-
       <label className="pb-formField">
         <span className="pb-formLabel">Tekst za goste</span>
         <textarea

@@ -16,7 +16,7 @@ function buildPreviewAccessText(draft: InvitationCreateDraft) {
   const enabledFeatures = [
     draft.wishlistEnabled ? 'listu želja' : null,
     draft.savingsEnabled ? 'grupni poklon' : null,
-    draft.rsvpEnabled ? 'potvrdu dolaska' : null,
+    'potvrdu dolaska',
   ].filter(Boolean)
 
   if (enabledFeatures.length === 0) {
@@ -50,12 +50,13 @@ export default function InvitationLivePreview({ draft, compact }: Props) {
         <div className="pb-inviteCard__stack">
           <PublicInvitationHero
             celebrantTitle={buildInvitationHeroTitle(draft.title, draft.celebrantName)}
+            titleFont={draft.titleFont}
             dateText={formatInvitationDateText(draft.date)}
             timeText={formatInvitationTimeText(buildTimeRangeValue(draft.time, draft.timeEnd))}
             venueText={location}
             messageText={messageText}
             backgroundImage={resolveInvitationBackgroundImage(draft.theme, draft.theme)}
-            showRsvp={draft.rsvpEnabled}
+            showRsvp
             rsvp={null}
             accessTitle="Privatni dio pozivnice"
             accessText={accessText ?? 'Prijavi se za privatne detalje proslave.'}

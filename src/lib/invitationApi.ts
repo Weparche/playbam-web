@@ -53,6 +53,7 @@ export type PublicInvitation = {
   publicSlug: string
   title: string
   celebrantName: string
+  titleFont?: string | null
   date: string
   time: string
   location: string
@@ -65,6 +66,7 @@ export type PublicInvitation = {
 export type CreateInvitationPayload = {
   title: string
   celebrantName: string
+  titleFont?: string | null
   date: string
   time: string
   location: string

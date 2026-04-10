@@ -1,19 +1,26 @@
-export type CoverTheme = 'konfeti' | 'baloni' | 'zvjezdice'
+export type CoverTheme = 'pozivnica-girl' | 'pozivnica-boy' | 'pozivnica-boys' | 'pozivnica-girls' | 'pozivnica-mix'
 export type EffectStyle = 'confetti' | 'streamers' | 'glow'
-export type TitleFont = 'poster' | 'script' | 'clean'
+export type TitleFont =
+  | 'lilita'
+  | 'fredoka'
+  | 'gummy'
+  | 'merienda'
+  | 'great-vibes'
+  | 'playfair'
+  | 'libre-baskerville'
+  | 'jakarta'
+  | 'nunito'
 export type RsvpMood = 'party' | 'sweet' | 'icons' | 'spark'
 export type AccentPalette = 'berry' | 'sky' | 'mint'
 export type LocationType = 'Igraonica / lokal' | 'Kod kuće' | 'Na otvorenom' | 'Druga lokacija'
 
 export type ShortcutId =
-  | 'title'
   | 'dateTime'
   | 'location'
   | 'theme'
   | 'message'
   | 'wishlist'
   | 'rsvp'
-  | 'style'
   | 'settings'
   | 'preview'
 
@@ -52,10 +59,12 @@ export type InvitationCreateDraft = {
 export const LOCATION_TYPES: readonly LocationType[] = ['Igraonica / lokal', 'Kod kuće', 'Na otvorenom', 'Druga lokacija']
 
 export const COVER_THEME_OPTIONS = [
-  { id: 'konfeti', label: 'Konfeti', description: 'Šaren i veseo poster za klasični party.' },
-  { id: 'baloni', label: 'Baloni', description: 'Lagani, prozračni vizual s više topline.' },
-  { id: 'zvjezdice', label: 'Zvjezdice', description: 'Čarobniji, sanjiviji smjer za posebniji vibe.' },
-] as const satisfies ReadonlyArray<{ id: CoverTheme; label: string; description: string }>
+  { id: 'pozivnica-girl', label: 'Cura', description: 'Topla ilustracija za pozivnicu s jednom curom.', image: '/pozivnica-girl.png' },
+  { id: 'pozivnica-boy', label: 'Dečko', description: 'Varijanta s jednim dečkom na naslovnici.', image: '/pozivnica-boy.png' },
+  { id: 'pozivnica-boys', label: 'Dva dečka', description: 'Tema za dva dječaka na istoj pozivnici.', image: '/pozivnica-boys.png' },
+  { id: 'pozivnica-girls', label: 'Dvije cure', description: 'Tema s dvije cure i istim storybook stilom.', image: '/pozivnica-girls.png' },
+  { id: 'pozivnica-mix', label: 'Cura i dečko', description: 'Miks ilustracija za pozivnicu s curom i dečkom.', image: '/pozivnica-mix.png' },
+] as const satisfies ReadonlyArray<{ id: CoverTheme; label: string; description: string; image: string }>
 
 export const EFFECT_OPTIONS = [
   { id: 'confetti', label: 'Konfeti', description: 'Sitni party detalji preko postera.' },
@@ -64,9 +73,15 @@ export const EFFECT_OPTIONS = [
 ] as const satisfies ReadonlyArray<{ id: EffectStyle; label: string; description: string }>
 
 export const TITLE_FONT_OPTIONS = [
-  { id: 'poster', label: 'Poster', description: 'Deblji naslov za hero riječ.', preview: 'Luka slavi!' },
-  { id: 'script', label: 'Rukopis', description: 'Više invitation osjećaja i topline.', preview: 'Luka slavi!' },
-  { id: 'clean', label: 'Clean', description: 'Najčišći i najsmireniji naslov.', preview: 'Luka slavi!' },
+  { id: 'lilita', label: 'Lilita One', description: 'Najizraženiji party naslov za hero kadar.', preview: 'Luka slavi!' },
+  { id: 'fredoka', label: 'Fredoka', description: 'Zaigran i mekan display font za dječji rođendan.', preview: 'Luka slavi!' },
+  { id: 'gummy', label: 'Sour Gummy', description: 'Još više bubble energije i karaktera.', preview: 'Luka slavi!' },
+  { id: 'merienda', label: 'Merienda', description: 'Topliji rukopisni ton za nježniji mood.', preview: 'Luka slavi!' },
+  { id: 'great-vibes', label: 'Great Vibes', description: 'Klasični invite script koji ostaje čitljiv.', preview: 'Luka slavi!' },
+  { id: 'playfair', label: 'Playfair Display', description: 'Elegantni serif za modernije i klasične pozivnice.', preview: 'Luka slavi!' },
+  { id: 'libre-baskerville', label: 'Libre Baskerville', description: 'Sofisticirani serif koji dobro nosi detalje pozivnice.', preview: 'Luka slavi!' },
+  { id: 'jakarta', label: 'Plus Jakarta Sans', description: 'Čist i moderan naslov s urednim ritmom.', preview: 'Luka slavi!' },
+  { id: 'nunito', label: 'Nunito', description: 'Prijateljski rounded sans za smireniji look.', preview: 'Luka slavi!' },
 ] as const satisfies ReadonlyArray<{ id: TitleFont; label: string; description: string; preview: string }>
 
 export const RSVP_MOOD_OPTIONS = [
@@ -88,9 +103,9 @@ export const ACCENT_OPTIONS = [
 ] as const satisfies ReadonlyArray<{ id: AccentPalette; label: string; description: string }>
 
 export const STYLE_PRESETS = [
-  { id: 'birthday-pop', label: 'Birthday Pop', vibe: 'Šaren i vedar', theme: 'konfeti', font: 'poster', effect: 'confetti', accent: 'berry' },
-  { id: 'soft-party', label: 'Soft Party', vibe: 'Topliji i nježniji', theme: 'baloni', font: 'script', effect: 'glow', accent: 'mint' },
-  { id: 'magic-night', label: 'Magic Night', vibe: 'Malo čarobniji mood', theme: 'zvjezdice', font: 'clean', effect: 'streamers', accent: 'sky' },
+  { id: 'birthday-pop', label: 'Birthday Pop', vibe: 'Šaren i vedar', theme: 'pozivnica-girl', font: 'lilita', effect: 'confetti', accent: 'berry' },
+  { id: 'soft-party', label: 'Soft Party', vibe: 'Topliji i nježniji', theme: 'pozivnica-boy', font: 'merienda', effect: 'glow', accent: 'mint' },
+  { id: 'magic-night', label: 'Magic Night', vibe: 'Malo čarobniji mood', theme: 'pozivnica-mix', font: 'playfair', effect: 'streamers', accent: 'sky' },
 ] as const satisfies ReadonlyArray<{
   id: string
   label: string
@@ -105,7 +120,6 @@ export const SHORTCUT_ITEMS = [
   { id: 'theme', label: 'Tema', icon: '🎨' },
   { id: 'wishlist', label: 'Pokloni', icon: '🎁' },
   { id: 'rsvp', label: 'RSVP', icon: '🥳' },
-  { id: 'style', label: 'Stil', icon: '✨' },
   { id: 'settings', label: 'Postavke', icon: '⚙️' },
   { id: 'preview', label: 'Pregled', icon: '👁️' },
 ] as const satisfies ReadonlyArray<{ id: ShortcutId; label: string; icon: string }>
@@ -120,9 +134,9 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   locationAddress: 'Lastovska 2, Zagreb',
   locationType: 'Igraonica / lokal',
   message: 'Vidimo se na tulumu!',
-  theme: 'baloni',
+  theme: 'pozivnica-girl',
   effect: 'glow',
-  titleFont: 'poster',
+  titleFont: 'lilita',
   rsvpMood: 'party',
   accentPalette: 'sky',
   wishlistEnabled: true,
@@ -158,9 +172,9 @@ export function formatPreviewTime(timeValue: string, timeEndValue = '') {
   const start = timeValue.trim()
   const end = timeEndValue.trim()
 
-  if (start && end) return `${start} - ${end}`
-  if (start) return `${start} - ...`
-  if (end) return `... - ${end}`
+  if (start && end) return `${start}h - ${end}h`
+  if (start) return `${start}h - ...`
+  if (end) return `... - ${end}h`
   return 'Vrijeme uskoro'
 }
 
@@ -201,6 +215,31 @@ export function buildPreviewLocation(locationName: string, locationAddress: stri
   return details.length > 0 ? details.join(' • ') : locationType.trim() || 'Lokacija uskoro'
 }
 
+export function normalizeTitleFont(fontValue: string | null | undefined): TitleFont {
+  const normalized = fontValue?.trim().toLowerCase() ?? ''
+
+  switch (normalized) {
+    case 'lilita':
+    case 'fredoka':
+    case 'gummy':
+    case 'merienda':
+    case 'great-vibes':
+    case 'playfair':
+    case 'libre-baskerville':
+    case 'jakarta':
+    case 'nunito':
+      return normalized
+    case 'poster':
+      return 'lilita'
+    case 'script':
+      return 'merienda'
+    case 'clean':
+      return 'jakarta'
+    default:
+      return 'lilita'
+  }
+}
+
 export function getRsvpSymbol(style: RsvpMood, choice: RsvpChoice) {
   const selectedStyle = RSVP_MOOD_OPTIONS.find((option) => option.id === style) ?? RSVP_MOOD_OPTIONS[0]
   return selectedStyle.symbols[choice]
@@ -216,4 +255,52 @@ export function getThemeLabel(theme: CoverTheme) {
 
 export function getAccentClass(accent: AccentPalette) {
   return `pb-quickCreate--accent-${accent}`
+}
+
+export function normalizeCreateTheme(themeValue: string | null | undefined): CoverTheme {
+  const normalized = themeValue?.trim().toLowerCase() ?? ''
+
+  switch (normalized) {
+    case 'pozivnica-girl':
+    case 'pozivnica-boy':
+    case 'pozivnica-boys':
+    case 'pozivnica-girls':
+    case 'pozivnica-mix':
+      return normalized
+    case 'konfeti':
+      return 'pozivnica-boys'
+    case 'zvjezdice':
+    case 'pozivnica-bg1':
+      return 'pozivnica-mix'
+    case 'baloni':
+    case 'pozivnica-bg':
+    case 'pozivnica-boys1':
+    default:
+      return 'pozivnica-girl'
+  }
+}
+
+export function buildCreateProgress(draft: InvitationCreateDraft) {
+  const titleReady = Boolean(draft.title.trim())
+  const dateReady = Boolean(draft.date.trim() && draft.time.trim() && draft.timeEnd.trim())
+  const locationReady = Boolean(draft.locationName.trim())
+  const messageReady = Boolean(draft.message.trim())
+  const wishlistReady = draft.wishlistEnabled ? draft.wishlistItems.length > 0 || draft.savingsEnabled : true
+  const rsvpReady = Boolean(draft.rsvpPrompt.trim())
+
+  const steps = [titleReady, dateReady, locationReady, messageReady, wishlistReady, rsvpReady]
+  const completedSteps = steps.filter(Boolean).length
+  const totalSteps = steps.length
+
+  return {
+    titleReady,
+    dateReady,
+    locationReady,
+    messageReady,
+    wishlistReady,
+    rsvpReady,
+    completedSteps,
+    totalSteps,
+    progressPercent: Math.round((completedSteps / totalSteps) * 100),
+  }
 }

@@ -1,11 +1,6 @@
 import Card from '../ui/Card'
-import {
-  buildPreviewLocation,
-  getAccentClass,
-  getRsvpSymbol,
-  type InvitationCreateDraft,
-} from './createTypes'
-import { formatPreviewDate, formatPreviewTime } from './createTypes'
+import { resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
+import { buildPreviewLocation, formatPreviewDate, formatPreviewTime, getRsvpSymbol, normalizeTitleFont, type InvitationCreateDraft } from './createTypes'
 
 type Props = {
   draft: InvitationCreateDraft
@@ -13,34 +8,33 @@ type Props = {
 }
 
 export default function InvitationPreviewCard({ draft, compact }: Props) {
-  const title = draft.title.trim() || `${draft.celebrantName.trim() || 'Slavljenik'} slavi rođendan`
+  const title = draft.title.trim() || 'Upiši naslov pozivnice'
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
-  const accentClass = getAccentClass(draft.accentPalette)
+  const backgroundImage = resolveInvitationBackgroundImage(draft.theme, draft.theme)
+  const titleFont = normalizeTitleFont(draft.titleFont)
 
   return (
-    <Card className={`pb-previewCard ${compact ? 'pb-previewCard--compact' : ''} ${accentClass}`}>
-      <div className={`pb-previewCard__hero pb-previewCard__hero--${draft.theme} pb-previewCard__hero--${draft.effect}`}>
+    <Card className={`pb-previewCard ${compact ? 'pb-previewCard--compact' : ''}`}>
+      <div className="pb-previewCard__hero">
+        <img className="pb-previewCard__heroImage" src={backgroundImage} alt="" aria-hidden="true" />
         <img className="pb-previewCard__logo" src="/logo.png" alt="Playbam.hr" />
         <div className="pb-previewCard__heroText">
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
-          <h3 className={`pb-previewCard__title pb-previewCard__title--${draft.titleFont}`}>{title}</h3>
-          <p className="pb-previewCard__celebrant">
-            {draft.celebrantName.trim() ? `${draft.celebrantName.trim()} je zvijezda tuluma` : 'Dodaj ime slavljenika'}
-          </p>
+          <h3 className={`pb-previewCard__title pb-previewCard__title--${titleFont}`}>{title}</h3>
         </div>
       </div>
 
       <div className="pb-previewCard__grid">
         <div className="pb-previewCard__infoCard">
-          <span className="pb-previewCard__label">Datum</span>
+          <span className="pb-previewCard__label">Datum:</span>
           <strong>{formatPreviewDate(draft.date)}</strong>
         </div>
         <div className="pb-previewCard__infoCard">
-          <span className="pb-previewCard__label">Vrijeme</span>
+          <span className="pb-previewCard__label">Vrijeme:</span>
           <strong>{formatPreviewTime(draft.time, draft.timeEnd)}</strong>
         </div>
         <div className="pb-previewCard__infoCard pb-previewCard__infoCard--wide">
-          <span className="pb-previewCard__label">Lokacija</span>
+          <span className="pb-previewCard__label">Lokacija:</span>
           <strong>{location}</strong>
         </div>
       </div>
@@ -56,8 +50,11 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
           <div className="pb-previewCard__wishlist">
             {draft.wishlistItems.slice(0, 3).map((item) => (
               <div key={item.id} className="pb-previewCard__wishlistItem">
-                <strong>{item.title || 'Novi poklon'}</strong>
-                <span>{item.note || 'Dodaj kratku napomenu ili link.'}</span>
+                <div className="pb-previewCard__wishlistLine">
+                  <strong>Naslov poklona:</strong>
+                  <span>{item.title || 'Novi poklon'}</span>
+                </div>
+                {item.note ? <p>{item.note}</p> : null}
               </div>
             ))}
           </div>
@@ -73,23 +70,21 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
         </div>
       ) : null}
 
-      {draft.rsvpEnabled ? (
-        <div className="pb-previewCard__section">
-          <div className="pb-previewCard__sectionHeader">
-            <strong>RSVP</strong>
-            <span>Uključeno</span>
-          </div>
-          <p className="pb-previewCard__rsvpPrompt">{draft.rsvpPrompt.trim() || 'Potvrdi dolazak i javi odgovara li vam termin.'}</p>
-          <div className="pb-previewCard__rsvpRow" aria-hidden="true">
-            {(['going', 'maybe', 'not_going'] as const).map((choice) => (
-              <span key={choice} className={`pb-previewCard__rsvpPill pb-previewCard__rsvpPill--${choice.replace('_', '-')}`}>
-                <span>{getRsvpSymbol(draft.rsvpMood, choice)}</span>
-                <span>{choice === 'going' ? 'Dolazimo' : choice === 'maybe' ? 'Možda' : 'Ne dolazimo'}</span>
-              </span>
-            ))}
-          </div>
+      <div className="pb-previewCard__section">
+        <div className="pb-previewCard__sectionHeader">
+          <strong>RSVP</strong>
+          <span>Uključeno</span>
         </div>
-      ) : null}
+        <p className="pb-previewCard__rsvpPrompt">{draft.rsvpPrompt.trim() || 'Potvrdi dolazak i javi odgovara li vam termin.'}</p>
+        <div className="pb-previewCard__rsvpRow" aria-hidden="true">
+          {(['going', 'maybe', 'not_going'] as const).map((choice) => (
+            <span key={choice} className={`pb-previewCard__rsvpPill pb-previewCard__rsvpPill--${choice.replace('_', '-')}`}>
+              <span>{getRsvpSymbol(draft.rsvpMood, choice)}</span>
+              <span>{choice === 'going' ? 'Dolazimo' : choice === 'maybe' ? 'Možda' : 'Ne dolazimo'}</span>
+            </span>
+          ))}
+        </div>
+      </div>
     </Card>
   )
 }

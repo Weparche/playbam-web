@@ -10,18 +10,16 @@ import QuickLocationEditor from '../components/create/QuickLocationEditor'
 import QuickMessageEditor from '../components/create/QuickMessageEditor'
 import QuickRSVPEditor from '../components/create/QuickRSVPEditor'
 import QuickThemeEditor from '../components/create/QuickThemeEditor'
-import QuickTitleEditor from '../components/create/QuickTitleEditor'
 import QuickWishlistEditor from '../components/create/QuickWishlistEditor'
 import ShortcutRail from '../components/create/ShortcutRail'
 import {
+  buildCreateProgress,
   buildTimeRangeValue,
   DEFAULT_CREATE_DRAFT,
-  type AccentPalette,
-  type CoverTheme,
-  type EffectStyle,
+  normalizeCreateTheme,
+  normalizeTitleFont,
   type InvitationCreateDraft,
   type ShortcutId,
-  type TitleFont,
   type WishlistDraftItem,
 } from '../components/create/createTypes'
 import Footer from '../components/layout/Footer'
@@ -45,11 +43,18 @@ function readStoredDraft() {
     return {
       ...DEFAULT_CREATE_DRAFT,
       ...parsed,
+      theme: normalizeCreateTheme(typeof parsed.theme === 'string' ? parsed.theme : DEFAULT_CREATE_DRAFT.theme),
+      titleFont: normalizeTitleFont(typeof parsed.titleFont === 'string' ? parsed.titleFont : DEFAULT_CREATE_DRAFT.titleFont),
+      rsvpEnabled: true,
       wishlistItems: Array.isArray(parsed.wishlistItems) ? parsed.wishlistItems : DEFAULT_CREATE_DRAFT.wishlistItems,
     }
   } catch {
     return DEFAULT_CREATE_DRAFT
   }
+}
+
+function buildCelebrantFallback(title: string, fallbackName: string) {
+  return title.trim() || fallbackName.trim() || 'Slavljenik'
 }
 
 export default function CreateInvitationPage() {
@@ -60,10 +65,13 @@ export default function CreateInvitationPage() {
   const [savingInvitation, setSavingInvitation] = useState(false)
   const [formError, setFormError] = useState('')
 
+  const { completedSteps, totalSteps, progressPercent } = buildCreateProgress(draft)
+  const progressLabel = completedSteps === totalSteps ? 'Spremno za objavu' : `${totalSteps - completedSteps} koraka do objave`
+
   useEffect(() => {
     setSaveState('saving')
     const timeoutId = window.setTimeout(() => {
-      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft))
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...draft, rsvpEnabled: true }))
       setSaveState('saved')
     }, 420)
 
@@ -73,21 +81,15 @@ export default function CreateInvitationPage() {
   const autosaveLabel = saveState === 'saving' ? 'Autosave u tijeku…' : 'Spremljeno lokalno'
 
   const updateField = <K extends keyof InvitationCreateDraft>(field: K, value: InvitationCreateDraft[K]) => {
-    setDraft((current) => ({ ...current, [field]: value }))
+    const nextValue = (field === 'rsvpEnabled' ? true : value) as InvitationCreateDraft[K]
+    setDraft((current) => ({
+      ...current,
+      [field]: nextValue,
+    }))
   }
 
   const updateWishlistItems = (items: WishlistDraftItem[]) => {
     setDraft((current) => ({ ...current, wishlistItems: items }))
-  }
-
-  const applyStylePreset = (theme: CoverTheme, font: TitleFont, effect: EffectStyle, accent: AccentPalette) => {
-    setDraft((current) => ({
-      ...current,
-      theme,
-      titleFont: font,
-      effect,
-      accentPalette: accent,
-    }))
   }
 
   const handleShortcutClick = (shortcut: ShortcutId) => {
@@ -95,8 +97,8 @@ export default function CreateInvitationPage() {
   }
 
   const handleCreateInvitation = async () => {
-    if (!draft.title.trim() || !draft.celebrantName.trim() || !draft.date.trim() || !draft.time.trim() || !draft.timeEnd.trim() || !draft.locationName.trim()) {
-      setFormError('Upiši naslov, ime slavljenika, datum, vrijeme od-do i naziv lokacije.')
+    if (!draft.title.trim() || !draft.date.trim() || !draft.time.trim() || !draft.timeEnd.trim() || !draft.locationName.trim()) {
+      setFormError('Upiši naslov, datum, vrijeme od-do i naziv lokacije.')
       return
     }
 
@@ -111,7 +113,8 @@ export default function CreateInvitationPage() {
     try {
       const created = await createInvitation({
         title: draft.title.trim(),
-        celebrantName: draft.celebrantName.trim(),
+        celebrantName: buildCelebrantFallback(draft.title, draft.celebrantName),
+        titleFont: draft.titleFont,
         date: draft.date,
         time: buildTimeRangeValue(draft.time, draft.timeEnd),
         location: [draft.locationName.trim(), draft.locationAddress.trim()].filter(Boolean).join(', '),
@@ -130,17 +133,6 @@ export default function CreateInvitationPage() {
 
   const renderPanel = () => {
     switch (activeShortcut) {
-      case 'title':
-        return (
-          <FloatingEditPanel
-            open
-            title="Naslov i font"
-            description="Najvažniji dio editora. Ovdje nastaje prvi dojam pozivnice."
-            onClose={() => setActiveShortcut(null)}
-          >
-            <QuickTitleEditor draft={draft} onFieldChange={updateField} onStylePreset={applyStylePreset} />
-          </FloatingEditPanel>
-        )
       case 'dateTime':
         return (
           <FloatingEditPanel
@@ -189,34 +181,11 @@ export default function CreateInvitationPage() {
         return (
           <FloatingEditPanel
             open
-            title="Cover i tema"
-            description="Biraj poster smjer i osnovnu atmosferu pozivnice."
+            title="Tema"
+            description="Odaberi jednu od pet gotovih naslovnica za pozivnicu."
             onClose={() => setActiveShortcut(null)}
           >
-            <QuickThemeEditor
-              draft={draft}
-              mode="theme"
-              onThemeChange={(value) => updateField('theme', value)}
-              onEffectChange={(value) => updateField('effect', value)}
-              onAccentChange={(value) => updateField('accentPalette', value)}
-            />
-          </FloatingEditPanel>
-        )
-      case 'style':
-        return (
-          <FloatingEditPanel
-            open
-            title="Stil i boje"
-            description="Fino podešavanje efekta i akcent boja bez gubljenja konteksta."
-            onClose={() => setActiveShortcut(null)}
-          >
-            <QuickThemeEditor
-              draft={draft}
-              mode="style"
-              onThemeChange={(value) => updateField('theme', value)}
-              onEffectChange={(value) => updateField('effect', value)}
-              onAccentChange={(value) => updateField('accentPalette', value)}
-            />
+            <QuickThemeEditor draft={draft} onThemeChange={(value) => updateField('theme', value)} />
           </FloatingEditPanel>
         )
       case 'rsvp':
@@ -224,7 +193,7 @@ export default function CreateInvitationPage() {
           <FloatingEditPanel
             open
             title="RSVP"
-            description="Uključi potvrdu dolaska i odaberi mood ikonica koje gost vidi."
+            description="Uredi tekst za goste i odaberi mood ikonica koje gost vidi."
             onClose={() => setActiveShortcut(null)}
           >
             <QuickRSVPEditor draft={draft} onFieldChange={updateField} />
@@ -235,14 +204,10 @@ export default function CreateInvitationPage() {
           <FloatingEditPanel
             open
             title="Postavke"
-            description="Priprema za napredne postavke koje ćemo kasnije spojiti na backend draft logiku."
+            description="Dodatne opcije koje još ostaju povezane uz wishlist i grupni poklon."
             onClose={() => setActiveShortcut(null)}
           >
             <div className="pb-quickEditor">
-              <label className="pb-quickEditor__toggle">
-                <input type="checkbox" checked={draft.rsvpEnabled} onChange={(event) => updateField('rsvpEnabled', event.target.checked)} />
-                <span>RSVP uključen</span>
-              </label>
               <label className="pb-quickEditor__toggle">
                 <input type="checkbox" checked={draft.wishlistEnabled} onChange={(event) => updateField('wishlistEnabled', event.target.checked)} />
                 <span>Wishlist uključen</span>
@@ -252,7 +217,7 @@ export default function CreateInvitationPage() {
                 <span>Grupni poklon / štednja uključena</span>
               </label>
               <p className="pb-quickEditor__hint">
-                Kasnije ovdje spajamo privatnost, share settings, reminder logiku i pravi autosave draft endpoint.
+                RSVP ostaje uključen, a ovdje kasnije možemo spojiti privatnost, share settings i pravi autosave draft endpoint.
               </p>
             </div>
           </FloatingEditPanel>
@@ -282,16 +247,30 @@ export default function CreateInvitationPage() {
           preview={<InvitationPreviewCard draft={draft} compact />}
           rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={handleShortcutClick} />}
         >
-          <InvitationMainEditor draft={draft} onOpenShortcut={handleShortcutClick} />
+          <InvitationMainEditor draft={draft} onFieldChange={updateField} onOpenShortcut={handleShortcutClick} />
 
           <Card className="pb-createFooterAction">
-            <div className="pb-createFooterAction__copy">
-              <strong>Spremno za objavu</strong>
-              <span>Osnovni podaci i preview su povezani. Wishlist, stil i RSVP se već vide uživo u editoru.</span>
+            <div className="pb-createFooterAction__stack">
+              <div className="pb-createEditor__progress pb-createFooterAction__progress">
+                <div className="pb-createEditor__progressMeta">
+                  <span>{completedSteps} od {totalSteps} koraka spremno</span>
+                  <span>{progressLabel}</span>
+                </div>
+                <div className="pb-createEditor__progressTrack" aria-hidden="true">
+                  <span className="pb-createEditor__progressFill" style={{ width: `${progressPercent}%` }} />
+                </div>
+              </div>
+
+              <div className="pb-createFooterAction__row">
+                <div className="pb-createFooterAction__copy">
+                  <strong>Spremno za objavu</strong>
+                  <span>Naslov, tema i pregled su povezani. Pokloni i RSVP ostaju vidljivi uživo u editoru.</span>
+                </div>
+                <Button variant="amber" type="button" onClick={handleCreateInvitation} disabled={savingInvitation}>
+                  {savingInvitation ? 'Spremamo…' : 'Izradi pozivnicu'}
+                </Button>
+              </div>
             </div>
-            <Button variant="amber" type="button" onClick={handleCreateInvitation} disabled={savingInvitation}>
-              {savingInvitation ? 'Spremamo…' : 'Izradi pozivnicu'}
-            </Button>
           </Card>
 
           {formError ? <div className="pb-inlineNote pb-inlineNote--error">{formError}</div> : null}

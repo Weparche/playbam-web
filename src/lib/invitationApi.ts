@@ -495,3 +495,7 @@ export async function unfurlLink(url: string): Promise<UnfurlResult> {
   }
   return response.json() as Promise<UnfurlResult>
 }
+
+export function proxyImageUrl(url: string): string {
+  return `${API_BASE}/api/image-proxy?url=${encodeURIComponent(url)}`
+}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Card from '../ui/Card'
 import { resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
+import { proxyImageUrl } from '../../lib/invitationApi'
 import {
   buildPreviewLocation,
   formatPreviewDate,
@@ -76,7 +77,8 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
           </div>
           <div className="pb-previewCard__wishlist">
             {draft.wishlistItems.slice(0, 3).map((item) => {
-              const thumbSrc = item.linkMeta?.image || item.linkMeta?.favicon
+              const rawThumb = item.linkMeta?.image || item.linkMeta?.favicon
+              const thumbSrc = rawThumb ? proxyImageUrl(rawThumb) : undefined
               return (
                 <div key={item.id} className="pb-previewCard__wishlistItem">
                   <div className="pb-previewCard__wishlistLine">
@@ -86,6 +88,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
                         src={thumbSrc}
                         alt=""
                         aria-hidden="true"
+                        referrerPolicy="no-referrer"
                         onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                       />
                     ) : null}

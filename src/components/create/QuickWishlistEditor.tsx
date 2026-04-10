@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { InvitationCreateDraft, LinkMeta, WishlistDraftItem } from './createTypes'
-import { unfurlLink } from '../../lib/invitationApi'
+import { unfurlLink, proxyImageUrl } from '../../lib/invitationApi'
 
 const ITEM_ACCENT_COLORS = ['#5b3df5', '#2e9e5e', '#d97706', '#e04d6b', '#0891b2', '#7c3aed']
 const LINK_DEBOUNCE_MS = 600
@@ -41,23 +41,37 @@ function LinkPreviewSpinner() {
 }
 
 function LinkPreview({ meta }: { meta: LinkMeta }) {
-  const imageSrc = meta.image || meta.favicon
-  if (!imageSrc && !meta.domain) return null
+  const [imgOk, setImgOk] = useState(true)
+  const hasOgImage = !!meta.image
+  const showImage = hasOgImage && imgOk
+
+  if (!meta.image && !meta.favicon && !meta.domain) return null
 
   return (
-    <div className="pb-quickEditor__linkPreview">
-      {imageSrc ? (
+    <div className={`pb-quickEditor__linkPreview${showImage ? ' pb-quickEditor__linkPreview--rich' : ''}`}>
+      {showImage ? (
         <img
-          className="pb-quickEditor__linkThumb"
-          src={imageSrc}
+          className="pb-quickEditor__linkOgImage"
+          src={proxyImageUrl(meta.image!)}
           alt=""
           aria-hidden="true"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+          onError={() => setImgOk(false)}
         />
       ) : null}
-      <div className="pb-quickEditor__linkMeta">
-        {meta.title ? <span className="pb-quickEditor__linkTitle">{meta.title}</span> : null}
-        {meta.domain ? <span className="pb-quickEditor__linkDomain">{meta.domain}</span> : null}
+      <div className="pb-quickEditor__linkBar">
+        {meta.favicon ? (
+          <img
+            className="pb-quickEditor__linkFavicon"
+            src={proxyImageUrl(meta.favicon)}
+            alt=""
+            aria-hidden="true"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+          />
+        ) : null}
+        <div className="pb-quickEditor__linkMeta">
+          {meta.title ? <span className="pb-quickEditor__linkTitle">{meta.title}</span> : null}
+          {meta.domain ? <span className="pb-quickEditor__linkDomain">{meta.domain}</span> : null}
+        </div>
       </div>
     </div>
   )

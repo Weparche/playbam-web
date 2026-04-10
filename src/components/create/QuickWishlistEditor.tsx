@@ -79,6 +79,8 @@ function WishlistItemEditor({
   const [fetching, setFetching] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout>>()
   const lastFetchedUrlRef = useRef(item.link)
+  const onLinkMetaChangeRef = useRef(onLinkMetaChange)
+  onLinkMetaChangeRef.current = onLinkMetaChange
 
   useEffect(() => {
     return () => {
@@ -100,19 +102,20 @@ function WishlistItemEditor({
 
     if (value === lastFetchedUrlRef.current && item.linkMeta) return
 
+    const itemId = item.id
     setFetching(true)
     debounceRef.current = setTimeout(async () => {
       try {
         const result = await unfurlLink(value)
         lastFetchedUrlRef.current = value
-        onLinkMetaChange(item.id, {
+        onLinkMetaChangeRef.current(itemId, {
           title: result.title ?? undefined,
           image: result.image ?? undefined,
           domain: result.domain ?? undefined,
           favicon: result.favicon ?? undefined,
         })
       } catch {
-        onLinkMetaChange(item.id, undefined)
+        onLinkMetaChangeRef.current(itemId, undefined)
       } finally {
         setFetching(false)
       }
@@ -150,12 +153,15 @@ function WishlistItemEditor({
 }
 
 export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistChange }: Props) {
+  const itemsRef = useRef(draft.wishlistItems)
+  itemsRef.current = draft.wishlistItems
+
   const updateItem = (id: string, field: keyof WishlistDraftItem, value: string) => {
-    onWishlistChange(draft.wishlistItems.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
+    onWishlistChange(itemsRef.current.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
   }
 
   const updateLinkMeta = (id: string, meta: LinkMeta | undefined) => {
-    onWishlistChange(draft.wishlistItems.map((item) => (item.id === id ? { ...item, linkMeta: meta } : item)))
+    onWishlistChange(itemsRef.current.map((item) => (item.id === id ? { ...item, linkMeta: meta } : item)))
   }
 
   const addItem = () => {

@@ -8,17 +8,8 @@ type Props = {
 export default function QuickRSVPEditor({ draft, onFieldChange }: Props) {
   return (
     <div className="pb-quickEditor">
-      <label className="pb-formField">
-        <span className="pb-formLabel">Tekst za goste</span>
-        <textarea
-          className="pb-input pb-quickEditor__textarea"
-          value={draft.rsvpPrompt}
-          onChange={(event) => onFieldChange('rsvpPrompt', event.target.value)}
-        />
-      </label>
-
       <div className="pb-quickEditor__block">
-        <span className="pb-quickEditor__label">Icon mood</span>
+        <span className="pb-quickEditor__label">Set ikonica za RSVP</span>
         <div className="pb-quickEditor__optionGrid">
           {RSVP_MOOD_OPTIONS.map((option) => (
             <button
@@ -28,7 +19,9 @@ export default function QuickRSVPEditor({ draft, onFieldChange }: Props) {
               onClick={() => onFieldChange('rsvpMood', option.id)}
             >
               <strong>{option.label}</strong>
-              <span>{option.symbols.going} {option.symbols.maybe} {option.symbols.not_going}</span>
+              <span className="pb-quickEditor__rsvpGlyphs">
+                {option.symbols.going} {option.symbols.maybe} {option.symbols.not_going}
+              </span>
             </button>
           ))}
         </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { normalizeTitleFont } from '../create/createTypes'
+import { getRsvpSymbol, normalizeRsvpMood, normalizeTitleFont, RSVP_GUEST_HEADLINE, type RsvpMood } from '../create/createTypes'
 
 type Props = {
   celebrantTitle: string
@@ -10,6 +10,7 @@ type Props = {
   venueText: string
   messageText: string
   backgroundImage: string
+  rsvpMood?: RsvpMood | string | null
   showRsvp?: boolean
   rsvp?: 'going' | 'not_going' | 'maybe' | null
   guestRsvpHint?: string | null
@@ -68,6 +69,7 @@ export default function PublicInvitationHero({
   venueText,
   messageText,
   backgroundImage,
+  rsvpMood = null,
   showRsvp = false,
   rsvp = null,
   guestRsvpHint = null,
@@ -81,6 +83,7 @@ export default function PublicInvitationHero({
   const [failedImage, setFailedImage] = useState<string | null>(null)
   const heroImage = failedImage === resolvedImage ? fallbackImage : resolvedImage
   const normalizedTitleFont = normalizeTitleFont(titleFont)
+  const resolvedMood = normalizeRsvpMood(typeof rsvpMood === 'string' ? rsvpMood : null)
   const [titlePrimary, titleSecondary = ''] = celebrantTitle.split('|')
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venueText)}`
 
@@ -139,14 +142,14 @@ export default function PublicInvitationHero({
 
           {showRsvp ? (
             <div className="pb-inviteHero__rsvpBlock pb-inviteHero__rsvpBlock--storybook">
-              <h2 className="pb-inviteHero__rsvpTitle pb-inviteHero__rsvpTitle--storybook">Potvrdi dolazak</h2>
+              <h2 className="pb-inviteHero__rsvpTitle pb-inviteHero__rsvpTitle--storybook">{RSVP_GUEST_HEADLINE}</h2>
               <div className="pb-inviteHero__rsvpButtons pb-inviteHero__rsvpButtons--storybook">
                 <button
                   type="button"
                   className={`pb-rsvpBtn pb-rsvpBtn--storybook pb-rsvpBtn--storybookGoing ${rsvp === 'going' ? 'is-active' : ''}`}
                   onClick={() => onRsvpClick?.('going')}
                 >
-                  <span className="pb-rsvpBtn__emoji" aria-hidden>🥳</span>
+                  <span className="pb-rsvpBtn__emoji" aria-hidden>{getRsvpSymbol(resolvedMood, 'going')}</span>
                   <span>Dolazimo</span>
                 </button>
                 <button
@@ -154,7 +157,7 @@ export default function PublicInvitationHero({
                   className={`pb-rsvpBtn pb-rsvpBtn--storybook pb-rsvpBtn--storybookNotGoing ${rsvp === 'not_going' ? 'is-active' : ''}`}
                   onClick={() => onRsvpClick?.('not_going')}
                 >
-                  <span className="pb-rsvpBtn__emoji" aria-hidden>💔</span>
+                  <span className="pb-rsvpBtn__emoji" aria-hidden>{getRsvpSymbol(resolvedMood, 'not_going')}</span>
                   <span>Ne dolazimo</span>
                 </button>
                 <button
@@ -162,7 +165,7 @@ export default function PublicInvitationHero({
                   className={`pb-rsvpBtn pb-rsvpBtn--storybook pb-rsvpBtn--storybookMaybe ${rsvp === 'maybe' ? 'is-active' : ''}`}
                   onClick={() => onRsvpClick?.('maybe')}
                 >
-                  <span className="pb-rsvpBtn__emoji" aria-hidden>🤔</span>
+                  <span className="pb-rsvpBtn__emoji" aria-hidden>{getRsvpSymbol(resolvedMood, 'maybe')}</span>
                   <span>Možda</span>
                 </button>
               </div>

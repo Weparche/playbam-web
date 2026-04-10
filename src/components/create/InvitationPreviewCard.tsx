@@ -1,6 +1,14 @@
 import Card from '../ui/Card'
 import { resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
-import { buildPreviewLocation, formatPreviewDate, formatPreviewTime, getRsvpSymbol, normalizeTitleFont, type InvitationCreateDraft } from './createTypes'
+import {
+  buildPreviewLocation,
+  formatPreviewDate,
+  formatPreviewTime,
+  getRsvpSymbol,
+  normalizeTitleFont,
+  RSVP_GUEST_HEADLINE,
+  type InvitationCreateDraft,
+} from './createTypes'
 
 type Props = {
   draft: InvitationCreateDraft
@@ -75,11 +83,11 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
           <strong>RSVP</strong>
           <span>Uključeno</span>
         </div>
-        <p className="pb-previewCard__rsvpPrompt">{draft.rsvpPrompt.trim() || 'Potvrdi dolazak i javi odgovara li vam termin.'}</p>
+        <p className="pb-previewCard__rsvpPrompt">{RSVP_GUEST_HEADLINE}</p>
         <div className="pb-previewCard__rsvpRow" aria-hidden="true">
           {(['going', 'maybe', 'not_going'] as const).map((choice) => (
             <span key={choice} className={`pb-previewCard__rsvpPill pb-previewCard__rsvpPill--${choice.replace('_', '-')}`}>
-              <span>{getRsvpSymbol(draft.rsvpMood, choice)}</span>
+              <span className="pb-previewCard__rsvpGlyph">{getRsvpSymbol(draft.rsvpMood, choice)}</span>
               <span>{choice === 'going' ? 'Dolazimo' : choice === 'maybe' ? 'Možda' : 'Ne dolazimo'}</span>
             </span>
           ))}

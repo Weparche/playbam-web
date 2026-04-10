@@ -17,7 +17,9 @@ import {
   buildTimeRangeValue,
   DEFAULT_CREATE_DRAFT,
   normalizeCreateTheme,
+  normalizeRsvpMood,
   normalizeTitleFont,
+  RSVP_GUEST_HEADLINE,
   type InvitationCreateDraft,
   type ShortcutId,
   type WishlistDraftItem,
@@ -45,7 +47,9 @@ function readStoredDraft() {
       ...parsed,
       theme: normalizeCreateTheme(typeof parsed.theme === 'string' ? parsed.theme : DEFAULT_CREATE_DRAFT.theme),
       titleFont: normalizeTitleFont(typeof parsed.titleFont === 'string' ? parsed.titleFont : DEFAULT_CREATE_DRAFT.titleFont),
+      rsvpMood: normalizeRsvpMood(typeof parsed.rsvpMood === 'string' ? parsed.rsvpMood : DEFAULT_CREATE_DRAFT.rsvpMood),
       rsvpEnabled: true,
+      rsvpPrompt: RSVP_GUEST_HEADLINE,
       wishlistItems: Array.isArray(parsed.wishlistItems) ? parsed.wishlistItems : DEFAULT_CREATE_DRAFT.wishlistItems,
     }
   } catch {
@@ -71,7 +75,10 @@ export default function CreateInvitationPage() {
   useEffect(() => {
     setSaveState('saving')
     const timeoutId = window.setTimeout(() => {
-      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...draft, rsvpEnabled: true }))
+      window.localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({ ...draft, rsvpEnabled: true, rsvpPrompt: RSVP_GUEST_HEADLINE }),
+      )
       setSaveState('saved')
     }, 420)
 
@@ -192,8 +199,8 @@ export default function CreateInvitationPage() {
         return (
           <FloatingEditPanel
             open
-            title="RSVP"
-            description="Uredi tekst za goste i odaberi mood ikonica koje gost vidi."
+            title="RSVP ikone"
+            description="Odaberi jedan od setova ikonica za tri odgovora gosta."
             onClose={() => setActiveShortcut(null)}
           >
             <QuickRSVPEditor draft={draft} onFieldChange={updateField} />

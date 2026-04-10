@@ -349,7 +349,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             </button>
           </div>
         </div>
-        <p className="pb-createEditor__cardNote">Klik na karticu otvara datum i vrijeme, a chevron vodi ravno na uređivanje lokacije.</p>
+        {/* <p className="pb-createEditor__cardNote">Klik na karticu otvara datum i vrijeme, a chevron vodi ravno na uređivanje lokacije.</p> */}
         <div className="pb-createEditor__facts">
           <button type="button" className="pb-createEditor__fact" onClick={(event) => handleFactClick(event, 'dateTime')}>
             <span className="pb-createEditor__factBody">
@@ -461,7 +461,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               <EditorChevron />
             </div>
           </div>
-          <p className="pb-createEditor__bodyText">{draft.rsvpPrompt.trim() || 'RSVP je uključen po defaultu.'}</p>
+          <p className="pb-createEditor__bodyText">Promijenite ikone RSVP-a po vašoj želji.</p>
         </Card>
       </div>
     </div>

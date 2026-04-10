@@ -56,6 +56,7 @@ export default function InvitationLivePreview({ draft, compact }: Props) {
             venueText={location}
             messageText={messageText}
             backgroundImage={resolveInvitationBackgroundImage(draft.theme, draft.theme)}
+            rsvpMood={draft.rsvpMood}
             showRsvp
             rsvp={null}
             accessTitle="Privatni dio pozivnice"

@@ -10,7 +10,7 @@ export type TitleFont =
   | 'libre-baskerville'
   | 'jakarta'
   | 'nunito'
-export type RsvpMood = 'party' | 'sweet' | 'icons' | 'spark'
+export type RsvpMood = 'party' | 'sweet' | 'icons' | 'spark' | 'balloon' | 'thumbs' | 'check' | 'zoo' | 'sport' | 'space' | 'music' | 'crown' | 'heart' | 'fire' | 'nature' | 'pirate'
 export type AccentPalette = 'berry' | 'sky' | 'mint'
 export type LocationType = 'Igraonica / lokal' | 'Kod kuće' | 'Na otvorenom' | 'Druga lokacija'
 
@@ -32,6 +32,9 @@ export type WishlistDraftItem = {
 }
 
 export type RsvpChoice = 'going' | 'maybe' | 'not_going'
+
+/** Fiksni tekst koji gosti vide uz RSVP (nije dio quick editora). */
+export const RSVP_GUEST_HEADLINE = 'Potvrdi dolazak na pozivnici'
 
 export type InvitationCreateDraft = {
   title: string
@@ -89,6 +92,18 @@ export const RSVP_MOOD_OPTIONS = [
   { id: 'sweet', label: 'Sweet', description: 'Mekši, slatki mood s više charactera.', symbols: { going: '🧁', maybe: '💭', not_going: '🥲' } },
   { id: 'icons', label: 'Icons', description: 'Čistiji simboli za uredniji preview.', symbols: { going: '✦', maybe: '◌', not_going: '✕' } },
   { id: 'spark', label: 'Spark', description: 'Malo sjaja i više editorial osjećaja.', symbols: { going: '✨', maybe: '👀', not_going: '🌧️' } },
+  { id: 'balloon', label: 'Baloni', description: 'Baloni i jasni emoji odgovori.', symbols: { going: '🎈', maybe: '🤷', not_going: '🙅' } },
+  { id: 'thumbs', label: 'Palčevi', description: 'Palac gore / neutaralno / palac dolje.', symbols: { going: '👍', maybe: '🤷', not_going: '👎' } },
+  { id: 'check', label: 'Kvačice', description: 'Da / upit / ne u obliku oznaka.', symbols: { going: '✅', maybe: '❔', not_going: '❌' } },
+  { id: 'zoo', label: 'Životinje', description: 'Zaigrani set sa životinjama.', symbols: { going: '🐻', maybe: '🦊', not_going: '🐢' } },
+  { id: 'sport', label: 'Sport', description: 'Za sportaše i aktivne tulume.', symbols: { going: '⚽', maybe: '🏃', not_going: '🤕' } },
+  { id: 'space', label: 'Svemir', description: 'Svemirska tema za male astronaute.', symbols: { going: '🚀', maybe: '🛸', not_going: '🌑' } },
+  { id: 'music', label: 'Glazba', description: 'Za glazbeni party i DJ tulume.', symbols: { going: '🎵', maybe: '🎧', not_going: '🔇' } },
+  { id: 'crown', label: 'Kruna', description: 'Premium kraljevski set za posebne prilike.', symbols: { going: '👑', maybe: '💎', not_going: '🪨' } },
+  { id: 'heart', label: 'Srca', description: 'Nježniji set sa srcima u boji.', symbols: { going: '💖', maybe: '💛', not_going: '🖤' } },
+  { id: 'fire', label: 'Vatra', description: 'Energičan vibe za najluđe tulume.', symbols: { going: '🔥', maybe: '⚡', not_going: '🧊' } },
+  { id: 'nature', label: 'Priroda', description: 'Sezonski set inspiriran prirodom.', symbols: { going: '🌻', maybe: '🍂', not_going: '❄️' } },
+  { id: 'pirate', label: 'Pirati', description: 'Piratska tema za avanturiste.', symbols: { going: '🏴‍☠️', maybe: '⚓', not_going: '🦈' } },
 ] as const satisfies ReadonlyArray<{
   id: RsvpMood
   label: string
@@ -147,7 +162,7 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   savingsEnabled: false,
   savingsLabel: 'Sudjelovanje u štednji za veliki poklon',
   rsvpEnabled: true,
-  rsvpPrompt: 'Potvrdi dolazak i javi dolazite li na proslavu.',
+  rsvpPrompt: RSVP_GUEST_HEADLINE,
 }
 
 export function formatPreviewDate(dateValue: string) {
@@ -240,6 +255,12 @@ export function normalizeTitleFont(fontValue: string | null | undefined): TitleF
   }
 }
 
+export function normalizeRsvpMood(value: string | null | undefined): RsvpMood {
+  const key = (value ?? '').trim().toLowerCase()
+  const match = RSVP_MOOD_OPTIONS.find((option) => option.id === key)
+  return (match?.id ?? 'party') as RsvpMood
+}
+
 export function getRsvpSymbol(style: RsvpMood, choice: RsvpChoice) {
   const selectedStyle = RSVP_MOOD_OPTIONS.find((option) => option.id === style) ?? RSVP_MOOD_OPTIONS[0]
   return selectedStyle.symbols[choice]
@@ -286,7 +307,7 @@ export function buildCreateProgress(draft: InvitationCreateDraft) {
   const locationReady = Boolean(draft.locationName.trim())
   const messageReady = Boolean(draft.message.trim())
   const wishlistReady = draft.wishlistEnabled ? draft.wishlistItems.length > 0 || draft.savingsEnabled : true
-  const rsvpReady = Boolean(draft.rsvpPrompt.trim())
+  const rsvpReady = draft.rsvpEnabled
 
   const steps = [titleReady, dateReady, locationReady, messageReady, wishlistReady, rsvpReady]
   const completedSteps = steps.filter(Boolean).length

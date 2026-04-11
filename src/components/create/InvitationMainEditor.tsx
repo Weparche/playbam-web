@@ -97,15 +97,6 @@ function PaletteIcon() {
   )
 }
 
-function ChatBubbleIcon() {
-  return (
-    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" className="pb-createEditor__cardIcon" aria-hidden="true">
-      <path d="M4 5.5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H8.5L5.5 15v-2.5H6a2 2 0 0 1-2-2v-5z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M7.5 7.5h5M7.5 10h3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-    </svg>
-  )
-}
-
 function GiftIcon() {
   return (
     <svg viewBox="0 0 20 20" width="18" height="18" fill="none" className="pb-createEditor__cardIcon" aria-hidden="true">
@@ -113,15 +104,6 @@ function GiftIcon() {
       <rect x="4.5" y="11" width="11" height="5.5" rx="1" stroke="currentColor" strokeWidth="1.5" />
       <path d="M10 8v8.5" stroke="currentColor" strokeWidth="1.3" />
       <path d="M10 8c-1-2.5-3.5-3-4-2s1.5 2 4 2zM10 8c1-2.5 3.5-3 4-2s-1.5 2-4 2z" stroke="currentColor" strokeWidth="1.3" fill="none" />
-    </svg>
-  )
-}
-
-function CheckCircleIcon() {
-  return (
-    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" className="pb-createEditor__cardIcon" aria-hidden="true">
-      <circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M6.5 10.5l2.5 2.5 5-5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -175,22 +157,16 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
   const [canScrollFontsRight, setCanScrollFontsRight] = useState(true)
 
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
-  const { titleReady, dateReady, locationReady, messageReady, rsvpReady } = buildCreateProgress(draft)
+  const { titleReady, dateReady, locationReady } = buildCreateProgress(draft)
 
   const titleStatus = titleReady ? { label: 'Popunjeno', tone: 'ready' as const } : { label: 'Dodaj naslov', tone: 'pending' as const }
   const scheduleStatus = dateReady && locationReady
     ? { label: 'Spremno', tone: 'ready' as const }
     : { label: 'Nedostaje detalj', tone: 'pending' as const }
   const themeStatus = { label: 'Odabrana tema', tone: 'accent' as const }
-  const messageStatus = messageReady
-    ? { label: 'Dodana poruka', tone: 'accent' as const }
-    : { label: 'Dodaj poruku', tone: 'pending' as const }
   const wishlistStatus = draft.wishlistEnabled
     ? { label: draft.wishlistItems.length > 0 ? `${draft.wishlistItems.length} želje` : 'Wishlist uključen', tone: 'accent' as const }
     : { label: 'Isključen', tone: 'muted' as const }
-  const rsvpStatus = rsvpReady
-    ? { label: 'Aktivan', tone: 'accent' as const }
-    : { label: 'Dodaj tekst', tone: 'pending' as const }
 
   useEffect(() => {
     const scroller = fontScrollerRef.current

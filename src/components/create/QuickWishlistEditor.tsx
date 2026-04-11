@@ -91,7 +91,7 @@ function WishlistItemEditor({
   onLinkMetaChange: (id: string, meta: LinkMeta | undefined) => void
 }) {
   const [fetching, setFetching] = useState(false)
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>()
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastFetchedUrlRef = useRef(item.link)
   const onLinkMetaChangeRef = useRef(onLinkMetaChange)
   onLinkMetaChangeRef.current = onLinkMetaChange
@@ -167,15 +167,12 @@ function WishlistItemEditor({
 }
 
 export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistChange }: Props) {
-  const itemsRef = useRef(draft.wishlistItems)
-  itemsRef.current = draft.wishlistItems
-
   const updateItem = (id: string, field: keyof WishlistDraftItem, value: string) => {
-    onWishlistChange(itemsRef.current.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
+    onWishlistChange(draft.wishlistItems.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
   }
 
   const updateLinkMeta = (id: string, meta: LinkMeta | undefined) => {
-    onWishlistChange(itemsRef.current.map((item) => (item.id === id ? { ...item, linkMeta: meta } : item)))
+    onWishlistChange(draft.wishlistItems.map((item) => (item.id === id ? { ...item, linkMeta: meta } : item)))
   }
 
   const addItem = () => {

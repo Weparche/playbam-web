@@ -30,9 +30,19 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
       mountedRef.current = true
       return
     }
-    setFlash(true)
-    const timer = window.setTimeout(() => setFlash(false), 450)
-    return () => window.clearTimeout(timer)
+
+    let timeoutId = 0
+    const frameId = window.requestAnimationFrame(() => {
+      setFlash(true)
+      timeoutId = window.setTimeout(() => setFlash(false), 450)
+    })
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      if (timeoutId) {
+        window.clearTimeout(timeoutId)
+      }
+    }
   }, [draft.title, draft.date, draft.time, draft.timeEnd, draft.locationName, draft.message, draft.theme, draft.titleFont, draft.rsvpMood])
 
   const cardClass = [

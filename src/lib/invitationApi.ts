@@ -523,5 +523,13 @@ export async function unfurlLink(url: string): Promise<UnfurlResult> {
 }
 
 export function proxyImageUrl(url: string): string {
-  return `${API_BASE}/api/image-proxy?url=${encodeURIComponent(url)}`
+  if (!url) {
+    return url
+  }
+
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:' && url.startsWith('http://')) {
+    return `https://${url.slice('http://'.length)}`
+  }
+
+  return url
 }

@@ -525,6 +525,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
           </div>
         </Card>
 
+        {/*
         <Card
           className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--message"
           role="button"
@@ -545,6 +546,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
           </div>
           <p className="pb-createEditor__bodyText">{draft.message.trim() || 'Dodaj kratku poruku za goste.'}</p>
         </Card>
+        */}
 
         <Card
           className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--wishlist"
@@ -571,6 +573,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
           </p>
         </Card>
 
+        {/*
         <Card
           className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--rsvp"
           role="button"
@@ -591,6 +594,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
           </div>
           <p className="pb-createEditor__bodyText">Promijenite ikone RSVP-a po vašoj želji.</p>
         </Card>
+        */}
       </div>
     </div>
   )

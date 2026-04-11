@@ -4,11 +4,23 @@ import { readStoredHostToken } from './hostWebSession'
 
 /**
  * U devu: prazan base → zahtjevi na isti origin (Vite proxy šalje /api na backend).
- * U produkciji: obavezno VITE_API_BASE_URL (npr. https://api.playbam.hr).
+ * Na Cloudflare Pages deployu preferiramo isti origin `/api`, jer repo već ima Pages function proxy.
+ * Na ostalim produkcijskim hostovima koristi se VITE_API_BASE_URL.
  */
+function shouldUseSameOriginApi() {
+  if (typeof window === 'undefined') {
+    return false
+  }
+
+  const host = window.location.hostname.toLowerCase()
+  return host.endsWith('.pages.dev')
+}
+
 const RAW_API_BASE = import.meta.env.DEV
   ? ''
-  : (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+  : shouldUseSameOriginApi()
+    ? ''
+    : (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
 
 function getProtocolSafeApiBase(base: string) {
   if (!base || typeof window === 'undefined') {

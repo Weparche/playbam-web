@@ -52,7 +52,7 @@ export default function FloatingEditPanel({ open, title, description, onClose, c
   const panelClass = `pb-floatingPanel${closing ? ' is-closing' : ''}`
 
   return (
-    <div className={backdropClass} aria-hidden="true">
+    <div className={backdropClass}>
       <div className={panelClass} role="dialog" aria-modal="true" aria-label={title} ref={panelRef}>
         <div className="pb-floatingPanel__header">
           <div>

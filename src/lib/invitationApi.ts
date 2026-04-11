@@ -6,9 +6,23 @@ import { readStoredHostToken } from './hostWebSession'
  * U devu: prazan base → zahtjevi na isti origin (Vite proxy šalje /api na backend).
  * U produkciji: obavezno VITE_API_BASE_URL (npr. https://api.playbam.hr).
  */
-const API_BASE = import.meta.env.DEV
+const RAW_API_BASE = import.meta.env.DEV
   ? ''
   : (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+
+function getProtocolSafeApiBase(base: string) {
+  if (!base || typeof window === 'undefined') {
+    return base
+  }
+
+  if (window.location.protocol !== 'https:' || !base.startsWith('http://')) {
+    return base
+  }
+
+  return `https://${base.slice('http://'.length)}`
+}
+
+const API_BASE = getProtocolSafeApiBase(RAW_API_BASE)
 
 /** Samo u `npm run dev`: šalje Bearer kao seed host (vidi backend PLAYBAM_HOST_AUTH_TOKEN). */
 const DEV_HOST_AUTH_TOKEN =

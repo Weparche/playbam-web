@@ -61,7 +61,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
         window.clearTimeout(timeoutId)
       }
     }
-  }, [draft.title, draft.date, draft.time, draft.timeEnd, draft.locationName, draft.message, draft.theme, draft.titleFont, draft.titleColor, draft.titleOutline, draft.titleSize, draft.rsvpMood])
+  }, [draft.title, draft.date, draft.time, draft.timeEnd, draft.locationName, draft.theme, draft.titleFont, draft.titleColor, draft.titleOutline, draft.titleSize, draft.rsvpMood])
 
   const cardClass = [
     'pb-previewCard',
@@ -100,8 +100,6 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
           <strong>{location}</strong>
         </div>
       </div>
-
-      <div className="pb-previewCard__message">{draft.message.trim() || 'Dodaj kratku poruku za goste.'}</div>
 
       {draft.wishlistEnabled ? (
         <div className="pb-previewCard__section">

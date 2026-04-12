@@ -8,7 +8,6 @@ import {
   type KeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
-  type WheelEvent as ReactWheelEvent,
 } from 'react'
 
 import Card from '../ui/Card'
@@ -229,6 +228,24 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
   }, [draft.title, draft.titleFont])
 
   useEffect(() => {
+    const scroller = fontScrollerRef.current
+    if (!scroller) {
+      return undefined
+    }
+
+    const onWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+        return
+      }
+      scroller.scrollBy({ left: event.deltaY, behavior: 'auto' })
+      event.preventDefault()
+    }
+
+    scroller.addEventListener('wheel', onWheel, { passive: false })
+    return () => scroller.removeEventListener('wheel', onWheel)
+  }, [])
+
+  useEffect(() => {
     const handleWindowPointerMove = (event: PointerEvent) => {
       if (dragPointerIdRef.current !== event.pointerId) {
         return
@@ -320,16 +337,6 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
     scroller.scrollBy({ left: step * multiplier, behavior: 'smooth' })
   }
 
-  const handleFontStripWheel = (event: ReactWheelEvent<HTMLDivElement>) => {
-    const scroller = fontScrollerRef.current
-    if (!scroller || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
-      return
-    }
-
-    scroller.scrollBy({ left: event.deltaY, behavior: 'auto' })
-    event.preventDefault()
-  }
-
   const handleFontSelect = (event: ReactMouseEvent<HTMLButtonElement>, fontId: InvitationCreateDraft['titleFont']) => {
     if (dragMovedRef.current) {
       event.preventDefault()
@@ -363,13 +370,16 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             </div>
             <label className="pb-createEditor__titleField pb-createEditor__titleField--hero">
               <span className="pb-visuallyHidden">Naslov pozivnice</span>
-              <input
-                className={`pb-createEditor__titleInput pb-createEditor__title--${draft.titleFont} pb-createEditor__titleOutline--${draft.titleOutline} pb-createEditor__titleSize--${draft.titleSize}`}
-                style={titleStyle}
-                value={draft.title}
-                onChange={handleTitleChange}
-                placeholder="Upiši naslov pozivnice"
-              />
+              <div className="pb-createEditor__titleFieldShell">
+                <input
+                  className={`pb-createEditor__titleInput pb-createEditor__title--${draft.titleFont} pb-createEditor__titleOutline--${draft.titleOutline} pb-createEditor__titleSize--${draft.titleSize}`}
+                  style={titleStyle}
+                  value={draft.title}
+                  onChange={handleTitleChange}
+                  placeholder="Upiši naslov pozivnice"
+                />
+                <EditorChevron />
+              </div>
             </label>
           </div>
         </div>
@@ -391,7 +401,6 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               className={`pb-createEditor__fontScroller ${isDraggingFonts ? 'is-dragging' : ''}`}
               role="list"
               aria-label="Odabir fonta za naslov"
-              onWheel={handleFontStripWheel}
               onPointerDown={handleFontStripPointerDown}
             >
               {TITLE_FONT_OPTIONS.map((option) => (
@@ -468,17 +477,17 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               </span>
             </button>
           </div>
-          <div
-            className="pb-createEditor__heroRsvpPreview"
-            role="button"
-            tabIndex={0}
-            aria-label="Uredi RSVP ikone"
-            onClick={() => onOpenShortcut('rsvp')}
-            onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('rsvp'))}
-          >
-            <div className="pb-createEditor__heroRsvpInner">
-              <div>
-                <span className="pb-createEditor__heroRsvpLabel">RSVP preview</span>
+          <div className="pb-createEditor__heroRsvpBlock">
+            <span className="pb-createEditor__heroRsvpLabel">RSVP preview</span>
+            <div
+              className="pb-createEditor__heroRsvpPreview"
+              role="button"
+              tabIndex={0}
+              aria-label="Uredi RSVP ikone"
+              onClick={() => onOpenShortcut('rsvp')}
+              onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('rsvp'))}
+            >
+              <div className="pb-createEditor__heroRsvpInner">
                 <div className="pb-previewCard__rsvpRow" aria-hidden="true">
                   {(['going', 'maybe', 'not_going'] as const).map((choice) => (
                     <span
@@ -490,8 +499,8 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
                     </span>
                   ))}
                 </div>
+                <EditorChevron />
               </div>
-              <EditorChevron />
             </div>
           </div>
         </div>
@@ -502,7 +511,9 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
           onClick={() => onOpenShortcut('theme')}
           aria-label="Promijeni temu"
         >
-          <PaletteIcon />
+          <span className="pb-createEditor__mobileThemeChipIconWrap" aria-hidden="true">
+            <PaletteIcon />
+          </span>
           <span className="pb-createEditor__mobileThemeChipContent">
             <span className="pb-createEditor__mobileThemeChipLabel">Promijeni temu</span>
             <span className="pb-createEditor__mobileThemeChipHint">Odaberi naslovnicu pozivnice</span>

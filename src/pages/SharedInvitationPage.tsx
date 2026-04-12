@@ -2,7 +2,7 @@
 import { useParams } from 'react-router-dom'
 
 import FloatingEditPanel from '../components/create/FloatingEditPanel'
-import InvitationLivePreview from '../components/create/InvitationLivePreview'
+import InvitationLivePreview, { type LivePreviewMode } from '../components/create/InvitationLivePreview'
 import InvitationMainEditor from '../components/create/InvitationMainEditor'
 import QuickDateTimeEditor from '../components/create/QuickDateTimeEditor'
 import QuickLocationEditor from '../components/create/QuickLocationEditor'
@@ -78,14 +78,11 @@ type PartyDetailsDraft = {
   extraDetails: string
 }
 
-type HostShortcutId = ShortcutId | 'partyDetails' | 'requests'
+type HostShortcutId = 'wishlist' | 'settings' | 'partyDetails' | 'requests'
 
 const HOST_SHORTCUT_ITEMS = [
-  { id: 'theme', label: 'Tema', icon: '🎨' },
-  { id: 'wishlist', label: 'Pokloni', icon: '🎁' },
-  { id: 'rsvp', label: 'RSVP', icon: '🥳' },
+  { id: 'wishlist', label: 'Lista želja', icon: '🎁' },
   { id: 'settings', label: 'Ažuriraj', icon: '⚙️' },
-  { id: 'preview', label: 'Pregled', icon: '👁️' },
   { id: 'partyDetails', label: 'Detalji', icon: '📍' },
   { id: 'requests', label: 'Zahtjevi', icon: '🧾' },
 ] as const satisfies ReadonlyArray<{ id: HostShortcutId; label: string; icon: string }>
@@ -298,6 +295,7 @@ export default function SharedInvitationPage() {
   const [hostPartyDetailsDraft, setHostPartyDetailsDraft] = useState<PartyDetailsDraft>(createPartyDetailsDraft())
   const [hostEditorShortcut, setHostEditorShortcut] = useState<ShortcutId | null>(null)
   const [hostShortcutActive, setHostShortcutActive] = useState<HostShortcutId | null>(null)
+  const [hostPreviewMode, setHostPreviewMode] = useState<LivePreviewMode>('guest')
   const [savingHostInvitation, setSavingHostInvitation] = useState(false)
   const [hostUpdateError, setHostUpdateError] = useState('')
   const [hostUpdateNotice, setHostUpdateNotice] = useState('')
@@ -419,12 +417,6 @@ export default function SharedInvitationPage() {
     setHostShortcutActive(shortcut)
 
     switch (shortcut) {
-      case 'theme':
-      case 'rsvp':
-        setHostUpdateOpen(true)
-        setHostEditorShortcut(shortcut)
-        scrollToHostSection('host-update-card')
-        return
       case 'wishlist':
         setHostWishlistOpen(true)
         scrollToHostSection('host-wishlist-card')
@@ -432,9 +424,6 @@ export default function SharedInvitationPage() {
       case 'settings':
         setHostUpdateOpen(true)
         scrollToHostSection('host-update-card')
-        return
-      case 'preview':
-        scrollToHostSection('host-live-preview')
         return
       case 'partyDetails':
         setHostPartyDetailsOpen(true)
@@ -1080,7 +1069,6 @@ export default function SharedInvitationPage() {
   const renderHostEditorPanel = () => {
     const closeHostEditorPanel = () => {
       setHostEditorShortcut(null)
-      setHostShortcutActive((current) => (current === 'theme' || current === 'rsvp' ? null : current))
     }
 
     switch (hostEditorShortcut) {
@@ -1566,8 +1554,30 @@ export default function SharedInvitationPage() {
                   </Card>
                   </div>
 
-                  <div id="host-live-preview" className="pb-hostStudio__preview">
-                    <InvitationLivePreview draft={hostEditorDraft} />
+                  <div className="pb-hostStudio__previewColumn">
+                    <div className="pb-hostPreviewMode" role="tablist" aria-label="Način pregleda pozivnice">
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={hostPreviewMode === 'guest'}
+                        className={`pb-hostPreviewMode__btn ${hostPreviewMode === 'guest' ? 'is-active' : ''}`}
+                        onClick={() => setHostPreviewMode('guest')}
+                      >
+                        Gost pregled
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={hostPreviewMode === 'print'}
+                        className={`pb-hostPreviewMode__btn ${hostPreviewMode === 'print' ? 'is-active' : ''}`}
+                        onClick={() => setHostPreviewMode('print')}
+                      >
+                        Print pregled
+                      </button>
+                    </div>
+                    <div id="host-live-preview" className="pb-hostStudio__preview">
+                      <InvitationLivePreview draft={hostEditorDraft} previewMode={hostPreviewMode} />
+                    </div>
                   </div>
 
                   <div className="pb-hostStudio__rail">

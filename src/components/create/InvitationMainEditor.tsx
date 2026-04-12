@@ -640,7 +640,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
           >
             <div className="pb-createEditor__cardHeader">
               <div>
-                <span className="pb-createEditor__eyebrow"><GiftIcon /> Pokloni</span>
+                <span className="pb-createEditor__eyebrow"><GiftIcon /> Lista želja</span>
                 <h3 className="pb-createEditor__sectionTitle">Wishlist i dodatci</h3>
               </div>
               <div className="pb-createEditor__cardMeta">

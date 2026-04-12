@@ -215,11 +215,8 @@ export const STYLE_PRESETS = [
 }>
 
 export const SHORTCUT_ITEMS = [
-  { id: 'theme', label: 'Tema', icon: '🎨' },
-  { id: 'wishlist', label: 'Pokloni', icon: '🎁' },
-  { id: 'rsvp', label: 'RSVP', icon: '🥳' },
+  { id: 'wishlist', label: 'Lista želja', icon: '🎁' },
   { id: 'settings', label: 'Postavke', icon: '⚙️' },
-  { id: 'preview', label: 'Pregled', icon: '👁️' },
 ] as const satisfies ReadonlyArray<{ id: ShortcutId; label: string; icon: string }>
 
 export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {

@@ -106,6 +106,7 @@ export type CreateInvitationResponse = {
   shareToken: string
   publicSlug: string
   webShareUrl: string
+  hostAuthToken?: string
 }
 
 export type InvitationAccess = {

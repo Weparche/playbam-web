@@ -42,7 +42,7 @@ export type WishlistDraftItem = {
 export type RsvpChoice = 'going' | 'maybe' | 'not_going'
 
 /** Fiksni tekst koji gosti vide uz RSVP (nije dio quick editora). */
-export const RSVP_GUEST_HEADLINE = 'Potvrdi dolazak na pozivnici'
+export const RSVP_GUEST_HEADLINE = 'Potvrdi dolazak'
 
 export type InvitationCreateDraft = {
   title: string

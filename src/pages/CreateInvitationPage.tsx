@@ -150,7 +150,7 @@ export default function CreateInvitationPage() {
         theme: draft.theme,
       }, null)
 
-      const nextHostToken = readStoredHostToken() || DEV_HOST_AUTH_TOKEN
+      const nextHostToken = created.hostAuthToken || readStoredHostToken() || DEV_HOST_AUTH_TOKEN
       if (nextHostToken) {
         writeStoredHostToken(nextHostToken)
       }

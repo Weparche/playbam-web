@@ -228,7 +228,13 @@ export default function CreateInvitationPage() {
             description="Odaberi jednu od pet gotovih naslovnica za pozivnicu."
             onClose={() => setActiveShortcut(null)}
           >
-            <QuickThemeEditor draft={draft} onThemeChange={(value) => updateField('theme', value)} />
+            <QuickThemeEditor
+              draft={draft}
+              onThemeChange={(value) => {
+                updateField('theme', value)
+                setActiveShortcut(null)
+              }}
+            />
           </FloatingEditPanel>
         )
       case 'rsvp':
@@ -239,7 +245,15 @@ export default function CreateInvitationPage() {
             description="Odaberi jedan od setova ikonica za tri odgovora gosta."
             onClose={() => setActiveShortcut(null)}
           >
-            <QuickRSVPEditor draft={draft} onFieldChange={updateField} />
+            <QuickRSVPEditor
+              draft={draft}
+              onFieldChange={(field, value) => {
+                updateField(field, value)
+                if (field === 'rsvpMood') {
+                  setActiveShortcut(null)
+                }
+              }}
+            />
           </FloatingEditPanel>
         )
       case 'settings':

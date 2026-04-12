@@ -10,7 +10,7 @@ export type TitleFont =
   | 'libre-baskerville'
   | 'jakarta'
   | 'nunito'
-export type TitleColor = 'playbam-blue' | 'snow' | 'berry' | 'mint' | 'sunset'
+export type TitleColor = 'playbam-blue' | 'ink' | 'berry' | 'mint' | 'sunset'
 export type TitleOutline = 'none' | 'soft' | 'bold'
 export type TitleSize = 'sm' | 'md' | 'lg'
 export type RsvpMood = 'party' | 'sweet' | 'icons' | 'spark' | 'balloon' | 'thumbs' | 'check' | 'zoo' | 'sport' | 'space' | 'music' | 'crown' | 'heart' | 'fire' | 'nature' | 'pirate'
@@ -109,10 +109,10 @@ export const TITLE_COLOR_OPTIONS = [
     description: 'Brand plava — jasna i pouzdana na većini naslovnica.',
   },
   {
-    id: 'snow',
-    label: 'Bijela',
-    swatch: '#fff9f2',
-    description: 'Topla bijela — dobro stoji na tamnijim ili šarenim pozadinama.',
+    id: 'ink',
+    label: 'Crna',
+    swatch: '#171a21',
+    description: 'Duboka crna — jak kontrast na svijetlim i šarenim naslovnicama.',
   },
   {
     id: 'berry',
@@ -367,11 +367,13 @@ export function normalizeTitleColor(value: string | null | undefined): TitleColo
 
   switch (normalized) {
     case 'playbam-blue':
-    case 'snow':
+    case 'ink':
     case 'berry':
     case 'mint':
     case 'sunset':
       return normalized
+    case 'snow':
+      return 'ink'
     default:
       return 'playbam-blue'
   }

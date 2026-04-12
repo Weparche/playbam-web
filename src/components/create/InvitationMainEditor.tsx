@@ -503,7 +503,11 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
           aria-label="Promijeni temu"
         >
           <PaletteIcon />
-          <span>Promijeni temu</span>
+          <span className="pb-createEditor__mobileThemeChipContent">
+            <span className="pb-createEditor__mobileThemeChipLabel">Promijeni temu</span>
+            <span className="pb-createEditor__mobileThemeChipHint">Odaberi naslovnicu pozivnice</span>
+          </span>
+          <EditorChevron />
         </button>
       </Card>
 
@@ -720,7 +724,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
                           <span className="pb-createEditor__titleStyleOptionDesc">{option.description}</span>
                           <span
                             className={`pb-createEditor__titleStyleOptionSamplePlate ${
-                              option.id === 'snow' ? 'pb-createEditor__titleStyleOptionSamplePlate--dark' : ''
+                              option.id === 'ink' ? 'pb-createEditor__titleStyleOptionSamplePlate--dark' : ''
                             }`}
                           >
                             <span

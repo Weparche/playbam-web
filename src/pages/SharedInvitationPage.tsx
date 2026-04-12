@@ -1114,7 +1114,13 @@ export default function SharedInvitationPage() {
             description="Promijeni naslovnicu pozivnice."
             onClose={closeHostEditorPanel}
           >
-            <QuickThemeEditor draft={hostEditorDraft} onThemeChange={(value) => updateHostField('theme', value)} />
+            <QuickThemeEditor
+              draft={hostEditorDraft}
+              onThemeChange={(value) => {
+                updateHostField('theme', value)
+                closeHostEditorPanel()
+              }}
+            />
           </FloatingEditPanel>
         )
       case 'rsvp':
@@ -1125,7 +1131,15 @@ export default function SharedInvitationPage() {
             description="Odaberi set ikona za potvrdu dolaska."
             onClose={closeHostEditorPanel}
           >
-            <QuickRSVPEditor draft={hostEditorDraft} onFieldChange={updateHostField} />
+            <QuickRSVPEditor
+              draft={hostEditorDraft}
+              onFieldChange={(field, value) => {
+                updateHostField(field, value)
+                if (field === 'rsvpMood') {
+                  closeHostEditorPanel()
+                }
+              }}
+            />
           </FloatingEditPanel>
         )
       default:

@@ -359,16 +359,45 @@ export function createInvitation(payload: CreateInvitationPayload, identity?: Te
   })
 }
 
-export function updateInvitation(
+export async function updateInvitation(
   invitationId: string,
   payload: UpdateInvitationPayload,
   identity?: TemporaryWebIdentity | null,
-) {
-  return request<PublicInvitation>(`/api/invitations/${encodeURIComponent(invitationId)}`, {
-    method: 'PUT',
-    body: payload,
-    identity,
-  })
+  /** U `npm run dev`: ako PUT vrati 404 (npr. backend nije pokrenut), spoji payload u ovu pozivnicu umjesto bacanja greške. */
+  devMergeBase?: PublicInvitation | null,
+): Promise<PublicInvitation> {
+  try {
+    return await request<PublicInvitation>(`/api/invitations/${encodeURIComponent(invitationId)}`, {
+      method: 'PUT',
+      body: payload,
+      identity,
+    })
+  } catch (error) {
+    if (
+      import.meta.env.DEV &&
+      devMergeBase &&
+      devMergeBase.id === invitationId &&
+      isApiError(error, 404)
+    ) {
+      return {
+        ...devMergeBase,
+        title: payload.title,
+        celebrantName: payload.celebrantName,
+        titleFont: payload.titleFont ?? devMergeBase.titleFont,
+        titleColor: payload.titleColor ?? devMergeBase.titleColor,
+        titleOutline: payload.titleOutline ?? devMergeBase.titleOutline,
+        titleSize: payload.titleSize ?? devMergeBase.titleSize,
+        date: payload.date,
+        time: payload.time,
+        location: payload.location,
+        message: payload.message ?? null,
+        coverImage: payload.coverImage ?? null,
+        theme: payload.theme ?? null,
+        partyDetails: payload.partyDetails ?? devMergeBase.partyDetails ?? null,
+      }
+    }
+    throw error
+  }
 }
 
 export function getInvitationAccess(invitationId: string, identity?: TemporaryWebIdentity | null) {

@@ -29,7 +29,7 @@ export function formatInvitationDateText(dateValue: string) {
     .replace(/^./, (letter) => letter.toUpperCase())
   const [year, month, day] = dateValue.split('-')
 
-  return `${dayName}, ${day}-${month}.${year}`
+  return `${dayName}, ${day}.${month}.${year}`
 }
 
 export function formatInvitationTimeText(timeValue: string) {

@@ -13,6 +13,11 @@ import {
 } from '../create/createTypes'
 import { useInvitationTitleAutoFit } from './useInvitationTitleAutoFit'
 
+export type PrintPartyDetailLine = {
+  label: string
+  value: string
+}
+
 type Props = {
   celebrantTitle: string
   titleFont?: string | null
@@ -32,6 +37,8 @@ type Props = {
   accessTitle: string
   accessText: string
   showAccessCard?: boolean
+  /** Ispod poruke (npr. ispis / print pregled). */
+  printPartyDetails?: readonly PrintPartyDetailLine[] | null
 }
 
 function IconCalendar() {
@@ -94,6 +101,7 @@ export default function PublicInvitationHero({
   accessTitle,
   accessText,
   showAccessCard = true,
+  printPartyDetails = null,
 }: Props) {
   const fallbackImage = '/pozivnica-girl.png'
   const resolvedImage = backgroundImage || fallbackImage
@@ -134,7 +142,7 @@ export default function PublicInvitationHero({
           }}
         />
 
-        <div className="pb-inviteHero__content pb-inviteHero__content--storybook">
+        <div className="pb-inviteHero__content pb-inviteHero__content--storybook" style={titleStyle}>
           <img className="pb-inviteHero__logo" src="/logo.png" alt="Playbam.hr" />
 
           <header ref={titleWrapRef} className="pb-inviteHero__titleWrap pb-inviteHero__titleWrap--storybook">
@@ -173,6 +181,17 @@ export default function PublicInvitationHero({
             </a>
 
             <p className="pb-inviteHero__message pb-inviteHero__message--storybook">{messageText}</p>
+
+            {printPartyDetails && printPartyDetails.length > 0 ? (
+              <div className="pb-inviteHero__printPartyDetails" aria-label="Detalji tuluma">
+                {printPartyDetails.map((row) => (
+                  <div key={row.label} className="pb-inviteHero__printPartyRow">
+                    <span className="pb-inviteHero__printPartyLabel">{row.label}</span>
+                    <span className="pb-inviteHero__printPartyValue">{row.value}</span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           {showRsvp ? (

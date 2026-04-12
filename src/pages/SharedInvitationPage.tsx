@@ -1,4 +1,5 @@
-﻿import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
+﻿import { type ChangeEvent, type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
+import { toJpeg } from 'html-to-image'
 import { useParams } from 'react-router-dom'
 
 import FloatingEditPanel from '../components/create/FloatingEditPanel'
@@ -17,6 +18,7 @@ import Footer from '../components/layout/Footer'
 import Navbar from '../components/layout/Navbar'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
+import PrivateToggleChevron from '../components/ui/PrivateToggleChevron'
 import { useAuth } from '../context/AuthContext'
 import {
   cancelInvitationWishlistReservation,
@@ -54,6 +56,7 @@ import type { TemporaryWebIdentity } from '../lib/tempWebIdentity'
 import {
   buildTimeRangeValue,
   DEFAULT_CREATE_DRAFT,
+  getTitleColorValue,
   normalizeCreateTheme,
   normalizeTitleColor,
   normalizeTitleFont,
@@ -78,13 +81,16 @@ type PartyDetailsDraft = {
   extraDetails: string
 }
 
-type HostShortcutId = 'wishlist' | 'settings' | 'partyDetails' | 'requests'
+type HostShortcutId = 'wishlist' | 'settings' | 'partyDetails' | 'requests' | 'shareGuest'
+
+type HostAccordionSection = 'update' | 'details' | 'requests' | 'wishlist'
 
 const HOST_SHORTCUT_ITEMS = [
   { id: 'wishlist', label: 'Lista želja', icon: '🎁' },
   { id: 'settings', label: 'Ažuriraj', icon: '⚙️' },
   { id: 'partyDetails', label: 'Detalji', icon: '📍' },
   { id: 'requests', label: 'Zahtjevi', icon: '🧾' },
+  { id: 'shareGuest', label: 'Podijeli pozivnicu', icon: '🔗' },
 ] as const satisfies ReadonlyArray<{ id: HostShortcutId; label: string; icon: string }>
 
 function createEmptyDraft(parentName = ''): FamilyProfileDraft {
@@ -182,6 +188,14 @@ function createPartyDetailsDraft(details?: InvitationPartyDetails | null): Party
     cafeLocation: details?.cafeLocation ?? '',
     extraDetails: details?.extraDetails ?? '',
   }
+}
+
+function buildGuestInvitePageUrl(invitation: PublicInvitation) {
+  const slug = (invitation.publicSlug || invitation.shareToken || '').trim()
+  if (typeof window === 'undefined') {
+    return `/pozivnica/${slug}`
+  }
+  return `${window.location.origin}/pozivnica/${slug}`
 }
 
 function buildInvitationUpdatePayload(
@@ -285,10 +299,7 @@ export default function SharedInvitationPage() {
   const [editingWishlistItemId, setEditingWishlistItemId] = useState<string | null>(null)
   const [savingWishlistItem, setSavingWishlistItem] = useState(false)
   const [guestModalOpen, setGuestModalOpen] = useState(false)
-  const [hostRequestsOpen, setHostRequestsOpen] = useState(false)
-  const [hostUpdateOpen, setHostUpdateOpen] = useState(false)
-  const [hostPartyDetailsOpen, setHostPartyDetailsOpen] = useState(false)
-  const [hostWishlistOpen, setHostWishlistOpen] = useState(false)
+  const [hostAccordionOpen, setHostAccordionOpen] = useState<HostAccordionSection | null>(null)
   const [hostAddGiftOpen, setHostAddGiftOpen] = useState(false)
   const [selectedHostRequest, setSelectedHostRequest] = useState<MembershipRequest | null>(null)
   const [hostEditorDraft, setHostEditorDraft] = useState<InvitationCreateDraft>(DEFAULT_CREATE_DRAFT)
@@ -299,6 +310,10 @@ export default function SharedInvitationPage() {
   const [savingHostInvitation, setSavingHostInvitation] = useState(false)
   const [hostUpdateError, setHostUpdateError] = useState('')
   const [hostUpdateNotice, setHostUpdateNotice] = useState('')
+  const [hostShareDialogOpen, setHostShareDialogOpen] = useState(false)
+  const [hostShareCopyDone, setHostShareCopyDone] = useState(false)
+  const [hostJpgExportMessage, setHostJpgExportMessage] = useState<string | null>(null)
+  const hostPrintCardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIdentityDraft({
@@ -310,6 +325,12 @@ export default function SharedInvitationPage() {
   useEffect(() => {
     setHostToken(readStoredHostToken())
   }, [])
+
+  useEffect(() => {
+    if (hostPreviewMode !== 'print') {
+      setHostJpgExportMessage(null)
+    }
+  }, [hostPreviewMode])
 
   useEffect(() => {
     let cancelled = false
@@ -413,30 +434,156 @@ export default function SharedInvitationPage() {
     })
   }
 
+  const toggleHostAccordion = (section: HostAccordionSection) => {
+    setHostAccordionOpen((prev) => {
+      const next = prev === section ? null : section
+      if (next === 'update') {
+        setHostPreviewMode('guest')
+      } else if (next === 'details') {
+        setHostPreviewMode('print')
+      }
+      return next
+    })
+  }
+
+  const openHostAccordion = (section: HostAccordionSection) => {
+    setHostAccordionOpen(section)
+    if (section === 'update') {
+      setHostPreviewMode('guest')
+    } else if (section === 'details') {
+      setHostPreviewMode('print')
+    }
+  }
+
   const handleHostShortcutClick = (shortcut: HostShortcutId) => {
     setHostShortcutActive(shortcut)
 
     switch (shortcut) {
       case 'wishlist':
-        setHostWishlistOpen(true)
+        openHostAccordion('wishlist')
         scrollToHostSection('host-wishlist-card')
         return
       case 'settings':
-        setHostUpdateOpen(true)
+        openHostAccordion('update')
         scrollToHostSection('host-update-card')
         return
       case 'partyDetails':
-        setHostPartyDetailsOpen(true)
+        openHostAccordion('details')
         scrollToHostSection('host-details-card')
         return
       case 'requests':
-        setHostRequestsOpen(true)
+        openHostAccordion('requests')
         scrollToHostSection('host-requests-card')
+        return
+      case 'shareGuest':
+        setHostShareDialogOpen(true)
         return
       default:
         return
     }
   }
+
+  const handleHostPrintInvite = () => {
+    document.documentElement.classList.add('pb-print-host-invite')
+    const cleanup = () => {
+      document.documentElement.classList.remove('pb-print-host-invite')
+      window.removeEventListener('afterprint', cleanup)
+    }
+    window.addEventListener('afterprint', cleanup)
+    window.requestAnimationFrame(() => {
+      window.print()
+    })
+  }
+
+  const handleHostExportJpg = async () => {
+    setHostJpgExportMessage(null)
+
+    if (hostPreviewMode !== 'print') {
+      setHostPreviewMode('print')
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      })
+    }
+
+    const root = hostPrintCardRef.current?.querySelector('.pb-inviteCard--storybook') as HTMLElement | null
+    if (!root) {
+      setHostJpgExportMessage('Pozivnica nije pronađena u pregledu.')
+      return
+    }
+
+    const rect = root.getBoundingClientRect()
+    const width = Math.ceil(Math.max(root.scrollWidth, rect.width))
+    const height = Math.ceil(Math.max(root.scrollHeight, rect.height))
+
+    try {
+      const dataUrl = await toJpeg(root, {
+        quality: 0.92,
+        pixelRatio: 2,
+        backgroundColor: '#ffffff',
+        cacheBust: true,
+        width,
+        height,
+        style: {
+          width: `${width}px`,
+          height: `${height}px`,
+          overflow: 'visible',
+        },
+      })
+      const anchor = document.createElement('a')
+      anchor.href = dataUrl
+      anchor.download = 'pozivnica.jpg'
+      anchor.click()
+      setHostJpgExportMessage('JPG je spremljen u preuzimanja.')
+      window.setTimeout(() => setHostJpgExportMessage(null), 4000)
+    } catch {
+      setHostJpgExportMessage('JPG izvoz nije uspio (slike/CORS ili preglednik). Pokušaj Print pa „Spremi kao PDF”.')
+    }
+  }
+
+  const guestPageShareUrl = invitation ? buildGuestInvitePageUrl(invitation) : ''
+  const guestWhatsAppShareHref = guestPageShareUrl
+    ? `https://wa.me/?text=${encodeURIComponent(`Pozivnica: ${guestPageShareUrl}`)}`
+    : ''
+
+  const closeHostShareDialog = () => {
+    setHostShareDialogOpen(false)
+    setHostShortcutActive(null)
+  }
+
+  const handleCopyGuestInviteLink = async () => {
+    if (!guestPageShareUrl) {
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(guestPageShareUrl)
+      setHostShareCopyDone(true)
+    } catch {
+      setHostShareCopyDone(false)
+    }
+  }
+
+  useEffect(() => {
+    if (hostShareDialogOpen) {
+      setHostShareCopyDone(false)
+    }
+  }, [hostShareDialogOpen])
+
+  useEffect(() => {
+    if (!hostShareDialogOpen) {
+      return undefined
+    }
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setHostShareDialogOpen(false)
+        setHostShortcutActive(null)
+      }
+    }
+
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [hostShareDialogOpen])
 
   const handleToggleGuestChild = (childId: string, checked: boolean) => {
     setSelectedChildIds((current) => (checked ? [...current, childId] : current.filter((id) => id !== childId)))
@@ -732,10 +879,11 @@ export default function SharedInvitationPage() {
         invitation.id,
         buildInvitationUpdatePayload(hostEditorDraft, hostPartyDetailsDraft),
         user ?? null,
+        invitation,
       )
       setInvitation(updatedInvitation)
       setHostUpdateNotice('Pozivnica je ažurirana.')
-    } catch {
+    } catch (caughtError) {
       setHostUpdateError('Spremanje promjena trenutno nije uspjelo.')
     } finally {
       setSavingHostInvitation(false)
@@ -1302,20 +1450,20 @@ export default function SharedInvitationPage() {
                     <button
                       id="host-update-toggle"
                       type="button"
-                      className={`pb-privateToggle ${hostUpdateOpen ? 'is-open' : ''}`}
-                      onClick={() => setHostUpdateOpen((current) => !current)}
-                      aria-expanded={hostUpdateOpen}
+                      className={`pb-privateToggle ${hostAccordionOpen === 'update' ? 'is-open' : ''}`}
+                      onClick={() => toggleHostAccordion('update')}
+                      aria-expanded={hostAccordionOpen === 'update'}
                     >
                       <span className="pb-privateToggle__copy">
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
                         <span className="pb-privateToggle__title">Ažuriraj pozivnicu</span>
                       </span>
                       <span className="pb-privateToggle__arrow" aria-hidden>
-                        →
+                        <PrivateToggleChevron />
                       </span>
                     </button>
 
-                    {hostUpdateOpen ? (
+                    {hostAccordionOpen === 'update' ? (
                       <div className="pb-privateAccordionBody">
                         <p className="pb-flowCard__text">
                           Isti editor kao kod izrade pozivnice, samo bez desnog previewa. Ovdje uređuješ naslov, temu,
@@ -1328,6 +1476,7 @@ export default function SharedInvitationPage() {
                             onFieldChange={updateHostField}
                             onOpenShortcut={setHostEditorShortcut}
                             hideWishlistCard
+                            activeShortcut={hostEditorShortcut}
                           />
                         </div>
 
@@ -1347,22 +1496,32 @@ export default function SharedInvitationPage() {
                     <button
                       id="host-details-toggle"
                       type="button"
-                      className={`pb-privateToggle ${hostPartyDetailsOpen ? 'is-open' : ''}`}
-                      onClick={() => setHostPartyDetailsOpen((current) => !current)}
-                      aria-expanded={hostPartyDetailsOpen}
+                      className={`pb-privateToggle ${hostAccordionOpen === 'details' ? 'is-open' : ''}`}
+                      onClick={() => toggleHostAccordion('details')}
+                      aria-expanded={hostAccordionOpen === 'details'}
                     >
                       <span className="pb-privateToggle__copy">
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
                         <span className="pb-privateToggle__title">Detalji tuluma</span>
                       </span>
                       <span className="pb-privateToggle__arrow" aria-hidden>
-                        →
+                        <PrivateToggleChevron />
                       </span>
                     </button>
 
-                    {hostPartyDetailsOpen ? (
+                    {hostAccordionOpen === 'details' ? (
                       <div className="pb-privateAccordionBody">
-                        <section className="pb-privateDetails pb-hostDetailsEditor" aria-labelledby="host-party-details-title">
+                        <section
+                          className="pb-privateDetails pb-hostDetailsEditor pb-hostDetailsEditor--matchTitle"
+                          aria-labelledby="host-party-details-title"
+                          style={
+                            {
+                              ['--pb-host-details-fg' as string]: getTitleColorValue(
+                                normalizeTitleColor(hostEditorDraft.titleColor),
+                              ),
+                            } as CSSProperties
+                          }
+                        >
                           <header className="pb-invitePrivateCard__header">
                             <h3 id="host-party-details-title" className="pb-invitePrivateCard__title">
                               Detalji tuluma
@@ -1444,20 +1603,20 @@ export default function SharedInvitationPage() {
                     <button
                       id="host-requests-toggle"
                       type="button"
-                      className={`pb-privateToggle ${hostRequestsOpen ? 'is-open' : ''}`}
-                      onClick={() => setHostRequestsOpen((current) => !current)}
-                      aria-expanded={hostRequestsOpen}
+                      className={`pb-privateToggle ${hostAccordionOpen === 'requests' ? 'is-open' : ''}`}
+                      onClick={() => toggleHostAccordion('requests')}
+                      aria-expanded={hostAccordionOpen === 'requests'}
                     >
                       <span className="pb-privateToggle__copy">
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
                         <span className="pb-privateToggle__title">Zahtjevi za pristup</span>
                       </span>
                       <span className="pb-privateToggle__arrow" aria-hidden>
-                        →
+                        <PrivateToggleChevron />
                       </span>
                     </button>
 
-                    {hostRequestsOpen ? (
+                    {hostAccordionOpen === 'requests' ? (
                       <div className="pb-privateAccordionBody">
                         <p className="pb-flowCard__text">Pregledaj tko traži pristup privatnom dijelu pozivnice i upravljaj gostima.</p>
                         {hostError ? <div className="pb-inlineNote pb-inlineNote--error">{hostError}</div> : null}
@@ -1476,20 +1635,20 @@ export default function SharedInvitationPage() {
                     <button
                       id="host-wishlist-toggle"
                       type="button"
-                      className={`pb-privateToggle ${hostWishlistOpen ? 'is-open' : ''}`}
-                      onClick={() => setHostWishlistOpen((current) => !current)}
-                      aria-expanded={hostWishlistOpen}
+                      className={`pb-privateToggle ${hostAccordionOpen === 'wishlist' ? 'is-open' : ''}`}
+                      onClick={() => toggleHostAccordion('wishlist')}
+                      aria-expanded={hostAccordionOpen === 'wishlist'}
                     >
                       <span className="pb-privateToggle__copy">
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
                         <span className="pb-privateToggle__title">Lista želja</span>
                       </span>
                       <span className="pb-privateToggle__arrow" aria-hidden>
-                        →
+                        <PrivateToggleChevron />
                       </span>
                     </button>
 
-                    {hostWishlistOpen ? (
+                    {hostAccordionOpen === 'wishlist' ? (
                       <div className="pb-privateAccordionBody">
                         <p className="pb-flowCard__text pb-flowCard__text--hostWishlist">
                           Dodaj, uredi i organiziraj želje za poklone. Ovdje vidiš i tko je što rezervirao.
@@ -1510,7 +1669,7 @@ export default function SharedInvitationPage() {
                               </span>
                             </span>
                             <span className="pb-privateToggle__arrow" aria-hidden>
-                              +
+                              <PrivateToggleChevron />
                             </span>
                           </button>
 
@@ -1542,7 +1701,7 @@ export default function SharedInvitationPage() {
                             editingItemId={editingWishlistItemId}
                             onEdit={(item) => {
                               handleWishlistEdit(item)
-                              setHostWishlistOpen(true)
+                              openHostAccordion('wishlist')
                               setHostAddGiftOpen(true)
                             }}
                             onDelete={handleWishlistDelete}
@@ -1575,8 +1734,29 @@ export default function SharedInvitationPage() {
                         Print pregled
                       </button>
                     </div>
-                    <div id="host-live-preview" className="pb-hostStudio__preview">
-                      <InvitationLivePreview draft={hostEditorDraft} previewMode={hostPreviewMode} />
+                    {hostPreviewMode === 'print' ? (
+                      <div className="pb-hostPrintToolbar">
+                        <Button type="button" variant="primary" onClick={handleHostPrintInvite}>
+                          Print pozivnice
+                        </Button>
+                        <Button type="button" variant="ghost" onClick={() => void handleHostExportJpg()}>
+                          Izvezi u JPG
+                        </Button>
+                        {hostJpgExportMessage ? (
+                          <p className="pb-hostPrintToolbar__hint" role="status">
+                            {hostJpgExportMessage}
+                          </p>
+                        ) : null}
+                      </div>
+                    ) : null}
+                    <div id="host-live-preview" ref={hostPrintCardRef} className="pb-hostStudio__previewCluster">
+                      <div className="pb-hostStudio__preview">
+                        <InvitationLivePreview
+                          draft={hostEditorDraft}
+                          previewMode={hostPreviewMode}
+                          partyDetails={hostPartyDetailsDraft}
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -1604,6 +1784,52 @@ export default function SharedInvitationPage() {
           ) : null}
         </div>
       </main>
+
+      {hostShareDialogOpen && invitation ? (
+        <div
+          className="pb-modalOverlay"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              closeHostShareDialog()
+            }
+          }}
+        >
+          <div className="pb-modalDialog pb-hostShareDialog" role="dialog" aria-modal="true" aria-labelledby="host-share-dialog-title">
+            <div className="pb-modalDialog__head">
+              <h2 id="host-share-dialog-title" className="pb-modalDialog__title">
+                Podijeli pozivnicu
+              </h2>
+              <button type="button" className="pb-modalDialog__close" onClick={closeHostShareDialog} aria-label="Zatvori">
+                ×
+              </button>
+            </div>
+            <div className="pb-modalDialog__body">
+              <p className="pb-modalDialog__lead">Poveznica za gost prikaz (web pozivnica).</p>
+              <label className="pb-formField">
+                <span className="pb-formLabel">Link</span>
+                <input
+                  className="pb-input"
+                  readOnly
+                  value={guestPageShareUrl}
+                  onFocus={(event) => event.currentTarget.select()}
+                />
+              </label>
+              <div className="pb-flowActions pb-hostShareDialog__actions">
+                <Button type="button" variant="primary" onClick={() => void handleCopyGuestInviteLink()}>
+                  {hostShareCopyDone ? 'Kopirano' : 'Kopiraj link'}
+                </Button>
+                {guestWhatsAppShareHref ? (
+                  <a className="pb-btn pb-btn-ghost" href={guestWhatsAppShareHref} target="_blank" rel="noreferrer">
+                    WhatsApp
+                  </a>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <Footer />
     </>
   )

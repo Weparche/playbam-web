@@ -31,7 +31,7 @@ import Footer from '../components/layout/Footer'
 import Navbar from '../components/layout/Navbar'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
-import { createInvitation } from '../lib/invitationApi'
+import { createInvitation, createInvitationWishlistItem, type InvitationWishlistPayload } from '../lib/invitationApi'
 import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
 import { writeStoredTemporaryIdentity } from '../lib/tempWebIdentity'
 
@@ -71,6 +71,40 @@ function readStoredDraft() {
 
 function buildCelebrantFallback(title: string, fallbackName: string) {
   return title.trim() || fallbackName.trim() || 'Slavljenik'
+}
+
+function buildWishlistPayloadFromQuickDraft(item: WishlistDraftItem, priorityOrder: number): InvitationWishlistPayload | null {
+  const title = item.title.trim()
+  if (!title) {
+    return null
+  }
+  const link = item.link.trim()
+  return {
+    title,
+    description: item.note.trim() || null,
+    url: link || null,
+    priceLabel: null,
+    imageUrl: item.linkMeta?.image?.trim() || null,
+    priorityOrder,
+    isActive: true,
+  }
+}
+
+async function syncQuickCreateWishlist(invitationId: string, quickDraft: InvitationCreateDraft) {
+  if (!quickDraft.wishlistEnabled) {
+    return
+  }
+  for (let index = 0; index < quickDraft.wishlistItems.length; index++) {
+    const payload = buildWishlistPayloadFromQuickDraft(quickDraft.wishlistItems[index], index)
+    if (!payload) {
+      continue
+    }
+    try {
+      await createInvitationWishlistItem(invitationId, payload, null)
+    } catch {
+      // Ostale stavke i dalje pokušaj; pozivnica je već kreirana.
+    }
+  }
 }
 
 export default function CreateInvitationPage() {
@@ -165,6 +199,8 @@ export default function CreateInvitationPage() {
         writeStoredHostToken(nextHostToken)
       }
       writeStoredTemporaryIdentity(null)
+
+      await syncQuickCreateWishlist(created.id, draft)
 
       window.location.assign(`/pozivnica/${created.publicSlug || created.shareToken}`)
     } catch {
@@ -310,7 +346,7 @@ export default function CreateInvitationPage() {
           preview={<InvitationPreviewCard draft={draft} compact />}
           rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={(id) => handleShortcutClick(id as ShortcutId)} />}
         >
-          <InvitationMainEditor draft={draft} onFieldChange={updateField} onOpenShortcut={handleShortcutClick} />
+          <InvitationMainEditor draft={draft} onFieldChange={updateField} onOpenShortcut={handleShortcutClick} activeShortcut={activeShortcut} />
 
           <Card className="pb-createFooterAction">
             <div className="pb-createFooterAction__stack">

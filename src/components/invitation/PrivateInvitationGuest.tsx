@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent } from 'react'
 
 import Button from '../ui/Button'
+import PrivateToggleChevron from '../ui/PrivateToggleChevron'
 import type { InvitationWishlistItem, InvitationWishlistPayload, PublicInvitation } from '../../lib/invitationApi'
 
 type Props = {
@@ -245,7 +246,7 @@ export default function PrivateInvitationGuest({
               <span className="pb-privateToggle__title">Detalji rođendana</span>
             </span>
             <span className="pb-privateToggle__arrow" aria-hidden>
-              ↓
+              <PrivateToggleChevron />
             </span>
           </button>
 
@@ -291,7 +292,7 @@ export default function PrivateInvitationGuest({
               <span className="pb-privateToggle__title">Lista želja</span>
             </span>
             <span className="pb-privateToggle__arrow" aria-hidden>
-              ↓
+              <PrivateToggleChevron />
             </span>
           </button>
 
@@ -474,7 +475,7 @@ export default function PrivateInvitationGuest({
               <span className="pb-privateToggle__title">Više o igraonici</span>
             </span>
             <span className="pb-privateToggle__arrow" aria-hidden>
-              ↓
+              <PrivateToggleChevron />
             </span>
           </button>
 

@@ -35,6 +35,8 @@ type Props = {
   onFieldChange: <K extends keyof InvitationCreateDraft>(field: K, value: InvitationCreateDraft[K]) => void
   onOpenShortcut: (shortcut: ShortcutId) => void
   hideWishlistCard?: boolean
+  /** Za chevron na containerima: dolje kad je zatvoreno, gore kad je povezani shortcut otvoren. */
+  activeShortcut?: ShortcutId | null
 }
 
 type StatusTone = 'ready' | 'accent' | 'pending' | 'muted'
@@ -67,17 +69,30 @@ function ChevronIcon({ className }: { className: string }) {
   )
 }
 
-function EditorChevron() {
+function EditorChevron({ expanded }: { expanded?: boolean }) {
+  const accordion = expanded !== undefined
   return (
-    <span className="pb-createEditor__chevron" aria-hidden="true">
+    <span
+      className={[
+        'pb-createEditor__chevron',
+        accordion ? 'pb-createEditor__chevron--accordion' : '',
+        accordion && expanded ? 'is-open' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      aria-hidden="true"
+    >
       <ChevronIcon className="pb-createEditor__chevronIcon" />
     </span>
   )
 }
 
-function FactChevron() {
+function FactChevron({ expanded }: { expanded: boolean }) {
   return (
-    <span className="pb-createEditor__factChevron" aria-hidden="true">
+    <span
+      className={`pb-createEditor__factChevron pb-createEditor__factChevron--accordion ${expanded ? 'is-open' : ''}`}
+      aria-hidden="true"
+    >
       <ChevronIcon className="pb-createEditor__factChevronIcon" />
     </span>
   )
@@ -153,7 +168,13 @@ function getFontScrollStep(scroller: HTMLDivElement) {
   return Math.max(naturalStep, minimumStep)
 }
 
-export default function InvitationMainEditor({ draft, onFieldChange, onOpenShortcut, hideWishlistCard = false }: Props) {
+export default function InvitationMainEditor({
+  draft,
+  onFieldChange,
+  onOpenShortcut,
+  hideWishlistCard = false,
+  activeShortcut = null,
+}: Props) {
   const fontScrollerRef = useRef<HTMLDivElement | null>(null)
   const dragPointerIdRef = useRef<number | null>(null)
   const dragStartXRef = useRef(0)
@@ -443,7 +464,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
                   />
                   <span className="pb-createEditor__titleStyleTriggerText">{selectedTitleColor.label}</span>
                 </span>
-                <EditorChevron />
+                <EditorChevron expanded={titleStylePanel === 'color'} />
               </span>
             </button>
             <button
@@ -458,7 +479,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
                 <span className="pb-createEditor__titleStyleTriggerValue">
                   <span className="pb-createEditor__titleStyleTriggerText">{selectedTitleOutline.label}</span>
                 </span>
-                <EditorChevron />
+                <EditorChevron expanded={titleStylePanel === 'outline'} />
               </span>
             </button>
             <button
@@ -473,7 +494,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
                 <span className="pb-createEditor__titleStyleTriggerValue">
                   <span className="pb-createEditor__titleStyleTriggerText">{selectedTitleSize.label}</span>
                 </span>
-                <EditorChevron />
+                <EditorChevron expanded={titleStylePanel === 'size'} />
               </span>
             </button>
           </div>
@@ -499,7 +520,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
                     </span>
                   ))}
                 </div>
-                <EditorChevron />
+                <EditorChevron expanded={activeShortcut === 'rsvp'} />
               </div>
             </div>
           </div>
@@ -518,7 +539,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             <span className="pb-createEditor__mobileThemeChipLabel">Promijeni temu</span>
             <span className="pb-createEditor__mobileThemeChipHint">Odaberi naslovnicu pozivnice</span>
           </span>
-          <EditorChevron />
+          <EditorChevron expanded={activeShortcut === 'theme'} />
         </button>
       </Card>
 
@@ -544,7 +565,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               onClick={(event) => handleChevronClick(event, 'location')}
               onKeyDown={(event) => event.stopPropagation()}
             >
-              <EditorChevron />
+              <EditorChevron expanded={activeShortcut === 'dateTime' || activeShortcut === 'location'} />
             </button>
           </div>
         </div>
@@ -560,7 +581,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               <span>Datum</span>
               <strong>{formatPreviewDate(draft.date)}</strong>
             </span>
-            <FactChevron />
+            <FactChevron expanded={activeShortcut === 'dateTime'} />
           </button>
           <button type="button" className="pb-createEditor__fact" onClick={(event) => handleFactClick(event, 'dateTime')}>
             <ClockIcon ready={dateReady} />
@@ -568,7 +589,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               <span>Vrijeme</span>
               <strong>{formatPreviewTime(draft.time, draft.timeEnd)}</strong>
             </span>
-            <FactChevron />
+            <FactChevron expanded={activeShortcut === 'dateTime'} />
           </button>
           <button type="button" className="pb-createEditor__fact pb-createEditor__fact--wide" onClick={(event) => handleFactClick(event, 'location')}>
             <PinIcon ready={locationReady} />
@@ -576,7 +597,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               <span>Lokacija</span>
               <strong>{location}</strong>
             </span>
-            <FactChevron />
+            <FactChevron expanded={activeShortcut === 'location'} />
           </button>
         </div>
       </Card>
@@ -597,7 +618,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             </div>
             <div className="pb-createEditor__cardMeta">
               <span className={getStatusChipClass(themeStatus.tone)}>{themeStatus.label}</span>
-              <EditorChevron />
+              <EditorChevron expanded={activeShortcut === 'theme'} />
             </div>
           </div>
           <div className="pb-createEditor__themePreviewRow">
@@ -645,7 +666,7 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               </div>
               <div className="pb-createEditor__cardMeta">
                 <span className={getStatusChipClass(wishlistStatus.tone)}>{wishlistStatus.label}</span>
-                <EditorChevron />
+                <EditorChevron expanded={activeShortcut === 'wishlist'} />
               </div>
             </div>
             <p className="pb-createEditor__bodyText">

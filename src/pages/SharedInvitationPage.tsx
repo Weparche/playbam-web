@@ -1,6 +1,12 @@
 ﻿import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
+import FloatingEditPanel from '../components/create/FloatingEditPanel'
+import InvitationMainEditor from '../components/create/InvitationMainEditor'
+import QuickDateTimeEditor from '../components/create/QuickDateTimeEditor'
+import QuickLocationEditor from '../components/create/QuickLocationEditor'
+import QuickRSVPEditor from '../components/create/QuickRSVPEditor'
+import QuickThemeEditor from '../components/create/QuickThemeEditor'
 import InvitationCard from '../components/invitation/InvitationCard'
 import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGuest'
 import { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
@@ -24,6 +30,7 @@ import {
   getPublicInvitation,
   isApiError,
   listMembershipRequests,
+  updateInvitation,
   reserveInvitationWishlistItem,
   reviewMembershipRequest,
   saveRsvp,
@@ -32,14 +39,24 @@ import {
   type FamilyProfilePayload,
   type FamilyProfileResponse,
   type InvitationAccess,
+  type InvitationPartyDetails,
   type InvitationRsvp,
   type InvitationWishlistItem,
   type InvitationWishlistPayload,
   type MembershipRequest,
   type PublicInvitation,
+  type UpdateInvitationPayload,
 } from '../lib/invitationApi'
 import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
 import type { TemporaryWebIdentity } from '../lib/tempWebIdentity'
+import {
+  buildTimeRangeValue,
+  DEFAULT_CREATE_DRAFT,
+  normalizeCreateTheme,
+  normalizeTitleFont,
+  type InvitationCreateDraft,
+  type ShortcutId,
+} from '../components/create/createTypes'
 
 type WishlistDraft = {
   title: string
@@ -48,6 +65,12 @@ type WishlistDraft = {
   priceLabel: string
   imageUrl: string
   priorityOrder: string
+}
+
+type PartyDetailsDraft = {
+  parkingLocation: string
+  cafeLocation: string
+  extraDetails: string
 }
 
 function createEmptyDraft(parentName = ''): FamilyProfileDraft {
@@ -82,6 +105,87 @@ function createWishlistDraft(item?: InvitationWishlistItem | null): WishlistDraf
     priceLabel: item?.priceLabel ?? '',
     imageUrl: item?.imageUrl ?? '',
     priorityOrder: item ? String(item.priorityOrder) : '0',
+  }
+}
+
+function parseInvitationTimeRange(timeValue: string) {
+  const [rawStart = '', rawEnd = ''] = timeValue.split('-')
+  const start = rawStart.trim()
+  const end = rawEnd.trim()
+
+  return {
+    time: start,
+    timeEnd: end || start,
+  }
+}
+
+function splitInvitationLocation(locationValue: string) {
+  const parts = locationValue
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean)
+
+  if (parts.length <= 1) {
+    return {
+      locationName: locationValue.trim(),
+      locationAddress: '',
+    }
+  }
+
+  return {
+    locationName: parts[0],
+    locationAddress: parts.slice(1).join(', '),
+  }
+}
+
+function createDraftFromInvitation(invitation: PublicInvitation): InvitationCreateDraft {
+  const { time, timeEnd } = parseInvitationTimeRange(invitation.time)
+  const { locationName, locationAddress } = splitInvitationLocation(invitation.location)
+
+  return {
+    ...DEFAULT_CREATE_DRAFT,
+    title: invitation.title,
+    celebrantName: invitation.celebrantName,
+    titleFont: normalizeTitleFont(typeof invitation.titleFont === 'string' ? invitation.titleFont : DEFAULT_CREATE_DRAFT.titleFont),
+    date: invitation.date,
+    time,
+    timeEnd,
+    locationName,
+    locationAddress,
+    locationType: locationName.toLowerCase().includes('igraonica') ? 'Igraonica / lokal' : DEFAULT_CREATE_DRAFT.locationType,
+    message: invitation.message ?? '',
+    theme: normalizeCreateTheme(invitation.theme || invitation.coverImage || DEFAULT_CREATE_DRAFT.theme),
+    wishlistItems: [],
+  }
+}
+
+function createPartyDetailsDraft(details?: InvitationPartyDetails | null): PartyDetailsDraft {
+  return {
+    parkingLocation: details?.parkingLocation ?? '',
+    cafeLocation: details?.cafeLocation ?? '',
+    extraDetails: details?.extraDetails ?? '',
+  }
+}
+
+function buildInvitationUpdatePayload(
+  draft: InvitationCreateDraft,
+  partyDetails: PartyDetailsDraft,
+): UpdateInvitationPayload {
+  return {
+    title: draft.title.trim(),
+    celebrantName: draft.celebrantName.trim() || draft.title.trim() || 'Slavljenik',
+    titleFont: draft.titleFont,
+    date: draft.date,
+    time: buildTimeRangeValue(draft.time, draft.timeEnd),
+    location: [draft.locationName.trim(), draft.locationAddress.trim()].filter(Boolean).join(', '),
+    message: draft.message.trim() || null,
+    coverImage: draft.theme,
+    theme: draft.theme,
+    partyDetails: {
+      parkingLocation: partyDetails.parkingLocation.trim() || null,
+      cafeLocation: partyDetails.cafeLocation.trim() || null,
+      extraDetails: partyDetails.extraDetails.trim() || null,
+    },
   }
 }
 
@@ -124,6 +228,7 @@ function getDeleteErrorMessage(error: unknown) {
 export default function SharedInvitationPage() {
   const { token = '' } = useParams()
   const { user, login, logout } = useAuth()
+  const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [hostToken, setHostToken] = useState(() => readStoredHostToken())
   const [hostTokenDraft, setHostTokenDraft] = useState('')
   const [invitation, setInvitation] = useState<PublicInvitation | null>(null)
@@ -161,9 +266,17 @@ export default function SharedInvitationPage() {
   const [savingWishlistItem, setSavingWishlistItem] = useState(false)
   const [guestModalOpen, setGuestModalOpen] = useState(false)
   const [hostRequestsOpen, setHostRequestsOpen] = useState(false)
+  const [hostUpdateOpen, setHostUpdateOpen] = useState(true)
+  const [hostPartyDetailsOpen, setHostPartyDetailsOpen] = useState(true)
   const [hostWishlistOpen, setHostWishlistOpen] = useState(false)
   const [hostAddGiftOpen, setHostAddGiftOpen] = useState(false)
   const [selectedHostRequest, setSelectedHostRequest] = useState<MembershipRequest | null>(null)
+  const [hostEditorDraft, setHostEditorDraft] = useState<InvitationCreateDraft>(DEFAULT_CREATE_DRAFT)
+  const [hostPartyDetailsDraft, setHostPartyDetailsDraft] = useState<PartyDetailsDraft>(createPartyDetailsDraft())
+  const [hostEditorShortcut, setHostEditorShortcut] = useState<ShortcutId | null>(null)
+  const [savingHostInvitation, setSavingHostInvitation] = useState(false)
+  const [hostUpdateError, setHostUpdateError] = useState('')
+  const [hostUpdateNotice, setHostUpdateNotice] = useState('')
 
   useEffect(() => {
     setIdentityDraft({
@@ -207,6 +320,15 @@ export default function SharedInvitationPage() {
     }
   }, [token])
 
+  useEffect(() => {
+    if (!invitation) {
+      return
+    }
+
+    setHostEditorDraft(createDraftFromInvitation(invitation))
+    setHostPartyDetailsDraft(createPartyDetailsDraft(invitation.partyDetails))
+  }, [invitation])
+
   const hasFamilyProfile = Boolean(familyProfile?.profile)
   const hasHostSession = Boolean(hostToken)
   const isHost = access?.isHost ?? false
@@ -243,6 +365,24 @@ export default function SharedInvitationPage() {
 
   const openGuestFlow = () => {
     setGuestModalOpen(true)
+  }
+
+  const updateHostField = <K extends keyof InvitationCreateDraft>(field: K, value: InvitationCreateDraft[K]) => {
+    setHostEditorDraft((current) => ({
+      ...current,
+      [field]: field === 'rsvpEnabled' ? true : value,
+    }))
+    setHostUpdateError('')
+    setHostUpdateNotice('')
+  }
+
+  const updateHostPartyDetails = <K extends keyof PartyDetailsDraft>(field: K, value: PartyDetailsDraft[K]) => {
+    setHostPartyDetailsDraft((current) => ({
+      ...current,
+      [field]: value,
+    }))
+    setHostUpdateError('')
+    setHostUpdateNotice('')
   }
 
   const handleToggleGuestChild = (childId: string, checked: boolean) => {
@@ -509,6 +649,46 @@ export default function SharedInvitationPage() {
     setFamilyProfile(null)
   }
 
+  const handleHostInvitationSave = async () => {
+    if (!invitation || (!user && !hasHostSession)) {
+      return
+    }
+
+    if (
+      !hostEditorDraft.title.trim() ||
+      !hostEditorDraft.date.trim() ||
+      !hostEditorDraft.time.trim() ||
+      !hostEditorDraft.timeEnd.trim() ||
+      !hostEditorDraft.locationName.trim()
+    ) {
+      setHostUpdateError('Upiši naslov, datum, vrijeme od-do i naziv lokacije.')
+      return
+    }
+
+    if (hostEditorDraft.timeEnd <= hostEditorDraft.time) {
+      setHostUpdateError('Vrijeme završetka mora biti nakon vremena početka.')
+      return
+    }
+
+    setSavingHostInvitation(true)
+    setHostUpdateError('')
+    setHostUpdateNotice('')
+
+    try {
+      const updatedInvitation = await updateInvitation(
+        invitation.id,
+        buildInvitationUpdatePayload(hostEditorDraft, hostPartyDetailsDraft),
+        user ?? null,
+      )
+      setInvitation(updatedInvitation)
+      setHostUpdateNotice('Pozivnica je ažurirana.')
+    } catch {
+      setHostUpdateError('Spremanje promjena trenutno nije uspjelo.')
+    } finally {
+      setSavingHostInvitation(false)
+    }
+  }
+
   const handleProfileSave = async () => {
     const parentName = profileDraft.parentName.trim()
     const children = profileDraft.children
@@ -756,7 +936,7 @@ export default function SharedInvitationPage() {
   }
 
   const handleWishlistSave = async () => {
-    if (!user || !invitation) {
+    if (!invitation || (!user && !hasHostSession)) {
       return
     }
 
@@ -771,13 +951,14 @@ export default function SharedInvitationPage() {
     setWishlistError('')
 
     try {
+      const identity = user ?? undefined
       if (editingWishlistItemId) {
-        await updateInvitationWishlistItem(invitation.id, editingWishlistItemId, payload, user)
+        await updateInvitationWishlistItem(invitation.id, editingWishlistItemId, payload, identity)
       } else {
-        await createInvitationWishlistItem(invitation.id, payload, user)
+        await createInvitationWishlistItem(invitation.id, payload, identity)
       }
       resetWishlistForm()
-      await refreshWishlist(user)
+      await refreshWishlist(identity)
     } catch {
       setWishlistFormError('Spremanje želje trenutno nije uspjelo.')
     } finally {
@@ -792,7 +973,7 @@ export default function SharedInvitationPage() {
   }
 
   const handleWishlistDelete = async (item: InvitationWishlistItem) => {
-    if (!user || !invitation) {
+    if (!invitation || (!user && !hasHostSession)) {
       return
     }
 
@@ -800,11 +981,12 @@ export default function SharedInvitationPage() {
     setWishlistError('')
 
     try {
-      await deleteInvitationWishlistItem(invitation.id, item.id, user)
+      const identity = user ?? undefined
+      await deleteInvitationWishlistItem(invitation.id, item.id, identity)
       if (editingWishlistItemId === item.id) {
         resetWishlistForm()
       }
-      await refreshWishlist(user)
+      await refreshWishlist(identity)
     } catch (caughtError) {
       setWishlistError(getDeleteErrorMessage(caughtError))
     } finally {
@@ -813,7 +995,7 @@ export default function SharedInvitationPage() {
   }
 
   const handleHostReleaseReservation = async (item: InvitationWishlistItem) => {
-    if (!user || !invitation) {
+    if (!invitation || (!user && !hasHostSession)) {
       return
     }
 
@@ -821,12 +1003,64 @@ export default function SharedInvitationPage() {
     setWishlistError('')
 
     try {
-      await cancelInvitationWishlistReservation(invitation.id, item.id, user)
-      await refreshWishlist(user)
+      const identity = user ?? undefined
+      await cancelInvitationWishlistReservation(invitation.id, item.id, identity)
+      await refreshWishlist(identity)
     } catch {
       setWishlistError('Otpuštanje rezervacije trenutno nije uspjelo.')
     } finally {
       setWishlistActionId(null)
+    }
+  }
+
+  const renderHostEditorPanel = () => {
+    switch (hostEditorShortcut) {
+      case 'dateTime':
+        return (
+          <FloatingEditPanel
+            open
+            title="Datum i vrijeme"
+            description="Brzi picker za osnovne informacije koje gost vidi prve."
+            onClose={() => setHostEditorShortcut(null)}
+          >
+            <QuickDateTimeEditor draft={hostEditorDraft} today={today} onFieldChange={updateHostField} />
+          </FloatingEditPanel>
+        )
+      case 'location':
+        return (
+          <FloatingEditPanel
+            open
+            title="Lokacija"
+            description="Naziv lokacije i dodatni detalji dolaska."
+            onClose={() => setHostEditorShortcut(null)}
+          >
+            <QuickLocationEditor draft={hostEditorDraft} onFieldChange={updateHostField} />
+          </FloatingEditPanel>
+        )
+      case 'theme':
+        return (
+          <FloatingEditPanel
+            open
+            title="Tema"
+            description="Promijeni naslovnicu pozivnice."
+            onClose={() => setHostEditorShortcut(null)}
+          >
+            <QuickThemeEditor draft={hostEditorDraft} onThemeChange={(value) => updateHostField('theme', value)} />
+          </FloatingEditPanel>
+        )
+      case 'rsvp':
+        return (
+          <FloatingEditPanel
+            open
+            title="RSVP ikone"
+            description="Odaberi set ikona za potvrdu dolaska."
+            onClose={() => setHostEditorShortcut(null)}
+          >
+            <QuickRSVPEditor draft={hostEditorDraft} onFieldChange={updateHostField} />
+          </FloatingEditPanel>
+        )
+      default:
+        return null
     }
   }
 
@@ -924,6 +1158,7 @@ export default function SharedInvitationPage() {
 
               {user && !loadingPrivateState && hasPrivateAccess && !isHost ? (
                 <PrivateInvitationGuest
+                  invitation={invitation}
                   wishlistLoading={wishlistLoading}
                   wishlistError={wishlistError}
                   wishlistItems={wishlistItems}
@@ -989,6 +1224,148 @@ export default function SharedInvitationPage() {
 
               {(user || hasHostSession) && !loadingPrivateState && isHost ? (
                 <div className="pb-invitePrivateStack pb-invitePrivateStack--host">
+                  <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                    <button
+                      id="host-update-toggle"
+                      type="button"
+                      className={`pb-privateToggle ${hostUpdateOpen ? 'is-open' : ''}`}
+                      onClick={() => setHostUpdateOpen((current) => !current)}
+                      aria-expanded={hostUpdateOpen}
+                    >
+                      <span className="pb-privateToggle__copy">
+                        <span className="pb-privateToggle__eyebrow">Organizator</span>
+                        <span className="pb-privateToggle__title">Ažuriraj pozivnicu</span>
+                      </span>
+                      <span className="pb-privateToggle__arrow" aria-hidden>
+                        →
+                      </span>
+                    </button>
+
+                    {hostUpdateOpen ? (
+                      <div className="pb-privateAccordionBody">
+                        <p className="pb-flowCard__text">
+                          Isti editor kao kod izrade pozivnice, samo bez desnog previewa. Ovdje uređuješ naslov, temu,
+                          datum i lokaciju.
+                        </p>
+
+                        <div className="pb-hostUpdateEditor">
+                          <InvitationMainEditor
+                            draft={hostEditorDraft}
+                            onFieldChange={updateHostField}
+                            onOpenShortcut={setHostEditorShortcut}
+                            hideWishlistCard
+                          />
+                        </div>
+
+                        <div className="pb-hostEditorActions">
+                          <Button type="button" variant="amber" onClick={handleHostInvitationSave} disabled={savingHostInvitation}>
+                            {savingHostInvitation ? 'Spremamo...' : 'Spremi promjene'}
+                          </Button>
+                        </div>
+
+                        {hostUpdateError ? <div className="pb-inlineNote pb-inlineNote--error">{hostUpdateError}</div> : null}
+                        {hostUpdateNotice ? <div className="pb-inlineNote pb-inlineNote--info">{hostUpdateNotice}</div> : null}
+                      </div>
+                    ) : null}
+                  </Card>
+
+                  <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                    <button
+                      id="host-details-toggle"
+                      type="button"
+                      className={`pb-privateToggle ${hostPartyDetailsOpen ? 'is-open' : ''}`}
+                      onClick={() => setHostPartyDetailsOpen((current) => !current)}
+                      aria-expanded={hostPartyDetailsOpen}
+                    >
+                      <span className="pb-privateToggle__copy">
+                        <span className="pb-privateToggle__eyebrow">Organizator</span>
+                        <span className="pb-privateToggle__title">Detalji tuluma</span>
+                      </span>
+                      <span className="pb-privateToggle__arrow" aria-hidden>
+                        →
+                      </span>
+                    </button>
+
+                    {hostPartyDetailsOpen ? (
+                      <div className="pb-privateAccordionBody">
+                        <section className="pb-privateDetails pb-hostDetailsEditor" aria-labelledby="host-party-details-title">
+                          <header className="pb-invitePrivateCard__header">
+                            <h3 id="host-party-details-title" className="pb-invitePrivateCard__title">
+                              Detalji tuluma
+                            </h3>
+                            <p className="pb-invitePrivateCard__subtitle">
+                              Ovo se prikazuje gostima u privatnom dijelu pozivnice.
+                            </p>
+                          </header>
+
+                          <div className="pb-formGrid">
+                            <label className="pb-formField">
+                              <span className="pb-formLabel">Lokacija parkinga</span>
+                              <input
+                                className="pb-input"
+                                type="text"
+                                value={hostPartyDetailsDraft.parkingLocation}
+                                onChange={(event) => updateHostPartyDetails('parkingLocation', event.target.value)}
+                                placeholder="npr. parking iza igraonice, ulaz iz Lastovske"
+                              />
+                            </label>
+
+                            <label className="pb-formField">
+                              <span className="pb-formLabel">Lokacija kafića</span>
+                              <input
+                                className="pb-input"
+                                type="text"
+                                value={hostPartyDetailsDraft.cafeLocation}
+                                onChange={(event) => updateHostPartyDetails('cafeLocation', event.target.value)}
+                                placeholder="npr. roditelji mogu pričekati u obližnjem kafiću"
+                              />
+                            </label>
+
+                            <label className="pb-formField pb-hostDetailsEditor__field--wide">
+                              <span className="pb-formLabel">Ostali detalji po želji</span>
+                              <textarea
+                                className="pb-input pb-hostDetailsEditor__textarea"
+                                value={hostPartyDetailsDraft.extraDetails}
+                                onChange={(event) => updateHostPartyDetails('extraDetails', event.target.value)}
+                                placeholder="npr. ulaz na bočna vrata, ponesite čarape, roditelji dolaze 15 min prije završetka..."
+                              />
+                            </label>
+                          </div>
+
+                          <div className="pb-partyFacts">
+                            {hostPartyDetailsDraft.parkingLocation.trim() ? (
+                              <div className="pb-partyFact">
+                                <div className="pb-partyFact__label">Parking</div>
+                                <div className="pb-partyFact__value">{hostPartyDetailsDraft.parkingLocation.trim()}</div>
+                              </div>
+                            ) : null}
+                            {hostPartyDetailsDraft.cafeLocation.trim() ? (
+                              <div className="pb-partyFact">
+                                <div className="pb-partyFact__label">Kafić</div>
+                                <div className="pb-partyFact__value">{hostPartyDetailsDraft.cafeLocation.trim()}</div>
+                              </div>
+                            ) : null}
+                            {hostPartyDetailsDraft.extraDetails.trim() ? (
+                              <div className="pb-partyFact">
+                                <div className="pb-partyFact__label">Ostali detalji</div>
+                                <div className="pb-partyFact__value">{hostPartyDetailsDraft.extraDetails.trim()}</div>
+                              </div>
+                            ) : null}
+                          </div>
+
+                          <div className="pb-hostEditorActions">
+                            <Button type="button" variant="amber" onClick={handleHostInvitationSave} disabled={savingHostInvitation}>
+                              {savingHostInvitation ? 'Spremamo...' : 'Spremi detalje'}
+                            </Button>
+                          </div>
+
+                          {hostUpdateError ? <div className="pb-inlineNote pb-inlineNote--error">{hostUpdateError}</div> : null}
+                          {hostUpdateNotice ? <div className="pb-inlineNote pb-inlineNote--info">{hostUpdateNotice}</div> : null}
+                        </section>
+                      </div>
+                    ) : null}
+                  </Card>
+
                   <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
                     <button
                       id="host-requests-toggle"
@@ -1113,6 +1490,7 @@ export default function SharedInvitationPage() {
                   onRemove={() => void handleReview(selectedHostRequest.id, 'reject')}
                 />
               ) : null}
+              {renderHostEditorPanel()}
             </>
           ) : null}
         </div>

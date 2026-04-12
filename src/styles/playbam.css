@@ -1760,7 +1760,7 @@
 
 .pb-invitePrivateStack--host {
   gap: clamp(0.65rem, 2.2vw, 0.9rem);
-  margin: clamp(-11.8rem, -28vw, -9.2rem) auto 0;
+  margin: clamp(-9.6rem, -23vw, -7.2rem) auto 0;
 }
 
 .pb-invitePrivateStack > * {
@@ -1832,6 +1832,8 @@
 #private-details-toggle::before,
 #private-wishlist-toggle::before,
 #private-venue-toggle::before,
+#host-update-toggle::before,
+#host-details-toggle::before,
 #host-requests-toggle::before,
 #host-wishlist-toggle::before {
   content: '';
@@ -1937,6 +1939,14 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46d8' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 7h8'/%3E%3Cpath d='M8 12h8'/%3E%3Cpath d='M8 17h5'/%3E%3Cpath d='M5 7h.01'/%3E%3Cpath d='M5 12h.01'/%3E%3Cpath d='M5 17h.01'/%3E%3C/svg%3E");
 }
 
+#host-update-toggle::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46d8' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5V15l10.8-10.8a1.8 1.8 0 012.5 0l2.3 2.3a1.8 1.8 0 010 2.5L8.8 19.5H4z'/%3E%3Cpath d='M13.5 5.5l5 5'/%3E%3C/svg%3E");
+}
+
+#host-details-toggle::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46d8' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4h10'/%3E%3Cpath d='M5 9h14'/%3E%3Cpath d='M7 14h10'/%3E%3Cpath d='M9 19h6'/%3E%3C/svg%3E");
+}
+
 #host-wishlist-toggle::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46d8' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20s-6.5-4.4-8.5-8.1C1.8 8.7 3.5 5 7.2 5c2 0 3.2 1 4.8 2.7C13.6 6 14.8 5 16.8 5c3.7 0 5.4 3.7 3.7 6.9C18.5 15.6 12 20 12 20z'/%3E%3C/svg%3E");
 }
@@ -1998,6 +2008,33 @@
   padding: 0 1rem 1rem;
   display: grid;
   gap: 1rem;
+}
+
+.pb-hostUpdateEditor {
+  width: 100%;
+}
+
+.pb-hostUpdateEditor .pb-createEditor {
+  gap: 1rem;
+}
+
+.pb-hostEditorActions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.pb-hostDetailsEditor {
+  display: grid;
+  gap: 1rem;
+}
+
+.pb-hostDetailsEditor__field--wide {
+  grid-column: 1 / -1;
+}
+
+.pb-hostDetailsEditor__textarea {
+  min-height: 8rem;
+  resize: vertical;
 }
 
 .pb-privateDetails,

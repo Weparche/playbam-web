@@ -28,6 +28,7 @@ type Props = {
   draft: InvitationCreateDraft
   onFieldChange: <K extends keyof InvitationCreateDraft>(field: K, value: InvitationCreateDraft[K]) => void
   onOpenShortcut: (shortcut: ShortcutId) => void
+  hideWishlistCard?: boolean
 }
 
 type StatusTone = 'ready' | 'accent' | 'pending' | 'muted'
@@ -146,7 +147,7 @@ function getFontScrollStep(scroller: HTMLDivElement) {
   return Math.max(naturalStep, minimumStep)
 }
 
-export default function InvitationMainEditor({ draft, onFieldChange, onOpenShortcut }: Props) {
+export default function InvitationMainEditor({ draft, onFieldChange, onOpenShortcut, hideWishlistCard = false }: Props) {
   const fontScrollerRef = useRef<HTMLDivElement | null>(null)
   const dragPointerIdRef = useRef<number | null>(null)
   const dragStartXRef = useRef(0)
@@ -524,30 +525,32 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
         </Card>
         */}
 
-        <Card
-          className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--wishlist"
-          role="button"
-          tabIndex={0}
-          aria-label="Uredi wishlist i dodatke"
-          onClick={() => onOpenShortcut('wishlist')}
-          onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('wishlist'))}
-        >
-          <div className="pb-createEditor__cardHeader">
-            <div>
-              <span className="pb-createEditor__eyebrow"><GiftIcon /> Pokloni</span>
-              <h3 className="pb-createEditor__sectionTitle">Wishlist i dodatci</h3>
+        {!hideWishlistCard ? (
+          <Card
+            className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--wishlist"
+            role="button"
+            tabIndex={0}
+            aria-label="Uredi wishlist i dodatke"
+            onClick={() => onOpenShortcut('wishlist')}
+            onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('wishlist'))}
+          >
+            <div className="pb-createEditor__cardHeader">
+              <div>
+                <span className="pb-createEditor__eyebrow"><GiftIcon /> Pokloni</span>
+                <h3 className="pb-createEditor__sectionTitle">Wishlist i dodatci</h3>
+              </div>
+              <div className="pb-createEditor__cardMeta">
+                <span className={getStatusChipClass(wishlistStatus.tone)}>{wishlistStatus.label}</span>
+                <EditorChevron />
+              </div>
             </div>
-            <div className="pb-createEditor__cardMeta">
-              <span className={getStatusChipClass(wishlistStatus.tone)}>{wishlistStatus.label}</span>
-              <EditorChevron />
-            </div>
-          </div>
-          <p className="pb-createEditor__bodyText">
-            {draft.wishlistEnabled
-              ? `${draft.wishlistItems.length} prijedloga poklona${draft.savingsEnabled ? ' + uključen grupni poklon' : ''}`
-              : 'Wishlist je trenutno isključen.'}
-          </p>
-        </Card>
+            <p className="pb-createEditor__bodyText">
+              {draft.wishlistEnabled
+                ? `${draft.wishlistItems.length} prijedloga poklona${draft.savingsEnabled ? ' + uključen grupni poklon' : ''}`
+                : 'Wishlist je trenutno isključen.'}
+            </p>
+          </Card>
+        ) : null}
 
         {/*
         <Card

@@ -1,9 +1,10 @@
 import { useState, type ChangeEvent } from 'react'
 
 import Button from '../ui/Button'
-import type { InvitationWishlistItem, InvitationWishlistPayload } from '../../lib/invitationApi'
+import type { InvitationWishlistItem, InvitationWishlistPayload, PublicInvitation } from '../../lib/invitationApi'
 
 type Props = {
+  invitation: PublicInvitation
   wishlistLoading: boolean
   wishlistError: string
   wishlistItems: InvitationWishlistItem[]
@@ -84,16 +85,6 @@ function resolveWishlistImageUrl(item: InvitationWishlistItem) {
   return null
 }
 
-const PARTY_DETAILS = [
-  { label: 'Tema rođendana', value: 'Svemirska avantura' },
-  { label: 'Pizza', value: '4 velike pizze za ekipu' },
-  { label: 'Torta', value: 'Čokoladna torta sa svemirskim ukrasima' },
-  { label: 'Grickalice', value: 'Kokice, flips i mini pereci' },
-  { label: 'Piće', value: 'Sokovi, voda i dječji kokteli' },
-  { label: 'Ples', value: 'Glazba i mini disco party' },
-  { label: 'Crtanje lica', value: 'Da, organizirano tijekom proslave' },
-]
-
 const VENUE_GALLERY = [
   'https://jogica.com.hr/wp-content/uploads/2026/04/20260216_175918.jpg',
   'https://jogica.com.hr/wp-content/uploads/2026/04/20260216_183628.jpg',
@@ -110,6 +101,7 @@ const VENUE_DETAILS = [
 ]
 
 export default function PrivateInvitationGuest({
+  invitation,
   wishlistLoading,
   wishlistError,
   wishlistItems,
@@ -199,6 +191,18 @@ export default function PrivateInvitationGuest({
   const selectedWishPurchaseLabel = selectedWishItem ? wishlistPurchaseLabel(selectedWishItem) : null
   const selectedVenueImageUrl = selectedVenueImageIndex !== null ? VENUE_GALLERY[selectedVenueImageIndex] : null
   const selectedVenueImageNumber = selectedVenueImageIndex !== null ? selectedVenueImageIndex + 1 : 0
+  const partyDetails = [
+    invitation.location?.trim() ? { label: 'Lokacija', value: invitation.location.trim() } : null,
+    invitation.partyDetails?.parkingLocation?.trim()
+      ? { label: 'Parking', value: invitation.partyDetails.parkingLocation.trim() }
+      : null,
+    invitation.partyDetails?.cafeLocation?.trim()
+      ? { label: 'Kafić', value: invitation.partyDetails.cafeLocation.trim() }
+      : null,
+    invitation.partyDetails?.extraDetails?.trim()
+      ? { label: 'Ostali detalji', value: invitation.partyDetails.extraDetails.trim() }
+      : null,
+  ].filter(Boolean) as Array<{ label: string; value: string }>
 
   const showPreviousVenueImage = () => {
     setSelectedVenueImageIndex((current) => {
@@ -257,14 +261,18 @@ export default function PrivateInvitationGuest({
                   </p>
                 </header>
 
-                <div className="pb-partyFacts">
-                  {PARTY_DETAILS.map((item) => (
-                    <div key={item.label} className="pb-partyFact">
-                      <div className="pb-partyFact__label">{item.label}</div>
-                      <div className="pb-partyFact__value">{item.value}</div>
-                    </div>
-                  ))}
-                </div>
+                {partyDetails.length > 0 ? (
+                  <div className="pb-partyFacts">
+                    {partyDetails.map((item) => (
+                      <div key={item.label} className="pb-partyFact">
+                        <div className="pb-partyFact__label">{item.label}</div>
+                        <div className="pb-partyFact__value">{item.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="pb-inlineNote pb-inlineNote--info">Organizator još nije dodao dodatne detalje tuluma.</div>
+                )}
               </section>
             </div>
           ) : null}

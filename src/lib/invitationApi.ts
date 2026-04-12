@@ -86,7 +86,14 @@ export type PublicInvitation = {
   message?: string | null
   coverImage?: string | null
   theme?: string | null
+  partyDetails?: InvitationPartyDetails | null
   webShareUrl: string
+}
+
+export type InvitationPartyDetails = {
+  parkingLocation?: string | null
+  cafeLocation?: string | null
+  extraDetails?: string | null
 }
 
 export type CreateInvitationPayload = {
@@ -99,6 +106,20 @@ export type CreateInvitationPayload = {
   message?: string | null
   coverImage?: string | null
   theme?: string | null
+  partyDetails?: InvitationPartyDetails | null
+}
+
+export type UpdateInvitationPayload = {
+  title: string
+  celebrantName: string
+  titleFont?: string | null
+  date: string
+  time: string
+  location: string
+  message?: string | null
+  coverImage?: string | null
+  theme?: string | null
+  partyDetails?: InvitationPartyDetails | null
 }
 
 export type CreateInvitationResponse = {
@@ -324,6 +345,18 @@ export function getPublicInvitation(token: string) {
 export function createInvitation(payload: CreateInvitationPayload, identity?: TemporaryWebIdentity | null) {
   return request<CreateInvitationResponse>('/api/invitations', {
     method: 'POST',
+    body: payload,
+    identity,
+  })
+}
+
+export function updateInvitation(
+  invitationId: string,
+  payload: UpdateInvitationPayload,
+  identity?: TemporaryWebIdentity | null,
+) {
+  return request<PublicInvitation>(`/api/invitations/${encodeURIComponent(invitationId)}`, {
+    method: 'PUT',
     body: payload,
     identity,
   })

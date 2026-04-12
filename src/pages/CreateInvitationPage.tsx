@@ -30,6 +30,7 @@ import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import { createInvitation } from '../lib/invitationApi'
 import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
+import { writeStoredTemporaryIdentity } from '../lib/tempWebIdentity'
 
 const LOCAL_STORAGE_KEY = 'playbam.quick-create.draft'
 const DEV_HOST_AUTH_TOKEN =
@@ -154,6 +155,7 @@ export default function CreateInvitationPage() {
       if (nextHostToken) {
         writeStoredHostToken(nextHostToken)
       }
+      writeStoredTemporaryIdentity(null)
 
       window.location.assign(`/pozivnica/${created.publicSlug || created.shareToken}`)
     } catch {

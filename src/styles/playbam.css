@@ -7909,13 +7909,13 @@
 .pb-inviteHero__accessCard {
   position: absolute;
   left: 50%;
-  bottom: 2.2%;
-  width: 66%;
+  bottom: 1.6%;
+  width: 62.4%;
   transform: translateX(-50%);
   display: flex;
   align-items: flex-start;
   gap: 0.55rem;
-  padding: 0.85rem 0.95rem;
+  padding: 0.74rem 0.84rem;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 12px 24px rgba(184, 167, 226, 0.18);

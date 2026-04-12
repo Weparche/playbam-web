@@ -3841,8 +3841,29 @@
 
 .pb-createStudio__previewDialog {
   width: min(92vw, 26rem);
+  max-height: min(90vh, 57.6rem);
   display: grid;
   gap: 0.75rem;
+  overflow-y: auto;
+}
+
+.pb-createStudio__previewPopup {
+  width: 100%;
+}
+
+.pb-createStudio__previewPopup .pb-inviteHero__infoBlock {
+  top: 38.4%;
+}
+
+.pb-createStudio__previewPopup .pb-inviteHero__accessCard {
+  width: 62.4%;
+  padding: 0.74rem 0.84rem;
+}
+
+.pb-createStudio__previewPopup .pb-inviteHero__accessText {
+  white-space: nowrap;
+  font-size: 0.67rem;
+  line-height: 1.15;
 }
 
 .pb-createStudio__previewClose {
@@ -5490,6 +5511,10 @@
   animation: pbFloatingPanelIn 180ms ease;
 }
 
+.pb-floatingPanel--preview {
+  max-height: min(96vh, 52.8rem);
+}
+
 .pb-floatingPanel__header {
   position: sticky;
   top: 0;
@@ -6243,9 +6268,11 @@
     position: sticky;
     top: 6rem;
     align-self: start;
+    min-height: min(86rem, calc(100vh - 5.5rem));
   }
 
   .pb-createShell__preview .pb-previewCard {
+    min-height: 100%;
     padding: 0.9rem;
     border-radius: 1.45rem;
     background: rgba(255, 255, 255, 0.86);

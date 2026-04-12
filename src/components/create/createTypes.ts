@@ -97,11 +97,11 @@ export const TITLE_FONT_OPTIONS = [
 
 export const RSVP_MOOD_OPTIONS = [
   { id: 'party', label: 'Party', description: 'Najrazigraniji set za klasični rođendan.', symbols: { going: '🥳', maybe: '🤔', not_going: '💔' } },
-  { id: 'sweet', label: 'Sweet', description: 'Mekši, slatki mood s više charactera.', symbols: { going: '🧁', maybe: '💭', not_going: '🥲' } },
+  { id: 'sweet', label: 'Sweet', description: 'Mekši, slatki mood s više karaktera.', symbols: { going: '🧁', maybe: '💭', not_going: '🥲' } },
   { id: 'icons', label: 'Icons', description: 'Čistiji simboli za uredniji preview.', symbols: { going: '✦', maybe: '◌', not_going: '✕' } },
   { id: 'spark', label: 'Spark', description: 'Malo sjaja i više editorial osjećaja.', symbols: { going: '✨', maybe: '👀', not_going: '🌧️' } },
   { id: 'balloon', label: 'Baloni', description: 'Baloni i jasni emoji odgovori.', symbols: { going: '🎈', maybe: '🤷', not_going: '🙅' } },
-  { id: 'thumbs', label: 'Palčevi', description: 'Palac gore / neutaralno / palac dolje.', symbols: { going: '👍', maybe: '🤷', not_going: '👎' } },
+  { id: 'thumbs', label: 'Palčevi', description: 'Palac gore / neutralno / palac dolje.', symbols: { going: '👍', maybe: '🤷', not_going: '👎' } },
   { id: 'check', label: 'Kvačice', description: 'Da / upit / ne u obliku oznaka.', symbols: { going: '✅', maybe: '❔', not_going: '❌' } },
   { id: 'zoo', label: 'Životinje', description: 'Zaigrani set sa životinjama.', symbols: { going: '🐻', maybe: '🦊', not_going: '🐢' } },
   { id: 'sport', label: 'Sport', description: 'Za sportaše i aktivne tulume.', symbols: { going: '⚽', maybe: '🏃', not_going: '🤕' } },

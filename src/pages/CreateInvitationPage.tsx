@@ -29,8 +29,13 @@ import Navbar from '../components/layout/Navbar'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import { createInvitation } from '../lib/invitationApi'
+import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
 
 const LOCAL_STORAGE_KEY = 'playbam.quick-create.draft'
+const DEV_HOST_AUTH_TOKEN =
+  typeof import.meta.env.VITE_DEV_HOST_AUTH_TOKEN === 'string'
+    ? import.meta.env.VITE_DEV_HOST_AUTH_TOKEN.trim()
+    : ''
 
 function readStoredDraft() {
   if (typeof window === 'undefined') {
@@ -143,7 +148,12 @@ export default function CreateInvitationPage() {
         message: draft.message.trim() || undefined,
         coverImage: draft.theme,
         theme: draft.theme,
-      })
+      }, null)
+
+      const nextHostToken = readStoredHostToken() || DEV_HOST_AUTH_TOKEN
+      if (nextHostToken) {
+        writeStoredHostToken(nextHostToken)
+      }
 
       window.location.assign(`/pozivnica/${created.publicSlug || created.shareToken}`)
     } catch {
@@ -249,10 +259,13 @@ export default function CreateInvitationPage() {
           <FloatingEditPanel
             open
             title="Pregled"
-            description="Brzi pregled kako pozivnica izgleda gostu bez napuštanja editora."
+            description="Brzi pregled kako pozivnica izgleda gostu."
+            panelClassName="pb-floatingPanel--preview"
             onClose={() => setActiveShortcut(null)}
           >
-            <InvitationLivePreview draft={draft} compact />
+            <div className="pb-createStudio__previewPopup">
+              <InvitationLivePreview draft={draft} compact />
+            </div>
           </FloatingEditPanel>
         )
       default:

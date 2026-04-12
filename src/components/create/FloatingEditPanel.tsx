@@ -6,9 +6,10 @@ type Props = {
   description?: string
   onClose: () => void
   children: ReactNode
+  panelClassName?: string
 }
 
-export default function FloatingEditPanel({ open, title, description, onClose, children }: Props) {
+export default function FloatingEditPanel({ open, title, description, onClose, children, panelClassName = '' }: Props) {
   const panelRef = useRef<HTMLDivElement | null>(null)
   const [closing, setClosing] = useState(false)
 
@@ -49,7 +50,7 @@ export default function FloatingEditPanel({ open, title, description, onClose, c
   if (!open && !closing) return null
 
   const backdropClass = `pb-floatingPanel__backdrop${closing ? ' is-closing' : ''}`
-  const panelClass = `pb-floatingPanel${closing ? ' is-closing' : ''}`
+  const panelClass = `pb-floatingPanel${panelClassName ? ` ${panelClassName}` : ''}${closing ? ' is-closing' : ''}`
 
   return (
     <div className={backdropClass}>

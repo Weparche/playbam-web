@@ -53,24 +53,17 @@ export function formatInvitationTimeText(timeValue: string) {
   return `${normalized}h - ${endHour}:${endMinute}h`
 }
 
+/** Jedan red naslova za hero/preview. Znak `|` tretira se kao razmak. */
 export function buildInvitationHeroTitle(title: string, celebrantName: string) {
   const normalized = title.trim().replace(/\s+/g, ' ')
-  if (normalized.includes('|')) {
-    return normalized
-  }
+  const merged = normalized.replace(/\|/g, ' ').replace(/\s+/g, ' ').trim()
 
-  if (normalized) {
-    const words = normalized.split(' ')
-    if (words.length <= 2) {
-      return normalized
-    }
-
-    const middleIndex = Math.ceil(words.length / 2)
-    return `${words.slice(0, middleIndex).join(' ')}|${words.slice(middleIndex).join(' ')}`
+  if (merged) {
+    return merged
   }
 
   const fallbackName = celebrantName.trim() || 'Slavljenik'
-  return `${fallbackName} slavi|rođendan!`
+  return `${fallbackName} slavi rođendan!`
 }
 
 export function resolveInvitationBackgroundImage(coverImage?: MaybeString, theme?: MaybeString) {

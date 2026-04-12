@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Card from '../ui/Card'
-import { resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
+import { buildInvitationHeroTitle, resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
+import { useInvitationTitleAutoFit } from '../invitation/useInvitationTitleAutoFit'
 import { proxyImageUrl } from '../../lib/invitationApi'
 import {
   buildPreviewLocation,
@@ -22,7 +23,8 @@ type Props = {
 }
 
 export default function InvitationPreviewCard({ draft, compact }: Props) {
-  const title = draft.title.trim() || 'Upiši naslov pozivnice'
+  const displayTitle =
+    buildInvitationHeroTitle(draft.title.trim() || '', draft.celebrantName).trim() || 'Upiši naslov pozivnice'
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
   const backgroundImage = resolveInvitationBackgroundImage(draft.theme, draft.theme)
   const titleFont = normalizeTitleFont(draft.titleFont)
@@ -31,6 +33,15 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
   const titleSize = normalizeTitleSize(draft.titleSize)
   const [flash, setFlash] = useState(false)
   const mountedRef = useRef(false)
+  const previewTitleRef = useRef<HTMLHeadingElement>(null)
+  const previewHeroTextRef = useRef<HTMLDivElement>(null)
+
+  useInvitationTitleAutoFit(previewTitleRef, null, previewHeroTextRef, 'preview', [
+    displayTitle,
+    titleFont,
+    titleOutline,
+    titleSize,
+  ])
 
   useEffect(() => {
     if (!mountedRef.current) {
@@ -63,13 +74,14 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
       <div className="pb-previewCard__hero">
         <img className="pb-previewCard__heroImage" src={backgroundImage} alt="" aria-hidden="true" />
         <img className="pb-previewCard__logo" src="/logo.png" alt="Playbam.hr" />
-        <div className="pb-previewCard__heroText">
+        <div ref={previewHeroTextRef} className="pb-previewCard__heroText">
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
           <h3
+            ref={previewTitleRef}
             className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}`}
             style={{ ['--pb-preview-title-color' as string]: getTitleColorValue(titleColor) }}
           >
-            {title}
+            {displayTitle}
           </h3>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react'
+import { useRef, useState, type CSSProperties } from 'react'
 
 import {
   getRsvpSymbol,
@@ -11,6 +11,7 @@ import {
   RSVP_GUEST_HEADLINE,
   type RsvpMood,
 } from '../create/createTypes'
+import { useInvitationTitleAutoFit } from './useInvitationTitleAutoFit'
 
 type Props = {
   celebrantTitle: string
@@ -103,15 +104,24 @@ export default function PublicInvitationHero({
   const normalizedTitleOutline = normalizeTitleOutline(titleOutline)
   const normalizedTitleSize = normalizeTitleSize(titleSize)
   const resolvedMood = normalizeRsvpMood(typeof rsvpMood === 'string' ? rsvpMood : null)
-  const [titlePrimary, titleSecondary = ''] = celebrantTitle.split('|')
+  const frameRef = useRef<HTMLDivElement>(null)
+  const titleWrapRef = useRef<HTMLElement>(null)
+  const heroTitleRef = useRef<HTMLHeadingElement>(null)
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venueText)}`
   const titleStyle = {
     ['--pb-invite-title-color' as string]: getTitleColorValue(normalizedTitleColor),
   } as CSSProperties
 
+  useInvitationTitleAutoFit(heroTitleRef, frameRef, titleWrapRef, 'hero', [
+    celebrantTitle,
+    normalizedTitleFont,
+    normalizedTitleOutline,
+    normalizedTitleSize,
+  ])
+
   return (
     <section className="pb-inviteHero pb-inviteHero--storybook" aria-label="Hero dio javne rođendanske pozivnice">
-      <div className="pb-inviteHero__frame pb-inviteHero__frame--storybook">
+      <div ref={frameRef} className="pb-inviteHero__frame pb-inviteHero__frame--storybook">
         <img
           className="pb-inviteHero__image pb-inviteHero__image--storybook"
           src={heroImage}
@@ -127,13 +137,13 @@ export default function PublicInvitationHero({
         <div className="pb-inviteHero__content pb-inviteHero__content--storybook">
           <img className="pb-inviteHero__logo" src="/logo.png" alt="Playbam.hr" />
 
-          <header className="pb-inviteHero__titleWrap pb-inviteHero__titleWrap--storybook">
+          <header ref={titleWrapRef} className="pb-inviteHero__titleWrap pb-inviteHero__titleWrap--storybook">
             <h1
+              ref={heroTitleRef}
               className={`pb-inviteHero__title pb-inviteHero__title--storybook pb-inviteHero__title--${normalizedTitleFont} pb-inviteHero__title--outline-${normalizedTitleOutline} pb-inviteHero__title--size-${normalizedTitleSize}`}
               style={titleStyle}
             >
-              <span className="pb-inviteHero__titleLine">{titlePrimary}</span>
-              {titleSecondary ? <span className="pb-inviteHero__titleLine">{titleSecondary}</span> : null}
+              {celebrantTitle}
             </h1>
           </header>
 

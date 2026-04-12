@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useId,
   useRef,
   useState,
   type ChangeEvent,
@@ -27,6 +28,8 @@ import {
   type InvitationCreateDraft,
   type ShortcutId,
 } from './createTypes'
+
+type TitleStylePanel = 'color' | 'outline' | 'size'
 
 type Props = {
   draft: InvitationCreateDraft
@@ -160,6 +163,8 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
   const [isDraggingFonts, setIsDraggingFonts] = useState(false)
   const [canScrollFontsLeft, setCanScrollFontsLeft] = useState(false)
   const [canScrollFontsRight, setCanScrollFontsRight] = useState(true)
+  const [titleStylePanel, setTitleStylePanel] = useState<TitleStylePanel | null>(null)
+  const titleStyleDialogTitleId = useId()
 
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
   const { titleReady, dateReady, locationReady } = buildCreateProgress(draft)
@@ -175,6 +180,28 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
   const wishlistStatus = draft.wishlistEnabled
     ? { label: draft.wishlistItems.length > 0 ? `${draft.wishlistItems.length} želje` : 'Wishlist uključen', tone: 'accent' as const }
     : { label: 'Isključen', tone: 'muted' as const }
+
+  const selectedTitleColor = TITLE_COLOR_OPTIONS.find((o) => o.id === draft.titleColor) ?? TITLE_COLOR_OPTIONS[0]
+  const selectedTitleOutline = TITLE_OUTLINE_OPTIONS.find((o) => o.id === draft.titleOutline) ?? TITLE_OUTLINE_OPTIONS[0]
+  const selectedTitleSize = TITLE_SIZE_OPTIONS.find((o) => o.id === draft.titleSize) ?? TITLE_SIZE_OPTIONS[0]
+
+  useEffect(() => {
+    if (!titleStylePanel) {
+      return undefined
+    }
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setTitleStylePanel(null)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = prevOverflow
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [titleStylePanel])
 
   useEffect(() => {
     const scroller = fontScrollerRef.current
@@ -313,6 +340,8 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
   }
 
   const heroThemeImage = resolveInvitationBackgroundImage(draft.theme, draft.theme)
+  const titleStyleSampleText =
+    draft.title.trim().length > 0 ? draft.title.trim().slice(0, 56) : 'Luka slavi 6. rođendan'
 
   return (
     <div className="pb-createEditor">
@@ -387,55 +416,57 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
               <FontStripChevron direction="right" />
             </button>
           </div>
-          <div className="pb-createEditor__titleStyleStack">
-            <div className="pb-createEditor__titleStyleGroup">
-              <span className="pb-createEditor__heroRsvpLabel">Boja naslova</span>
-              <div className="pb-createEditor__titleSwatches">
-                {TITLE_COLOR_OPTIONS.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    className={`pb-createEditor__titleSwatch ${draft.titleColor === option.id ? 'is-active' : ''}`}
-                    style={{ ['--pb-title-swatch' as string]: option.swatch } as ReactCSSProperties}
-                    onClick={() => onFieldChange('titleColor', option.id)}
-                    aria-label={option.label}
-                    title={option.label}
+          <div className="pb-createEditor__titleStyleRow">
+            <button
+              type="button"
+              className="pb-createEditor__titleStyleTrigger"
+              aria-haspopup="dialog"
+              aria-expanded={titleStylePanel === 'color'}
+              onClick={() => setTitleStylePanel('color')}
+            >
+              <span className="pb-createEditor__titleStyleTriggerEyebrow">Boja naslova</span>
+              <span className="pb-createEditor__titleStyleTriggerRow">
+                <span className="pb-createEditor__titleStyleTriggerValue">
+                  <span
+                    className="pb-createEditor__titleStyleTriggerSwatch"
+                    style={{ ['--pb-title-swatch' as string]: selectedTitleColor.swatch } as ReactCSSProperties}
+                    aria-hidden="true"
                   />
-                ))}
-              </div>
-            </div>
-
-            <div className="pb-createEditor__titleStyleGroup">
-              <span className="pb-createEditor__heroRsvpLabel">Outline</span>
-              <div className="pb-createEditor__styleChipRow">
-                {TITLE_OUTLINE_OPTIONS.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    className={`pb-createEditor__styleChip ${draft.titleOutline === option.id ? 'is-active' : ''}`}
-                    onClick={() => onFieldChange('titleOutline', option.id)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="pb-createEditor__titleStyleGroup">
-              <span className="pb-createEditor__heroRsvpLabel">Veličina</span>
-              <div className="pb-createEditor__styleChipRow">
-                {TITLE_SIZE_OPTIONS.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    className={`pb-createEditor__styleChip ${draft.titleSize === option.id ? 'is-active' : ''}`}
-                    onClick={() => onFieldChange('titleSize', option.id)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+                  <span className="pb-createEditor__titleStyleTriggerText">{selectedTitleColor.label}</span>
+                </span>
+                <EditorChevron />
+              </span>
+            </button>
+            <button
+              type="button"
+              className="pb-createEditor__titleStyleTrigger"
+              aria-haspopup="dialog"
+              aria-expanded={titleStylePanel === 'outline'}
+              onClick={() => setTitleStylePanel('outline')}
+            >
+              <span className="pb-createEditor__titleStyleTriggerEyebrow">Outline</span>
+              <span className="pb-createEditor__titleStyleTriggerRow">
+                <span className="pb-createEditor__titleStyleTriggerValue">
+                  <span className="pb-createEditor__titleStyleTriggerText">{selectedTitleOutline.label}</span>
+                </span>
+                <EditorChevron />
+              </span>
+            </button>
+            <button
+              type="button"
+              className="pb-createEditor__titleStyleTrigger"
+              aria-haspopup="dialog"
+              aria-expanded={titleStylePanel === 'size'}
+              onClick={() => setTitleStylePanel('size')}
+            >
+              <span className="pb-createEditor__titleStyleTriggerEyebrow">Veličina</span>
+              <span className="pb-createEditor__titleStyleTriggerRow">
+                <span className="pb-createEditor__titleStyleTriggerValue">
+                  <span className="pb-createEditor__titleStyleTriggerText">{selectedTitleSize.label}</span>
+                </span>
+                <EditorChevron />
+              </span>
+            </button>
           </div>
           <div
             className="pb-createEditor__heroRsvpPreview"
@@ -633,6 +664,160 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
         </Card>
         */}
       </div>
+
+      {titleStylePanel ? (
+        <div
+          className="pb-modalOverlay"
+          role="presentation"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setTitleStylePanel(null)
+            }
+          }}
+        >
+          <div
+            className="pb-modalDialog pb-createEditor__titleStyleModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleStyleDialogTitleId}
+          >
+            <div className="pb-modalDialog__head">
+              <h2 id={titleStyleDialogTitleId} className="pb-modalDialog__title">
+                {titleStylePanel === 'color' && 'Boja naslova'}
+                {titleStylePanel === 'outline' && 'Outline'}
+                {titleStylePanel === 'size' && 'Veličina'}
+              </h2>
+              <button type="button" className="pb-modalDialog__close" onClick={() => setTitleStylePanel(null)} aria-label="Zatvori">
+                ×
+              </button>
+            </div>
+            <div className="pb-modalDialog__body pb-createEditor__titleStyleModalBody">
+              {titleStylePanel === 'color' ? (
+                <>
+                  <p className="pb-modalDialog__lead">
+                    Boja se odnosi na tekst naslova na naslovnici. Pregled ispod koristi tvoj font i outline — mijenja se samo boja.
+                  </p>
+                  <div className="pb-createEditor__titleStyleOptionList">
+                    {TITLE_COLOR_OPTIONS.map((option) => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        className={`pb-createEditor__titleStyleOption pb-createEditor__titleStyleOption--withSwatch ${
+                          draft.titleColor === option.id ? 'is-active' : ''
+                        }`}
+                        onClick={() => {
+                          onFieldChange('titleColor', option.id)
+                          setTitleStylePanel(null)
+                        }}
+                      >
+                        <span
+                          className="pb-createEditor__titleStyleOptionSwatch"
+                          style={{ ['--pb-title-swatch' as string]: option.swatch } as ReactCSSProperties}
+                          aria-hidden="true"
+                        />
+                        <span className="pb-createEditor__titleStyleOptionCopy">
+                          <span className="pb-createEditor__titleStyleOptionTitle">{option.label}</span>
+                          <span className="pb-createEditor__titleStyleOptionDesc">{option.description}</span>
+                          <span
+                            className={`pb-createEditor__titleStyleOptionSamplePlate ${
+                              option.id === 'snow' ? 'pb-createEditor__titleStyleOptionSamplePlate--dark' : ''
+                            }`}
+                          >
+                            <span
+                              className={`pb-createEditor__titleStyleOptionSample pb-createEditor__title--${draft.titleFont} pb-createEditor__titleOutline--${draft.titleOutline} pb-createEditor__titleSize--lg`}
+                              style={
+                                {
+                                  ['--pb-create-title-color' as string]: getTitleColorValue(option.id),
+                                } as ReactCSSProperties
+                              }
+                            >
+                              {titleStyleSampleText}
+                            </span>
+                          </span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+              {titleStylePanel === 'outline' ? (
+                <>
+                  <p className="pb-modalDialog__lead">
+                    Outline je svijetli obrub oko slova koji pomaže čitljivosti na šarenim ilustracijama. Pregled koristi tvoju boju i veličinu.
+                  </p>
+                  <div className="pb-createEditor__titleStyleOptionList">
+                    {TITLE_OUTLINE_OPTIONS.map((option) => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        className={`pb-createEditor__titleStyleOption ${draft.titleOutline === option.id ? 'is-active' : ''}`}
+                        onClick={() => {
+                          onFieldChange('titleOutline', option.id)
+                          setTitleStylePanel(null)
+                        }}
+                      >
+                        <span className="pb-createEditor__titleStyleOptionCopy">
+                          <span className="pb-createEditor__titleStyleOptionTitle">{option.label}</span>
+                          <span className="pb-createEditor__titleStyleOptionDesc">{option.description}</span>
+                          <span className="pb-createEditor__titleStyleOptionSamplePlate pb-createEditor__titleStyleOptionSamplePlate--neutral">
+                            <span
+                              className={`pb-createEditor__titleStyleOptionSample pb-createEditor__title--${draft.titleFont} pb-createEditor__titleOutline--${option.id} pb-createEditor__titleSize--${draft.titleSize}`}
+                              style={
+                                {
+                                  ['--pb-create-title-color' as string]: getTitleColorValue(draft.titleColor),
+                                } as ReactCSSProperties
+                              }
+                            >
+                              {titleStyleSampleText}
+                            </span>
+                          </span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+              {titleStylePanel === 'size' ? (
+                <>
+                  <p className="pb-modalDialog__lead">
+                    Veličina utječe na to koliko naslov dominira na naslovnici. Pregled koristi tvoju boju i outline.
+                  </p>
+                  <div className="pb-createEditor__titleStyleOptionList">
+                    {TITLE_SIZE_OPTIONS.map((option) => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        className={`pb-createEditor__titleStyleOption ${draft.titleSize === option.id ? 'is-active' : ''}`}
+                        onClick={() => {
+                          onFieldChange('titleSize', option.id)
+                          setTitleStylePanel(null)
+                        }}
+                      >
+                        <span className="pb-createEditor__titleStyleOptionCopy">
+                          <span className="pb-createEditor__titleStyleOptionTitle">{option.label}</span>
+                          <span className="pb-createEditor__titleStyleOptionDesc">{option.description}</span>
+                          <span className="pb-createEditor__titleStyleOptionSamplePlate pb-createEditor__titleStyleOptionSamplePlate--neutral">
+                            <span
+                              className={`pb-createEditor__titleStyleOptionSample pb-createEditor__title--${draft.titleFont} pb-createEditor__titleOutline--${draft.titleOutline} pb-createEditor__titleSize--${option.id}`}
+                              style={
+                                {
+                                  ['--pb-create-title-color' as string]: getTitleColorValue(draft.titleColor),
+                                } as ReactCSSProperties
+                              }
+                            >
+                              {titleStyleSampleText}
+                            </span>
+                          </span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

@@ -102,24 +102,73 @@ export const TITLE_FONT_OPTIONS = [
 ] as const satisfies ReadonlyArray<{ id: TitleFont; label: string; description: string; preview: string }>
 
 export const TITLE_COLOR_OPTIONS = [
-  { id: 'playbam-blue', label: 'Playbam plava', swatch: '#336fd6' },
-  { id: 'snow', label: 'Bijela', swatch: '#fff9f2' },
-  { id: 'berry', label: 'Berry', swatch: '#d25687' },
-  { id: 'mint', label: 'Mint', swatch: '#2aa88d' },
-  { id: 'sunset', label: 'Sunset', swatch: '#ff8a5b' },
-] as const satisfies ReadonlyArray<{ id: TitleColor; label: string; swatch: string }>
+  {
+    id: 'playbam-blue',
+    label: 'Playbam plava',
+    swatch: '#336fd6',
+    description: 'Brand plava — jasna i pouzdana na većini naslovnica.',
+  },
+  {
+    id: 'snow',
+    label: 'Bijela',
+    swatch: '#fff9f2',
+    description: 'Topla bijela — dobro stoji na tamnijim ili šarenim pozadinama.',
+  },
+  {
+    id: 'berry',
+    label: 'Berry',
+    swatch: '#d25687',
+    description: 'Pink-lila ton za veseliji, slatkiji dojam.',
+  },
+  {
+    id: 'mint',
+    label: 'Mint',
+    swatch: '#2aa88d',
+    description: 'Svjež mint za mirniji, „proljetni” izgled.',
+  },
+  {
+    id: 'sunset',
+    label: 'Sunset',
+    swatch: '#ff8a5b',
+    description: 'Topli narančasti naglasak za sunčaniji party.',
+  },
+] as const satisfies ReadonlyArray<{ id: TitleColor; label: string; swatch: string; description: string }>
 
 export const TITLE_OUTLINE_OPTIONS = [
-  { id: 'none', label: 'Bez outlinea' },
-  { id: 'soft', label: 'Mekani outline' },
-  { id: 'bold', label: 'Jači outline' },
-] as const satisfies ReadonlyArray<{ id: TitleOutline; label: string }>
+  {
+    id: 'none',
+    label: 'Bez outlinea',
+    description: 'Bez dodatnog obruba oko slova — najčišći, najdiskretniji izgled.',
+  },
+  {
+    id: 'soft',
+    label: 'Mekani outline',
+    description: 'Blagi svijetli obrub — bolja čitljivost na šarenim ilustracijama.',
+  },
+  {
+    id: 'bold',
+    label: 'Jači outline',
+    description: 'Deblji obrub za jak kontrast i naglašen naslov.',
+  },
+] as const satisfies ReadonlyArray<{ id: TitleOutline; label: string; description: string }>
 
 export const TITLE_SIZE_OPTIONS = [
-  { id: 'sm', label: 'Manji naslov' },
-  { id: 'md', label: 'Srednji naslov' },
-  { id: 'lg', label: 'Veći naslov' },
-] as const satisfies ReadonlyArray<{ id: TitleSize; label: string }>
+  {
+    id: 'sm',
+    label: 'Najmanji naslov',
+    description: 'Najkompaktnije — kad je tekst jako dugačak ili treba još prostora ispod.',
+  },
+  {
+    id: 'md',
+    label: 'Srednji naslov',
+    description: 'Srednja veličina — diskretno manje od glavnog (najvećeg) prikaza.',
+  },
+  {
+    id: 'lg',
+    label: 'Najveći naslov',
+    description: 'Najveća dopuštena veličina naslova — dobar default za većinu pozivnica.',
+  },
+] as const satisfies ReadonlyArray<{ id: TitleSize; label: string; description: string }>
 
 export const RSVP_MOOD_OPTIONS = [
   { id: 'party', label: 'Party', description: 'Najrazigraniji set za klasični rođendan.', symbols: { going: '🥳', maybe: '🤔', not_going: '💔' } },
@@ -179,7 +228,7 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   titleFont: 'lilita',
   titleColor: 'playbam-blue',
   titleOutline: 'soft',
-  titleSize: 'md',
+  titleSize: 'lg',
   date: '2026-06-15',
   time: '15:00',
   timeEnd: '17:00',
@@ -350,7 +399,7 @@ export function normalizeTitleSize(value: string | null | undefined): TitleSize 
     case 'lg':
       return normalized
     default:
-      return 'md'
+      return 'lg'
   }
 }
 

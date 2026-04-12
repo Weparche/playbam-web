@@ -7524,7 +7524,8 @@
     grid-column: 1 / -1;
   }
 
-  .pb-createEditor__infoCard--theme {
+  /* Tema + lista želja u jednom redu; kad je samo tema (npr. host), zauzmi cijelu širinu. */
+  .pb-createEditor__grid > .pb-card:only-child {
     grid-column: 1 / -1;
   }
 }

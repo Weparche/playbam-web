@@ -51,6 +51,9 @@ export default function InvitationLivePreview({ draft, compact }: Props) {
           <PublicInvitationHero
             celebrantTitle={buildInvitationHeroTitle(draft.title, draft.celebrantName)}
             titleFont={draft.titleFont}
+            titleColor={draft.titleColor}
+            titleOutline={draft.titleOutline}
+            titleSize={draft.titleSize}
             dateText={formatInvitationDateText(draft.date)}
             timeText={formatInvitationTimeText(buildTimeRangeValue(draft.time, draft.timeEnd))}
             venueText={location}

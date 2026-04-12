@@ -18,7 +18,10 @@ import {
   DEFAULT_CREATE_DRAFT,
   normalizeCreateTheme,
   normalizeRsvpMood,
+  normalizeTitleColor,
   normalizeTitleFont,
+  normalizeTitleOutline,
+  normalizeTitleSize,
   RSVP_GUEST_HEADLINE,
   type InvitationCreateDraft,
   type ShortcutId,
@@ -53,6 +56,9 @@ function readStoredDraft() {
       ...parsed,
       theme: normalizeCreateTheme(typeof parsed.theme === 'string' ? parsed.theme : DEFAULT_CREATE_DRAFT.theme),
       titleFont: normalizeTitleFont(typeof parsed.titleFont === 'string' ? parsed.titleFont : DEFAULT_CREATE_DRAFT.titleFont),
+      titleColor: normalizeTitleColor(typeof parsed.titleColor === 'string' ? parsed.titleColor : DEFAULT_CREATE_DRAFT.titleColor),
+      titleOutline: normalizeTitleOutline(typeof parsed.titleOutline === 'string' ? parsed.titleOutline : DEFAULT_CREATE_DRAFT.titleOutline),
+      titleSize: normalizeTitleSize(typeof parsed.titleSize === 'string' ? parsed.titleSize : DEFAULT_CREATE_DRAFT.titleSize),
       rsvpMood: normalizeRsvpMood(typeof parsed.rsvpMood === 'string' ? parsed.rsvpMood : DEFAULT_CREATE_DRAFT.rsvpMood),
       rsvpEnabled: true,
       rsvpPrompt: RSVP_GUEST_HEADLINE,
@@ -143,6 +149,9 @@ export default function CreateInvitationPage() {
         title: draft.title.trim(),
         celebrantName: buildCelebrantFallback(draft.title, draft.celebrantName),
         titleFont: draft.titleFont,
+        titleColor: draft.titleColor,
+        titleOutline: draft.titleOutline,
+        titleSize: draft.titleSize,
         date: draft.date,
         time: buildTimeRangeValue(draft.time, draft.timeEnd),
         location: [draft.locationName.trim(), draft.locationAddress.trim()].filter(Boolean).join(', '),
@@ -285,7 +294,7 @@ export default function CreateInvitationPage() {
           progressPercent={progressPercent}
           progressLabel={progressLabel}
           preview={<InvitationPreviewCard draft={draft} compact />}
-          rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={handleShortcutClick} />}
+          rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={(id) => handleShortcutClick(id as ShortcutId)} />}
         >
           <InvitationMainEditor draft={draft} onFieldChange={updateField} onOpenShortcut={handleShortcutClick} />
 

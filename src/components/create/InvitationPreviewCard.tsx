@@ -6,8 +6,12 @@ import {
   buildPreviewLocation,
   formatPreviewDate,
   formatPreviewTime,
+  getTitleColorValue,
   getRsvpSymbol,
+  normalizeTitleColor,
   normalizeTitleFont,
+  normalizeTitleOutline,
+  normalizeTitleSize,
   RSVP_GUEST_HEADLINE,
   type InvitationCreateDraft,
 } from './createTypes'
@@ -22,6 +26,9 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
   const backgroundImage = resolveInvitationBackgroundImage(draft.theme, draft.theme)
   const titleFont = normalizeTitleFont(draft.titleFont)
+  const titleColor = normalizeTitleColor(draft.titleColor)
+  const titleOutline = normalizeTitleOutline(draft.titleOutline)
+  const titleSize = normalizeTitleSize(draft.titleSize)
   const [flash, setFlash] = useState(false)
   const mountedRef = useRef(false)
 
@@ -43,7 +50,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
         window.clearTimeout(timeoutId)
       }
     }
-  }, [draft.title, draft.date, draft.time, draft.timeEnd, draft.locationName, draft.message, draft.theme, draft.titleFont, draft.rsvpMood])
+  }, [draft.title, draft.date, draft.time, draft.timeEnd, draft.locationName, draft.message, draft.theme, draft.titleFont, draft.titleColor, draft.titleOutline, draft.titleSize, draft.rsvpMood])
 
   const cardClass = [
     'pb-previewCard',
@@ -58,7 +65,12 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
         <img className="pb-previewCard__logo" src="/logo.png" alt="Playbam.hr" />
         <div className="pb-previewCard__heroText">
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
-          <h3 className={`pb-previewCard__title pb-previewCard__title--${titleFont}`}>{title}</h3>
+          <h3
+            className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}`}
+            style={{ ['--pb-preview-title-color' as string]: getTitleColorValue(titleColor) }}
+          >
+            {title}
+          </h3>
         </div>
       </div>
 

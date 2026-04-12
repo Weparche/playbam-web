@@ -60,6 +60,9 @@ export default function InvitationCard({
         <PublicInvitationHero
           celebrantTitle={celebrantTitle}
           titleFont={invitation.titleFont}
+          titleColor={invitation.titleColor}
+          titleOutline={invitation.titleOutline}
+          titleSize={invitation.titleSize}
           dateText={dateText}
           timeText={timeText}
           venueText={venueText}

@@ -80,6 +80,9 @@ export type PublicInvitation = {
   title: string
   celebrantName: string
   titleFont?: string | null
+  titleColor?: string | null
+  titleOutline?: string | null
+  titleSize?: string | null
   date: string
   time: string
   location: string
@@ -100,6 +103,9 @@ export type CreateInvitationPayload = {
   title: string
   celebrantName: string
   titleFont?: string | null
+  titleColor?: string | null
+  titleOutline?: string | null
+  titleSize?: string | null
   date: string
   time: string
   location: string
@@ -113,6 +119,9 @@ export type UpdateInvitationPayload = {
   title: string
   celebrantName: string
   titleFont?: string | null
+  titleColor?: string | null
+  titleOutline?: string | null
+  titleSize?: string | null
   date: string
   time: string
   location: string

@@ -10,6 +10,9 @@ export type TitleFont =
   | 'libre-baskerville'
   | 'jakarta'
   | 'nunito'
+export type TitleColor = 'playbam-blue' | 'snow' | 'berry' | 'mint' | 'sunset'
+export type TitleOutline = 'none' | 'soft' | 'bold'
+export type TitleSize = 'sm' | 'md' | 'lg'
 export type RsvpMood = 'party' | 'sweet' | 'icons' | 'spark' | 'balloon' | 'thumbs' | 'check' | 'zoo' | 'sport' | 'space' | 'music' | 'crown' | 'heart' | 'fire' | 'nature' | 'pirate'
 export type AccentPalette = 'berry' | 'sky' | 'mint'
 export type LocationType = 'Igraonica / lokal' | 'Kod kuće' | 'Na otvorenom' | 'Druga lokacija'
@@ -47,6 +50,10 @@ export const RSVP_GUEST_HEADLINE = 'Potvrdi dolazak'
 export type InvitationCreateDraft = {
   title: string
   celebrantName: string
+  titleFont: TitleFont
+  titleColor: TitleColor
+  titleOutline: TitleOutline
+  titleSize: TitleSize
   date: string
   time: string
   timeEnd: string
@@ -56,7 +63,6 @@ export type InvitationCreateDraft = {
   message: string
   theme: CoverTheme
   effect: EffectStyle
-  titleFont: TitleFont
   rsvpMood: RsvpMood
   accentPalette: AccentPalette
   wishlistEnabled: boolean
@@ -94,6 +100,26 @@ export const TITLE_FONT_OPTIONS = [
   { id: 'jakarta', label: 'Plus Jakarta Sans', description: 'Čist i moderan naslov s urednim ritmom.', preview: 'Luka slavi!' },
   { id: 'nunito', label: 'Nunito', description: 'Prijateljski rounded sans za smireniji look.', preview: 'Luka slavi!' },
 ] as const satisfies ReadonlyArray<{ id: TitleFont; label: string; description: string; preview: string }>
+
+export const TITLE_COLOR_OPTIONS = [
+  { id: 'playbam-blue', label: 'Playbam plava', swatch: '#336fd6' },
+  { id: 'snow', label: 'Bijela', swatch: '#fff9f2' },
+  { id: 'berry', label: 'Berry', swatch: '#d25687' },
+  { id: 'mint', label: 'Mint', swatch: '#2aa88d' },
+  { id: 'sunset', label: 'Sunset', swatch: '#ff8a5b' },
+] as const satisfies ReadonlyArray<{ id: TitleColor; label: string; swatch: string }>
+
+export const TITLE_OUTLINE_OPTIONS = [
+  { id: 'none', label: 'Bez outlinea' },
+  { id: 'soft', label: 'Mekani outline' },
+  { id: 'bold', label: 'Jači outline' },
+] as const satisfies ReadonlyArray<{ id: TitleOutline; label: string }>
+
+export const TITLE_SIZE_OPTIONS = [
+  { id: 'sm', label: 'Manji naslov' },
+  { id: 'md', label: 'Srednji naslov' },
+  { id: 'lg', label: 'Veći naslov' },
+] as const satisfies ReadonlyArray<{ id: TitleSize; label: string }>
 
 export const RSVP_MOOD_OPTIONS = [
   { id: 'party', label: 'Party', description: 'Najrazigraniji set za klasični rođendan.', symbols: { going: '🥳', maybe: '🤔', not_going: '💔' } },
@@ -150,6 +176,10 @@ export const SHORTCUT_ITEMS = [
 export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   title: 'Luka slavi 6. rođendan',
   celebrantName: 'Luka',
+  titleFont: 'lilita',
+  titleColor: 'playbam-blue',
+  titleOutline: 'soft',
+  titleSize: 'md',
   date: '2026-06-15',
   time: '15:00',
   timeEnd: '17:00',
@@ -159,7 +189,6 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   message: 'Vidimo se na tulumu!',
   theme: 'pozivnica-girl',
   effect: 'glow',
-  titleFont: 'lilita',
   rsvpMood: 'party',
   accentPalette: 'sky',
   wishlistEnabled: true,
@@ -282,6 +311,51 @@ export function normalizeTitleFont(fontValue: string | null | undefined): TitleF
     default:
       return 'lilita'
   }
+}
+
+export function normalizeTitleColor(value: string | null | undefined): TitleColor {
+  const normalized = value?.trim().toLowerCase() ?? ''
+
+  switch (normalized) {
+    case 'playbam-blue':
+    case 'snow':
+    case 'berry':
+    case 'mint':
+    case 'sunset':
+      return normalized
+    default:
+      return 'playbam-blue'
+  }
+}
+
+export function normalizeTitleOutline(value: string | null | undefined): TitleOutline {
+  const normalized = value?.trim().toLowerCase() ?? ''
+
+  switch (normalized) {
+    case 'none':
+    case 'soft':
+    case 'bold':
+      return normalized
+    default:
+      return 'soft'
+  }
+}
+
+export function normalizeTitleSize(value: string | null | undefined): TitleSize {
+  const normalized = value?.trim().toLowerCase() ?? ''
+
+  switch (normalized) {
+    case 'sm':
+    case 'md':
+    case 'lg':
+      return normalized
+    default:
+      return 'md'
+  }
+}
+
+export function getTitleColorValue(color: TitleColor) {
+  return TITLE_COLOR_OPTIONS.find((option) => option.id === color)?.swatch ?? '#336fd6'
 }
 
 export function normalizeRsvpMood(value: string | null | undefined): RsvpMood {

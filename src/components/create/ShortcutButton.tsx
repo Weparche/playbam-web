@@ -1,11 +1,9 @@
-import type { ShortcutId } from './createTypes'
-
 type Props = {
-  id: ShortcutId
+  id: string
   icon: string
   label: string
   active?: boolean
-  onClick: (id: ShortcutId) => void
+  onClick: (id: string) => void
 }
 
 export default function ShortcutButton({ id, icon, label, active, onClick }: Props) {

@@ -17,9 +17,13 @@ import {
   buildPreviewLocation,
   formatPreviewDate,
   formatPreviewTime,
+  getTitleColorValue,
   getRsvpSymbol,
   getThemeLabel,
+  TITLE_COLOR_OPTIONS,
   TITLE_FONT_OPTIONS,
+  TITLE_OUTLINE_OPTIONS,
+  TITLE_SIZE_OPTIONS,
   type InvitationCreateDraft,
   type ShortcutId,
 } from './createTypes'
@@ -159,6 +163,9 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
 
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
   const { titleReady, dateReady, locationReady } = buildCreateProgress(draft)
+  const titleStyle = {
+    ['--pb-create-title-color' as string]: getTitleColorValue(draft.titleColor),
+  } as ReactCSSProperties
 
   const titleStatus = titleReady ? { label: 'Popunjeno', tone: 'ready' as const } : { label: 'Dodaj naslov', tone: 'pending' as const }
   const scheduleStatus = dateReady && locationReady
@@ -328,7 +335,8 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             <label className="pb-createEditor__titleField pb-createEditor__titleField--hero">
               <span className="pb-visuallyHidden">Naslov pozivnice</span>
               <input
-                className={`pb-createEditor__titleInput pb-createEditor__title--${draft.titleFont}`}
+                className={`pb-createEditor__titleInput pb-createEditor__title--${draft.titleFont} pb-createEditor__titleOutline--${draft.titleOutline} pb-createEditor__titleSize--${draft.titleSize}`}
+                style={titleStyle}
                 value={draft.title}
                 onChange={handleTitleChange}
                 placeholder="Upiši naslov pozivnice"
@@ -378,6 +386,56 @@ export default function InvitationMainEditor({ draft, onFieldChange, onOpenShort
             >
               <FontStripChevron direction="right" />
             </button>
+          </div>
+          <div className="pb-createEditor__titleStyleStack">
+            <div className="pb-createEditor__titleStyleGroup">
+              <span className="pb-createEditor__heroRsvpLabel">Boja naslova</span>
+              <div className="pb-createEditor__titleSwatches">
+                {TITLE_COLOR_OPTIONS.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    className={`pb-createEditor__titleSwatch ${draft.titleColor === option.id ? 'is-active' : ''}`}
+                    style={{ ['--pb-title-swatch' as string]: option.swatch } as ReactCSSProperties}
+                    onClick={() => onFieldChange('titleColor', option.id)}
+                    aria-label={option.label}
+                    title={option.label}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="pb-createEditor__titleStyleGroup">
+              <span className="pb-createEditor__heroRsvpLabel">Outline</span>
+              <div className="pb-createEditor__styleChipRow">
+                {TITLE_OUTLINE_OPTIONS.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    className={`pb-createEditor__styleChip ${draft.titleOutline === option.id ? 'is-active' : ''}`}
+                    onClick={() => onFieldChange('titleOutline', option.id)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pb-createEditor__titleStyleGroup">
+              <span className="pb-createEditor__heroRsvpLabel">Veličina</span>
+              <div className="pb-createEditor__styleChipRow">
+                {TITLE_SIZE_OPTIONS.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    className={`pb-createEditor__styleChip ${draft.titleSize === option.id ? 'is-active' : ''}`}
+                    onClick={() => onFieldChange('titleSize', option.id)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           <div
             className="pb-createEditor__heroRsvpPreview"

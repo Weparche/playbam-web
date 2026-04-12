@@ -1,15 +1,16 @@
 import ShortcutButton from './ShortcutButton'
-import { SHORTCUT_ITEMS, type ShortcutId } from './createTypes'
+import { SHORTCUT_ITEMS } from './createTypes'
 
 type Props = {
-  activeShortcut: ShortcutId | null
-  onShortcutClick: (id: ShortcutId) => void
+  activeShortcut: string | null
+  onShortcutClick: (id: string) => void
+  items?: ReadonlyArray<{ id: string; label: string; icon: string }>
 }
 
-export default function ShortcutRail({ activeShortcut, onShortcutClick }: Props) {
+export default function ShortcutRail({ activeShortcut, onShortcutClick, items = SHORTCUT_ITEMS }: Props) {
   return (
     <aside className="pb-shortcutRail" aria-label="Brzi shortcuti za uredjivanje">
-      {SHORTCUT_ITEMS.map((item) => (
+      {items.map((item) => (
         <ShortcutButton
           key={item.id}
           id={item.id}

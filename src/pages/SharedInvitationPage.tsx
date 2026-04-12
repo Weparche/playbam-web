@@ -2,11 +2,13 @@
 import { useParams } from 'react-router-dom'
 
 import FloatingEditPanel from '../components/create/FloatingEditPanel'
+import InvitationLivePreview from '../components/create/InvitationLivePreview'
 import InvitationMainEditor from '../components/create/InvitationMainEditor'
 import QuickDateTimeEditor from '../components/create/QuickDateTimeEditor'
 import QuickLocationEditor from '../components/create/QuickLocationEditor'
 import QuickRSVPEditor from '../components/create/QuickRSVPEditor'
 import QuickThemeEditor from '../components/create/QuickThemeEditor'
+import ShortcutRail from '../components/create/ShortcutRail'
 import InvitationCard from '../components/invitation/InvitationCard'
 import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGuest'
 import { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
@@ -53,7 +55,10 @@ import {
   buildTimeRangeValue,
   DEFAULT_CREATE_DRAFT,
   normalizeCreateTheme,
+  normalizeTitleColor,
   normalizeTitleFont,
+  normalizeTitleOutline,
+  normalizeTitleSize,
   type InvitationCreateDraft,
   type ShortcutId,
 } from '../components/create/createTypes'
@@ -72,6 +77,18 @@ type PartyDetailsDraft = {
   cafeLocation: string
   extraDetails: string
 }
+
+type HostShortcutId = ShortcutId | 'partyDetails' | 'requests'
+
+const HOST_SHORTCUT_ITEMS = [
+  { id: 'theme', label: 'Tema', icon: '🎨' },
+  { id: 'wishlist', label: 'Pokloni', icon: '🎁' },
+  { id: 'rsvp', label: 'RSVP', icon: '🥳' },
+  { id: 'settings', label: 'Ažuriraj', icon: '⚙️' },
+  { id: 'preview', label: 'Pregled', icon: '👁️' },
+  { id: 'partyDetails', label: 'Detalji', icon: '📍' },
+  { id: 'requests', label: 'Zahtjevi', icon: '🧾' },
+] as const satisfies ReadonlyArray<{ id: HostShortcutId; label: string; icon: string }>
 
 function createEmptyDraft(parentName = ''): FamilyProfileDraft {
   return {
@@ -147,6 +164,9 @@ function createDraftFromInvitation(invitation: PublicInvitation): InvitationCrea
     title: invitation.title,
     celebrantName: invitation.celebrantName,
     titleFont: normalizeTitleFont(typeof invitation.titleFont === 'string' ? invitation.titleFont : DEFAULT_CREATE_DRAFT.titleFont),
+    titleColor: normalizeTitleColor(typeof invitation.titleColor === 'string' ? invitation.titleColor : DEFAULT_CREATE_DRAFT.titleColor),
+    titleOutline: normalizeTitleOutline(typeof invitation.titleOutline === 'string' ? invitation.titleOutline : DEFAULT_CREATE_DRAFT.titleOutline),
+    titleSize: normalizeTitleSize(typeof invitation.titleSize === 'string' ? invitation.titleSize : DEFAULT_CREATE_DRAFT.titleSize),
     date: invitation.date,
     time,
     timeEnd,
@@ -175,6 +195,9 @@ function buildInvitationUpdatePayload(
     title: draft.title.trim(),
     celebrantName: draft.celebrantName.trim() || draft.title.trim() || 'Slavljenik',
     titleFont: draft.titleFont,
+    titleColor: draft.titleColor,
+    titleOutline: draft.titleOutline,
+    titleSize: draft.titleSize,
     date: draft.date,
     time: buildTimeRangeValue(draft.time, draft.timeEnd),
     location: [draft.locationName.trim(), draft.locationAddress.trim()].filter(Boolean).join(', '),
@@ -266,14 +289,15 @@ export default function SharedInvitationPage() {
   const [savingWishlistItem, setSavingWishlistItem] = useState(false)
   const [guestModalOpen, setGuestModalOpen] = useState(false)
   const [hostRequestsOpen, setHostRequestsOpen] = useState(false)
-  const [hostUpdateOpen, setHostUpdateOpen] = useState(true)
-  const [hostPartyDetailsOpen, setHostPartyDetailsOpen] = useState(true)
+  const [hostUpdateOpen, setHostUpdateOpen] = useState(false)
+  const [hostPartyDetailsOpen, setHostPartyDetailsOpen] = useState(false)
   const [hostWishlistOpen, setHostWishlistOpen] = useState(false)
   const [hostAddGiftOpen, setHostAddGiftOpen] = useState(false)
   const [selectedHostRequest, setSelectedHostRequest] = useState<MembershipRequest | null>(null)
   const [hostEditorDraft, setHostEditorDraft] = useState<InvitationCreateDraft>(DEFAULT_CREATE_DRAFT)
   const [hostPartyDetailsDraft, setHostPartyDetailsDraft] = useState<PartyDetailsDraft>(createPartyDetailsDraft())
   const [hostEditorShortcut, setHostEditorShortcut] = useState<ShortcutId | null>(null)
+  const [hostShortcutActive, setHostShortcutActive] = useState<HostShortcutId | null>(null)
   const [savingHostInvitation, setSavingHostInvitation] = useState(false)
   const [hostUpdateError, setHostUpdateError] = useState('')
   const [hostUpdateNotice, setHostUpdateNotice] = useState('')
@@ -383,6 +407,46 @@ export default function SharedInvitationPage() {
     }))
     setHostUpdateError('')
     setHostUpdateNotice('')
+  }
+
+  const scrollToHostSection = (elementId: string) => {
+    window.requestAnimationFrame(() => {
+      document.getElementById(elementId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
+
+  const handleHostShortcutClick = (shortcut: HostShortcutId) => {
+    setHostShortcutActive(shortcut)
+
+    switch (shortcut) {
+      case 'theme':
+      case 'rsvp':
+        setHostUpdateOpen(true)
+        setHostEditorShortcut(shortcut)
+        scrollToHostSection('host-update-card')
+        return
+      case 'wishlist':
+        setHostWishlistOpen(true)
+        scrollToHostSection('host-wishlist-card')
+        return
+      case 'settings':
+        setHostUpdateOpen(true)
+        scrollToHostSection('host-update-card')
+        return
+      case 'preview':
+        scrollToHostSection('host-live-preview')
+        return
+      case 'partyDetails':
+        setHostPartyDetailsOpen(true)
+        scrollToHostSection('host-details-card')
+        return
+      case 'requests':
+        setHostRequestsOpen(true)
+        scrollToHostSection('host-requests-card')
+        return
+      default:
+        return
+    }
   }
 
   const handleToggleGuestChild = (childId: string, checked: boolean) => {
@@ -1014,6 +1078,11 @@ export default function SharedInvitationPage() {
   }
 
   const renderHostEditorPanel = () => {
+    const closeHostEditorPanel = () => {
+      setHostEditorShortcut(null)
+      setHostShortcutActive((current) => (current === 'theme' || current === 'rsvp' ? null : current))
+    }
+
     switch (hostEditorShortcut) {
       case 'dateTime':
         return (
@@ -1021,7 +1090,7 @@ export default function SharedInvitationPage() {
             open
             title="Datum i vrijeme"
             description="Brzi picker za osnovne informacije koje gost vidi prve."
-            onClose={() => setHostEditorShortcut(null)}
+            onClose={closeHostEditorPanel}
           >
             <QuickDateTimeEditor draft={hostEditorDraft} today={today} onFieldChange={updateHostField} />
           </FloatingEditPanel>
@@ -1032,7 +1101,7 @@ export default function SharedInvitationPage() {
             open
             title="Lokacija"
             description="Naziv lokacije i dodatni detalji dolaska."
-            onClose={() => setHostEditorShortcut(null)}
+            onClose={closeHostEditorPanel}
           >
             <QuickLocationEditor draft={hostEditorDraft} onFieldChange={updateHostField} />
           </FloatingEditPanel>
@@ -1043,7 +1112,7 @@ export default function SharedInvitationPage() {
             open
             title="Tema"
             description="Promijeni naslovnicu pozivnice."
-            onClose={() => setHostEditorShortcut(null)}
+            onClose={closeHostEditorPanel}
           >
             <QuickThemeEditor draft={hostEditorDraft} onThemeChange={(value) => updateHostField('theme', value)} />
           </FloatingEditPanel>
@@ -1054,7 +1123,7 @@ export default function SharedInvitationPage() {
             open
             title="RSVP ikone"
             description="Odaberi set ikona za potvrdu dolaska."
-            onClose={() => setHostEditorShortcut(null)}
+            onClose={closeHostEditorPanel}
           >
             <QuickRSVPEditor draft={hostEditorDraft} onFieldChange={updateHostField} />
           </FloatingEditPanel>
@@ -1138,16 +1207,18 @@ export default function SharedInvitationPage() {
                 </div>
               ) : null}
 
-              <InvitationCard
-                invitation={invitation}
-                access={hasPrivateAccess ? 'private' : 'public'}
-                isHost={isHost}
-                rsvp={rsvp?.status ?? null}
-                canSubmitRsvp={canSubmitRsvp}
-                onRsvpChange={canSubmitRsvp ? handleRsvpChange : undefined}
-                onGuestRsvpIntent={isHost ? undefined : handleGuestRsvpIntent}
-                guestRsvpHint={guestRsvpHint}
-              />
+              {!isHost || loadingPrivateState ? (
+                <InvitationCard
+                  invitation={invitation}
+                  access={hasPrivateAccess ? 'private' : 'public'}
+                  isHost={isHost}
+                  rsvp={rsvp?.status ?? null}
+                  canSubmitRsvp={canSubmitRsvp}
+                  onRsvpChange={canSubmitRsvp ? handleRsvpChange : undefined}
+                  onGuestRsvpIntent={isHost ? undefined : handleGuestRsvpIntent}
+                  guestRsvpHint={guestRsvpHint}
+                />
+              ) : null}
 
               {(user || hasHostSession) && loadingPrivateState ? (
                 <Card className="pb-flowCard">
@@ -1223,8 +1294,9 @@ export default function SharedInvitationPage() {
               ) : null}
 
               {(user || hasHostSession) && !loadingPrivateState && isHost ? (
-                <div className="pb-invitePrivateStack pb-invitePrivateStack--host">
-                  <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                <div className="pb-hostStudio">
+                  <div className="pb-invitePrivateStack pb-invitePrivateStack--host pb-hostStudio__cards">
+                  <Card id="host-update-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
                     <button
                       id="host-update-toggle"
                       type="button"
@@ -1269,7 +1341,7 @@ export default function SharedInvitationPage() {
                     ) : null}
                   </Card>
 
-                  <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                  <Card id="host-details-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
                     <button
                       id="host-details-toggle"
                       type="button"
@@ -1366,7 +1438,7 @@ export default function SharedInvitationPage() {
                     ) : null}
                   </Card>
 
-                  <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                  <Card id="host-requests-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
                     <button
                       id="host-requests-toggle"
                       type="button"
@@ -1398,7 +1470,7 @@ export default function SharedInvitationPage() {
                     ) : null}
                   </Card>
 
-                  <Card className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                  <Card id="host-wishlist-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
                     <button
                       id="host-wishlist-toggle"
                       type="button"
@@ -1478,6 +1550,19 @@ export default function SharedInvitationPage() {
                       </div>
                     ) : null}
                   </Card>
+                  </div>
+
+                  <div id="host-live-preview" className="pb-hostStudio__preview">
+                    <InvitationLivePreview draft={hostEditorDraft} />
+                  </div>
+
+                  <div className="pb-hostStudio__rail">
+                    <ShortcutRail
+                      items={HOST_SHORTCUT_ITEMS}
+                      activeShortcut={hostShortcutActive}
+                      onShortcutClick={(id) => handleHostShortcutClick(id as HostShortcutId)}
+                    />
+                  </div>
                 </div>
               ) : null}
 

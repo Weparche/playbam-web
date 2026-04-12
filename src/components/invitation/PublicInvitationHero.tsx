@@ -1,10 +1,23 @@
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 
-import { getRsvpSymbol, normalizeRsvpMood, normalizeTitleFont, RSVP_GUEST_HEADLINE, type RsvpMood } from '../create/createTypes'
+import {
+  getRsvpSymbol,
+  getTitleColorValue,
+  normalizeRsvpMood,
+  normalizeTitleColor,
+  normalizeTitleFont,
+  normalizeTitleOutline,
+  normalizeTitleSize,
+  RSVP_GUEST_HEADLINE,
+  type RsvpMood,
+} from '../create/createTypes'
 
 type Props = {
   celebrantTitle: string
   titleFont?: string | null
+  titleColor?: string | null
+  titleOutline?: string | null
+  titleSize?: string | null
   dateText: string
   timeText: string
   venueText: string
@@ -64,6 +77,9 @@ function IconLock() {
 export default function PublicInvitationHero({
   celebrantTitle,
   titleFont = null,
+  titleColor = null,
+  titleOutline = null,
+  titleSize = null,
   dateText,
   timeText,
   venueText,
@@ -83,9 +99,15 @@ export default function PublicInvitationHero({
   const [failedImage, setFailedImage] = useState<string | null>(null)
   const heroImage = failedImage === resolvedImage ? fallbackImage : resolvedImage
   const normalizedTitleFont = normalizeTitleFont(titleFont)
+  const normalizedTitleColor = normalizeTitleColor(titleColor)
+  const normalizedTitleOutline = normalizeTitleOutline(titleOutline)
+  const normalizedTitleSize = normalizeTitleSize(titleSize)
   const resolvedMood = normalizeRsvpMood(typeof rsvpMood === 'string' ? rsvpMood : null)
   const [titlePrimary, titleSecondary = ''] = celebrantTitle.split('|')
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venueText)}`
+  const titleStyle = {
+    ['--pb-invite-title-color' as string]: getTitleColorValue(normalizedTitleColor),
+  } as CSSProperties
 
   return (
     <section className="pb-inviteHero pb-inviteHero--storybook" aria-label="Hero dio javne rođendanske pozivnice">
@@ -106,7 +128,10 @@ export default function PublicInvitationHero({
           <img className="pb-inviteHero__logo" src="/logo.png" alt="Playbam.hr" />
 
           <header className="pb-inviteHero__titleWrap pb-inviteHero__titleWrap--storybook">
-            <h1 className={`pb-inviteHero__title pb-inviteHero__title--storybook pb-inviteHero__title--${normalizedTitleFont}`}>
+            <h1
+              className={`pb-inviteHero__title pb-inviteHero__title--storybook pb-inviteHero__title--${normalizedTitleFont} pb-inviteHero__title--outline-${normalizedTitleOutline} pb-inviteHero__title--size-${normalizedTitleSize}`}
+              style={titleStyle}
+            >
               <span className="pb-inviteHero__titleLine">{titlePrimary}</span>
               {titleSecondary ? <span className="pb-inviteHero__titleLine">{titleSecondary}</span> : null}
             </h1>

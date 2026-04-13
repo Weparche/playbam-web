@@ -39,6 +39,9 @@ type Props = {
   showAccessCard?: boolean
   /** Ispod poruke (npr. ispis / print pregled). */
   printPartyDetails?: readonly PrintPartyDetailLine[] | null
+  /** QR kod za print/export (prikaz unutar backgrounda pozivnice). */
+  printQrDataUrl?: string | null
+  printQrUrl?: string | null
 }
 
 function IconCalendar() {
@@ -102,6 +105,8 @@ export default function PublicInvitationHero({
   accessText,
   showAccessCard = true,
   printPartyDetails = null,
+  printQrDataUrl = null,
+  printQrUrl = null,
 }: Props) {
   const fallbackImage = '/pozivnica-girl.png'
   const resolvedImage = backgroundImage || fallbackImage
@@ -141,6 +146,13 @@ export default function PublicInvitationHero({
             }
           }}
         />
+
+        {printQrDataUrl ? (
+          <div className="pb-inviteHero__printQr" aria-label="QR kod pozivnice">
+            <img className="pb-inviteHero__printQrImage" src={printQrDataUrl} alt="QR kod pozivnice" />
+            {printQrUrl ? <div className="pb-inviteHero__printQrUrl">{printQrUrl}</div> : null}
+          </div>
+        ) : null}
 
         <div className="pb-inviteHero__content pb-inviteHero__content--storybook" style={titleStyle}>
           <img className="pb-inviteHero__logo" src="/logo.png" alt="Playbam.hr" />

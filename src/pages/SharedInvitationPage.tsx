@@ -1,5 +1,7 @@
 ﻿import { type ChangeEvent, type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import { toJpeg } from 'html-to-image'
+
+import { buildGoogleFontsEmbedCss } from '../lib/buildGoogleFontsEmbedCss'
 import { useParams } from 'react-router-dom'
 
 import FloatingEditPanel from '../components/create/FloatingEditPanel'
@@ -90,7 +92,7 @@ const HOST_SHORTCUT_ITEMS = [
   { id: 'settings', label: 'Ažuriraj', icon: '⚙️' },
   { id: 'partyDetails', label: 'Detalji', icon: '📍' },
   { id: 'requests', label: 'Zahtjevi', icon: '🧾' },
-  { id: 'shareGuest', label: 'Podijeli pozivnicu', icon: '🔗' },
+  { id: 'shareGuest', label: 'Podijeli', icon: '🔗' },
 ] as const satisfies ReadonlyArray<{ id: HostShortcutId; label: string; icon: string }>
 
 function createEmptyDraft(parentName = ''): FamilyProfileDraft {
@@ -516,11 +518,20 @@ export default function SharedInvitationPage() {
     const height = Math.ceil(Math.max(root.scrollHeight, rect.height))
 
     try {
+      let fontEmbedCSS = ''
+      try {
+        fontEmbedCSS = await buildGoogleFontsEmbedCss(document, { cacheBust: true })
+      } catch {
+        /* mreža / blokada — fallback ispod */
+      }
+
       const dataUrl = await toJpeg(root, {
         quality: 0.92,
         pixelRatio: 2,
         backgroundColor: '#ffffff',
         cacheBust: true,
+        /* fontEmbedCSS: fetch + data URL umjesto cssRules na cross-origin linku */
+        ...(fontEmbedCSS ? { fontEmbedCSS } : { skipFonts: true }),
         width,
         height,
         style: {
@@ -1751,11 +1762,29 @@ export default function SharedInvitationPage() {
                     ) : null}
                     <div id="host-live-preview" ref={hostPrintCardRef} className="pb-hostStudio__previewCluster">
                       <div className="pb-hostStudio__preview">
-                        <InvitationLivePreview
-                          draft={hostEditorDraft}
-                          previewMode={hostPreviewMode}
-                          partyDetails={hostPartyDetailsDraft}
-                        />
+                        <div className="pb-hostScreenPrintPreview">
+                          <InvitationLivePreview
+                            draft={hostEditorDraft}
+                            previewMode={hostPreviewMode}
+                            partyDetails={hostPartyDetailsDraft}
+                            inviteUrl={guestPageShareUrl || null}
+                          />
+                        </div>
+
+                        {hostPreviewMode === 'print' ? (
+                          <div className="pb-hostPrintOnlySheet" aria-label="A4 ispis (4 pozivnice)">
+                            {Array.from({ length: 4 }).map((_, index) => (
+                              <div key={index} className="pb-hostPrintOnlySheet__item">
+                                <InvitationLivePreview
+                                  draft={hostEditorDraft}
+                                  previewMode="print"
+                                  partyDetails={hostPartyDetailsDraft}
+                                  inviteUrl={guestPageShareUrl || null}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   </div>

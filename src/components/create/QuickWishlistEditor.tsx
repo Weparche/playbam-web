@@ -83,24 +83,33 @@ function WishlistItemEditor({
   onUpdate,
   onRemove,
   onLinkMetaChange,
+  forceTitleFocus,
 }: {
   item: WishlistDraftItem
   index: number
   onUpdate: (id: string, field: keyof WishlistDraftItem, value: string) => void
   onRemove: (id: string) => void
   onLinkMetaChange: (id: string, meta: LinkMeta | undefined) => void
+  forceTitleFocus?: boolean
 }) {
   const [fetching, setFetching] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastFetchedUrlRef = useRef(item.link)
   const onLinkMetaChangeRef = useRef(onLinkMetaChange)
   onLinkMetaChangeRef.current = onLinkMetaChange
+  const titleInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current)
     }
   }, [])
+
+  useEffect(() => {
+    if (forceTitleFocus) {
+      titleInputRef.current?.focus()
+    }
+  }, [forceTitleFocus])
 
   const handleLinkChange = (value: string) => {
     onUpdate(item.id, 'link', value)
@@ -150,7 +159,7 @@ function WishlistItemEditor({
       </div>
       <label className="pb-formField">
         <span className="pb-formLabel">Naziv poklona</span>
-        <input className="pb-input" value={item.title} onChange={(event) => onUpdate(item.id, 'title', event.target.value)} />
+        <input ref={titleInputRef} className="pb-input" value={item.title} onChange={(event) => onUpdate(item.id, 'title', event.target.value)} />
       </label>
       <label className="pb-formField">
         <span className="pb-formLabel">Kratka napomena</span>
@@ -167,7 +176,14 @@ function WishlistItemEditor({
 }
 
 export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistChange }: Props) {
+  const [addGiftError, setAddGiftError] = useState('')
+  const [focusTitleItemId, setFocusTitleItemId] = useState<string | null>(null)
+
   const updateItem = (id: string, field: keyof WishlistDraftItem, value: string) => {
+    if (field === 'title') {
+      setAddGiftError('')
+      setFocusTitleItemId(null)
+    }
     onWishlistChange(draft.wishlistItems.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
   }
 
@@ -176,6 +192,14 @@ export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistCh
   }
 
   const addItem = () => {
+    const last = draft.wishlistItems[draft.wishlistItems.length - 1]
+    if (last && !last.title.trim()) {
+      setAddGiftError('Upiši naziv poklona prije dodavanja novog.')
+      setFocusTitleItemId(last.id)
+      return
+    }
+    setAddGiftError('')
+    setFocusTitleItemId(null)
     onWishlistChange([
       ...draft.wishlistItems,
       { id: `wish-${Date.now()}`, title: '', note: '', link: '' },
@@ -203,8 +227,10 @@ export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistCh
               onUpdate={updateItem}
               onRemove={removeItem}
               onLinkMetaChange={updateLinkMeta}
+              forceTitleFocus={focusTitleItemId === item.id}
             />
           ))}
+          {addGiftError ? <div className="pb-inlineNote pb-inlineNote--error">{addGiftError}</div> : null}
           <button type="button" className="pb-quickEditor__add" onClick={addItem}>
             + Dodaj poklon
             {draft.wishlistItems.length > 0 ? (

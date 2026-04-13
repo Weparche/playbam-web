@@ -1,4 +1,7 @@
-import PublicInvitationHero, { type PrintPartyDetailLine } from '../invitation/PublicInvitationHero'
+import { useEffect, useMemo, useState } from 'react'
+import QRCode from 'qrcode'
+
+import PublicInvitationHero from '../invitation/PublicInvitationHero'
 import {
   buildInvitationHeroTitle,
   formatInvitationDateText,
@@ -18,9 +21,10 @@ export type LivePreviewPartyDetails = {
 type Props = {
   draft: InvitationCreateDraft
   compact?: boolean
-  /** Gost: puni prikaz. Print: bez RSVP-a + detalji tuluma desno. */
+  /** Gost: puni prikaz. Print: bez RSVP-a + QR kod. */
   previewMode?: LivePreviewMode
   partyDetails?: LivePreviewPartyDetails | null
+  inviteUrl?: string | null
 }
 
 function buildPreviewAccessText(draft: InvitationCreateDraft) {
@@ -45,29 +49,54 @@ function buildPreviewAccessText(draft: InvitationCreateDraft) {
   return `Prijavi se za ${enabledFeatures[0]}, ${enabledFeatures[1]} i ${enabledFeatures[2]}.`
 }
 
-function buildPrintPartyDetailLines(details: LivePreviewPartyDetails): PrintPartyDetailLine[] {
-  const parking = details.parkingLocation.trim()
-  const cafe = details.cafeLocation.trim()
-  const extra = details.extraDetails.trim()
-  const rows: PrintPartyDetailLine[] = []
-  if (parking) rows.push({ label: 'Parking', value: parking })
-  if (cafe) rows.push({ label: 'Kafić', value: cafe })
-  if (extra) rows.push({ label: 'Ostalo', value: extra })
-  return rows
-}
-
 export default function InvitationLivePreview({
   draft,
   compact,
   previewMode = 'guest',
   partyDetails = null,
+  inviteUrl = null,
 }: Props) {
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
   const messageText = draft.message.trim() || 'Vidimo se na tulumu!'
   const accessText = buildPreviewAccessText(draft)
   const isPrint = previewMode === 'print'
-  const details = partyDetails ?? { parkingLocation: '', cafeLocation: '', extraDetails: '' }
-  const printPartyLines = isPrint ? buildPrintPartyDetailLines(details) : null
+  void partyDetails
+
+  const qrTargetUrl = useMemo(() => inviteUrl?.trim() || '', [inviteUrl])
+  const [qrDataUrl, setQrDataUrl] = useState<string>('')
+  const [, setQrError] = useState(false)
+
+  useEffect(() => {
+    let alive = true
+    if (!isPrint || !qrTargetUrl) {
+      setQrDataUrl('')
+      setQrError(false)
+      return () => {
+        alive = false
+      }
+    }
+
+    setQrError(false)
+    QRCode.toDataURL(qrTargetUrl, {
+      errorCorrectionLevel: 'M',
+      margin: 1,
+      width: 420,
+      color: { dark: '#0b1220', light: '#ffffff' },
+    })
+      .then((dataUrl: string) => {
+        if (!alive) return
+        setQrDataUrl(dataUrl)
+      })
+      .catch(() => {
+        if (!alive) return
+        setQrError(true)
+        setQrDataUrl('')
+      })
+
+    return () => {
+      alive = false
+    }
+  }, [isPrint, qrTargetUrl])
 
   const heroCard = (
     <section className="pb-inviteCard pb-inviteCard--storybook pb-createLivePreview__card" aria-label="Pregled stvarne web pozivnice">
@@ -91,7 +120,9 @@ export default function InvitationLivePreview({
           /* Gost pregled: privatna kartica (ispod RSVP-a) privremeno isključena.
              Vrati prikaz: showAccessCard={!isPrint && Boolean(accessText)} */
           showAccessCard={false}
-          printPartyDetails={printPartyLines && printPartyLines.length > 0 ? printPartyLines : null}
+          printPartyDetails={null}
+          printQrDataUrl={isPrint ? (qrDataUrl || null) : null}
+          printQrUrl={isPrint ? (qrTargetUrl || null) : null}
         />
       </div>
     </section>

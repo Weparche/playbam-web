@@ -325,7 +325,7 @@ export default function CreateInvitationPage() {
             onClose={() => setActiveShortcut(null)}
           >
             <div className="pb-createStudio__previewPopup">
-              <InvitationLivePreview draft={draft} compact />
+              <InvitationLivePreview draft={draft} compact inviteUrl={null} />
             </div>
           </FloatingEditPanel>
         )

@@ -485,7 +485,20 @@ export default function SharedInvitationPage() {
     }
   }
 
-  const handleHostPrintInvite = () => {
+  const handleHostPrintInvite = async () => {
+    if (hostPreviewMode !== 'print') {
+      setHostPreviewMode('print')
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      })
+    }
+
+    try {
+      await document.fonts.ready
+    } catch {
+      // Nastavi i bez potvrde fontova; cilj je da print preview ipak dobije sadržaj.
+    }
+
     document.documentElement.classList.add('pb-print-host-invite')
     const cleanup = () => {
       document.documentElement.classList.remove('pb-print-host-invite')
@@ -493,7 +506,9 @@ export default function SharedInvitationPage() {
     }
     window.addEventListener('afterprint', cleanup)
     window.requestAnimationFrame(() => {
-      window.print()
+      window.requestAnimationFrame(() => {
+        window.print()
+      })
     })
   }
 

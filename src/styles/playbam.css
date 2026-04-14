@@ -1900,26 +1900,38 @@
     print-color-adjust: exact;
   }
 
-  html.pb-print-host-invite body * {
-    visibility: hidden !important;
+  html.pb-print-host-invite,
+  html.pb-print-host-invite body,
+  html.pb-print-host-invite #root,
+  html.pb-print-host-invite .pb-main {
+    height: auto !important;
+    min-height: 0 !important;
   }
 
-  html.pb-print-host-invite #host-live-preview,
-  html.pb-print-host-invite #host-live-preview * {
-    visibility: visible !important;
+  html.pb-print-host-invite .pb-main--demo {
+    padding: 0 !important;
+    background: #fff !important;
+    background-image: none !important;
+    overflow: visible !important;
   }
 
-  html.pb-print-host-invite .pb-hostStudio__previewCluster,
-  html.pb-print-host-invite .pb-hostStudio__preview,
-  html.pb-print-host-invite .pb-hostPrintOnlySheet,
-  html.pb-print-host-invite .pb-hostPrintOnlySheet * {
-    visibility: visible !important;
+  html.pb-print-host-invite .pb-main--demo::before,
+  html.pb-print-host-invite .pb-main--demo::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  html.pb-print-host-invite .pb-invitePage__blobs {
+    display: none !important;
+  }
+
+  html.pb-print-host-invite .pb-backRow {
+    display: none !important;
   }
 
   html.pb-print-host-invite .pb-hostStudio__previewColumn > .pb-hostPrintToolbar,
   html.pb-print-host-invite .pb-hostStudio__previewColumn > .pb-hostPrintToolbar * {
     display: none !important;
-    visibility: hidden !important;
   }
 
   html.pb-print-host-invite #host-live-preview {
@@ -1937,7 +1949,8 @@
   html.pb-print-host-invite .pb-inviteSessionBar,
   html.pb-print-host-invite .pb-hostStudio__cards,
   html.pb-print-host-invite .pb-hostStudio__rail,
-  html.pb-print-host-invite .pb-hostPreviewMode {
+  html.pb-print-host-invite .pb-hostPreviewMode,
+  html.pb-print-host-invite .pb-modalOverlay {
     display: none !important;
   }
 
@@ -1953,6 +1966,17 @@
     margin: 0 !important;
     width: 100% !important;
     max-width: none !important;
+  }
+
+  html.pb-print-host-invite .pb-hostStudio__preview,
+  html.pb-print-host-invite .pb-hostStudio__previewCluster {
+    position: static !important;
+    top: auto !important;
+    display: block !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   html.pb-print-host-invite .pb-createLivePreview {
@@ -1977,44 +2001,45 @@
 
   /* Na ekranu gledamo 1 pozivnicu; u print dijalogu ispisujemo 4 (2×2) */
   html.pb-print-host-invite .pb-hostScreenPrintPreview {
-    display: none !important;
-    visibility: hidden !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 auto !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet {
-    display: grid !important;
-    visibility: visible !important;
-    width: 100% !important;
+    display: none !important;
+  }
+
+  html.pb-print-host-invite .pb-hostScreenPrintPreview .pb-createLivePreview {
+    width: fit-content !important;
+    max-width: 100% !important;
     margin: 0 auto !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 4mm !important;
-    align-items: start !important;
-    justify-items: center !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
-  html.pb-print-host-invite .pb-hostPrintOnlySheet__item {
-    width: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
+  html.pb-print-host-invite .pb-hostScreenPrintPreview .pb-inviteCard--storybook {
+    width: 156mm !important;
+    max-width: 156mm !important;
+    margin: 0 auto !important;
   }
 
-  /* Smanji pozivnicu da 2x2 stane na 1x A4 */
-  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {
-    max-width: 210px !important;
-  }
-
-  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__frame--storybook {
-    max-width: 210px !important;
+  html.pb-print-host-invite .pb-hostScreenPrintPreview .pb-inviteHero__frame--storybook {
+    width: 156mm !important;
+    max-width: 156mm !important;
     min-height: auto !important;
+    margin: 0 auto !important;
   }
 }
 
-@media screen {
-  .pb-hostPrintOnlySheet {
-    display: none;
-  }
+.pb-hostPrintOnlySheet {
+  display: none;
+  width: 100%;
+  visibility: hidden;
+  overflow: hidden;
 }
 
 .pb-createLivePreview__printSplit {

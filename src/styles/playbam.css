@@ -2001,16 +2001,32 @@
 
   /* Na ekranu gledamo 1 pozivnicu; u print dijalogu ispisujemo 4 (2×2) */
   html.pb-print-host-invite .pb-hostScreenPrintPreview {
-    display: block !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-  }
-
-  html.pb-print-host-invite .pb-hostPrintOnlySheet {
     display: none !important;
   }
 
-  html.pb-print-host-invite .pb-hostScreenPrintPreview .pb-createLivePreview {
+  html.pb-print-host-invite .pb-hostPrintOnlySheet {
+    display: grid !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    visibility: visible !important;
+    overflow: visible !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 4mm !important;
+    align-items: start !important;
+    align-content: start !important;
+    justify-items: center !important;
+  }
+
+  html.pb-print-host-invite .pb-hostPrintOnlySheet__item {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-createLivePreview {
     width: fit-content !important;
     max-width: 100% !important;
     margin: 0 auto !important;
@@ -2021,15 +2037,15 @@
     box-shadow: none !important;
   }
 
-  html.pb-print-host-invite .pb-hostScreenPrintPreview .pb-inviteCard--storybook {
-    width: 156mm !important;
-    max-width: 156mm !important;
+  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {
+    width: 78.5mm !important;
+    max-width: 78.5mm !important;
     margin: 0 auto !important;
   }
 
-  html.pb-print-host-invite .pb-hostScreenPrintPreview .pb-inviteHero__frame--storybook {
-    width: 156mm !important;
-    max-width: 156mm !important;
+  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__frame--storybook {
+    width: 78.5mm !important;
+    max-width: 78.5mm !important;
     min-height: auto !important;
     margin: 0 auto !important;
   }

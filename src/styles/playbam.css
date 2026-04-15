@@ -4400,11 +4400,24 @@
   white-space: nowrap;
 }
 
+.pb-createShell__statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
 .pb-createShell__autosave {
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
-  color: rgba(16, 24, 40, 0.58);
+  gap: 0.42rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(77, 124, 238, 0.16);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 10px 24px rgba(37, 66, 125, 0.08);
+  color: rgba(20, 42, 82, 0.78);
   font-size: 0.92rem;
   font-weight: 800;
   transition: opacity 400ms ease;
@@ -4432,6 +4445,32 @@
 
 .pb-createShell__autosaveIcon--check {
   color: #2e9e5e;
+}
+
+.pb-createShell__headerActions {
+  display: flex;
+  align-items: center;
+}
+
+.pb-createShell__resetButton.pb-btn-ghost {
+  min-height: 2.5rem;
+  padding-inline: 0.95rem;
+  border-radius: 999px;
+  border-color: rgba(20, 42, 82, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+  color: #1f3760;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(37, 66, 125, 0.06);
+}
+
+.pb-createShell__resetButton.pb-btn-ghost:hover {
+  border-color: rgba(77, 124, 238, 0.22);
+  background: rgba(244, 248, 255, 0.94);
+}
+
+.pb-createShell__resetButton.pb-btn-ghost:focus-visible {
+  outline: 3px solid rgba(77, 124, 238, 0.24);
+  outline-offset: 2px;
 }
 
 @keyframes pbSpinLoop {
@@ -6572,6 +6611,19 @@
 
   .pb-createShell__autosave {
     font-size: 0.84rem;
+  }
+
+  .pb-createShell__statusRow {
+    width: 100%;
+  }
+
+  .pb-createShell__headerActions,
+  .pb-createShell__resetButton.pb-btn-ghost {
+    width: 100%;
+  }
+
+  .pb-createShell__resetButton.pb-btn-ghost {
+    justify-content: center;
   }
 
   .pb-createEditor__heroCard,

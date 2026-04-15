@@ -6,11 +6,21 @@ type Props = {
   progressPercent: number
   progressLabel: string
   preview: ReactNode
-  rail: ReactNode
+  rail?: ReactNode
+  headerActions?: ReactNode
   children: ReactNode
 }
 
-export default function InvitationCreateShell({ autosaveLabel, saveState, progressPercent, progressLabel, preview, rail, children }: Props) {
+export default function InvitationCreateShell({
+  autosaveLabel,
+  saveState,
+  progressPercent,
+  progressLabel,
+  preview,
+  rail,
+  headerActions,
+  children,
+}: Props) {
   const headerRef = useRef<HTMLElement | null>(null)
   const [showStickyProgress, setShowStickyProgress] = useState(false)
 
@@ -33,22 +43,25 @@ export default function InvitationCreateShell({ autosaveLabel, saveState, progre
   return (
     <div className="pb-createShell">
       <header className="pb-createShell__header" ref={headerRef}>
-        <span className="pb-createShell__eyebrow">VidimOse create</span>
+        <span className="pb-createShell__eyebrow">VidimoSe.hr pozivnice</span>
         <h1 className="pb-createShell__title">Jednostavno kreiranje pozivnice za tulume!</h1>
-        <span className={`pb-createShell__autosave ${saveState === 'saved' ? 'pb-createShell__autosave--saved' : ''}`}>
-          <span className={autosaveIconClass} aria-hidden="true">
-            {saveState === 'saving' ? (
-              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M8 1.5a6.5 6.5 0 1 1-4.6 1.9" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3.5 8.5l3 3 6-7" />
-              </svg>
-            )}
+        <div className="pb-createShell__statusRow">
+          <span className={`pb-createShell__autosave ${saveState === 'saved' ? 'pb-createShell__autosave--saved' : ''}`}>
+            <span className={autosaveIconClass} aria-hidden="true">
+              {saveState === 'saving' ? (
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M8 1.5a6.5 6.5 0 1 1-4.6 1.9" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3.5 8.5l3 3 6-7" />
+                </svg>
+              )}
+            </span>
+            {autosaveLabel}
           </span>
-          {autosaveLabel}
-        </span>
+          {headerActions ? <div className="pb-createShell__headerActions">{headerActions}</div> : null}
+        </div>
       </header>
 
       <div className={`pb-createShell__stickyProgress ${showStickyProgress ? 'is-visible' : ''}`}>

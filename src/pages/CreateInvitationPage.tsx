@@ -13,9 +13,9 @@ import QuickThemeEditor from '../components/create/QuickThemeEditor'
 import QuickWishlistEditor from '../components/create/QuickWishlistEditor'
 import ShortcutRail from '../components/create/ShortcutRail'
 import {
+  buildEmptyCreateDraft,
   buildCreateProgress,
   buildTimeRangeValue,
-  DEFAULT_CREATE_DRAFT,
   normalizeCreateTheme,
   normalizeRsvpMood,
   normalizeTitleColor,
@@ -42,30 +42,32 @@ const DEV_HOST_AUTH_TOKEN =
     : ''
 
 function readStoredDraft() {
+  const emptyDraft = buildEmptyCreateDraft()
+
   if (typeof window === 'undefined') {
-    return DEFAULT_CREATE_DRAFT
+    return emptyDraft
   }
 
   try {
     const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY)
-    if (!raw) return DEFAULT_CREATE_DRAFT
+    if (!raw) return emptyDraft
 
     const parsed = JSON.parse(raw) as Partial<InvitationCreateDraft>
     return {
-      ...DEFAULT_CREATE_DRAFT,
+      ...emptyDraft,
       ...parsed,
-      theme: normalizeCreateTheme(typeof parsed.theme === 'string' ? parsed.theme : DEFAULT_CREATE_DRAFT.theme),
-      titleFont: normalizeTitleFont(typeof parsed.titleFont === 'string' ? parsed.titleFont : DEFAULT_CREATE_DRAFT.titleFont),
-      titleColor: normalizeTitleColor(typeof parsed.titleColor === 'string' ? parsed.titleColor : DEFAULT_CREATE_DRAFT.titleColor),
-      titleOutline: normalizeTitleOutline(typeof parsed.titleOutline === 'string' ? parsed.titleOutline : DEFAULT_CREATE_DRAFT.titleOutline),
-      titleSize: normalizeTitleSize(typeof parsed.titleSize === 'string' ? parsed.titleSize : DEFAULT_CREATE_DRAFT.titleSize),
-      rsvpMood: normalizeRsvpMood(typeof parsed.rsvpMood === 'string' ? parsed.rsvpMood : DEFAULT_CREATE_DRAFT.rsvpMood),
+      theme: normalizeCreateTheme(typeof parsed.theme === 'string' ? parsed.theme : emptyDraft.theme),
+      titleFont: normalizeTitleFont(typeof parsed.titleFont === 'string' ? parsed.titleFont : emptyDraft.titleFont),
+      titleColor: normalizeTitleColor(typeof parsed.titleColor === 'string' ? parsed.titleColor : emptyDraft.titleColor),
+      titleOutline: normalizeTitleOutline(typeof parsed.titleOutline === 'string' ? parsed.titleOutline : emptyDraft.titleOutline),
+      titleSize: normalizeTitleSize(typeof parsed.titleSize === 'string' ? parsed.titleSize : emptyDraft.titleSize),
+      rsvpMood: normalizeRsvpMood(typeof parsed.rsvpMood === 'string' ? parsed.rsvpMood : emptyDraft.rsvpMood),
       rsvpEnabled: true,
       rsvpPrompt: RSVP_GUEST_HEADLINE,
-      wishlistItems: Array.isArray(parsed.wishlistItems) ? parsed.wishlistItems : DEFAULT_CREATE_DRAFT.wishlistItems,
+      wishlistItems: Array.isArray(parsed.wishlistItems) ? parsed.wishlistItems : emptyDraft.wishlistItems,
     }
   } catch {
-    return DEFAULT_CREATE_DRAFT
+    return emptyDraft
   }
 }
 
@@ -146,7 +148,7 @@ export default function CreateInvitationPage() {
     return () => window.clearTimeout(timeoutId)
   }, [draft])
 
-  const autosaveLabel = saveState === 'saving' ? 'Autosave u tijeku…' : 'Spremljeno lokalno'
+  const autosaveLabel = saveState === 'saving' ? 'Spremam lokalno…' : 'Spremljeno lokalno'
 
   const updateField = <K extends keyof InvitationCreateDraft>(field: K, value: InvitationCreateDraft[K]) => {
     const nextValue = (field === 'rsvpEnabled' ? true : value) as InvitationCreateDraft[K]
@@ -162,6 +164,20 @@ export default function CreateInvitationPage() {
 
   const handleShortcutClick = (shortcut: ShortcutId) => {
     setActiveShortcut((current) => (current === shortcut ? null : shortcut))
+  }
+
+  const handleResetDraft = () => {
+    if (typeof window !== 'undefined') {
+      const confirmed = window.confirm('Resetirati sve promjene i vratiti pozivnicu na prazne placeholder vrijednosti?')
+      if (!confirmed) {
+        return
+      }
+      window.localStorage.removeItem(LOCAL_STORAGE_KEY)
+    }
+
+    setActiveShortcut(null)
+    setFormError('')
+    setDraft(buildEmptyCreateDraft())
   }
 
   const handleCreateInvitation = async () => {
@@ -344,6 +360,11 @@ export default function CreateInvitationPage() {
           progressPercent={progressPercent}
           progressLabel={progressLabel}
           preview={<InvitationPreviewCard draft={draft} compact />}
+          headerActions={(
+            <Button variant="ghost" type="button" className="pb-createShell__resetButton" onClick={handleResetDraft}>
+              Resetiraj promjene
+            </Button>
+          )}
           rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={(id) => handleShortcutClick(id as ShortcutId)} />}
         >
           <InvitationMainEditor draft={draft} onFieldChange={updateField} onOpenShortcut={handleShortcutClick} activeShortcut={activeShortcut} />

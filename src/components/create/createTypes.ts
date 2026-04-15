@@ -251,6 +251,23 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   rsvpPrompt: RSVP_GUEST_HEADLINE,
 }
 
+export function buildEmptyCreateDraft(): InvitationCreateDraft {
+  return {
+    ...DEFAULT_CREATE_DRAFT,
+    title: '',
+    celebrantName: '',
+    date: '',
+    time: '',
+    timeEnd: '',
+    locationName: '',
+    locationAddress: '',
+    message: '',
+    wishlistEnabled: false,
+    wishlistItems: [],
+    savingsEnabled: false,
+  }
+}
+
 export function formatPreviewDate(dateValue: string) {
   if (!dateValue.trim()) return 'Datum još nije odabran'
   const parsedDate = new Date(`${dateValue}T12:00:00`)
@@ -334,7 +351,16 @@ export function getUpcomingDateOptions(referenceDate: string) {
 
 export function buildPreviewLocation(locationName: string, locationAddress: string, locationType: string) {
   const details = [locationName.trim(), locationAddress.trim()].filter(Boolean)
-  return details.length > 0 ? details.join(' • ') : locationType.trim() || 'Lokacija uskoro'
+  if (details.length > 0) {
+    return details.join(' • ')
+  }
+
+  const normalizedType = locationType.trim()
+  if (!normalizedType || normalizedType === 'Igraonica / lokal') {
+    return 'Lokacija uskoro'
+  }
+
+  return normalizedType
 }
 
 export function normalizeTitleFont(fontValue: string | null | undefined): TitleFont {
@@ -463,7 +489,7 @@ export function buildCreateProgress(draft: InvitationCreateDraft) {
   const wishlistReady = draft.wishlistEnabled ? draft.wishlistItems.length > 0 || draft.savingsEnabled : true
   const rsvpReady = draft.rsvpEnabled
 
-  const steps = [titleReady, dateReady, locationReady, messageReady, wishlistReady, rsvpReady]
+  const steps = [titleReady, dateReady, locationReady]
   const completedSteps = steps.filter(Boolean).length
   const totalSteps = steps.length
 

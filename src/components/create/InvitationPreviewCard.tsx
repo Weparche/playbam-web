@@ -73,7 +73,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
     <Card className={cardClass}>
       <div className="pb-previewCard__hero">
         <img className="pb-previewCard__heroImage" src={backgroundImage} alt="" aria-hidden="true" />
-        <img className="pb-previewCard__logo" src="/logo.png" alt="Playbam.hr" />
+        <img className="pb-previewCard__logo" src="/logo.png" alt="VidimoSe.hr" />
         <div ref={previewHeroTextRef} className="pb-previewCard__heroText">
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
           <h3

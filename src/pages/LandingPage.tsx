@@ -76,7 +76,7 @@ export default function LandingPage() {
             <div className="pb-hero__left">
               <div className="pb-hero__chipRow">
                 <span className="pb-chip">
-                  Playbam.hr za roditelje i dječje rođendane
+                  VidimoSe.hr za roditelje i dječje rođendane
                 </span>
               </div>
 
@@ -423,7 +423,7 @@ export default function LandingPage() {
           <div className="pb-container">
             <div className="pb-download__grid">
               <div className="pb-download__left">
-                <h2 className="pb-title">Preuzmi Playbam</h2>
+                <h2 className="pb-title">Preuzmi VidimoSe</h2>
                 <p className="pb-subtitle">
                   Brza rezervacija, paketi i pozivnice u jednoj aplikaciji.
                 </p>

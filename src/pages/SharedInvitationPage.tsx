@@ -1320,18 +1320,18 @@ export default function SharedInvitationPage() {
         </div>
         <div className="pb-container pb-flowLayout">
           <div className="pb-backRow">
-            <a className="pb-backLink" href="https://playbam.hr">
+            <a className="pb-backLink" href="https://vidimose.hr">
               <span className="pb-backLink__icon" aria-hidden>
                 &larr;
               </span>
-              <span>Nazad na Playbam.hr</span>
+              <span>Nazad na VidimoSe.hr</span>
             </a>
           </div>
 
           {loading ? (
             <Card className="pb-flowCard">
               <h1 className="pb-flowCard__title">Učitavamo pozivnicu...</h1>
-              <p className="pb-flowCard__text">Dohvaćamo javne podatke s Playbam backend API-ja.</p>
+              <p className="pb-flowCard__text">Dohvaćamo javne podatke s VidimoSe.hr backend API-ja.</p>
             </Card>
           ) : null}
 
@@ -1456,7 +1456,7 @@ export default function SharedInvitationPage() {
                         type="password"
                         value={hostTokenDraft}
                         onChange={(event) => setHostTokenDraft(event.target.value)}
-                        placeholder="playbam-prod-host-token"
+                        placeholder="vidimose-prod-host-token"
                       />
                     </label>
                   </div>

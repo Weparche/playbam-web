@@ -104,7 +104,7 @@ export const TITLE_FONT_OPTIONS = [
 export const TITLE_COLOR_OPTIONS = [
   {
     id: 'playbam-blue',
-    label: 'Playbam plava',
+    label: 'VidimoSe plava',
     swatch: '#336fd6',
     description: 'Brand plava — jasna i pouzdana na većini naslovnica.',
   },

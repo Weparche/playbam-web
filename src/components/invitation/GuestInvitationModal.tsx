@@ -129,7 +129,7 @@ export default function GuestInvitationModal({
           {step === 'login' ? (
             <>
               <p className="pb-modalDialog__lead">
-                Za potvrdu dolaska, rezervaciju poklona i privatni sadržaj trebamo tvoj kontakt. Podaci se spremaju u tvoj Playbam profil.
+                Za potvrdu dolaska, rezervaciju poklona i privatni sadržaj trebamo tvoj kontakt. Podaci se spremaju u tvoj VidimoSe.hr profil.
               </p>
               <div className="pb-formGrid">
                 <label className="pb-formField">

@@ -117,6 +117,7 @@ export default function CreateInvitationPage() {
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [draft, setDraft] = useState<InvitationCreateDraft>(() => readStoredDraft())
   const [activeShortcut, setActiveShortcut] = useState<ShortcutId | null>(null)
+  const [pendingOpenLocationAfterDateTime, setPendingOpenLocationAfterDateTime] = useState(false)
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('saved')
   const [savingInvitation, setSavingInvitation] = useState(false)
   const [formError, setFormError] = useState('')
@@ -170,6 +171,41 @@ export default function CreateInvitationPage() {
     setActiveShortcut((current) => (current === shortcut ? null : shortcut))
   }
 
+  useEffect(() => {
+    if (!pendingOpenLocationAfterDateTime) {
+      return
+    }
+
+    if (activeShortcut !== 'dateTime') {
+      setPendingOpenLocationAfterDateTime(false)
+    }
+  }, [activeShortcut, pendingOpenLocationAfterDateTime])
+
+  useEffect(() => {
+    if (!pendingOpenLocationAfterDateTime || activeShortcut !== 'dateTime') {
+      return
+    }
+
+    const dateReady = Boolean(draft.date.trim())
+    const timeReady = Boolean(draft.time.trim())
+    const timeEndReady = Boolean(draft.timeEnd.trim())
+
+    if (dateReady && timeReady && timeEndReady) {
+      setPendingOpenLocationAfterDateTime(false)
+      setActiveShortcut('location')
+    }
+  }, [activeShortcut, draft.date, draft.time, draft.timeEnd, pendingOpenLocationAfterDateTime])
+
+  const handleOpenScheduleDateTimeFlow = () => {
+    setPendingOpenLocationAfterDateTime(true)
+    setActiveShortcut('dateTime')
+  }
+
+  const handleDateTimePanelClose = () => {
+    setPendingOpenLocationAfterDateTime(false)
+    setActiveShortcut(null)
+  }
+
   const handleResetDraft = () => {
     if (typeof window !== 'undefined') {
       const confirmed = window.confirm('Resetirati pozivnicu i vratiti je na prazne placeholder vrijednosti?')
@@ -180,6 +216,7 @@ export default function CreateInvitationPage() {
     }
 
     setActiveShortcut(null)
+    setPendingOpenLocationAfterDateTime(false)
     setFormError('')
     setDraft(buildEmptyCreateDraft())
   }
@@ -243,7 +280,7 @@ export default function CreateInvitationPage() {
             open
             title="Datum i vrijeme"
             description="Brzi picker za osnovne informacije koje gost vidi prve."
-            onClose={() => setActiveShortcut(null)}
+            onClose={handleDateTimePanelClose}
           >
             <QuickDateTimeEditor draft={draft} today={today} onFieldChange={updateField} />
           </FloatingEditPanel>
@@ -376,7 +413,13 @@ export default function CreateInvitationPage() {
           )}
           rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={(id) => handleShortcutClick(id as ShortcutId)} />}
         >
-          <InvitationMainEditor draft={draft} onFieldChange={updateField} onOpenShortcut={handleShortcutClick} activeShortcut={activeShortcut} />
+          <InvitationMainEditor
+            draft={draft}
+            onFieldChange={updateField}
+            onOpenShortcut={handleShortcutClick}
+            onOpenScheduleDateTimeFlow={handleOpenScheduleDateTimeFlow}
+            activeShortcut={activeShortcut}
+          />
 
           <Card className="pb-createFooterAction">
             <div className="pb-createFooterAction__stack">

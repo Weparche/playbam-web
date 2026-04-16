@@ -151,7 +151,12 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
           <strong>RSVP</strong>
           <span>Uključeno</span>
         </div>
-        <p className="pb-previewCard__rsvpPrompt">{RSVP_GUEST_HEADLINE}</p>
+        <p
+          className={`pb-previewCard__rsvpPrompt pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline}`}
+          style={{ ['--pb-preview-title-color' as string]: getTitleColorValue(titleColor) }}
+        >
+          {RSVP_GUEST_HEADLINE}
+        </p>
         <div className="pb-previewCard__rsvpRow" aria-hidden="true">
           {(['going', 'maybe', 'not_going'] as const).map((choice) => (
             <span key={choice} className={`pb-previewCard__rsvpPill pb-previewCard__rsvpPill--${choice.replace('_', '-')}`}>

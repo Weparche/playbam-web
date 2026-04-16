@@ -211,7 +211,12 @@ export default function PublicInvitationHero({
 
           {showRsvp ? (
             <div className="pb-inviteHero__rsvpBlock pb-inviteHero__rsvpBlock--storybook">
-              <h2 className="pb-inviteHero__rsvpTitle pb-inviteHero__rsvpTitle--storybook">{RSVP_GUEST_HEADLINE}</h2>
+              <h2
+                className={`pb-inviteHero__rsvpTitle pb-inviteHero__rsvpTitle--storybook pb-inviteHero__title--${normalizedTitleFont} pb-inviteHero__title--outline-${normalizedTitleOutline}`}
+                style={titleStyle}
+              >
+                {RSVP_GUEST_HEADLINE}
+              </h2>
               <div className="pb-inviteHero__rsvpButtons pb-inviteHero__rsvpButtons--storybook">
                 <button
                   type="button"

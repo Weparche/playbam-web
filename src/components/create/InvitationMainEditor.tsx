@@ -34,6 +34,11 @@ type Props = {
   draft: InvitationCreateDraft
   onFieldChange: <K extends keyof InvitationCreateDraft>(field: K, value: InvitationCreateDraft[K]) => void
   onOpenShortcut: (shortcut: ShortcutId) => void
+  /**
+   * Kad su datum i lokacija prazni, klik na karticu „Kada i gdje“ pokreće datum/vrijeme;
+   * nakon zatvaranja tog panela roditelj može otvoriti lokaciju (npr. kreiraj pozivnicu).
+   */
+  onOpenScheduleDateTimeFlow?: () => void
   hideWishlistCard?: boolean
   /** Za chevron na containerima: dolje kad je zatvoreno, gore kad je povezani shortcut otvoren. */
   activeShortcut?: ShortcutId | null
@@ -172,6 +177,7 @@ export default function InvitationMainEditor({
   draft,
   onFieldChange,
   onOpenShortcut,
+  onOpenScheduleDateTimeFlow,
   hideWishlistCard = false,
   activeShortcut = null,
 }: Props) {
@@ -331,6 +337,14 @@ export default function InvitationMainEditor({
   const handleChevronClick = (event: ReactMouseEvent<HTMLButtonElement>, shortcut: ShortcutId) => {
     event.stopPropagation()
     onOpenShortcut(shortcut)
+  }
+
+  const openScheduleCardPrimary = () => {
+    if (!dateReady && !locationReady && onOpenScheduleDateTimeFlow) {
+      onOpenScheduleDateTimeFlow()
+      return
+    }
+    onOpenShortcut('dateTime')
   }
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -554,8 +568,8 @@ export default function InvitationMainEditor({
         role="button"
         tabIndex={0}
         aria-label="Uredi datum, vrijeme i lokaciju"
-        onClick={() => onOpenShortcut('dateTime')}
-        onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('dateTime'))}
+        onClick={openScheduleCardPrimary}
+        onKeyDown={(event) => handleActionKeyDown(event, openScheduleCardPrimary)}
       >
         <div className="pb-createEditor__cardHeader">
           <div>
@@ -577,7 +591,7 @@ export default function InvitationMainEditor({
         </div>
         {!dateReady && !locationReady ? (
           <div className="pb-createEditor__emptyHint">
-            <span>Klikni da dodaš datum, vrijeme i lokaciju</span>
+            <span>Klikni za dodati datum, vrijeme i lokaciju</span>
           </div>
         ) : null}
         <div className="pb-createEditor__facts">

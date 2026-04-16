@@ -90,10 +90,10 @@ export const EFFECT_OPTIONS = [
 ] as const satisfies ReadonlyArray<{ id: EffectStyle; label: string; description: string }>
 
 export const TITLE_FONT_OPTIONS = [
+  { id: 'merienda', label: 'Merienda', description: 'Topliji rukopisni ton za nježniji mood.', preview: 'Luka slavi!' },
   { id: 'lilita', label: 'Lilita One', description: 'Najizraženiji party naslov za hero kadar.', preview: 'Luka slavi!' },
   { id: 'fredoka', label: 'Fredoka', description: 'Zaigran i mekan display font za dječji rođendan.', preview: 'Luka slavi!' },
   { id: 'gummy', label: 'Sour Gummy', description: 'Još više bubble energije i karaktera.', preview: 'Luka slavi!' },
-  { id: 'merienda', label: 'Merienda', description: 'Topliji rukopisni ton za nježniji mood.', preview: 'Luka slavi!' },
   { id: 'great-vibes', label: 'Great Vibes', description: 'Klasični invite script koji ostaje čitljiv.', preview: 'Luka slavi!' },
   { id: 'playfair', label: 'Playfair Display', description: 'Elegantni serif za modernije i klasične pozivnice.', preview: 'Luka slavi!' },
   { id: 'libre-baskerville', label: 'Libre Baskerville', description: 'Sofisticirani serif koji dobro nosi detalje pozivnice.', preview: 'Luka slavi!' },
@@ -225,10 +225,10 @@ export const SHORTCUT_ITEMS = [
 export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   title: 'Luka slavi 6. rođendan',
   celebrantName: 'Luka',
-  titleFont: 'lilita',
+  titleFont: 'merienda',
   titleColor: 'playbam-blue',
   titleOutline: 'soft',
-  titleSize: 'lg',
+  titleSize: 'md',
   date: '2026-06-15',
   time: '15:00',
   timeEnd: '17:00',
@@ -384,7 +384,7 @@ export function normalizeTitleFont(fontValue: string | null | undefined): TitleF
     case 'clean':
       return 'jakarta'
     default:
-      return 'lilita'
+      return 'merienda'
   }
 }
 

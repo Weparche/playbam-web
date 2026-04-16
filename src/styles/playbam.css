@@ -4682,12 +4682,16 @@
 }
 
 @supports (height: 1cqh) {
+  .pb-createLivePreview .pb-inviteHero__infoBlock {
+    top: calc(37.9% - 0.5cqh);
+  }
+
   .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
     margin-top: calc(0.78rem - 1.5cqh - 1.5cqh + 5cqh - 2cqh - 2cqh);
   }
 
   .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-    transform: translateX(calc(-50% - 4.5cqh)) scale(0.9);
+    transform: translateX(calc(-50% - 5.2cqh)) scale(0.9);
   }
 
   .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
@@ -4752,6 +4756,12 @@
 
   .pb-createLivePreview .pb-inviteHero__infoBlock {
     top: 37.4%;
+  }
+
+  @supports (height: 1cqh) {
+    .pb-createLivePreview .pb-inviteHero__infoBlock {
+      top: calc(37.4% - 0.5cqh);
+    }
   }
 
   .pb-createLivePreview .pb-inviteHero__rsvpBlock--storybook {

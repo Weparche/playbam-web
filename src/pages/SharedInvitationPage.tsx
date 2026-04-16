@@ -54,6 +54,7 @@ import {
   type UpdateInvitationPayload,
 } from '../lib/invitationApi'
 import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
+import { applyInvitationShareMeta, clearInvitationShareMeta } from '../lib/invitationShareMeta'
 import type { TemporaryWebIdentity } from '../lib/tempWebIdentity'
 import {
   buildTimeRangeValue,
@@ -408,6 +409,16 @@ export default function SharedInvitationPage() {
       cancelled = true
     }
   }, [token])
+
+  useEffect(() => {
+    if (!invitation) {
+      return
+    }
+    applyInvitationShareMeta(invitation)
+    return () => {
+      clearInvitationShareMeta()
+    }
+  }, [invitation])
 
   useEffect(() => {
     if (!invitation) {

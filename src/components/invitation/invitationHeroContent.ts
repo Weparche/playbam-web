@@ -1,5 +1,6 @@
 type MaybeString = string | null | undefined
 
+/** Ista mapa za Open Graph (WhatsApp): `functions/_middleware.js` */
 const INVITATION_BACKGROUND_MAP: Record<string, string> = {
   baloni: '/pozivnica-girl.png',
   konfeti: '/pozivnica-boys.png',

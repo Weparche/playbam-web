@@ -4738,6 +4738,11 @@
     margin-top: calc(0.78rem - 1.5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh);
   }
 
+  /* Samo /kreiraj-pozivnicu: poruka ~2.5% okvira niže (3% − 0.5% gore) */
+  .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 1.5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh + 2.5cqh);
+  }
+
   .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
     transform: translateX(calc(-50% - 5.2cqh)) scale(0.9);
   }
@@ -4753,6 +4758,10 @@
     /* Live preview (host / kreiraj) — mora biti specifičnije od pravila iznad */
     .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
       margin-top: calc(0.78rem - 1.5cqh + 5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh);
+    }
+
+    .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
+      margin-top: calc(0.78rem - 1.5cqh + 5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh + 2.5cqh);
     }
 
     .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {

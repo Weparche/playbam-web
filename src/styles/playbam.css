@@ -5653,6 +5653,10 @@
 }
 
 @media (min-width: 980px) {
+  .pb-createShell__stickyProgress {
+    display: none;
+  }
+
   .pb-createEditor__heroRsvpBlock {
     margin-top: 0.9rem;
     padding-top: 0.9rem;
@@ -5800,15 +5804,15 @@
 }
 
 .pb-createEditor__statusChip--pending {
-  background: rgba(255, 195, 111, 0.16);
-  border-color: rgba(255, 195, 111, 0.18);
-  color: #a86708;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.18);
+  color: #9b1c1c;
 }
 
 .pb-createEditor__statusChip--muted {
-  background: rgba(133, 146, 166, 0.12);
-  border-color: rgba(133, 146, 166, 0.16);
-  color: #5f6d84;
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.14);
+  color: #9b1c1c;
 }
 
 .pb-createEditor__chevron {

@@ -138,34 +138,39 @@ export default function QuickDateTimeEditor({ draft, today, onFieldChange }: Pro
         ))}
       </div>
 
-      <div className="pb-quickEditor__twoCol">
-        <PickerField
-          label="Datum"
-          type="date"
-          min={today}
-          value={draft.date}
-          icon={<CalendarIcon />}
-          onChange={(value) => onFieldChange('date', value)}
-        />
-        <PickerField
-          label="Vrijeme od"
-          type="time"
-          value={draft.time}
-          step={1800}
-          list={timeSuggestionsId}
-          icon={<ClockIcon />}
-          onChange={(value) => onFieldChange('time', value)}
-        />
-        <PickerField
-          label="Vrijeme do"
-          type="time"
-          min={draft.time || undefined}
-          value={draft.timeEnd}
-          step={1800}
-          list={timeSuggestionsId}
-          icon={<ClockIcon />}
-          onChange={(value) => onFieldChange('timeEnd', value)}
-        />
+      <div className="pb-quickEditor__dateTimeLayout">
+        <div className="pb-quickEditor__dateTimeDateField">
+          <PickerField
+            label="Datum"
+            type="date"
+            min={today}
+            value={draft.date}
+            icon={<CalendarIcon />}
+            onChange={(value) => onFieldChange('date', value)}
+          />
+        </div>
+
+        <div className="pb-quickEditor__dateTimeTimeRow">
+          <PickerField
+            label="Vrijeme od"
+            type="time"
+            value={draft.time}
+            step={1800}
+            list={timeSuggestionsId}
+            icon={<ClockIcon />}
+            onChange={(value) => onFieldChange('time', value)}
+          />
+          <PickerField
+            label="Vrijeme do"
+            type="time"
+            min={draft.time || undefined}
+            value={draft.timeEnd}
+            step={1800}
+            list={timeSuggestionsId}
+            icon={<ClockIcon />}
+            onChange={(value) => onFieldChange('timeEnd', value)}
+          />
+        </div>
       </div>
 
       <datalist id={timeSuggestionsId}>

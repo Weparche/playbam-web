@@ -172,7 +172,7 @@ export default function CreateInvitationPage() {
 
   const handleResetDraft = () => {
     if (typeof window !== 'undefined') {
-      const confirmed = window.confirm('Resetirati sve promjene i vratiti pozivnicu na prazne placeholder vrijednosti?')
+      const confirmed = window.confirm('Resetirati pozivnicu i vratiti je na prazne placeholder vrijednosti?')
       if (!confirmed) {
         return
       }
@@ -371,7 +371,7 @@ export default function CreateInvitationPage() {
           preview={<InvitationPreviewCard draft={draft} compact />}
           headerActions={(
             <Button variant="ghost" type="button" className="pb-createShell__resetButton" onClick={handleResetDraft}>
-              Resetiraj promjene
+              Resetiraj pozivnicu
             </Button>
           )}
           rail={<ShortcutRail activeShortcut={activeShortcut} onShortcutClick={(id) => handleShortcutClick(id as ShortcutId)} />}

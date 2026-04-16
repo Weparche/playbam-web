@@ -516,7 +516,7 @@ export default function InvitationMainEditor({
             >
               <div className="pb-createEditor__heroRsvpInner">
                 <div className="pb-previewCard__rsvpRow" aria-hidden="true">
-                  {(['going', 'maybe', 'not_going'] as const).map((choice) => (
+                  {(['going', 'not_going', 'maybe'] as const).map((choice) => (
                     <span
                       key={choice}
                       className={`pb-previewCard__rsvpPill pb-previewCard__rsvpPill--${choice.replace('_', '-')}`}

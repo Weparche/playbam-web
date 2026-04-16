@@ -7423,6 +7423,31 @@
   outline: none;
 }
 
+.pb-quickEditor__dateTimeLayout {
+  margin-top: 0.95rem;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.pb-quickEditor__dateTimeDateField {
+  width: min(100%, 18.5rem);
+  justify-self: center;
+}
+
+.pb-quickEditor__dateTimeDateField .pb-formLabel {
+  text-align: center;
+}
+
+.pb-quickEditor__dateTimeDateField .pb-quickEditor__pickerInput {
+  text-align: center;
+}
+
+.pb-quickEditor__dateTimeTimeRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
 .pb-quickEditor__chipRow {
   display: flex;
   flex-wrap: wrap;

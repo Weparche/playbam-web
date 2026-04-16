@@ -238,7 +238,7 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   message: 'Vidimo se na tulumu!',
   theme: 'pozivnica-girl',
   effect: 'glow',
-  rsvpMood: 'party',
+  rsvpMood: 'zoo',
   accentPalette: 'sky',
   wishlistEnabled: true,
   wishlistItems: [
@@ -269,7 +269,7 @@ export function buildEmptyCreateDraft(): InvitationCreateDraft {
 }
 
 export function formatPreviewDate(dateValue: string) {
-  if (!dateValue.trim()) return 'Datum još nije odabran'
+  if (!dateValue.trim()) return 'Odaberi datum'
   const parsedDate = new Date(`${dateValue}T12:00:00`)
   if (Number.isNaN(parsedDate.getTime())) return dateValue
   return parsedDate
@@ -293,7 +293,7 @@ export function formatPreviewTime(timeValue: string, timeEndValue = '') {
   if (start && end) return `${start}h - ${end}h`
   if (start) return `${start}h - ...`
   if (end) return `... - ${end}h`
-  return 'Vrijeme uskoro'
+  return 'Odaberi vrijeme'
 }
 
 export function buildTimeRangeValue(timeValue: string, timeEndValue: string) {
@@ -357,7 +357,7 @@ export function buildPreviewLocation(locationName: string, locationAddress: stri
 
   const normalizedType = locationType.trim()
   if (!normalizedType || normalizedType === 'Igraonica / lokal') {
-    return 'Lokacija uskoro'
+    return 'Odaberi lokaciju događaja'
   }
 
   return normalizedType

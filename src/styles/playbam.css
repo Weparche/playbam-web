@@ -1882,6 +1882,21 @@
   color: rgba(16, 24, 40, 0.52);
 }
 
+.pb-hostAutosaveRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.pb-hostAutosaveLabel {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: rgba(16, 24, 40, 0.55);
+}
+
 .pb-hostShareDialog__actions {
   display: flex;
   flex-wrap: wrap;
@@ -4687,7 +4702,7 @@
   }
 
   .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 1.5cqh - 1.5cqh + 5cqh - 2cqh - 2cqh);
+    margin-top: calc(0.78rem - 1.5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh);
   }
 
   .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
@@ -4703,7 +4718,7 @@
   @supports (height: 1cqh) {
     /* Live preview (host / kreiraj) — mora biti specifičnije od pravila iznad */
     .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 1.5cqh + 5cqh - 1.5cqh + 5cqh - 2cqh - 2cqh);
+      margin-top: calc(0.78rem - 1.5cqh + 5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh);
     }
 
     .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
@@ -9696,7 +9711,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   justify-content: center;
   gap: 0.45rem;
   text-decoration: none;
-  color: #2f6fdd;
+  color: var(--pb-invite-title-color, #336fd6);
   margin: 0;
 }
 
@@ -9715,7 +9730,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   place-items: center;
   width: 1.32rem;
   height: 1.32rem;
-  color: #2f6fdd;
+  color: var(--pb-invite-title-color, #336fd6);
 }
 
 .pb-inviteHero__infoIcon svg {
@@ -9727,8 +9742,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   width: 1.68rem;
   height: 1.68rem;
   transform: translateY(-0.18rem);
-  color: #2468da;
-  filter: drop-shadow(0 4px 10px rgba(36, 104, 218, 0.16));
+  color: var(--pb-invite-title-color, #336fd6);
+  filter: drop-shadow(0 4px 10px rgba(51, 111, 214, 0.16));
 }
 
 .pb-inviteHero__infoValue {
@@ -9737,7 +9752,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  color: #2f6fdd;
+  color: var(--pb-invite-title-color, #336fd6);
   text-align: center;
 }
 
@@ -9751,7 +9766,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   font-family: var(--invite-font-meta);
   font-size: 0.62rem;
   font-weight: 800;
-  color: #2f6fdd;
+  color: var(--pb-invite-title-color, #336fd6);
   line-height: 1;
 }
 

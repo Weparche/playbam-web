@@ -267,6 +267,41 @@ function getDeleteErrorMessage(error: unknown) {
   return 'Brisanje poklona trenutno nije uspjelo.'
 }
 
+type HostLocalDraft = {
+  editorDraft: InvitationCreateDraft
+  partyDetailsDraft: PartyDetailsDraft
+}
+
+function buildHostLocalDraftKey(invitationId: string) {
+  return `playbam.host-update.draft.${invitationId}`
+}
+
+function readHostLocalDraft(invitationId: string): HostLocalDraft | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = window.localStorage.getItem(buildHostLocalDraftKey(invitationId))
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<HostLocalDraft>
+    if (!parsed.editorDraft || !parsed.partyDetailsDraft) return null
+    return {
+      editorDraft: parsed.editorDraft as InvitationCreateDraft,
+      partyDetailsDraft: parsed.partyDetailsDraft as PartyDetailsDraft,
+    }
+  } catch {
+    return null
+  }
+}
+
+function writeHostLocalDraft(invitationId: string, payload: HostLocalDraft) {
+  if (typeof window === 'undefined') return
+  window.localStorage.setItem(buildHostLocalDraftKey(invitationId), JSON.stringify(payload))
+}
+
+function clearHostLocalDraft(invitationId: string) {
+  if (typeof window === 'undefined') return
+  window.localStorage.removeItem(buildHostLocalDraftKey(invitationId))
+}
+
 export default function SharedInvitationPage() {
   const { token = '' } = useParams()
   const { user, login, logout } = useAuth()
@@ -312,6 +347,9 @@ export default function SharedInvitationPage() {
   const [selectedHostRequest, setSelectedHostRequest] = useState<MembershipRequest | null>(null)
   const [hostEditorDraft, setHostEditorDraft] = useState<InvitationCreateDraft>(DEFAULT_CREATE_DRAFT)
   const [hostPartyDetailsDraft, setHostPartyDetailsDraft] = useState<PartyDetailsDraft>(createPartyDetailsDraft())
+  const [hostLocalSaveState, setHostLocalSaveState] = useState<'idle' | 'saving' | 'saved'>('saved')
+  const hostLoadedDraftRef = useRef<InvitationCreateDraft | null>(null)
+  const hostLoadedPartyDetailsRef = useRef<PartyDetailsDraft | null>(null)
   const [hostEditorShortcut, setHostEditorShortcut] = useState<ShortcutId | null>(null)
   const [hostShortcutActive, setHostShortcutActive] = useState<HostShortcutId | null>(null)
   const [hostPreviewMode, setHostPreviewMode] = useState<LivePreviewMode>('guest')
@@ -376,9 +414,55 @@ export default function SharedInvitationPage() {
       return
     }
 
-    setHostEditorDraft(createDraftFromInvitation(invitation))
-    setHostPartyDetailsDraft(createPartyDetailsDraft(invitation.partyDetails))
+    const baseDraft = createDraftFromInvitation(invitation)
+    const basePartyDetails = createPartyDetailsDraft(invitation.partyDetails)
+    hostLoadedDraftRef.current = baseDraft
+    hostLoadedPartyDetailsRef.current = basePartyDetails
+
+    const stored = readHostLocalDraft(invitation.id)
+    if (stored) {
+      setHostEditorDraft({ ...baseDraft, ...stored.editorDraft })
+      setHostPartyDetailsDraft({ ...basePartyDetails, ...stored.partyDetailsDraft })
+      setHostLocalSaveState('saved')
+      return
+    }
+
+    setHostEditorDraft(baseDraft)
+    setHostPartyDetailsDraft(basePartyDetails)
+    setHostLocalSaveState('saved')
   }, [invitation])
+
+  useEffect(() => {
+    const hostActive = Boolean(access?.isHost)
+    if (!invitation || !hostActive) {
+      return
+    }
+
+    setHostLocalSaveState('saving')
+    const timeoutId = window.setTimeout(() => {
+      writeHostLocalDraft(invitation.id, { editorDraft: hostEditorDraft, partyDetailsDraft: hostPartyDetailsDraft })
+      setHostLocalSaveState('saved')
+    }, 420)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [access, hostEditorDraft, hostPartyDetailsDraft, invitation])
+
+  const hostAutosaveLabel = hostLocalSaveState === 'saving' ? 'Spremam lokalno…' : 'Spremljeno lokalno'
+
+  const handleHostResetLocalChanges = () => {
+    if (!invitation) return
+    const confirmed = window.confirm('Resetirati lokalne promjene i vratiti zadnje spremljeno stanje?')
+    if (!confirmed) return
+
+    clearHostLocalDraft(invitation.id)
+    setHostUpdateError('')
+    setHostUpdateNotice('')
+    setHostEditorShortcut(null)
+    setHostAddGiftOpen(false)
+    setHostEditorDraft(hostLoadedDraftRef.current ?? createDraftFromInvitation(invitation))
+    setHostPartyDetailsDraft(hostLoadedPartyDetailsRef.current ?? createPartyDetailsDraft(invitation.partyDetails))
+    setHostLocalSaveState('saved')
+  }
 
   const hasFamilyProfile = Boolean(familyProfile?.profile)
   const hasHostSession = Boolean(hostToken)
@@ -1513,6 +1597,12 @@ export default function SharedInvitationPage() {
                         </div>
 
                         <div className="pb-hostEditorActions">
+                          <div className="pb-hostAutosaveRow" aria-label="Lokalno spremanje promjena">
+                            <span className="pb-hostAutosaveLabel">{hostAutosaveLabel}</span>
+                            <Button type="button" variant="ghost" onClick={handleHostResetLocalChanges}>
+                              Resetiraj promjene
+                            </Button>
+                          </div>
                           <Button type="button" variant="amber" onClick={handleHostInvitationSave} disabled={savingHostInvitation}>
                             {savingHostInvitation ? 'Spremamo...' : 'Spremi promjene'}
                           </Button>

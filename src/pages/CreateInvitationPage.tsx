@@ -405,7 +405,12 @@ export default function CreateInvitationPage() {
           saveState={saveState}
           progressPercent={progressPercent}
           progressLabel={progressLabel}
-          preview={<InvitationPreviewCard draft={draft} compact />}
+          preview={(
+            <div className="pb-createShell__previewStack">
+              <h2 className="pb-createShell__previewLiveTitle">Live preview pozivnice</h2>
+              <InvitationPreviewCard draft={draft} compact />
+            </div>
+          )}
           headerActions={(
             <Button variant="ghost" type="button" className="pb-createShell__resetButton" onClick={handleResetDraft}>
               Resetiraj pozivnicu

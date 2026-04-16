@@ -4602,6 +4602,23 @@
   min-width: 0;
 }
 
+.pb-createShell__previewStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.pb-createShell__previewLiveTitle {
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: rgba(23, 36, 59, 0.88);
+}
+
 .pb-createLivePreview {
   position: relative;
   overflow: hidden;
@@ -8008,15 +8025,25 @@
   }
 
   .pb-createShell__preview {
-    display: block;
+    display: flex;
+    flex-direction: column;
     position: sticky;
     top: 6rem;
     align-self: start;
     min-height: min(86rem, calc(100vh - 5.5rem));
   }
 
+  .pb-createShell__previewStack {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
   .pb-createShell__preview .pb-previewCard {
-    min-height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
     padding: 0.9rem;
     border-radius: 1.45rem;
     background: rgba(255, 255, 255, 0.86);

@@ -16,6 +16,7 @@ export type LivePreviewPartyDetails = {
   parkingLocation: string
   cafeLocation: string
   extraDetails: string
+  contactName: string
   contactMobile: string
 }
 
@@ -71,6 +72,10 @@ export default function InvitationLivePreview({
   const printContactMobile = useMemo(() => {
     if (!isPrint || !partyDetails) return null
     return partyDetails.contactMobile.trim() || null
+  }, [isPrint, partyDetails])
+  const printContactName = useMemo(() => {
+    if (!isPrint || !partyDetails) return null
+    return partyDetails.contactName.trim() || null
   }, [isPrint, partyDetails])
 
   const qrTargetUrl = useMemo(() => inviteUrl?.trim() || '', [inviteUrl])
@@ -134,6 +139,7 @@ export default function InvitationLivePreview({
           printPartyDetails={printPartyDetails}
           printQrDataUrl={isPrint ? (qrDataUrl || null) : null}
           printContactMobile={printContactMobile}
+          printContactName={printContactName}
         />
       </div>
     </section>

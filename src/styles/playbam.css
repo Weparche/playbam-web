@@ -4687,11 +4687,11 @@
   }
 
   .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-    transform: translateX(calc(-50% - 3.5cqh));
+    transform: translateX(calc(-50% - 4.5cqh)) scale(0.9);
   }
 
   .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px - 1cqh);
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.5cqh);
   }
 }
 
@@ -4703,7 +4703,7 @@
     }
 
     .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px - 1cqh);
+      margin-top: calc(0.78rem - 13px + 3.25px + 0.5cqh);
     }
 
     /* Javna pozivnica (InvitationCard) */
@@ -9384,7 +9384,7 @@
 .pb-inviteHero__printQr {
   position: absolute;
   left: 50%;
-  bottom: 10.34%;
+  bottom: 8.79%;
   transform: translateX(-50%);
   z-index: 2;
   display: grid;
@@ -9413,6 +9413,16 @@
   font-size: 0.62rem;
   font-weight: 900;
   line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.pb-inviteHero__printQrContactName {
+  width: 100%;
+  margin-top: 0.12rem;
+  font-size: 0.74rem;
+  font-weight: 1000;
+  line-height: 1.15;
   text-align: center;
   overflow-wrap: anywhere;
 }

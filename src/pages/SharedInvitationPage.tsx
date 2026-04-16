@@ -81,6 +81,7 @@ type PartyDetailsDraft = {
   parkingLocation: string
   cafeLocation: string
   extraDetails: string
+  contactName: string
   contactMobile: string
 }
 
@@ -190,6 +191,7 @@ function createPartyDetailsDraft(details?: InvitationPartyDetails | null): Party
     parkingLocation: details?.parkingLocation ?? '',
     cafeLocation: details?.cafeLocation ?? '',
     extraDetails: details?.extraDetails ?? '',
+    contactName: details?.contactName ?? '',
     contactMobile: details?.contactMobile ?? '',
   }
 }
@@ -223,6 +225,7 @@ function buildInvitationUpdatePayload(
       parkingLocation: partyDetails.parkingLocation.trim() || null,
       cafeLocation: partyDetails.cafeLocation.trim() || null,
       extraDetails: partyDetails.extraDetails.trim() || null,
+      contactName: partyDetails.contactName.trim() || null,
       contactMobile: partyDetails.contactMobile.trim() || null,
     },
   }
@@ -1605,6 +1608,18 @@ export default function SharedInvitationPage() {
                                 autoComplete="tel"
                               />
                             </label>
+
+                            <label className="pb-formField pb-hostDetailsEditor__field--wide">
+                              <span className="pb-formLabel">Ime kontakta</span>
+                              <input
+                                className="pb-input"
+                                type="text"
+                                value={hostPartyDetailsDraft.contactName}
+                                onChange={(event) => updateHostPartyDetails('contactName', event.target.value)}
+                                placeholder="npr. Ana"
+                                autoComplete="name"
+                              />
+                            </label>
                           </div>
 
                           <div className="pb-partyFacts">
@@ -1630,6 +1645,12 @@ export default function SharedInvitationPage() {
                               <div className="pb-partyFact">
                                 <div className="pb-partyFact__label">Kontakt mobitel</div>
                                 <div className="pb-partyFact__value">{hostPartyDetailsDraft.contactMobile.trim()}</div>
+                              </div>
+                            ) : null}
+                            {hostPartyDetailsDraft.contactName.trim() ? (
+                              <div className="pb-partyFact">
+                                <div className="pb-partyFact__label">Ime kontakta</div>
+                                <div className="pb-partyFact__value">{hostPartyDetailsDraft.contactName.trim()}</div>
                               </div>
                             ) : null}
                           </div>

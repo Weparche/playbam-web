@@ -97,6 +97,7 @@ export type InvitationPartyDetails = {
   parkingLocation?: string | null
   cafeLocation?: string | null
   extraDetails?: string | null
+  contactName?: string | null
   contactMobile?: string | null
 }
 

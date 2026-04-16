@@ -42,6 +42,7 @@ type Props = {
   /** QR kod za print/export (prikaz unutar backgrounda pozivnice). */
   printQrDataUrl?: string | null
   /** Kontakt koji se ispisuje ispod QR koda (print). */
+  printContactName?: string | null
   printContactMobile?: string | null
 }
 
@@ -107,6 +108,7 @@ export default function PublicInvitationHero({
   showAccessCard = true,
   printPartyDetails = null,
   printQrDataUrl = null,
+  printContactName = null,
   printContactMobile = null,
 }: Props) {
   const fallbackImage = '/pozivnica-girl.png'
@@ -157,6 +159,11 @@ export default function PublicInvitationHero({
             >
               Prijavite se online za dolazak ili na broj ispod
             </div>
+            {printContactName ? (
+              <div className={`pb-inviteHero__printQrContactName pb-inviteHero__title--${normalizedTitleFont}`} style={titleStyle}>
+                {printContactName}
+              </div>
+            ) : null}
             {printContactMobile ? (
               <div className={`pb-inviteHero__printQrContact pb-inviteHero__title--${normalizedTitleFont}`} style={titleStyle}>
                 {printContactMobile}

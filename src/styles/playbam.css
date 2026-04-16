@@ -1913,14 +1913,40 @@
   html.pb-print-host-invite {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    height: fit-content !important;
+    max-height: none !important;
   }
 
-  html.pb-print-host-invite,
   html.pb-print-host-invite body,
   html.pb-print-host-invite #root,
   html.pb-print-host-invite .pb-main {
     height: auto !important;
     min-height: 0 !important;
+  }
+
+  html.pb-print-host-invite body {
+    height: fit-content !important;
+  }
+
+  html.pb-print-host-invite #root {
+    max-height: none !important;
+  }
+
+  html.pb-print-host-invite .pb-container,
+  html.pb-print-host-invite .pb-flowLayout,
+  html.pb-print-host-invite .pb-hostStudio,
+  html.pb-print-host-invite .pb-hostStudio__previewColumn {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  html.pb-print-host-invite .pb-footer {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    border: 0 !important;
   }
 
   html.pb-print-host-invite .pb-main--demo {
@@ -2050,6 +2076,13 @@
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  html.pb-print-host-invite .pb-hostStudio__preview .pb-createLivePreview {
+    min-height: 0 !important;
+    height: auto !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {
@@ -4710,7 +4743,8 @@
   }
 
   .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh);
+    /* Print pregled / ispis: ~1% okvira niže (1cqh) */
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.9cqh);
   }
 }
 
@@ -4722,7 +4756,7 @@
     }
 
     .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh);
+      margin-top: calc(0.78rem - 13px + 3.25px + 0.9cqh);
     }
 
     /* Javna pozivnica (InvitationCard) */

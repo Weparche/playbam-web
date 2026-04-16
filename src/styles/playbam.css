@@ -4743,8 +4743,8 @@
   }
 
   .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-    /* Print pregled / ispis: ~1% okvira niže (1cqh) */
-    margin-top: calc(0.78rem - 13px + 3.25px + 0.9cqh);
+    /* Print pregled / ispis: ~1% okvira gore (−1cqh) */
+    margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh);
   }
 }
 
@@ -4756,7 +4756,7 @@
     }
 
     .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px + 0.9cqh);
+      margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh);
     }
 
     /* Javna pozivnica (InvitationCard) */

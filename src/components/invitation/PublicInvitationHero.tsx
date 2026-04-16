@@ -41,6 +41,8 @@ type Props = {
   printPartyDetails?: readonly PrintPartyDetailLine[] | null
   /** QR kod za print/export (prikaz unutar backgrounda pozivnice). */
   printQrDataUrl?: string | null
+  /** Kontakt koji se ispisuje ispod QR koda (print). */
+  printContactMobile?: string | null
 }
 
 function IconCalendar() {
@@ -105,6 +107,7 @@ export default function PublicInvitationHero({
   showAccessCard = true,
   printPartyDetails = null,
   printQrDataUrl = null,
+  printContactMobile = null,
 }: Props) {
   const fallbackImage = '/pozivnica-girl.png'
   const resolvedImage = backgroundImage || fallbackImage
@@ -154,6 +157,11 @@ export default function PublicInvitationHero({
             >
               Prijavite se online za dolazak ili na broj ispod
             </div>
+            {printContactMobile ? (
+              <div className={`pb-inviteHero__printQrContact pb-inviteHero__title--${normalizedTitleFont}`} style={titleStyle}>
+                {printContactMobile}
+              </div>
+            ) : null}
           </div>
         ) : null}
 

@@ -89,10 +89,10 @@ type HostShortcutId = 'wishlist' | 'settings' | 'partyDetails' | 'requests' | 's
 type HostAccordionSection = 'update' | 'details' | 'requests' | 'wishlist'
 
 const HOST_SHORTCUT_ITEMS = [
-  { id: 'wishlist', label: 'Lista želja', icon: '🎁' },
   { id: 'settings', label: 'Ažuriraj', icon: '⚙️' },
   { id: 'partyDetails', label: 'Detalji', icon: '📍' },
   { id: 'requests', label: 'Zahtjevi', icon: '🧾' },
+  { id: 'wishlist', label: 'Lista želja', icon: '🎁' },
   { id: 'shareGuest', label: 'Podijeli', icon: '🔗' },
 ] as const satisfies ReadonlyArray<{ id: HostShortcutId; label: string; icon: string }>
 

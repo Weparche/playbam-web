@@ -65,18 +65,12 @@ export default function InvitationLivePreview({
     if (!isPrint || !partyDetails) {
       return null
     }
-    const lines: Array<{ label: string; value: string }> = []
-    const parking = partyDetails.parkingLocation.trim()
-    const cafe = partyDetails.cafeLocation.trim()
-    const details = partyDetails.extraDetails.trim()
-    const contactMobile = partyDetails.contactMobile.trim()
-
-    if (parking) lines.push({ label: 'Parking', value: parking })
-    if (cafe) lines.push({ label: 'Kafić', value: cafe })
-    if (details) lines.push({ label: 'Detalji', value: details })
-    if (contactMobile) lines.push({ label: 'Kontakt mobitel', value: contactMobile })
-
-    return lines.length > 0 ? lines : null
+    // Detalji tuluma se spremaju, ali se ne ispisuju na pozivnici.
+    return null
+  }, [isPrint, partyDetails])
+  const printContactMobile = useMemo(() => {
+    if (!isPrint || !partyDetails) return null
+    return partyDetails.contactMobile.trim() || null
   }, [isPrint, partyDetails])
 
   const qrTargetUrl = useMemo(() => inviteUrl?.trim() || '', [inviteUrl])
@@ -139,6 +133,7 @@ export default function InvitationLivePreview({
           showAccessCard={false}
           printPartyDetails={printPartyDetails}
           printQrDataUrl={isPrint ? (qrDataUrl || null) : null}
+          printContactMobile={printContactMobile}
         />
       </div>
     </section>

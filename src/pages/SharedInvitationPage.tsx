@@ -81,6 +81,7 @@ type PartyDetailsDraft = {
   parkingLocation: string
   cafeLocation: string
   extraDetails: string
+  contactMobile: string
 }
 
 type HostShortcutId = 'wishlist' | 'settings' | 'partyDetails' | 'requests' | 'shareGuest'
@@ -189,6 +190,7 @@ function createPartyDetailsDraft(details?: InvitationPartyDetails | null): Party
     parkingLocation: details?.parkingLocation ?? '',
     cafeLocation: details?.cafeLocation ?? '',
     extraDetails: details?.extraDetails ?? '',
+    contactMobile: details?.contactMobile ?? '',
   }
 }
 
@@ -221,6 +223,7 @@ function buildInvitationUpdatePayload(
       parkingLocation: partyDetails.parkingLocation.trim() || null,
       cafeLocation: partyDetails.cafeLocation.trim() || null,
       extraDetails: partyDetails.extraDetails.trim() || null,
+      contactMobile: partyDetails.contactMobile.trim() || null,
     },
   }
 }
@@ -1589,6 +1592,19 @@ export default function SharedInvitationPage() {
                                 placeholder="npr. ulaz na bočna vrata, ponesite čarape, roditelji dolaze 15 min prije završetka..."
                               />
                             </label>
+
+                            <label className="pb-formField pb-hostDetailsEditor__field--wide">
+                              <span className="pb-formLabel">Kontakt mobitel</span>
+                              <input
+                                className="pb-input"
+                                type="text"
+                                value={hostPartyDetailsDraft.contactMobile}
+                                onChange={(event) => updateHostPartyDetails('contactMobile', event.target.value)}
+                                placeholder="npr. +385 99 123 4567"
+                                inputMode="tel"
+                                autoComplete="tel"
+                              />
+                            </label>
                           </div>
 
                           <div className="pb-partyFacts">
@@ -1608,6 +1624,12 @@ export default function SharedInvitationPage() {
                               <div className="pb-partyFact">
                                 <div className="pb-partyFact__label">Ostali detalji</div>
                                 <div className="pb-partyFact__value">{hostPartyDetailsDraft.extraDetails.trim()}</div>
+                              </div>
+                            ) : null}
+                            {hostPartyDetailsDraft.contactMobile.trim() ? (
+                              <div className="pb-partyFact">
+                                <div className="pb-partyFact__label">Kontakt mobitel</div>
+                                <div className="pb-partyFact__value">{hostPartyDetailsDraft.contactMobile.trim()}</div>
                               </div>
                             ) : null}
                           </div>
@@ -1734,6 +1756,19 @@ export default function SharedInvitationPage() {
                             onReleaseReservation={handleHostReleaseReservation}
                           />
                         ) : null}
+
+                        <div className="pb-flowActions pb-flowActions--modal">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() => {
+                              resetWishlistForm()
+                              setHostAddGiftOpen(true)
+                            }}
+                          >
+                            Dodaj poklon
+                          </Button>
+                        </div>
                       </div>
                     ) : null}
                   </Card>

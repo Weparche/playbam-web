@@ -16,6 +16,7 @@ export type LivePreviewPartyDetails = {
   parkingLocation: string
   cafeLocation: string
   extraDetails: string
+  contactMobile: string
 }
 
 type Props = {
@@ -60,7 +61,23 @@ export default function InvitationLivePreview({
   const messageText = draft.message.trim() || 'Vidimo se na tulumu!'
   const accessText = buildPreviewAccessText(draft)
   const isPrint = previewMode === 'print'
-  void partyDetails
+  const printPartyDetails = useMemo(() => {
+    if (!isPrint || !partyDetails) {
+      return null
+    }
+    const lines: Array<{ label: string; value: string }> = []
+    const parking = partyDetails.parkingLocation.trim()
+    const cafe = partyDetails.cafeLocation.trim()
+    const details = partyDetails.extraDetails.trim()
+    const contactMobile = partyDetails.contactMobile.trim()
+
+    if (parking) lines.push({ label: 'Parking', value: parking })
+    if (cafe) lines.push({ label: 'Kafić', value: cafe })
+    if (details) lines.push({ label: 'Detalji', value: details })
+    if (contactMobile) lines.push({ label: 'Kontakt mobitel', value: contactMobile })
+
+    return lines.length > 0 ? lines : null
+  }, [isPrint, partyDetails])
 
   const qrTargetUrl = useMemo(() => inviteUrl?.trim() || '', [inviteUrl])
   const [qrDataUrl, setQrDataUrl] = useState<string>('')
@@ -120,9 +137,8 @@ export default function InvitationLivePreview({
           /* Gost pregled: privatna kartica (ispod RSVP-a) privremeno isključena.
              Vrati prikaz: showAccessCard={!isPrint && Boolean(accessText)} */
           showAccessCard={false}
-          printPartyDetails={null}
+          printPartyDetails={printPartyDetails}
           printQrDataUrl={isPrint ? (qrDataUrl || null) : null}
-          printQrUrl={isPrint ? (qrTargetUrl || null) : null}
         />
       </div>
     </section>

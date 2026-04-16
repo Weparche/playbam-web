@@ -157,7 +157,10 @@ export default function PublicInvitationHero({
         <div className="pb-inviteHero__content pb-inviteHero__content--storybook" style={titleStyle}>
           <img className="pb-inviteHero__logo" src="/logo.png" alt="VidimoSe.hr" />
 
-          <header ref={titleWrapRef} className="pb-inviteHero__titleWrap pb-inviteHero__titleWrap--storybook">
+          <header
+            ref={titleWrapRef}
+            className={`pb-inviteHero__titleWrap pb-inviteHero__titleWrap--storybook pb-inviteHero__titleWrap--size-${normalizedTitleSize}`}
+          >
             <h1
               ref={heroTitleRef}
               className={`pb-inviteHero__title pb-inviteHero__title--storybook pb-inviteHero__title--${normalizedTitleFont} pb-inviteHero__title--outline-${normalizedTitleOutline} pb-inviteHero__title--size-${normalizedTitleSize}`}

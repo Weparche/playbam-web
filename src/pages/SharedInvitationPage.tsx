@@ -1907,7 +1907,7 @@ function WishlistForm({ draft, error, saving, isEditing, onChange, onSave, onCan
   return (
     <div className="pb-profileForm pb-inviteHostAddCard">
       <div className="pb-formGrid">
-        <label className="pb-formField"><span className="pb-formLabel">Naziv poklona</span><input className="pb-input" type="text" value={draft.title} onChange={(event) => onChange({ ...draft, title: event.target.value })} /></label>
+        <label className="pb-formField"><span className="pb-formLabel">Naziv poklona <span className="pb-formLabel__required">*</span></span><input className="pb-input" type="text" required aria-required="true" value={draft.title} onChange={(event) => onChange({ ...draft, title: event.target.value })} /></label>
         <label className="pb-formField"><span className="pb-formLabel">Opis</span><input className="pb-input" type="text" value={draft.description} onChange={(event) => onChange({ ...draft, description: event.target.value })} /></label>
         <label className="pb-formField"><span className="pb-formLabel">Link</span><input className="pb-input" type="url" value={draft.url} onChange={(event) => onChange({ ...draft, url: event.target.value })} /></label>
         <label className="pb-formField"><span className="pb-formLabel">Cijena</span><input className="pb-input" type="text" value={draft.priceLabel} onChange={(event) => onChange({ ...draft, priceLabel: event.target.value })} /></label>

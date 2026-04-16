@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import type { InvitationCreateDraft, LinkMeta, WishlistDraftItem } from './createTypes'
+
 import { unfurlLink, proxyImageUrl } from '../../lib/invitationApi'
+import type { InvitationCreateDraft, LinkMeta, WishlistDraftItem } from './createTypes'
 
 const ITEM_ACCENT_COLORS = ['#5b3df5', '#2e9e5e', '#d97706', '#e04d6b', '#0891b2', '#7c3aed']
 const LINK_DEBOUNCE_MS = 600
@@ -65,7 +66,7 @@ function LinkPreview({ meta }: { meta: LinkMeta }) {
             src={proxyImageUrl(meta.favicon)}
             alt=""
             aria-hidden="true"
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+            onError={(event) => { (event.target as HTMLImageElement).style.display = 'none' }}
           />
         ) : null}
         <div className="pb-quickEditor__linkMeta">
@@ -158,8 +159,15 @@ function WishlistItemEditor({
         </button>
       </div>
       <label className="pb-formField">
-        <span className="pb-formLabel">Naziv poklona</span>
-        <input ref={titleInputRef} className="pb-input" value={item.title} onChange={(event) => onUpdate(item.id, 'title', event.target.value)} />
+        <span className="pb-formLabel">Naziv poklona <span className="pb-formLabel__required">*</span></span>
+        <input
+          ref={titleInputRef}
+          className="pb-input"
+          required
+          aria-required="true"
+          value={item.title}
+          onChange={(event) => onUpdate(item.id, 'title', event.target.value)}
+        />
       </label>
       <label className="pb-formField">
         <span className="pb-formLabel">Kratka napomena</span>
@@ -214,11 +222,12 @@ export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistCh
     <div className="pb-quickEditor">
       <label className="pb-quickEditor__toggle">
         <input type="checkbox" checked={draft.wishlistEnabled} onChange={(event) => onFieldChange('wishlistEnabled', event.target.checked)} />
-        <span>Uključi wishlist</span>
+        <span>Uključi listu želja</span>
       </label>
 
       {draft.wishlistEnabled ? (
         <div className="pb-quickEditor__list">
+          <div className="pb-quickEditor__hint">Polje <strong>Naziv poklona</strong> je obavezno za svaku stavku.</div>
           {draft.wishlistItems.map((item, index) => (
             <WishlistItemEditor
               key={item.id}

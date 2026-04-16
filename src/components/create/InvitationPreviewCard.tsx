@@ -74,7 +74,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
       <div className="pb-previewCard__hero">
         <img className="pb-previewCard__heroImage" src={backgroundImage} alt="" aria-hidden="true" />
         <img className="pb-previewCard__logo" src="/logo.png" alt="VidimoSe.hr" />
-        <div ref={previewHeroTextRef} className="pb-previewCard__heroText">
+        <div ref={previewHeroTextRef} className={`pb-previewCard__heroText pb-previewCard__heroText--size-${titleSize}`}>
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
           <h3
             ref={previewTitleRef}

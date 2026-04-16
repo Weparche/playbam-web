@@ -422,8 +422,8 @@ export default function PrivateInvitationGuest({
                   <div className="pb-profileForm pb-inviteWish__guestForm">
                     <div className="pb-formGrid">
                       <label className="pb-formField">
-                        <span className="pb-formLabel">Naziv poklona</span>
-                        <input className="pb-input" type="text" value={giftTitle} onChange={(event) => setGiftTitle(event.target.value)} />
+                        <span className="pb-formLabel">Naziv poklona <span className="pb-formLabel__required">*</span></span>
+                        <input className="pb-input" type="text" required aria-required="true" value={giftTitle} onChange={(event) => setGiftTitle(event.target.value)} />
                       </label>
                       <label className="pb-formField">
                         <span className="pb-formLabel">Kratki detalji</span>

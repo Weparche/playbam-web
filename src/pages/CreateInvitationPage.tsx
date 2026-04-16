@@ -92,6 +92,10 @@ function buildWishlistPayloadFromQuickDraft(item: WishlistDraftItem, priorityOrd
   }
 }
 
+function hasIncompleteQuickWishlistItem(items: WishlistDraftItem[]) {
+  return items.some((item) => !item.title.trim())
+}
+
 async function syncQuickCreateWishlist(invitationId: string, quickDraft: InvitationCreateDraft) {
   if (!quickDraft.wishlistEnabled) {
     return
@@ -186,6 +190,11 @@ export default function CreateInvitationPage() {
       return
     }
 
+    if (draft.wishlistEnabled && hasIncompleteQuickWishlistItem(draft.wishlistItems)) {
+      setFormError('U Listi želja upiši obavezni naziv poklona ili makni praznu stavku.')
+      return
+    }
+
     if (draft.timeEnd <= draft.time) {
       setFormError('Vrijeme završetka mora biti nakon vremena početka.')
       return
@@ -265,7 +274,7 @@ export default function CreateInvitationPage() {
         return (
           <FloatingEditPanel
             open
-            title="Wishlist i dodatci"
+            title="Lista želja"
             description="Uključi listu želja, dodaj prijedloge poklona i po želji grupni poklon."
             onClose={() => setActiveShortcut(null)}
           >
@@ -313,13 +322,13 @@ export default function CreateInvitationPage() {
           <FloatingEditPanel
             open
             title="Postavke"
-            description="Dodatne opcije koje još ostaju povezane uz wishlist i grupni poklon."
+            description="Dodatne opcije koje su povezane uz Listu želja i grupni poklon."
             onClose={() => setActiveShortcut(null)}
           >
             <div className="pb-quickEditor">
               <label className="pb-quickEditor__toggle">
                 <input type="checkbox" checked={draft.wishlistEnabled} onChange={(event) => updateField('wishlistEnabled', event.target.checked)} />
-                <span>Wishlist uključen</span>
+                <span>Lista želja uključena</span>
               </label>
               <label className="pb-quickEditor__toggle">
                 <input type="checkbox" checked={draft.savingsEnabled} onChange={(event) => updateField('savingsEnabled', event.target.checked)} />

@@ -2038,14 +2038,14 @@
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {
-    width: 78.5mm !important;
-    max-width: 78.5mm !important;
+    width: 86.4mm !important;
+    max-width: 86.4mm !important;
     margin: 0 auto !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__frame--storybook {
-    width: 78.5mm !important;
-    max-width: 78.5mm !important;
+    width: 86.4mm !important;
+    max-width: 86.4mm !important;
     min-height: auto !important;
     margin: 0 auto !important;
   }

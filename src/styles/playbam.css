@@ -5074,7 +5074,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 /* Gost pregled (host): RSVP centrirano kao info blok / pozadina — bez dodatnog pomaka ulijevo */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-  transform: translateX(calc(-50% - 0.34rem)) scale(0.9);
+  left: calc(50% - 0.7rem);
+  transform: translateX(-50%) scale(0.9);
   transform-origin: center top;
 }
 

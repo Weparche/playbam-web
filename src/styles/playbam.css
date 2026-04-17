@@ -10599,6 +10599,29 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   z-index: 1;
 }
 
+/* Gost s odobrenim pristupom: „Vidimo se na tulumu!” ~0.5% visine okvira niže (0.5cqh kad je podržano) */
+.pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__message--storybook {
+  margin-top: calc(0.78rem - 13px + 3.25px + 0.2rem);
+}
+
+@media (max-width: 640px) {
+  .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.2rem);
+  }
+}
+
+@supports (height: 1cqh) {
+  .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.5cqh);
+  }
+
+  @media (max-width: 640px) {
+    .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__message--storybook {
+      margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.5cqh);
+    }
+  }
+}
+
 @media (max-width: 520px) {
   .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__accessCard {
     /* Malo više od dna da ne dira RSVP; ostaje centrirano */

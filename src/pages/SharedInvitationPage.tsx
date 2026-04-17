@@ -1478,7 +1478,7 @@ export default function SharedInvitationPage() {
                 </Card>
               ) : null}
 
-              {!isHost || loadingPrivateState ? (
+              {(!isHost || loadingPrivateState) && !(user && !loadingPrivateState && hasPrivateAccess && !isHost) ? (
                 <InvitationCard
                   invitation={invitation}
                   access={hasPrivateAccess ? 'private' : 'public'}
@@ -1499,22 +1499,38 @@ export default function SharedInvitationPage() {
               ) : null}
 
               {user && !loadingPrivateState && hasPrivateAccess && !isHost ? (
-                <PrivateInvitationGuest
-                  invitation={invitation}
-                  wishlistLoading={wishlistLoading}
-                  wishlistError={wishlistError}
-                  wishlistItems={wishlistItems}
-                  wishlistActionId={wishlistActionId}
-                  currentGuestName={user.parentName || null}
-                  onReserve={handleReserveWishlistItem}
-                  onParticipate={handleParticipateWishlistItem}
-                  onCancel={handleCancelWishlistReservation}
-                  onAddWishlistItem={handleGuestWishlistAdd}
-                  onDeleteWishlistItem={handleGuestWishlistDelete}
-                  savingWishlistItem={savingWishlistItem}
-                  savingRsvp={savingRsvp}
-                  requestError={requestError}
-                />
+                <div className="pb-guestPrivateLayout" aria-label="Privatni dio pozivnice">
+                  <div className="pb-guestPrivateLayout__left">
+                    <PrivateInvitationGuest
+                      invitation={invitation}
+                      wishlistLoading={wishlistLoading}
+                      wishlistError={wishlistError}
+                      wishlistItems={wishlistItems}
+                      wishlistActionId={wishlistActionId}
+                      currentGuestName={user.parentName || null}
+                      onReserve={handleReserveWishlistItem}
+                      onParticipate={handleParticipateWishlistItem}
+                      onCancel={handleCancelWishlistReservation}
+                      onAddWishlistItem={handleGuestWishlistAdd}
+                      onDeleteWishlistItem={handleGuestWishlistDelete}
+                      savingWishlistItem={savingWishlistItem}
+                      savingRsvp={savingRsvp}
+                      requestError={requestError}
+                    />
+                  </div>
+                  <div className="pb-guestPrivateLayout__right">
+                    <InvitationCard
+                      invitation={invitation}
+                      access="private"
+                      isHost={false}
+                      rsvp={rsvp?.status ?? null}
+                      canSubmitRsvp={canSubmitRsvp}
+                      onRsvpChange={canSubmitRsvp ? handleRsvpChange : undefined}
+                      onGuestRsvpIntent={handleGuestRsvpIntent}
+                      guestRsvpHint={guestRsvpHint}
+                    />
+                  </div>
+                </div>
               ) : null}
 
               <GuestInvitationModal

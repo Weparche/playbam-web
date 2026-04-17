@@ -9750,6 +9750,11 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--storybook {
     line-height: 1.28;
   }
+
+  /* Mobile: RSVP 2% dolje */
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
+    top: calc(62.9% - 10% + 7% + 2%);
+  }
 }
 
 .pb-inviteHero__title--outline-none {

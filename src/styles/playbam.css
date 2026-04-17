@@ -9970,6 +9970,15 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 }
 
+/* Samo web (desktop): digni poruku ~0.5% gore */
+@media (min-width: 980px) {
+  @supports (height: 1cqh) {
+    .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
+      margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + 2cqh + 0.5cqh - 0.5cqh);
+    }
+  }
+}
+
 .pb-inviteHero__printPartyDetails {
   margin: 1.05rem auto 0;
   width: 86%;
@@ -10103,24 +10112,25 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-rsvpBtn--storybookGoing {
-  color: #4f5d79;
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(122, 122, 220, 0.22);
+  /* Uskladi s RSVP preview pill bojama */
+  background: rgba(91, 196, 144, 0.16);
+  border-color: rgba(91, 196, 144, 0.24);
+  color: #1d7a4e;
 }
 
 .pb-rsvpBtn--storybookNotGoing {
-  color: #4f5d79;
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(122, 122, 220, 0.22);
+  background: rgba(255, 126, 148, 0.16);
+  border-color: rgba(255, 126, 148, 0.22);
+  color: #be3658;
 }
 
 .pb-rsvpBtn--storybookMaybe {
   grid-column: 1 / -1;
   width: calc(50% - 0.275rem);
   justify-self: center;
-  color: #4f5d79;
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(122, 122, 220, 0.22);
+  background: rgba(245, 195, 68, 0.17);
+  border-color: rgba(245, 195, 68, 0.24);
+  color: #9b6c06;
 }
 
 .pb-rsvpBtn--storybook.is-active {

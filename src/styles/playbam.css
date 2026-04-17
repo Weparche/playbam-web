@@ -1,6 +1,8 @@
 /* Playbam.hr Landing - custom styling (mobile-first) */
 
 .pb-main {
+  max-width: 100%;
+  overflow-x: clip;
   background: radial-gradient(
       900px 440px at 15% 0%,
       rgba(30, 123, 230, 0.1),
@@ -37,6 +39,8 @@
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.78);
   border-bottom: 1px solid rgba(22, 24, 35, 0.08);
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 .pb-nav__inner {
@@ -45,6 +49,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
+  min-width: 0;
 }
 
 .pb-brand {
@@ -2629,7 +2634,8 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 }
 
 .pb-privateVenueModal {
-  max-width: min(34rem, calc(100vw - 1.5rem));
+  /* 100dvw: izbjegava širu od stvarnog viewporta (mobitel, 100vw često “pobrkne”) */
+  max-width: min(34rem, calc(100dvw - 1.5rem));
 }
 
 .pb-privateVenueModal__body {
@@ -3212,6 +3218,8 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 .pb-flowLayout {
   display: grid;
   gap: 14px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .pb-sessionCard {
@@ -4914,9 +4922,9 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
       margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh);
     }
 
-    /* Javna pozivnica (InvitationCard) — 5% gore vs. prijašnji pomak */
+    /* Javna pozivnica (InvitationCard) +1% dolje u odnosu na prethodni pomak */
     .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px + 5cqh - 2cqh + 2cqh - 5cqh);
+      margin-top: calc(0.78rem - 13px + 3.25px + 5cqh - 2cqh + 2cqh - 5cqh + 1cqh);
     }
   }
 }
@@ -5574,7 +5582,7 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 
 .pb-createEditor__titleStyleModal.pb-modalDialog {
   max-width: 26rem;
-  width: calc(100vw - 2rem);
+  width: min(calc(100dvw - 2rem), 100%);
 }
 
 .pb-createEditor__titleStyleModalBody {
@@ -6729,7 +6737,7 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   align-items: stretch;
   gap: var(--pb-create-rail-gap);
   width: fit-content;
-  max-width: min(calc(100vw - 1rem), 35.5rem);
+  max-width: min(calc(100dvw - 1rem), 35.5rem);
   padding: var(--pb-create-rail-padding);
   border-radius: 1.8rem;
   background: rgba(255, 255, 255, 0.76);
@@ -10257,9 +10265,9 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + var(--pb-invite-message-offset, 0cqh));
   }
 
-  /* Javna pozivnica: −2.5cqh (≈ 5% gore u odnosu na prijašnjih +2.5cqh) */
+  /* Javna pozivnica: −1.5cqh (−2.5cqh + 1% dolje) */
   .pb-inviteCard--storybook {
-    --pb-invite-message-offset: -2.5cqh;
+    --pb-invite-message-offset: -1.5cqh;
   }
 }
 

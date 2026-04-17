@@ -52,6 +52,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Sprječi “proširenje” sadržaja u širinu nakon fontova / UI traka (mobitel) */
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -65,6 +68,14 @@ body {
   font-family: var(--sans);
   color: var(--text);
   background: var(--bg);
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+#root {
+  overflow-x: clip;
+  max-width: 100%;
+  min-width: 0;
 }
 
 body:has(.pb-main--demo) {
@@ -84,9 +95,11 @@ img {
 /* Utility */
 .pb-container {
   width: 100%;
-  max-width: 1120px;
+  max-width: min(1120px, 100%);
   margin: 0 auto;
   padding: 0 18px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .pb-chip {

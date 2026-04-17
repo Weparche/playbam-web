@@ -76,12 +76,16 @@
   background: var(--color-bg-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 .ew-container {
-  max-width: 1280px;
+  max-width: min(1280px, 100%);
   margin: 0 auto;
   padding: 0 24px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @media (min-width: 768px) {

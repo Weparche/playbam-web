@@ -224,7 +224,13 @@ export default function PrivateInvitationGuest({
           </div>
         ) : null}
 
-        <section className="pb-invitePrivateCard pb-invitePrivateCard--guestPartyFacts" aria-label="Kontakt i detalji tuluma">
+        <section
+          className="pb-invitePrivateCard pb-invitePrivateCard--guestPartyFacts"
+          aria-labelledby="guest-party-details-heading"
+        >
+          <h2 id="guest-party-details-heading" className="pb-invitePrivateCard__guestPartyHeading">
+            Detalji tuluma
+          </h2>
           <div className="pb-partyFacts pb-partyFacts--guestGrid">
             {guestPartyDetailRows.map((row) => (
               <div

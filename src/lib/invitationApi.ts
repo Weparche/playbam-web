@@ -353,7 +353,41 @@ export function isApiError(error: unknown, status?: number) {
 
 type PublicInvitationRaw = PublicInvitation & { rsvp_mood?: string | null }
 
-/** Javni/PUT odgovor: neki backendi šalju `rsvp_mood` umjesto `rsvpMood`. */
+function normalizePartyDetails(raw: unknown): InvitationPartyDetails | null {
+  if (raw == null || typeof raw !== 'object') {
+    return null
+  }
+
+  const r = raw as Record<string, unknown>
+  const pick = (camel: string, snake: string): string | null => {
+    const a = r[camel]
+    const b = r[snake]
+    const s = (typeof a === 'string' ? a : typeof b === 'string' ? b : '').trim()
+    return s || null
+  }
+
+  const out: InvitationPartyDetails = {
+    parkingLocation: pick('parkingLocation', 'parking_location'),
+    cafeLocation: pick('cafeLocation', 'cafe_location'),
+    extraDetails: pick('extraDetails', 'extra_details'),
+    contactName: pick('contactName', 'contact_name'),
+    contactMobile: pick('contactMobile', 'contact_mobile'),
+  }
+
+  if (
+    !out.parkingLocation &&
+    !out.cafeLocation &&
+    !out.extraDetails &&
+    !out.contactName &&
+    !out.contactMobile
+  ) {
+    return null
+  }
+
+  return out
+}
+
+/** Javni/PUT odgovor: neki backendi šalju `rsvp_mood` umjesto `rsvpMood`; `party_details` u snake_case. */
 function normalizePublicInvitationResponse(raw: PublicInvitationRaw): PublicInvitation {
   const mood =
     typeof raw.rsvpMood === 'string'
@@ -361,7 +395,8 @@ function normalizePublicInvitationResponse(raw: PublicInvitationRaw): PublicInvi
       : typeof raw.rsvp_mood === 'string'
         ? raw.rsvp_mood
         : null
-  return { ...raw, rsvpMood: mood }
+  const partyDetails = normalizePartyDetails(raw.partyDetails)
+  return { ...raw, rsvpMood: mood, partyDetails }
 }
 
 export async function getPublicInvitation(token: string) {

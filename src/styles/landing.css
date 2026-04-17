@@ -700,10 +700,20 @@
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-print);
   background: var(--color-bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.ew-print-wrapper .ew-hero-visual__photo-img {
-  object-fit: cover;
+/* Print: „zoom out“ — cijela pozivnica vidljivija u okviru */
+.ew-hero-visual__photo-img--print {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  transform: scale(0.78);
+  transform-origin: center center;
 }
 
 @media (max-width: 919px) {

@@ -8379,8 +8379,9 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 
   .pb-hostStudio {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 42.5rem) auto;
     align-items: start;
+    justify-content: center;
   }
 
   .pb-hostStudioShell {

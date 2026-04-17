@@ -4957,16 +4957,16 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-createLivePreview .pb-inviteHero__logo {
-  top: calc(1.21% - 1cqh);
+  top: 1.15%;
 }
 
 .pb-createLivePreview .pb-inviteHero__titleWrap--storybook {
-  top: calc(8.8% + 1cqh);
+  top: 9%;
 }
 
 /* Srednji (md) naslov: dodatnih 20% gore u odnosu na glavni pomak */
 .pb-createLivePreview .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
-  top: calc(7.04% + 1cqh);
+  top: 7.2%;
 }
 
 /* Live preview: najveći (lg) naslov — dodatni pomak gore */
@@ -5007,78 +5007,21 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   font-size: calc(1.8rem * 1.15);
 }
 
-@supports (height: 1cqh) {
-  .pb-createLivePreview .pb-inviteHero__infoBlock {
-    top: calc(37.9% - 0.5cqh);
-  }
-
-  .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 1.5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh);
-  }
-
-  /* Samo /kreiraj-pozivnicu: poruka ~2.5% okvira niže (3% − 0.5% gore) */
-  .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 1.5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh + 2.5cqh);
-  }
-
-  .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-    transform: translateX(calc(-50% - 5.2cqh)) scale(0.9);
-  }
-
-  .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-    /* Print pregled / ispis: ~1% okvira gore (−1cqh) */
-    margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh);
-  }
+/* Live preview: poruka i RSVP — bez cqh (stabilno u editoru / host pregledu) */
+.pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
+  margin-top: calc(0.78rem - 13px + 3.25px);
 }
 
-@media (max-width: 640px) {
-  @supports (height: 1cqh) {
-    /* Live preview (host / kreiraj) — mora biti specifičnije od pravila iznad */
-    .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 1.5cqh + 5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh);
-    }
-
-    .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 1.5cqh + 5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh + 2.5cqh);
-    }
-
-    .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh);
-    }
-
-    /* Javna pozivnica (InvitationCard) +1% dolje u odnosu na prethodni pomak */
-    .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px + 5cqh - 2cqh + 2cqh - 5cqh + 1cqh);
-    }
-  }
+.pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
+  margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem);
 }
 
-/* Message offset defaults (stabilizira "Vidimo se na tulumu!" u svim kontekstima) */
-@supports (height: 1cqh) {
-  /* Host preview (mobile): guest 3% gore, print 5% dolje */
-  @media (max-width: 640px) {
-    .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) {
-      --pb-invite-message-offset: -3cqh;
-    }
-    .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print {
-      --pb-invite-message-offset: 5cqh;
-    }
-  }
+.pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
+  margin-top: calc(0.78rem - 13px + 3.25px);
 }
 
-/* Host /pozivnica (mobile): posebni pomaci poruke u gost/print previewu */
-@media (max-width: 640px) {
-  @supports (height: 1cqh) {
-    /* Gost pregled: 3% gore */
-    .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 1.5cqh + 5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh + var(--pb-invite-message-offset, 0cqh));
-    }
-
-    /* Print pregled: 5% dolje */
-    .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh + var(--pb-invite-message-offset, 0cqh));
-    }
-  }
+.pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
+  transform: translateX(calc(-50% - 0.34rem)) scale(0.9);
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__accessCard {
@@ -5107,25 +5050,19 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 @media (max-width: 979px) {
   .pb-createLivePreview .pb-inviteHero__logo {
-    top: calc(0.76% - 1cqh);
+    top: 0.7%;
   }
 
   .pb-createLivePreview .pb-inviteHero__titleWrap--storybook {
-    top: calc(8.4% + 1cqh);
+    top: 8.65%;
   }
 
   .pb-createLivePreview .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
-    top: calc(6.72% + 1cqh);
+    top: 6.9%;
   }
 
   .pb-createLivePreview .pb-inviteHero__infoBlock {
     top: 37.4%;
-  }
-
-  @supports (height: 1cqh) {
-    .pb-createLivePreview .pb-inviteHero__infoBlock {
-      top: calc(37.4% - 0.5cqh);
-    }
   }
 
   .pb-createLivePreview .pb-inviteHero__rsvpBlock--storybook {
@@ -10089,15 +10026,15 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 /* Javna /pozivnica/ — naslov: ista pozicija i veličina kao Gost pregled na hostu */
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__logo {
-  top: calc(1.21% - 1cqh);
+  top: 1.15%;
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook {
-  top: calc(8.8% + 1cqh);
+  top: 9%;
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
-  top: calc(7.04% + 1cqh);
+  top: 7.2%;
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--size-lg {
@@ -10117,12 +10054,6 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   top: calc(63.4% - 10% + 7%);
 }
 
-@supports (height: 1cqh) {
-  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
-    top: calc(37.9% - 0.5cqh);
-  }
-}
-
 /* Malo veći razmak između prvog i drugog retka naslova */
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--storybook {
   line-height: 1.22;
@@ -10138,25 +10069,19 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 @media (max-width: 979px) {
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__logo {
-    top: calc(0.76% - 1cqh);
+    top: 0.7%;
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook {
-    top: calc(8.4% + 1cqh);
+    top: 8.65%;
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
-    top: calc(6.72% + 1cqh);
+    top: 6.9%;
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
     top: 37.4%;
-  }
-
-  @supports (height: 1cqh) {
-    .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
-      top: calc(37.4% - 0.5cqh);
-    }
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
@@ -10312,10 +10237,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   margin-top: 0.55rem;
 }
 
-@supports (height: 1cqh) {
-  .pb-inviteHero__infoRow--venue {
-    transform: translateX(-2.5cqh);
-  }
+.pb-inviteHero__infoRow--venue {
+  transform: translateX(-0.12rem);
 }
 
 .pb-inviteHero__infoIcon {
@@ -10364,6 +10287,10 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-inviteHero__message--storybook {
+  /*
+   * Fiksni pomak (bez cqh): visina okvira i 1cqh mijenjaju se pri resizeu / fontu / mob. URL baru
+   * pa je “Vidimo se na tulumu!” stalno “plesalo”.
+   */
   margin: calc(0.78rem - 13px + 3.25px) 0 0;
   width: 82%;
   max-width: 100%;
@@ -10376,8 +10303,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   border: 0;
   border-radius: 0;
   font-family: var(--invite-font-meta);
-  /* +20% od prijašnjeg clamp(0.82rem, 2.75vw, 0.92rem) */
-  font-size: clamp(0.984rem, 3.3vw, 1.104rem);
+  /* Fiksna veličina — bez vw (mobilni chrome mijenja širinu viewporta) */
+  font-size: 0.984rem;
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -10387,15 +10314,10 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   text-shadow: 0 1px 1px rgba(61, 44, 120, 0.18);
 }
 
-@supports (height: 1cqh) {
-  .pb-inviteHero__message--storybook {
-    /* Pomak prema gore 3% visine okvira (container na .pb-inviteHero__frame--storybook) */
-    margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + var(--pb-invite-message-offset, 0cqh));
-  }
-
-  /* Javna pozivnica: −1.5cqh (−2.5cqh + 1% dolje) */
-  .pb-inviteCard--storybook {
-    --pb-invite-message-offset: -1.5cqh;
+/* Uži ekran: malo niže u odnosu na staro +1cqh (sada fiksno) */
+@media (max-width: 640px) {
+  .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem);
   }
 }
 
@@ -10475,17 +10397,11 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   width: 71%;
   margin: 0;
   padding: 0;
-  transform: translateX(-50%);
+  transform: translateX(calc(-50% - 0.18rem));
   display: grid;
   justify-items: center;
   gap: 0.8rem;
   z-index: 2;
-}
-
-@supports (height: 1cqh) {
-  .pb-inviteHero__rsvpBlock--storybook {
-    transform: translateX(calc(-50% - 2.5cqh));
-  }
 }
 
 .pb-inviteHero__rsvpTitle--storybook {

@@ -8605,6 +8605,80 @@
   margin-top: 0.65rem;
 }
 
+/* Pending kartice: što kompaktnije, bez preklapanja */
+.pb-hostRequestGroup--pending .pb-hostRequestItem {
+  padding: 0.7rem 0.75rem;
+  gap: 0.5rem;
+}
+
+.pb-hostRequestGroup--pending .pb-hostRequestItem__meta {
+  margin-top: 0.22rem;
+}
+
+.pb-hostRequestGroup--pending .pb-hostRequestItem__actions {
+  margin-top: 0.55rem;
+  gap: 0.4rem;
+}
+
+.pb-hostRequestGroup--pending .pb-hostRequestItem__actions .pb-btn {
+  padding: 0.5rem 0.6rem;
+  min-height: 2.15rem;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.pb-hostRequestGroup--pending .pb-hostRequestItem__rsvpBadge {
+  padding: 0.38rem 0.5rem;
+  border-radius: 12px;
+}
+
+/* Mobile: zadrži 2 kartice u redu kad stane, ali ne forsiraj jedan red teksta */
+@media (max-width: 520px) {
+  .pb-hostRequests {
+    gap: 0.6rem;
+  }
+
+  .pb-hostRequestItem {
+    padding: 0.68rem 0.7rem;
+    gap: 0.48rem;
+  }
+
+  .pb-hostRequestItem__headRow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.18rem;
+    align-items: start;
+  }
+
+  .pb-hostRequestItem__children {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .pb-hostRequestItem__title {
+    font-size: 0.9rem;
+  }
+
+  .pb-hostRequestItem__meta {
+    font-size: 0.74rem;
+    line-height: 1.32;
+  }
+
+  .pb-hostRequestItem__actions {
+    margin-top: 0.5rem;
+  }
+
+  .pb-hostRequestItem__actions .pb-btn {
+    width: 100%;
+  }
+}
+
+/* Ultra usko: 1 stupac da ništa ne ide preko ničega */
+@media (max-width: 360px) {
+  .pb-hostRequests {
+    grid-template-columns: 1fr;
+  }
+}
 .pb-hostRequestItem__side {
   display: grid;
   justify-items: stretch;

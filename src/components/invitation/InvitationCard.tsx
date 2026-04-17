@@ -37,7 +37,7 @@ export default function InvitationCard({
   const timeText = formatInvitationTimeText(invitation.time.trim())
   const venueText = invitation.location.trim() || 'Lokacija uskoro'
   const backgroundImage = resolveInvitationBackgroundImage(invitation.coverImage, invitation.theme)
-  const accessTitle = 'Privatni dio pozivnice'
+  const accessTitle = access === 'private' ? 'Privatni dio pozivnice' : 'Javni dio pozivnice'
   const accessText =
     access === 'private'
       ? 'Odluku možeš promijeniti do 24h prije rođendana.'

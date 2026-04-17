@@ -10321,6 +10321,32 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 }
 
+/*
+ * Javni prikaz (/pozivnica, gost nije u odobrenom privatnom modu): „Vidimo se…” ~0.5% visine okvira niže.
+ * (Kartica nema .pb-inviteCard--guestPrivate — odvojeno od pravila za odobrenog gosta.)
+ */
+.pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
+  margin-top: calc(0.78rem - 13px + 3.25px + 0.2rem);
+}
+
+@media (max-width: 640px) {
+  .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.2rem);
+  }
+}
+
+@supports (height: 1cqh) {
+  .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.5cqh);
+  }
+
+  @media (max-width: 640px) {
+    .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
+      margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.5cqh);
+    }
+  }
+}
+
 /* Desktop javna pozivnica: ne diramo dodatno (stabilna pozicija) */
 
 .pb-inviteHero__printPartyDetails {

@@ -10117,3 +10117,719 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     min-height: min(648px, 171vw);
   }
 }
+
+/* Homepage redesign */
+.pb-home {
+  position: relative;
+  overflow-x: clip;
+  padding-bottom: 104px;
+  background:
+    radial-gradient(1100px 540px at 10% 0%, rgba(255, 191, 125, 0.2), transparent 58%),
+    radial-gradient(900px 480px at 100% 8%, rgba(82, 171, 255, 0.18), transparent 56%),
+    linear-gradient(180deg, #fffaf4 0%, #fffdfb 28%, #ffffff 100%);
+}
+
+.pb-home::before,
+.pb-home::after {
+  content: '';
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(6px);
+}
+
+.pb-home::before {
+  top: 96px;
+  right: -72px;
+  width: 184px;
+  height: 184px;
+  background: radial-gradient(circle, rgba(255, 173, 112, 0.24), transparent 68%);
+}
+
+.pb-home::after {
+  top: 420px;
+  left: -84px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(102, 183, 255, 0.18), transparent 68%);
+}
+
+.pb-homeEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 10px 30px rgba(18, 35, 62, 0.08);
+  color: #87552d;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+
+.pb-homeSection {
+  position: relative;
+}
+
+.pb-homeSection__head {
+  max-width: 680px;
+  display: grid;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.pb-homeSection__title,
+.pb-homeFinalCta__title {
+  margin: 0;
+  color: #18263d;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  font-size: clamp(2rem, 8vw, 3.7rem);
+}
+
+.pb-homeSection__text,
+.pb-homeFinalCta__text {
+  margin: 0;
+  max-width: 58ch;
+  color: rgba(24, 38, 61, 0.72);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.pb-homeSection--warm {
+  background: linear-gradient(180deg, rgba(255, 244, 232, 0.72), rgba(255, 255, 255, 0));
+}
+
+.pb-homeSection--alt {
+  background: linear-gradient(180deg, rgba(244, 248, 255, 0.92), rgba(255, 255, 255, 0));
+}
+
+.pb-homeHero {
+  position: relative;
+  padding: 18px 0 40px;
+}
+
+.pb-homeHero__inner {
+  display: grid;
+  gap: 22px;
+}
+
+.pb-homeHero__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 16px;
+}
+
+.pb-homeHero__title {
+  margin: 0;
+  max-width: 10ch;
+  color: #16263e;
+  font-size: clamp(2.55rem, 11vw, 5.4rem);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.pb-homeHero__text {
+  margin: 0;
+  max-width: 34ch;
+  color: rgba(24, 38, 61, 0.74);
+  font-size: 16px;
+  line-height: 1.68;
+}
+
+.pb-homeHero__actions,
+.pb-homeFinalCta__actions {
+  display: grid;
+  gap: 12px;
+}
+
+.pb-homeHero__button {
+  min-height: 56px;
+  width: 100%;
+  border-radius: 20px;
+  font-size: 16px;
+  box-shadow: 0 14px 30px rgba(17, 24, 39, 0.09);
+}
+
+.pb-homeHero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pb-homeBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(29, 46, 71, 0.08);
+  box-shadow: 0 10px 24px rgba(21, 30, 48, 0.05);
+  color: rgba(24, 38, 61, 0.8);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pb-homeHero__visual {
+  position: relative;
+}
+
+.pb-homeShowcase {
+  position: relative;
+  display: grid;
+  gap: 14px;
+}
+
+.pb-homeShowcase__invite,
+.pb-homeShowcase__venue {
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 22px 44px rgba(17, 24, 39, 0.1);
+  backdrop-filter: blur(14px);
+}
+
+.pb-homeShowcase__invite {
+  padding: 16px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(255, 248, 241, 0.9)),
+    radial-gradient(circle at top right, rgba(255, 174, 126, 0.2), transparent 35%);
+}
+
+.pb-homeShowcase__venue {
+  margin-left: auto;
+  width: calc(100% - 18px);
+  padding: 18px;
+  background:
+    linear-gradient(160deg, rgba(240, 247, 255, 0.96), rgba(255, 255, 255, 0.94)),
+    radial-gradient(circle at top left, rgba(111, 182, 255, 0.2), transparent 35%);
+}
+
+.pb-homeShowcase__inviteTop,
+.pb-homeShowcase__venueTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pb-homeMiniPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 239, 220, 0.95);
+  color: #9c5d28;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.pb-homeMiniPill--soft {
+  background: rgba(227, 239, 255, 0.94);
+  color: #265ea6;
+}
+
+.pb-homeMiniDots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.pb-homeMiniDots i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(24, 38, 61, 0.14);
+}
+
+.pb-homeShowcase__inviteBody {
+  margin-top: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.pb-homeShowcase__inviteArt {
+  min-height: 210px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 214, 170, 0.95), transparent 22%),
+    radial-gradient(circle at 72% 28%, rgba(117, 188, 255, 0.95), transparent 20%),
+    radial-gradient(circle at 38% 70%, rgba(255, 179, 186, 0.92), transparent 18%),
+    linear-gradient(145deg, #fff5ea 0%, #fde7d2 48%, #f9dcc3 100%);
+}
+
+.pb-homeShowcase__inviteCard {
+  padding: 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(24, 38, 61, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.pb-homeShowcase__inviteTitle,
+.pb-homeShowcase__venueTitle {
+  color: #16263e;
+  font-size: 22px;
+  font-weight: 1000;
+  letter-spacing: -0.04em;
+}
+
+.pb-homeShowcase__inviteMeta,
+.pb-homeShowcase__venueMeta {
+  margin-top: 6px;
+  color: rgba(24, 38, 61, 0.66);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.pb-homeShowcase__price {
+  color: #265ea6;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.pb-homeShowcase__venueChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.pb-homeShowcase__venueChips span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(38, 94, 166, 0.12);
+  color: rgba(24, 38, 61, 0.78);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pb-homeSteps,
+.pb-homeValues,
+.pb-homeInvites,
+.pb-homeVenues {
+  display: grid;
+  gap: 14px;
+}
+
+.pb-homeSteps__card,
+.pb-homeValues__card,
+.pb-homeVenueCard,
+.pb-homeInviteCard,
+.pb-homeTrustQuote,
+.pb-homeTrustStats__item,
+.pb-homeFinalCta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(24, 38, 61, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.07);
+}
+
+.pb-homeSteps__card,
+.pb-homeValues__card,
+.pb-homeVenueCard,
+.pb-homeInviteCard {
+  padding: 20px;
+}
+
+.pb-homeSteps__icon,
+.pb-homeValues__icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 243, 228, 0.95), rgba(233, 242, 255, 0.95));
+  color: #1f5da1;
+}
+
+.pb-homeSteps__icon svg,
+.pb-homeValues__icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.pb-homeSteps__number {
+  margin-top: 16px;
+  color: #de8a44;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.pb-homeSteps__title,
+.pb-homeValues__title,
+.pb-homeVenueCard__title,
+.pb-homeInviteCard__title {
+  margin: 12px 0 0;
+  color: #16263e;
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.pb-homeSteps__text,
+.pb-homeValues__text,
+.pb-homeVenueCard__description,
+.pb-homeInviteCard__note {
+  margin: 10px 0 0;
+  color: rgba(24, 38, 61, 0.7);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.pb-homeFeature {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+}
+
+.pb-homeFeature__copy {
+  display: grid;
+  gap: 14px;
+}
+
+.pb-homeFeature__list {
+  display: grid;
+  gap: 10px;
+}
+
+.pb-homeFeature__listItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: rgba(24, 38, 61, 0.78);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+.pb-homeFeature__listItem::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffba75, #f59c51);
+  box-shadow: 0 8px 16px rgba(245, 156, 81, 0.25);
+}
+
+.pb-homeFeature__cta {
+  min-height: 54px;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.pb-homeInviteCard {
+  min-height: 196px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.9)),
+    linear-gradient(145deg, #fff5ea, #fff2e3);
+}
+
+.pb-homeInviteCard--sun {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.88)),
+    linear-gradient(145deg, #fff0de, #ffd8b3);
+}
+
+.pb-homeInviteCard--sky {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.88)),
+    linear-gradient(145deg, #e6f1ff, #cde3ff);
+}
+
+.pb-homeInviteCard--rose {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.88)),
+    linear-gradient(145deg, #fff0f1, #ffdce2);
+}
+
+.pb-homeInviteCard__tag {
+  width: fit-content;
+  margin-bottom: auto;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: rgba(24, 38, 61, 0.72);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.pb-homeInviteCard__meta,
+.pb-homeVenueCard__meta,
+.pb-homeFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pb-homeInviteCard__meta span,
+.pb-homeVenueCard__meta span,
+.pb-homeFilters span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(24, 38, 61, 0.08);
+  color: rgba(24, 38, 61, 0.78);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pb-homeVenueCard__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.pb-homeVenueCard__location {
+  margin-top: 6px;
+  color: rgba(24, 38, 61, 0.6);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pb-homeVenueCard__price {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(229, 240, 255, 0.9);
+  color: #265ea6;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.pb-homeTrust {
+  display: grid;
+  gap: 18px;
+  align-items: center;
+}
+
+.pb-homeTrust__copy {
+  display: grid;
+  gap: 14px;
+}
+
+.pb-homeTrust__panel {
+  display: grid;
+  gap: 14px;
+}
+
+.pb-homeTrustQuote,
+.pb-homeTrustStats__item {
+  padding: 20px;
+}
+
+.pb-homeTrustQuote p {
+  margin: 0;
+  color: #16263e;
+  font-size: 18px;
+  line-height: 1.55;
+  letter-spacing: -0.03em;
+}
+
+.pb-homeTrustQuote span,
+.pb-homeTrustStats__item span {
+  display: block;
+  margin-top: 12px;
+  color: rgba(24, 38, 61, 0.62);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pb-homeTrustStats__item strong {
+  display: block;
+  color: #16263e;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.pb-homeFinalCta {
+  padding: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 195, 143, 0.28), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(104, 182, 255, 0.22), transparent 32%),
+    linear-gradient(160deg, #fff8f1, #ffffff);
+}
+
+.pb-homeStickyBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 45;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.96) 28%);
+  backdrop-filter: blur(12px);
+}
+
+.pb-homeStickyBar__button {
+  min-height: 54px;
+  border-radius: 18px;
+}
+
+.pb-nav {
+  background: rgba(255, 250, 245, 0.8);
+  border-bottom: 1px solid rgba(24, 38, 61, 0.06);
+}
+
+.pb-nav__inner {
+  height: 72px;
+}
+
+.pb-brand__mark {
+  width: 124px;
+  height: 124px;
+}
+
+.pb-nav__link,
+.pb-nav__demoLink,
+.pb-nav__download {
+  color: rgba(24, 38, 61, 0.76);
+}
+
+.pb-nav__link:hover,
+.pb-nav__demoLink:hover,
+.pb-nav__download:hover {
+  color: #16263e;
+}
+
+.pb-footer {
+  background: transparent;
+  border-top: 1px solid rgba(24, 38, 61, 0.08);
+}
+
+.pb-footer__brandWrap {
+  display: grid;
+  gap: 8px;
+}
+
+.pb-footer__text {
+  margin: 0;
+  max-width: 28ch;
+  color: rgba(24, 38, 61, 0.64);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (min-width: 640px) {
+  .pb-homeInvites,
+  .pb-homeVenues,
+  .pb-homeValues {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pb-homeTrust__panel {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+@media (min-width: 900px) {
+  .pb-home {
+    padding-bottom: 0;
+  }
+
+  .pb-homeHero {
+    padding: 42px 0 74px;
+  }
+
+  .pb-homeHero__inner,
+  .pb-homeFeature,
+  .pb-homeTrust {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .pb-homeFeature--reverse .pb-homeFeature__copy {
+    order: 2;
+  }
+
+  .pb-homeFeature--reverse .pb-homeVenues {
+    order: 1;
+  }
+
+  .pb-homeHero__actions,
+  .pb-homeFinalCta__actions {
+    grid-template-columns: repeat(2, minmax(0, max-content));
+    align-items: center;
+  }
+
+  .pb-homeHero__button,
+  .pb-homeFeature__cta {
+    width: auto;
+    min-width: 220px;
+  }
+
+  .pb-homeSteps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pb-homeInvites {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pb-homeValues {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .pb-homeFinalCta {
+    padding: 34px;
+  }
+
+  .pb-homeStickyBar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pb-homeShowcase__invite,
+  .pb-homeShowcase__venue,
+  .pb-homeSteps__card,
+  .pb-homeInviteCard,
+  .pb-homeVenueCard,
+  .pb-homeValues__card,
+  .pb-homeFinalCta {
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease,
+      border-color 220ms ease;
+  }
+
+  .pb-homeShowcase__invite:hover,
+  .pb-homeShowcase__venue:hover,
+  .pb-homeSteps__card:hover,
+  .pb-homeInviteCard:hover,
+  .pb-homeVenueCard:hover,
+  .pb-homeValues__card:hover,
+  .pb-homeFinalCta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 46px rgba(17, 24, 39, 0.1);
+    border-color: rgba(38, 94, 166, 0.16);
+  }
+}

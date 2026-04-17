@@ -9,10 +9,10 @@ type NavItem = {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Kako radi', href: '#kako-radi' },
-  { label: 'Što dobivaš', href: '#sto-dobivas' },
-  { label: 'Pozivnice', href: '#digitalne-pozivnice' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Kako radi', href: '/#kako-radi' },
+  { label: 'Pozivnice', href: '/#pozivnice' },
+  { label: 'Igraonice', href: '/#igraonice' },
+  { label: 'Zašto Playbam', href: '/#zasto-playbam' },
 ]
 
 export default function Navbar() {
@@ -23,9 +23,9 @@ export default function Navbar() {
   return (
     <header className="pb-nav">
       <div className="pb-container pb-nav__inner">
-        <div className="pb-brand" aria-label="VidimoSe.hr">
-          <img src="/logo.png" alt="VidimoSe.hr" className="pb-brand__mark" />
-        </div>
+        <Link to="/" className="pb-brand" aria-label="Playbam">
+          <img src="/logo.png" alt="Playbam" className="pb-brand__mark" />
+        </Link>
 
         <nav className="pb-nav__links" aria-label="Glavna navigacija">
           {items.map((it) => (
@@ -36,11 +36,11 @@ export default function Navbar() {
         </nav>
 
         <div className="pb-nav__actions">
-          <Link to="/pozivnica-demo" className="pb-nav__demoLink">
-            Pogledaj demo
-          </Link>
+          <a href="/#igraonice" className="pb-nav__demoLink">
+            Igraonice
+          </a>
           <Link to="/kreiraj-pozivnicu" className="pb-nav__download">
-            Kreiraj pozivnicu
+            Izradi pozivnicu
           </Link>
         </div>
 
@@ -49,7 +49,7 @@ export default function Navbar() {
           type="button"
           aria-label={open ? 'Zatvori izbornik' : 'Otvori izbornik'}
           aria-expanded={open ? 'true' : 'false'}
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen((value) => !value)}
         >
           <span />
           <span />
@@ -73,11 +73,11 @@ export default function Navbar() {
               ))}
               <LinkButton
                 variant="primary"
-                href="/pozivnica-demo"
+                href="/#igraonice"
                 onClick={() => setOpen(false)}
                 className="pb-nav__mobileBtn"
               >
-                Pogledaj demo pozivnicu
+                Pretraži igraonice
               </LinkButton>
               <LinkButton
                 variant="amber"
@@ -85,7 +85,7 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className="pb-nav__mobileBtn"
               >
-                Kreiraj pozivnicu
+                Izradi pozivnicu
               </LinkButton>
             </div>
           </div>

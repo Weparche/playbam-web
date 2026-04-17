@@ -1,66 +1,161 @@
-﻿import type { ReactNode } from 'react'
-import { useMemo, useState } from 'react'
-import Navbar from '../components/layout/Navbar'
+import type { ReactNode } from 'react'
+
 import Footer from '../components/layout/Footer'
-import PhoneMockup from '../components/marketing/PhoneMockup'
-import FeatureStep from '../components/marketing/FeatureStep'
-import ValueCard from '../components/marketing/ValueCard'
-import InvitationPreviewCard from '../components/marketing/InvitationPreviewCard'
-import FaqItem from '../components/marketing/FaqItem'
+import Navbar from '../components/layout/Navbar'
 import LinkButton from '../components/ui/LinkButton'
 
-function Icon({ children }: { children: ReactNode }) {
-  return (
-    <div className="pb-icon" aria-hidden="true">
-      {children}
-    </div>
-  )
+type Step = {
+  number: string
+  title: string
+  description: string
+  icon: ReactNode
+}
+
+type InvitePreview = {
+  title: string
+  accent: string
+  note: string
+}
+
+type VenueCard = {
+  name: string
+  location: string
+  description: string
+  age: string
+  price: string
+}
+
+type ValueItem = {
+  title: string
+  description: string
+  icon: ReactNode
+}
+
+const steps: Step[] = [
+  {
+    number: '01',
+    title: 'Kreiraj pozivnicu',
+    description: 'Odaberi stil, unesi detalje i složi pozivnicu koja izgleda lijepo odmah na mobitelu.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 5 17.5v-11Z" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M8 8h8M8 11.5h8M8 15h4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    number: '02',
+    title: 'Podijeli roditeljima',
+    description: 'Pošalji poveznicu u nekoliko sekundi i podijeli sve bitne informacije na elegantan način.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M15 8a3 3 0 1 0-2.83-4H12a3 3 0 0 0 .17 1L8.5 7.1a3 3 0 0 0-1.5-.4 3 3 0 1 0 1.5 5.6l3.67 2.1A3 3 0 0 0 12 15a3 3 0 1 0 .17 1l-3.67-2.1a3 3 0 0 0 0-3.8l3.67-2.1A3 3 0 0 0 15 8Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    number: '03',
+    title: 'Pronađi igraonicu',
+    description: 'Pregledaj opcije, usporedi detalje i brzo suzi izbor na ono što stvarno odgovara vašem danu.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 21s-6-3.86-6-9a6 6 0 1 1 12 0c0 5.14-6 9-6 9Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M12 13a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor" strokeWidth="1.8" />
+      </svg>
+    ),
+  },
+]
+
+const invitePreviews: InvitePreview[] = [
+  {
+    title: 'Safari party',
+    accent: 'pb-homeInviteCard--sun',
+    note: 'Topli tonovi, kratki unos i spremno za dijeljenje.',
+  },
+  {
+    title: 'Mali astronauti',
+    accent: 'pb-homeInviteCard--sky',
+    note: 'Moderan izgled koji na mobitelu djeluje kao mini event page.',
+  },
+  {
+    title: 'Slatki studio',
+    accent: 'pb-homeInviteCard--rose',
+    note: 'Nježno, veselo i dovoljno premium za roditelje koji žele uredan dojam.',
+  },
+]
+
+const venueCards: VenueCard[] = [
+  {
+    name: 'Mini Planet',
+    location: 'Zagreb, Trešnjevka',
+    description: 'Svijetla igraonica s kreativnim kutcima i privatnom party zonom.',
+    age: '3-7 godina',
+    price: 'od 190 EUR',
+  },
+  {
+    name: 'Rocket Room',
+    location: 'Zagreb, Novi Zagreb',
+    description: 'Aktivan prostor za male istraživače s animatorom i fleksibilnim terminima.',
+    age: '4-9 godina',
+    price: 'od 230 EUR',
+  },
+  {
+    name: 'Luna Park Studio',
+    location: 'Split, centar',
+    description: 'Boutique prostor za manja slavljenja, fotogeničan i jednostavan za organizaciju.',
+    age: '2-6 godina',
+    price: 'od 170 EUR',
+  },
+]
+
+const values: ValueItem[] = [
+  {
+    title: 'Sve na jednom mjestu',
+    description: 'Pozivnica i pregled igraonica povezani su u isti jednostavan flow.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-11Z" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M8 8h8M8 12h5M8 16h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Manje stresa za roditelje',
+    description: 'Odmah vidiš što možeš napraviti i gdje dalje kliknuti, bez suvišnih koraka.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 21c4.97 0 9-3.58 9-8s-4.03-8-9-8-9 3.58-9 8 4.03 8 9 8Z" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M8.5 12.5 11 15l4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Brža organizacija',
+    description: 'Jasan mobile-first dizajn pomaže da sve riješiš i dok si u pokretu.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M21 12a9 9 0 1 1-3.18-6.87" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Uredan i moderan dojam',
+    description: 'Playbam djeluje kao suvremen proizvod kojem je lako vjerovati već u prvih par sekundi.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7l7-4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="m9.5 12 1.7 1.7L14.8 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+]
+
+function SectionEyebrow({ children }: { children: ReactNode }) {
+  return <span className="pb-homeEyebrow">{children}</span>
 }
 
 export default function LandingPage() {
-  const [openFaq, setOpenFaq] = useState<number | null>(0)
-
-  const faqs = useMemo(
-    () => [
-      {
-        q: 'Treba li aplikaciju za otvoriti pozivnicu?',
-        a: (
-          <>
-            Ne. Gosti mogu otvoriti javni pregled web pozivnice bez
-            instaliranja aplikacije, a privatni dio se otključava tek nakon prijave i odobrenja.
-          </>
-        ),
-      },
-      {
-        q: 'Mogu li gosti potvrditi dolazak bez aplikacije?',
-        a: (
-          <>
-            Potvrda dolaska, lista želja i rezervacija poklona dostupni su tek nakon prijave i odobrenja organizatora.
-          </>
-        ),
-      },
-      {
-        q: 'Mogu li promijeniti termin?',
-        a: (
-          <>
-            Da. Nakon što napravite rezervaciju, možete promijeniti termin
-            unutar aplikacije (ovisno o dostupnosti).
-          </>
-        ),
-      },
-      {
-        q: 'Kako radi rezervacija?',
-        a: (
-          <>
-            Pronađete igraonicu, odaberete slobodan termin i pošaljete
-            digitalne pozivnice gostima u par klikova.
-          </>
-        ),
-      },
-    ],
-    [],
-  )
-
   return (
     <>
       <a className="pb-skipLink" href="#main">
@@ -69,444 +164,264 @@ export default function LandingPage() {
 
       <Navbar />
 
-      <main id="main">
-        {/* HERO */}
-        <section className="pb-hero">
-          <div className="pb-container pb-hero__inner">
-            <div className="pb-hero__left">
-              <div className="pb-hero__chipRow">
-                <span className="pb-chip">
-                  VidimoSe.hr za roditelje i dječje rođendane
-                </span>
-              </div>
+      <main id="main" className="pb-home">
+        <section className="pb-homeHero">
+          <div className="pb-container pb-homeHero__inner">
+            <div className="pb-homeHero__content">
+              <SectionEyebrow>Playbam za moderne dječje rođendane</SectionEyebrow>
 
-              <h1 className="pb-hero__title">
-                Rezerviraj dječji rođendan u par klikova
+              <h1 className="pb-homeHero__title">
+                Pozivnica i idealna igraonica, bez kaosa u organizaciji.
               </h1>
 
-              <p className="pb-hero__subtitle">
-                Igraonice, slobodni termini, paketi i digitalne pozivnice -
-                sve na jednom mjestu.
+              <p className="pb-homeHero__text">
+                Playbam pomaže roditeljima da brzo izrade lijepu digitalnu pozivnicu i
+                pregledno istraže igraonice za dječji rođendan na jednom mjestu.
               </p>
 
-              <div className="pb-hero__ctaRow">
-                <LinkButton variant="amber" href="/kreiraj-pozivnicu">
-                  Kreiraj pozivnicu
+              <div className="pb-homeHero__actions">
+                <LinkButton variant="amber" href="/kreiraj-pozivnicu" className="pb-homeHero__button">
+                  Izradi pozivnicu
                 </LinkButton>
-                <LinkButton variant="primary" href="#download">
-                  Preuzmi aplikaciju
-                </LinkButton>
-                <LinkButton variant="ghost" href="/pozivnica-demo">
-                  Pogledaj demo pozivnicu
+                <LinkButton variant="primary" href="#igraonice" className="pb-homeHero__button">
+                  Pretraži igraonice
                 </LinkButton>
               </div>
 
-              <div className="pb-hero__micro">
-                Brzo rezerviraj, pošalji pozivnice i prati sve potvrde dolaska.
+              <div className="pb-homeHero__badges" aria-label="Glavne prednosti">
+                <span className="pb-homeBadge">Brzo i jednostavno</span>
+                <span className="pb-homeBadge">Moderno dijeljenje pozivnice</span>
+                <span className="pb-homeBadge">Pregled igraonica na jednom mjestu</span>
               </div>
             </div>
 
-            <div className="pb-hero__right">
-              <PhoneMockup />
+            <div className="pb-homeHero__visual" aria-hidden="true">
+              <div className="pb-homeShowcase">
+                <div className="pb-homeShowcase__invite">
+                  <div className="pb-homeShowcase__inviteTop">
+                    <span className="pb-homeMiniPill">Nova pozivnica</span>
+                    <span className="pb-homeMiniDots">
+                      <i />
+                      <i />
+                      <i />
+                    </span>
+                  </div>
+                  <div className="pb-homeShowcase__inviteBody">
+                    <div className="pb-homeShowcase__inviteArt" />
+                    <div className="pb-homeShowcase__inviteCard">
+                      <div className="pb-homeShowcase__inviteTitle">Noina 5. proslava</div>
+                      <div className="pb-homeShowcase__inviteMeta">Subota, 24. svibnja u 17:00</div>
+                      <div className="pb-homeShowcase__inviteMeta">Podijeli s roditeljima u 1 kliku</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pb-homeShowcase__venue">
+                  <div className="pb-homeShowcase__venueTop">
+                    <span className="pb-homeMiniPill pb-homeMiniPill--soft">Top izbor</span>
+                    <span className="pb-homeShowcase__price">od 190 EUR</span>
+                  </div>
+                  <div className="pb-homeShowcase__venueTitle">Mini Planet</div>
+                  <div className="pb-homeShowcase__venueMeta">Trešnjevka • 3-7 godina</div>
+                  <div className="pb-homeShowcase__venueChips">
+                    <span>Privatna sala</span>
+                    <span>Animator</span>
+                    <span>Parking</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* KAKO RADI */}
-        <section id="kako-radi" className="pb-section">
+        <section id="kako-radi" className="pb-section pb-homeSection">
           <div className="pb-container">
-            <header className="pb-sectionHeader pb-sectionHeader--center">
-              <h2 className="pb-title">Kako radi</h2>
-              <p className="pb-subtitle pb-text-center">
-                Tri koraka do rođendana koji teče bez stresa.
+            <div className="pb-homeSection__head">
+              <SectionEyebrow>Kako funkcionira</SectionEyebrow>
+              <h2 className="pb-homeSection__title">Tri kratka koraka do mirnije organizacije</h2>
+              <p className="pb-homeSection__text">
+                Prvi fokus je brz: pozivnica za poslati i pregled igraonica za lakšu odluku.
               </p>
-            </header>
-
-            <div className="pb-stepsGrid">
-              <FeatureStep
-                step="01"
-                title="Pronađi igraonicu"
-                description="U par sekundi pregledaj lokacije, pakete i dostupne opcije."
-                revealDelayMs={220}
-                icon={
-                  <Icon>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M12 21s-7-4.5-7-11a7 7 0 0 1 14 0c0 6.5-7 11-7 11Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12 11.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </Icon>
-                }
-              />
-
-              <FeatureStep
-                step="02"
-                title="Odaberi slobodan termin"
-                description="Biraj datum i vrijeme, vidi pakete i potvrdi rezervaciju."
-                revealDelayMs={2200}
-                icon={
-                  <Icon>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M8 2v4M16 2v4"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M3 9h18"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M5 5h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M8 13h4"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </Icon>
-                }
-              />
-
-              <FeatureStep
-                step="03"
-                title="Pošalji digitalnu pozivnicu gostima"
-                description="Gosti dobivaju web poveznicu, vide javni pregled i traže pristup pozivnici."
-                revealDelayMs={2400}
-                icon={
-                  <Icon>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M4 7h16v14H4V7Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M4 7l8 6 8-6"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M9 3h6"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </Icon>
-                }
-              />
             </div>
-          </div>
-        </section>
 
-        {/* ŠTO DOBIVAŠ */}
-        <section id="sto-dobivas" className="pb-section pb-section--alt">
-          <div className="pb-container">
-            <header className="pb-sectionHeader pb-sectionHeader--center">
-              <h2 className="pb-title">Što dobivaš</h2>
-              <p className="pb-subtitle pb-text-center">
-                Sve što ti treba za organizaciju rođendana na jednom mjestu.
-              </p>
-            </header>
-
-            <div className="pb-valuesGrid">
-              <ValueCard
-                title="Slobodni termini"
-                description="Brzo provjeri dostupnost i rezerviraj bez izgubljenog vremena."
-                revealDelayMs={2000}
-                icon={
-                  <Icon>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M7 3h10v4H7V3Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5 7h14v14H5V7Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M9 11h6"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </Icon>
-                }
-              />
-              <ValueCard
-                title="Cijene paketa"
-                description="Transparentne cijene paketa i što dobivaš u svakom terminu."
-                revealDelayMs={320}
-                icon={
-                  <Icon>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M12 1v22"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H7"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </Icon>
-                }
-              />
-              <ValueCard
-                title="Uzrasti"
-                description="Programi i paketi prilagođeni djeci različitih uzrasta."
-                revealDelayMs={420}
-                icon={
-                  <Icon>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M12 12c2.3 0 4-1.7 4-4S14.3 4 12 4 8 5.7 8 8s1.7 4 4 4Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M4 20c1.2-3.7 4.2-6 8-6s6.8 2.3 8 6"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </Icon>
-                }
-              />
-              <ValueCard
-                title="Lokacija i parking"
-                description="Jednostavno dođi: lokacija, upute i informacije o parkingu."
-                revealDelayMs={520}
-                icon={
-                  <Icon>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M12 21s-7-4.5-7-11a7 7 0 0 1 14 0c0 6.5-7 11-7 11Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3 21h18"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </Icon>
-                }
-              />
-              <ValueCard
-                title="Digitalne pozivnice"
-                description="Slikovita web pozivnica s javnim pregledom i privatnim pristupom nakon odobrenja."
-                revealDelayMs={620}
-                icon={
-                  <Icon>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M4 6h16v16H4V6Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M4 6l8 7 8-7"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </Icon>
-                }
-              />
-              <ValueCard
-                title="Potvrde dolaska"
-                description="Praćenje tko dolazi - da planiranje bude lakše."
-                revealDelayMs={720}
-                icon={
-                  <Icon>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M20 6 9 17l-5-5"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </Icon>
-                }
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* DIGITALNE POZIVNICE */}
-        <section id="digitalne-pozivnice" className="pb-section">
-          <div className="pb-container">
-            <div className="pb-twoCol">
-              <div className="pb-twoCol__left">
-                <header className="pb-sectionHeader">
-                  <h2 className="pb-title">Digitalne pozivnice</h2>
-                  <p className="pb-subtitle">
-                    Pozvani ne trebaju imati aplikaciju. Javni pregled prikazuje sigurne informacije, a privatni dio pozivnice otključava se tek nakon prijave i odobrenja.
-                  </p>
-                </header>
-
-                <div className="pb-bullets">
-                  <div className="pb-bullet">
-                    <span className="pb-bullet__dot" aria-hidden="true" />
-                    Web pozivnica se otvara na mobitelu i desktopu
-                  </div>
-                  <div className="pb-bullet">
-                    <span className="pb-bullet__dot" aria-hidden="true" />
-                    Prijava, obiteljski profil i zahtjev za pristup u nekoliko koraka
-                  </div>
-                  <div className="pb-bullet">
-                    <span className="pb-bullet__dot" aria-hidden="true" />
-                    Karta i lokacija placeholder do završne integracije
-                  </div>
-                </div>
-
-                <div className="pb-ctaRow pb-ctaRow--stack">
-                  <LinkButton variant="amber" href="/kreiraj-pozivnicu">
-                    Kreiraj pozivnicu
-                  </LinkButton>
-                  <LinkButton variant="primary" href="/pozivnica-demo">
-                    Otvori demo pozivnicu
-                  </LinkButton>
-                  <LinkButton variant="ghost" href="#download">
-                    Preuzmi aplikaciju
-                  </LinkButton>
-                </div>
-              </div>
-
-              <div className="pb-twoCol__right">
-                <InvitationPreviewCard />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* DOWNLOAD APP */}
-        <section id="download" className="pb-section pb-download">
-          <div className="pb-container">
-            <div className="pb-download__grid">
-              <div className="pb-download__left">
-                <h2 className="pb-title">Preuzmi VidimoSe</h2>
-                <p className="pb-subtitle">
-                  Brza rezervacija, paketi i pozivnice u jednoj aplikaciji.
-                </p>
-
-                <div className="pb-download__badges">
-                  <a
-                    className="pb-storeBadge pb-storeBadge--google pb-hover"
-                    href="https://play.google.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <span className="pb-storeBadge__brand">Google Play</span>
-                    <span className="pb-storeBadge__title">Preuzmi</span>
-                  </a>
-
-                  <a
-                    className="pb-storeBadge pb-storeBadge--apple pb-storeBadge--disabled"
-                    href="#"
-                    aria-disabled="true"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <span className="pb-storeBadge__brand">App Store</span>
-                    <span className="pb-storeBadge__title">Uskoro</span>
-                  </a>
-                </div>
-
-                <div className="pb-download__note">
-                  U demo-u možeš otvoriti javni pregled bez aplikacije, a zatim testirati prijavu i odobrenje pristupa.
-                </div>
-              </div>
-
-              <div className="pb-download__right">
-                <div className="pb-downloadCard pb-hover">
-                  <div className="pb-downloadCard__top">
-                    <div className="pb-downloadCard__dot" aria-hidden="true" />
-                    <div className="pb-downloadCard__label">Što dobivaš odmah</div>
-                  </div>
-                  <div className="pb-downloadCard__list">
-                    <div className="pb-downloadCard__item">Slobodni termini</div>
-                    <div className="pb-downloadCard__item">Paketi po cijeni</div>
-                    <div className="pb-downloadCard__item">Digitalne pozivnice</div>
-                    <div className="pb-downloadCard__item">Potvrde dolaska</div>
-                  </div>
-                  <div className="pb-downloadCard__cta">
-                    <LinkButton variant="amber" href="/kreiraj-pozivnicu">
-                      Kreiraj pozivnicu
-                    </LinkButton>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section id="faq" className="pb-section pb-section--alt">
-          <div className="pb-container">
-            <header className="pb-sectionHeader pb-sectionHeader--center">
-              <h2 className="pb-title">FAQ</h2>
-              <p className="pb-subtitle pb-text-center">Brzi odgovori na najčešća pitanja.</p>
-            </header>
-
-            <div className="pb-faq">
-              {faqs.map((it, idx) => (
-                <FaqItem
-                  key={it.q}
-                  question={it.q}
-                  answer={it.a}
-                  isOpen={openFaq === idx}
-                  onToggle={() => setOpenFaq((cur) => (cur === idx ? null : idx))}
-                />
+            <div className="pb-homeSteps">
+              {steps.map((step) => (
+                <article key={step.number} className="pb-homeSteps__card">
+                  <div className="pb-homeSteps__icon">{step.icon}</div>
+                  <div className="pb-homeSteps__number">{step.number}</div>
+                  <h3 className="pb-homeSteps__title">{step.title}</h3>
+                  <p className="pb-homeSteps__text">{step.description}</p>
+                </article>
               ))}
             </div>
           </div>
         </section>
+
+        <section id="pozivnice" className="pb-section pb-homeSection pb-homeSection--warm">
+          <div className="pb-container">
+            <div className="pb-homeFeature">
+              <div className="pb-homeFeature__copy">
+                <SectionEyebrow>Pozivnice</SectionEyebrow>
+                <h2 className="pb-homeSection__title">Digitalna pozivnica koja izgleda lijepo i dijeli se bez muke</h2>
+                <p className="pb-homeSection__text">
+                  Fokus je na brzom uređivanju, urednom prikazu na mobitelu i dojmu koji roditeljima odmah ulijeva povjerenje.
+                </p>
+                <div className="pb-homeFeature__list">
+                  <div className="pb-homeFeature__listItem">Lijep i moderan dizajn bez prenatrpanosti</div>
+                  <div className="pb-homeFeature__listItem">Brzo uređivanje ključnih detalja</div>
+                  <div className="pb-homeFeature__listItem">Jednostavno dijeljenje poveznice roditeljima</div>
+                </div>
+                <LinkButton variant="amber" href="/kreiraj-pozivnicu" className="pb-homeFeature__cta">
+                  Kreiraj svoju pozivnicu
+                </LinkButton>
+              </div>
+
+              <div className="pb-homeInvites" aria-label="Primjeri pozivnica">
+                {invitePreviews.map((invite) => (
+                  <article key={invite.title} className={`pb-homeInviteCard ${invite.accent}`}>
+                    <div className="pb-homeInviteCard__tag">Preview</div>
+                    <h3 className="pb-homeInviteCard__title">{invite.title}</h3>
+                    <p className="pb-homeInviteCard__note">{invite.note}</p>
+                    <div className="pb-homeInviteCard__meta">
+                      <span>Uredi naslov</span>
+                      <span>Dodaj datum</span>
+                      <span>Podijeli link</span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="igraonice" className="pb-section pb-homeSection">
+          <div className="pb-container">
+            <div className="pb-homeFeature pb-homeFeature--reverse">
+              <div className="pb-homeFeature__copy">
+                <SectionEyebrow>Igraonice</SectionEyebrow>
+                <h2 className="pb-homeSection__title">Pregledaj igraonice na način koji štedi vrijeme</h2>
+                <p className="pb-homeSection__text">
+                  Umjesto nepreglednog istraživanja, Playbam na homepageu odmah pokazuje kako će pretraga izgledati: jasno, čitko i usporedivo.
+                </p>
+                <div className="pb-homeFilters" aria-label="Vizualni filteri">
+                  <span>Grad</span>
+                  <span>Dob djeteta</span>
+                  <span>Budžet</span>
+                  <span>Termin</span>
+                </div>
+                <LinkButton variant="primary" href="#finalni-cta" className="pb-homeFeature__cta">
+                  Pogledaj igraonice
+                </LinkButton>
+              </div>
+
+              <div className="pb-homeVenues">
+                {venueCards.map((venue) => (
+                  <article key={venue.name} className="pb-homeVenueCard">
+                    <div className="pb-homeVenueCard__top">
+                      <div>
+                        <h3 className="pb-homeVenueCard__title">{venue.name}</h3>
+                        <div className="pb-homeVenueCard__location">{venue.location}</div>
+                      </div>
+                      <div className="pb-homeVenueCard__price">{venue.price}</div>
+                    </div>
+                    <p className="pb-homeVenueCard__description">{venue.description}</p>
+                    <div className="pb-homeVenueCard__meta">
+                      <span>{venue.age}</span>
+                      <span>Kapacitet do 20 djece</span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="zasto-playbam" className="pb-section pb-homeSection pb-homeSection--alt">
+          <div className="pb-container">
+            <div className="pb-homeSection__head">
+              <SectionEyebrow>Zašto Playbam</SectionEyebrow>
+              <h2 className="pb-homeSection__title">Jasno iskustvo za roditelje koji žele brzo riješiti bitno</h2>
+              <p className="pb-homeSection__text">
+                Nema viška blokova ni nejasnih koraka. Homepage vodi ravno prema dvije glavne stvari koje roditelj želi napraviti.
+              </p>
+            </div>
+
+            <div className="pb-homeValues">
+              {values.map((value) => (
+                <article key={value.title} className="pb-homeValues__card">
+                  <div className="pb-homeValues__icon">{value.icon}</div>
+                  <h3 className="pb-homeValues__title">{value.title}</h3>
+                  <p className="pb-homeValues__text">{value.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="pb-section pb-homeSection">
+          <div className="pb-container">
+            <div className="pb-homeTrust">
+              <div className="pb-homeTrust__copy">
+                <SectionEyebrow>Povjerenje</SectionEyebrow>
+                <h2 className="pb-homeSection__title">Roditeljima treba jednostavniji početak organizacije</h2>
+                <p className="pb-homeSection__text">
+                  Zato homepage ne obećava previše, nego odmah pokazuje dvije najvažnije stvari: kako će izgledati pozivnica i kako će izgledati pregled igraonica.
+                </p>
+              </div>
+
+              <div className="pb-homeTrust__panel">
+                <div className="pb-homeTrustQuote">
+                  <p>
+                    “Kad je prvi ekran jasan, lakše je odlučiti što dalje. To je osjećaj koji želimo dati roditeljima čim otvore Playbam.”
+                  </p>
+                  <span>Neutralan trust placeholder</span>
+                </div>
+                <div className="pb-homeTrustStats">
+                  <div className="pb-homeTrustStats__item">
+                    <strong>2 glavna koraka</strong>
+                    <span>Pozivnica i igraonica bez lutanja po stranici</span>
+                  </div>
+                  <div className="pb-homeTrustStats__item">
+                    <strong>Mobile-first pristup</strong>
+                    <span>Veliki CTA-i, čitke kartice i jasan vertikalni flow</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="finalni-cta" className="pb-section pb-homeSection">
+          <div className="pb-container">
+            <div className="pb-homeFinalCta">
+              <SectionEyebrow>Spremno za dalje</SectionEyebrow>
+              <h2 className="pb-homeFinalCta__title">Kreni od onoga što ti sada treba</h2>
+              <p className="pb-homeFinalCta__text">
+                Izradi pozivnicu odmah ili prvo istraži igraonice pa odluči bez žurbe.
+              </p>
+              <div className="pb-homeFinalCta__actions">
+                <LinkButton variant="amber" href="/kreiraj-pozivnicu" className="pb-homeHero__button">
+                  Izradi pozivnicu
+                </LinkButton>
+                <LinkButton variant="ghost" href="#igraonice" className="pb-homeHero__button">
+                  Istraži igraonice
+                </LinkButton>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="pb-homeStickyBar" aria-label="Brze akcije">
+          <LinkButton variant="amber" href="/kreiraj-pozivnicu" className="pb-homeStickyBar__button">
+            Izradi pozivnicu
+          </LinkButton>
+          <LinkButton variant="primary" href="#igraonice" className="pb-homeStickyBar__button">
+            Igraonice
+          </LinkButton>
+        </div>
 
         <Footer />
       </main>
     </>
   )
 }
-
-
-
-
-

@@ -1,21 +1,31 @@
 export default function Footer() {
   return (
-    <footer className="pb-footer">
+    <footer className="pb-footer" id="footer">
       <div className="pb-container pb-footer__inner">
-        <div className="pb-footer__brand">VidimoSe.hr</div>
+        <div className="pb-footer__brandWrap">
+          <div className="pb-footer__brand">Playbam</div>
+          <p className="pb-footer__text">
+            Jednostavniji početak organizacije dječjeg rođendana.
+          </p>
+        </div>
+
         <div className="pb-footer__col">
-          <div className="pb-footer__label">Kontakt</div>
-          <a className="pb-footer__link" href="mailto:kontakt@vidimose.hr">
-            kontakt@vidimose.hr
+          <div className="pb-footer__label">Navigacija</div>
+          <a className="pb-footer__link" href="/#zasto-playbam">
+            O nama
+          </a>
+          <a className="pb-footer__link" href="mailto:kontakt@playbam.hr">
+            Kontakt
           </a>
         </div>
+
         <div className="pb-footer__col">
-          <div className="pb-footer__label">Linkovi</div>
+          <div className="pb-footer__label">Pravno</div>
           <a className="pb-footer__link" href="#">
             Privatnost
           </a>
           <a className="pb-footer__link" href="#">
-            Uvjeti korištenja
+            Uvjeti
           </a>
         </div>
       </div>

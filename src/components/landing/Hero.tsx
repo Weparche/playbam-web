@@ -49,9 +49,9 @@ export default function Hero() {
             <Link to="/kreiraj-pozivnicu" className="ew-btn-primary">
               Napravi pozivnicu
             </Link>
-            <a href="#igraonice" className="ew-btn-secondary">
+            <Link to="/igraonice" className="ew-btn-secondary">
               Pronađi igraonicu →
-            </a>
+            </Link>
           </div>
 
           <div className="ew-hero__social" style={stagger(600)}>

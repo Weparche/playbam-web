@@ -74,11 +74,22 @@ export default function VenuesSection() {
         <div ref={gridRef} className="ew-venues__grid ew-reveal">
           {venues.slice(0, 6).map(venue => (
             <Link key={venue.id} to={`/igraonice/${venue.slug}`} className="ew-venue-card">
-              <div className="ew-venue-card__pattern" />
+              <div className="ew-venue-card__img-wrap">
+                <img
+                  src={venue.coverPhoto}
+                  alt={venue.name}
+                  className="ew-venue-card__img"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="ew-venue-card__overlay">
+                  <span className="ew-venue-card__overlay-cta">Pogledaj →</span>
+                </div>
+              </div>
               <div className="ew-venue-card__body">
                 <div className="ew-venue-card__name">{venue.name}</div>
                 <div className="ew-venue-card__meta">
-                  {venue.city} · ★ {venue.rating} · {venue.pricePerChild}€/dijete · dob {venue.ageRange}
+                  ★ {venue.rating} · {venue.pricePerChild}€/dijete · dob {venue.ageRange}
                 </div>
               </div>
             </Link>

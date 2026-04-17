@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-type NavItem = { label: string; href: string }
+type NavItem = { label: string } & ({ href: string; to?: never } | { to: string; href?: never })
 
 const navItems: NavItem[] = [
   { label: 'Pozivnice', href: '#pozivnice' },
-  { label: 'Igraonice', href: '#igraonice' },
+  { label: 'Igraonice', to: '/igraonice' },
   { label: 'Kako radi', href: '#kako-radi' },
   { label: 'Prijava', href: '#' },
 ]
@@ -43,9 +43,9 @@ export default function Navbar() {
 
           <div className="ew-navbar__menu">
             {navItems.map((item) => (
-              <a key={item.href} href={item.href} className="ew-navbar__link">
-                {item.label}
-              </a>
+              item.to
+                ? <Link key={item.to} to={item.to} className="ew-navbar__link">{item.label}</Link>
+                : <a key={item.href} href={item.href} className="ew-navbar__link">{item.label}</a>
             ))}
             <Link to="/kreiraj-pozivnicu" className="ew-navbar__cta">
               Napravi pozivnicu
@@ -70,9 +70,9 @@ export default function Navbar() {
           </div>
           <nav className="ew-navbar__sheet-nav">
             {navItems.map((item) => (
-              <a key={item.href} href={item.href} className="ew-navbar__sheet-link" onClick={closeMobile}>
-                {item.label}
-              </a>
+              item.to
+                ? <Link key={item.to} to={item.to} className="ew-navbar__sheet-link" onClick={closeMobile}>{item.label}</Link>
+                : <a key={item.href} href={item.href} className="ew-navbar__sheet-link" onClick={closeMobile}>{item.label}</a>
             ))}
           </nav>
           <div className="ew-navbar__sheet-cta">

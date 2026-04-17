@@ -25,6 +25,13 @@ const amenityIcons: Record<string, string> = {
   'Javni prijevoz': '🚌',
   'Parking u blizini': '🅿',
   'Foto rekviziti': '📸',
+  'Trampolini': '🏃',
+  'Video nadzor': '📹',
+  'TÜV certifikat': '✅',
+  'PS4 i VR zone': '🎮',
+  'Karaoke': '🎤',
+  'Bubble/Fog Machine': '✨',
+  'Ekskluzivni prostor': '🔒',
 }
 
 export default function VenueDetailPage() {

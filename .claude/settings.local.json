@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Skill(update-config)",
-      "Skill(update-config:*)"
+      "Skill(update-config:*)",
+      "WebSearch",
+      "WebFetch(domain:www.findglocal.com)",
+      "WebFetch(domain:ententini-igraonica.wheree.com)"
     ]
   }
 }

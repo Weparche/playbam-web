@@ -2277,13 +2277,16 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {
     width: 79mm !important;
     max-width: 79mm !important;
+    height: calc(79mm * 648 / 379 * 1.15) !important;
     margin: 0 auto !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__frame--storybook {
     width: 79mm !important;
     max-width: 79mm !important;
-    min-height: auto !important;
+    height: calc(79mm * 648 / 379 * 1.15) !important;
+    min-height: calc(79mm * 648 / 379 * 1.15) !important;
+    aspect-ratio: auto !important;
     margin: 0 auto !important;
   }
 }

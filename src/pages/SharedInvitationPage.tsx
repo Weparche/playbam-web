@@ -16,7 +16,6 @@ import InvitationCard from '../components/invitation/InvitationCard'
 import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGuest'
 import { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
 import GuestInvitationModal, { getGuestModalStep } from '../components/invitation/GuestInvitationModal'
-import Footer from '../components/layout/Footer'
 import Navbar from '../components/layout/Navbar'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
@@ -2030,8 +2029,6 @@ export default function SharedInvitationPage() {
           </div>
         </div>
       ) : null}
-
-      <Footer />
     </>
   )
 }

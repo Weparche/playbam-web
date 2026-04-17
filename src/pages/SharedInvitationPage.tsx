@@ -1467,6 +1467,15 @@ export default function SharedInvitationPage() {
                 </div>
               ) : null}
 
+              {user && !isHost && membershipRequest?.status === 'pending' ? (
+                <Card className="pb-flowCard">
+                  <h2 className="pb-flowCard__title">Čekanje na odobrenje organizatora…</h2>
+                  <p className="pb-flowCard__text">
+                    Zahtjev za pristup privatnom dijelu je poslan. Pozivnica će se automatski otključati kad organizator odobri ili odbije zahtjev.
+                  </p>
+                </Card>
+              ) : null}
+
               {!isHost || loadingPrivateState ? (
                 <InvitationCard
                   invitation={invitation}
@@ -2229,37 +2238,39 @@ function HostRequestListV2({
                       </div>
                     ) : null}
 
-                    {request.status === 'pending' ? (
-                      <div className="pb-flowActions pb-flowActions--compact pb-hostRequestItem__actions">
-                        <Button
-                          type="button"
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            onReview(request.id, 'approve')
-                          }}
-                          disabled={isBusy}
-                        >
-                          Odobri
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          type="button"
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            onReview(request.id, 'reject')
-                          }}
-                          disabled={isBusy}
-                        >
-                          Odbij
-                        </Button>
-                      </div>
-                    ) : null}
-                  </div>
+                    <div className="pb-hostRequestItem__footerRow">
+                      {request.status === 'pending' ? (
+                        <div className="pb-flowActions pb-flowActions--compact pb-hostRequestItem__actions">
+                          <Button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              onReview(request.id, 'approve')
+                            }}
+                            disabled={isBusy}
+                          >
+                            Odobri
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              onReview(request.id, 'reject')
+                            }}
+                            disabled={isBusy}
+                          >
+                            Odbij
+                          </Button>
+                        </div>
+                      ) : (
+                        <span />
+                      )}
 
-                  <div className="pb-hostRequestItem__side">
-                    <div className={`pb-hostRequestItem__rsvpBadge ${rsvpToneClass}`}>
-                      <span className="pb-hostRequestItem__rsvpLabel">RSVP</span>
-                      <span className="pb-hostRequestItem__rsvpValue">{rsvpLabel}</span>
+                      <div className={`pb-hostRequestItem__rsvpBadge ${rsvpToneClass}`}>
+                        <span className="pb-hostRequestItem__rsvpLabel">RSVP</span>
+                        <span className="pb-hostRequestItem__rsvpValue">{rsvpLabel}</span>
+                      </div>
                     </div>
                   </div>
                 </div>

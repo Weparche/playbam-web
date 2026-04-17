@@ -8605,6 +8605,33 @@
   margin-top: 0.65rem;
 }
 
+.pb-hostRequestItem__footerRow {
+  margin-top: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.pb-hostRequestItem__footerRow > span:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pb-hostRequestItem__actions {
+  margin-top: 0;
+}
+
+.pb-hostRequestItem__actions.pb-flowActions--compact {
+  justify-content: flex-start;
+}
+
+.pb-hostRequestItem__rsvpBadge {
+  width: auto;
+  min-width: 7.2rem;
+}
+
 /* Pending kartice: što kompaktnije, bez preklapanja */
 .pb-hostRequestGroup--pending .pb-hostRequestItem {
   padding: 0.7rem 0.75rem;
@@ -8670,6 +8697,18 @@
 
   .pb-hostRequestItem__actions .pb-btn {
     width: 100%;
+  }
+
+  .pb-hostRequestItem__footerRow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .pb-hostRequestItem__rsvpBadge {
+    width: 100%;
+    min-width: 0;
   }
 }
 

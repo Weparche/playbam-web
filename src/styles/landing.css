@@ -508,9 +508,21 @@
 
 .ew-hero__ctas {
   display: flex;
-  gap: 16px;
+  gap: calc(16px * 1.3);
   align-items: center;
   flex-wrap: wrap;
+}
+
+/* Homepage hero: „Napravi pozivnicu“ i „Pronađi igraonicu“ +30% */
+.ew-hero__ctas .ew-btn-primary {
+  padding: calc(16px * 1.3) calc(28px * 1.3);
+  font-size: calc(15px * 1.3);
+}
+
+.ew-hero__ctas .ew-btn-secondary {
+  font-size: calc(15px * 1.3);
+  padding-bottom: calc(2px * 1.3);
+  border-bottom-width: calc(1px * 1.3);
 }
 
 .ew-hero__social {

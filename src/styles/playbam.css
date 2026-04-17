@@ -1961,6 +1961,12 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   margin: 0;
 }
 
+.pb-hostStudio .pb-invitePrivateCard--accordion {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
 .pb-hostStudio__cards {
   align-self: start;
 }
@@ -8386,9 +8392,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   .pb-hostStudioShell {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
-    width: fit-content;
-    max-width: 100%;
-    margin-inline: auto;
   }
 
   .pb-hostStudioShell > .pb-inviteSessionBar--host {
@@ -8400,12 +8403,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
   .pb-hostStudioShell > .pb-hostStudio {
     grid-column: 1 / -1;
-  }
-
-  .pb-hostStudio {
-    width: fit-content;
-    max-width: 100%;
-    margin-inline: auto;
   }
 
   .pb-hostStudio__cards {

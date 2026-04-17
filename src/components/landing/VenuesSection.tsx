@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import { venues } from '../../lib/landing-data'
 import { useScrollReveal } from './useScrollReveal'
@@ -71,8 +72,8 @@ export default function VenuesSection() {
 
         {/* Venue cards grid */}
         <div ref={gridRef} className="ew-venues__grid ew-reveal">
-          {venues.map(venue => (
-            <article key={venue.name} className="ew-venue-card">
+          {venues.slice(0, 6).map(venue => (
+            <Link key={venue.id} to={`/igraonice/${venue.slug}`} className="ew-venue-card">
               <div className="ew-venue-card__pattern" />
               <div className="ew-venue-card__body">
                 <div className="ew-venue-card__name">{venue.name}</div>
@@ -80,11 +81,11 @@ export default function VenuesSection() {
                   {venue.city} · ★ {venue.rating} · {venue.pricePerChild}€/dijete · dob {venue.ageRange}
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
 
-        <a href="#igraonice" className="ew-btn-primary">Istraži sve igraonice</a>
+        <Link to="/igraonice" className="ew-btn-primary">Istraži sve igraonice</Link>
       </div>
     </section>
   )

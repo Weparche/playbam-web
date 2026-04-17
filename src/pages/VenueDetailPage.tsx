@@ -32,6 +32,8 @@ const amenityIcons: Record<string, string> = {
   'Karaoke': '🎤',
   'Bubble/Fog Machine': '✨',
   'Ekskluzivni prostor': '🔒',
+  'Air Hockey': '🏒',
+  'Labirinti': '🌀',
 }
 
 export default function VenueDetailPage() {

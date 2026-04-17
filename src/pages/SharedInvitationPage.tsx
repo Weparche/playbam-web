@@ -1881,6 +1881,7 @@ export default function SharedInvitationPage() {
                   </Card>
                   </div>
 
+                  <div className="pb-hostStudio__previewRail">
                   <div className="pb-hostStudio__previewColumn">
                     <div className="pb-hostPreviewMode" role="tablist" aria-label="Način pregleda pozivnice">
                       <button
@@ -1952,6 +1953,7 @@ export default function SharedInvitationPage() {
                       activeShortcut={hostShortcutActive}
                       onShortcutClick={(id) => handleHostShortcutClick(id as HostShortcutId)}
                     />
+                  </div>
                   </div>
                 </div>
               ) : null}

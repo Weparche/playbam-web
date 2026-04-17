@@ -1876,13 +1876,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     box-sizing: border-box;
   }
 
-  /* Host studio: isti centrirani širinski blok kao gost layout (kartice + preview + shortcuti). */
-  .pb-main--demo.pb-invitePage .pb-hostStudio {
-    max-width: min(60rem, 100%);
-    margin-inline: auto;
-    box-sizing: border-box;
-  }
-
   .pb-main--demo.pb-invitePage .pb-hostStudio__previewColumn,
   .pb-main--demo.pb-invitePage .pb-hostStudio__previewCluster {
     align-items: center;
@@ -1898,10 +1891,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
   .pb-main--demo.pb-invitePage .pb-hostPreviewMode {
     align-self: center;
-  }
-
-  .pb-main--demo.pb-invitePage .pb-hostStudio__rail {
-    justify-self: center;
   }
 
   .pb-guestPrivateLayout__left {
@@ -1953,6 +1942,11 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   --pb-create-rail-column: calc(var(--pb-create-rail-button-width) + (var(--pb-create-rail-padding) * 2) + 0.35rem);
   display: grid;
   gap: 1.35rem;
+}
+
+/* Omotač: na mobilnom se raspada (preview + rail ostaju direktna djeca .pb-hostStudio za order). */
+.pb-hostStudio__previewRail {
+  display: contents;
 }
 
 .pb-hostStudio .pb-invitePrivateStack--host {
@@ -5072,8 +5066,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 }
 
+/* Gost pregled (host): RSVP centrirano kao info blok / pozadina — bez dodatnog pomaka ulijevo */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-  transform: translateX(calc(-50% - 0.55rem)) scale(0.9);
+  transform: translateX(-50%) scale(0.9);
+  transform-origin: center top;
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
@@ -8377,8 +8373,24 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 
   .pb-hostStudio {
-    grid-template-columns: minmax(0, 1fr) minmax(20rem, 24rem) var(--pb-create-rail-column);
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
+  }
+
+  .pb-hostStudio__cards {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .pb-hostStudio__previewRail {
+    display: grid;
+    grid-template-columns: minmax(20rem, 24rem) var(--pb-create-rail-column);
+    gap: 1.35rem;
+    align-items: start;
+    grid-column: 2;
+    min-width: 0;
+    width: max-content;
+    max-width: 100%;
   }
 
   .pb-hostStudio__preview {

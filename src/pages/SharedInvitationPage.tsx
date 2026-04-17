@@ -2219,18 +2219,18 @@ function HostRequestListV2({
                   tabIndex={canOpenDetails ? 0 : undefined}
                 >
                   <div className="pb-hostRequestItem__main">
-                    <div className="pb-hostRequestItem__title">{parentName}</div>
-                    <div className="pb-hostRequestItem__meta">Djeca: {childrenText}</div>
+                    <div className="pb-hostRequestItem__headRow">
+                      <div className="pb-hostRequestItem__title">{parentName}</div>
+                      <div className="pb-hostRequestItem__children">Djeca: {childrenText}</div>
+                    </div>
                     {canOpenDetails ? (
                       <div className="pb-hostRequestItem__meta">
                         {giftCount > 0 ? `Pokloni: ${giftCount}` : 'Klikni za detalje gosta'}
                       </div>
                     ) : null}
-                  </div>
 
-                  <div className="pb-hostRequestItem__side">
                     {request.status === 'pending' ? (
-                      <div className="pb-flowActions pb-flowActions--compact">
+                      <div className="pb-flowActions pb-flowActions--compact pb-hostRequestItem__actions">
                         <Button
                           type="button"
                           onClick={(event) => {
@@ -2254,7 +2254,9 @@ function HostRequestListV2({
                         </Button>
                       </div>
                     ) : null}
+                  </div>
 
+                  <div className="pb-hostRequestItem__side">
                     <div className={`pb-hostRequestItem__rsvpBadge ${rsvpToneClass}`}>
                       <span className="pb-hostRequestItem__rsvpLabel">RSVP</span>
                       <span className="pb-hostRequestItem__rsvpValue">{rsvpLabel}</span>

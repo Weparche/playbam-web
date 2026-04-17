@@ -87,6 +87,8 @@ export type PublicInvitation = {
   time: string
   location: string
   message?: string | null
+  /** Set ikona za RSVP ako ga API uključi u javni odgovor. */
+  rsvpMood?: string | null
   coverImage?: string | null
   theme?: string | null
   partyDetails?: InvitationPartyDetails | null

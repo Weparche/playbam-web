@@ -1,0 +1,99 @@
+import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+
+type NavItem = { label: string; href: string }
+
+const navItems: NavItem[] = [
+  { label: 'Pozivnice', href: '#pozivnice' },
+  { label: 'Igraonice', href: '#igraonice' },
+  { label: 'Kako radi', href: '#kako-radi' },
+  { label: 'Prijava', href: '#' },
+]
+
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light'
+    const stored = localStorage.getItem('ew-theme')
+    if (stored === 'dark' || stored === 'light') return stored
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  })
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('ew-theme', theme)
+  }, [theme])
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light')
+  }, [])
+
+  const closeMobile = useCallback(() => setMobileOpen(false), [])
+
+  return (
+    <>
+      <header className={`ew-navbar${scrolled ? ' ew-navbar--scrolled' : ''}`}>
+        <div className="ew-navbar__inner">
+          <Link to="/" className="ew-navbar__logo">VidimoSe</Link>
+
+          <div className="ew-navbar__menu">
+            {navItems.map(item => (
+              <a key={item.href} href={item.href} className="ew-navbar__link">{item.label}</a>
+            ))}
+            <button
+              className="ew-navbar__theme-toggle"
+              onClick={toggleTheme}
+              aria-label={theme === 'light' ? 'Uključi tamni način' : 'Uključi svijetli način'}
+            >
+              {theme === 'light' ? '☾' : '☼'}
+            </button>
+            <Link to="/kreiraj-pozivnicu" className="ew-navbar__cta">Napravi pozivnicu</Link>
+          </div>
+
+          <button
+            className="ew-navbar__hamburger"
+            type="button"
+            aria-label={mobileOpen ? 'Zatvori izbornik' : 'Otvori izbornik'}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen(v => !v)}
+          >
+            <span /><span /><span />
+          </button>
+        </div>
+      </header>
+
+      {mobileOpen && (
+        <div className="ew-navbar__sheet" role="dialog" aria-modal="true" aria-label="Navigacija">
+          <div className="ew-navbar__sheet-header">
+            <Link to="/" className="ew-navbar__logo" onClick={closeMobile}>VidimoSe</Link>
+            <button className="ew-navbar__sheet-close" onClick={closeMobile} aria-label="Zatvori">
+              ✕
+            </button>
+          </div>
+          <nav className="ew-navbar__sheet-nav">
+            {navItems.map(item => (
+              <a key={item.href} href={item.href} className="ew-navbar__sheet-link" onClick={closeMobile}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <div className="ew-navbar__sheet-cta">
+            <button className="ew-navbar__theme-toggle" onClick={toggleTheme} style={{ marginBottom: 16 }}>
+              {theme === 'light' ? '☾ Tamni način' : '☼ Svijetli način'}
+            </button>
+            <Link to="/kreiraj-pozivnicu" className="ew-btn-primary" onClick={closeMobile} style={{ width: '100%', textAlign: 'center' }}>
+              Napravi pozivnicu
+            </Link>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}

@@ -267,13 +267,13 @@ export default function PublicInvitationHero({
 
           {showAccessCard ? (
             <div className="pb-inviteHero__accessCard">
-              <div className="pb-inviteHero__accessIcon" aria-hidden>
-                <IconLock />
-              </div>
-              <div className="pb-inviteHero__accessBody">
+              <div className="pb-inviteHero__accessHead">
+                <div className="pb-inviteHero__accessIcon" aria-hidden>
+                  <IconLock />
+                </div>
                 <div className="pb-inviteHero__accessTitle">{accessTitle}</div>
-                <div className="pb-inviteHero__accessText">{accessText}</div>
               </div>
+              <div className="pb-inviteHero__accessText">{accessText}</div>
             </div>
           ) : null}
         </div>

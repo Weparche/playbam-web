@@ -68,6 +68,7 @@ export default function InvitationCard({
           venueText={venueText}
           messageText={message}
           backgroundImage={backgroundImage}
+          rsvpMood={invitation.rsvpMood ?? null}
           showRsvp={showGuestRsvp}
           rsvp={rsvp}
           guestRsvpHint={guestRsvpHint}

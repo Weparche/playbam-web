@@ -4787,7 +4787,7 @@
 
     /* Javna pozivnica (InvitationCard) */
     .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px + 5cqh - 2cqh);
+      margin-top: calc(0.78rem - 13px + 3.25px + 5cqh - 2cqh + 2cqh);
     }
   }
 }
@@ -4803,7 +4803,7 @@
   box-sizing: border-box;
 }
 
-.pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__accessBody {
+.pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__accessHead {
   flex: 0 1 auto;
   min-width: 0;
   max-width: 100%;
@@ -9864,6 +9864,11 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     /* Pomak prema gore 3% visine okvira (container na .pb-inviteHero__frame--storybook) */
     margin-top: calc(0.78rem - 13px + 3.25px - 1cqh);
   }
+
+  /* Gost /pozivnica/… — poruka (npr. „Vidimo se na tulumu!“) ~2% okvira niže */
+  .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + 2cqh);
+  }
 }
 
 .pb-inviteHero__printPartyDetails {
@@ -9944,6 +9949,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   display: grid;
   justify-items: center;
   gap: 0.8rem;
+  z-index: 2;
 }
 
 @supports (height: 1cqh) {
@@ -10065,9 +10071,11 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   width: fit-content;
   max-width: 71%;
   transform: translateX(-50%);
+  z-index: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.35rem;
   padding: 0.74rem 0.84rem;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.94);
@@ -10075,41 +10083,57 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   box-sizing: border-box;
 }
 
+.pb-inviteHero__accessHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.22rem;
+  width: 100%;
+  min-width: 0;
+}
+
 .pb-inviteHero__accessIcon {
   display: inline-grid;
   place-items: center;
   width: 1.35rem;
   height: 1.35rem;
-  margin-top: 0.12rem;
   border-radius: 999px;
   color: #7a66dc;
   background: rgba(122, 102, 220, 0.1);
 }
 
-.pb-inviteHero__accessBody {
-  flex: 0 1 auto;
-  min-width: 0;
-  max-width: 100%;
-}
-
 .pb-inviteHero__accessTitle {
+  margin: 0;
   font-family: var(--invite-font-meta);
   font-size: 0.86rem;
   font-weight: 800;
   line-height: 1.2;
+  text-align: center;
   color: #27253f;
+  width: 100%;
 }
 
 .pb-inviteHero__accessText {
-  margin-top: 0.28rem;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   font-family: var(--invite-font);
   font-size: 0.74rem;
   font-weight: 600;
   line-height: 1.3;
   color: #7f8092;
+  text-align: center;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Javna /pozivnica/… — kartica ispod ne prekriva RSVP; 15% manja od izvornog bloka */
+.pb-inviteCard--storybook .pb-inviteHero__accessCard {
+  transform: translateX(-50%) scale(0.85);
+  transform-origin: center bottom;
 }
 
 @media (max-width: 520px) {
@@ -10276,6 +10300,124 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   font-weight: 800;
 }
 
+.pb-homeDecisionPanel {
+  display: grid;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.pb-homeDecisionPanel__label {
+  color: rgba(24, 38, 61, 0.62);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pb-homeDecisionPanel__grid {
+  display: grid;
+  gap: 12px;
+}
+
+.pb-homePathCard {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(24, 38, 61, 0.08);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 18px 36px rgba(17, 24, 39, 0.06);
+  text-decoration: none;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.pb-homePathCard--warm {
+  background:
+    radial-gradient(circle at top right, rgba(255, 191, 136, 0.28), transparent 34%),
+    rgba(255, 255, 255, 0.9);
+}
+
+.pb-homePathCard--cool {
+  background:
+    radial-gradient(circle at top right, rgba(116, 188, 255, 0.22), transparent 34%),
+    rgba(255, 255, 255, 0.9);
+}
+
+.pb-homePathCard__label {
+  width: fit-content;
+  min-height: 28px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  color: rgba(24, 38, 61, 0.64);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pb-homePathCard__title {
+  color: #16263e;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+
+.pb-homePathCard__text {
+  color: rgba(24, 38, 61, 0.7);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.pb-homePathCard__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  color: #265ea6;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.pb-homePathCard__cta::after {
+  content: '→';
+}
+
+.pb-homeQuickNavSection {
+  padding: 0 0 8px;
+}
+
+.pb-homeQuickNav {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: none;
+}
+
+.pb-homeQuickNav::-webkit-scrollbar {
+  display: none;
+}
+
+.pb-homeQuickNav__item {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(24, 38, 61, 0.08);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.05);
+  color: rgba(24, 38, 61, 0.78);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .pb-homeHero__visual {
   position: relative;
 }
@@ -10357,6 +10499,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-homeShowcase__inviteArt {
+  position: relative;
+  overflow: hidden;
   min-height: 210px;
   border-radius: 24px;
   background:
@@ -10364,6 +10508,22 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     radial-gradient(circle at 72% 28%, rgba(117, 188, 255, 0.95), transparent 20%),
     radial-gradient(circle at 38% 70%, rgba(255, 179, 186, 0.92), transparent 18%),
     linear-gradient(145deg, #fff5ea 0%, #fde7d2 48%, #f9dcc3 100%);
+}
+
+.pb-homeShowcase__inviteArt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 250, 244, 0.2));
+  pointer-events: none;
+}
+
+.pb-homeShowcase__inviteImage {
+  width: 100%;
+  height: 100%;
+  min-height: 210px;
+  object-fit: cover;
+  object-position: center top;
 }
 
 .pb-homeShowcase__inviteCard {
@@ -10739,6 +10899,10 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 @media (min-width: 640px) {
+  .pb-homeDecisionPanel__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .pb-homeInvites,
   .pb-homeVenues,
   .pb-homeValues {
@@ -10786,6 +10950,12 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     min-width: 220px;
   }
 
+  .pb-homeQuickNav {
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
   .pb-homeSteps {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -10810,6 +10980,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 @media (prefers-reduced-motion: no-preference) {
   .pb-homeShowcase__invite,
   .pb-homeShowcase__venue,
+  .pb-homePathCard,
+  .pb-homeQuickNav__item,
   .pb-homeSteps__card,
   .pb-homeInviteCard,
   .pb-homeVenueCard,
@@ -10823,6 +10995,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
   .pb-homeShowcase__invite:hover,
   .pb-homeShowcase__venue:hover,
+  .pb-homePathCard:hover,
+  .pb-homeQuickNav__item:hover,
   .pb-homeSteps__card:hover,
   .pb-homeInviteCard:hover,
   .pb-homeVenueCard:hover,

@@ -31,6 +31,19 @@ type ValueItem = {
   icon: ReactNode
 }
 
+type ActionPath = {
+  title: string
+  description: string
+  href: string
+  label: string
+  tone: string
+}
+
+type QuickLink = {
+  label: string
+  href: string
+}
+
 const steps: Step[] = [
   {
     number: '01',
@@ -151,6 +164,30 @@ const values: ValueItem[] = [
   },
 ]
 
+const actionPaths: ActionPath[] = [
+  {
+    title: 'Želim odmah napraviti pozivnicu',
+    description: 'Kreni s dizajnom, unesi detalje i podijeli link roditeljima bez puno tipkanja.',
+    href: '/kreiraj-pozivnicu',
+    label: 'Najbrži start',
+    tone: 'pb-homePathCard--warm',
+  },
+  {
+    title: 'Želim prvo pregledati igraonice',
+    description: 'Pogledaj kako će izgledati pregled lokacija, dobi, budžeta i paketa.',
+    href: '#igraonice',
+    label: 'Prvo istraživanje',
+    tone: 'pb-homePathCard--cool',
+  },
+]
+
+const quickLinks: QuickLink[] = [
+  { label: 'Kako radi', href: '#kako-radi' },
+  { label: 'Pozivnice', href: '#pozivnice' },
+  { label: 'Igraonice', href: '#igraonice' },
+  { label: 'Zašto Playbam', href: '#zasto-playbam' },
+]
+
 function SectionEyebrow({ children }: { children: ReactNode }) {
   return <span className="pb-homeEyebrow">{children}</span>
 }
@@ -193,6 +230,20 @@ export default function LandingPage() {
                 <span className="pb-homeBadge">Moderno dijeljenje pozivnice</span>
                 <span className="pb-homeBadge">Pregled igraonica na jednom mjestu</span>
               </div>
+
+              <div className="pb-homeDecisionPanel">
+                <div className="pb-homeDecisionPanel__label">Što želiš prvo riješiti?</div>
+                <div className="pb-homeDecisionPanel__grid">
+                  {actionPaths.map((path) => (
+                    <a key={path.title} href={path.href} className={`pb-homePathCard ${path.tone}`}>
+                      <span className="pb-homePathCard__label">{path.label}</span>
+                      <strong className="pb-homePathCard__title">{path.title}</strong>
+                      <span className="pb-homePathCard__text">{path.description}</span>
+                      <span className="pb-homePathCard__cta">Otvori</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className="pb-homeHero__visual" aria-hidden="true">
@@ -207,7 +258,13 @@ export default function LandingPage() {
                     </span>
                   </div>
                   <div className="pb-homeShowcase__inviteBody">
-                    <div className="pb-homeShowcase__inviteArt" />
+                    <div className="pb-homeShowcase__inviteArt">
+                      <img
+                        src="/pozivnica-home-cura.jpg"
+                        alt=""
+                        className="pb-homeShowcase__inviteImage"
+                      />
+                    </div>
                     <div className="pb-homeShowcase__inviteCard">
                       <div className="pb-homeShowcase__inviteTitle">Noina 5. proslava</div>
                       <div className="pb-homeShowcase__inviteMeta">Subota, 24. svibnja u 17:00</div>
@@ -231,6 +288,18 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="pb-homeQuickNavSection" aria-label="Brza navigacija">
+          <div className="pb-container">
+            <nav className="pb-homeQuickNav">
+              {quickLinks.map((link) => (
+                <a key={link.href} href={link.href} className="pb-homeQuickNav__item">
+                  {link.label}
+                </a>
+              ))}
+            </nav>
           </div>
         </section>
 

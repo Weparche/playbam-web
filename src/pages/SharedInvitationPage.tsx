@@ -310,7 +310,6 @@ export default function SharedInvitationPage() {
   const { user, login, logout } = useAuth()
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [hostToken, setHostToken] = useState(() => readStoredHostToken())
-  const [hostTokenDraft, setHostTokenDraft] = useState('')
   const [invitation, setInvitation] = useState<PublicInvitation | null>(null)
   const [access, setAccess] = useState<InvitationAccess | null>(null)
   const [familyProfile, setFamilyProfile] = useState<FamilyProfileResponse | null>(null)
@@ -329,7 +328,6 @@ export default function SharedInvitationPage() {
   const [profileDraft, setProfileDraft] = useState<FamilyProfileDraft>(createEmptyDraft(user?.parentName ?? ''))
   const [selectedChildIds, setSelectedChildIds] = useState<string[]>([])
   const [authError, setAuthError] = useState('')
-  const [hostAuthError, setHostAuthError] = useState('')
   const [profileError, setProfileError] = useState('')
   const [requestError, setRequestError] = useState('')
   const [hostError, setHostError] = useState('')
@@ -806,7 +804,6 @@ export default function SharedInvitationPage() {
         if (!currentUser) {
           writeStoredHostToken(null)
           setHostToken('')
-          setHostAuthError('Host token nije valjan za ovu pozivnicu.')
           setLoadingPrivateState(false)
           return
         }
@@ -877,7 +874,6 @@ export default function SharedInvitationPage() {
           }
           writeStoredHostToken(null)
           setHostToken("")
-          setHostAuthError("Host token nije valjan.")
         } else {
           setRequestError('Trenutačno ne možemo učitati privatni dio pozivnice.')
         }
@@ -951,25 +947,9 @@ export default function SharedInvitationPage() {
     setAuthError("")
   }
 
-  const handleHostLogin = () => {
-    const nextToken = hostTokenDraft.trim()
-
-    if (!nextToken) {
-      setHostAuthError('Upiši host token.')
-      return
-    }
-
-    logout()
-    writeStoredHostToken(nextToken)
-    setHostToken(nextToken)
-    setHostTokenDraft("")
-    setHostAuthError("")
-  }
-
   const handleHostLogout = () => {
     writeStoredHostToken(null)
     setHostToken("")
-    setHostAuthError("")
     setAccess(null)
     setHostRequests([])
     setWishlistItems([])
@@ -1546,31 +1526,6 @@ export default function SharedInvitationPage() {
                 submittingRequest={submittingRequest}
                 onRequestSubmit={handleRequestSubmit}
               />
-
-              {!user && !hasHostSession ? (
-                <Card className="pb-flowCard pb-hostTokenCard">
-                  <h2 className="pb-flowCard__title">Organizator test login</h2>
-                  <p className="pb-flowCard__text">Unesi host token za ulazak u organizatorski dio pozivnice.</p>
-                  <div className="pb-formGrid">
-                    <label className="pb-formField">
-                      <span className="pb-formLabel">Host token</span>
-                      <input
-                        className="pb-input"
-                        type="password"
-                        value={hostTokenDraft}
-                        onChange={(event) => setHostTokenDraft(event.target.value)}
-                        placeholder="vidimose-prod-host-token"
-                      />
-                    </label>
-                  </div>
-                  <div className="pb-flowActions">
-                    <Button type="button" onClick={handleHostLogin}>
-                      Uđi kao organizator
-                    </Button>
-                  </div>
-                  {hostAuthError ? <div className="pb-inlineNote pb-inlineNote--error">{hostAuthError}</div> : null}
-                </Card>
-              ) : null}
 
               {(user || hasHostSession) && !loadingPrivateState && isHost ? (
                 <div className="pb-hostStudio">

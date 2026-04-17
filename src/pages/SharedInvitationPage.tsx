@@ -502,7 +502,9 @@ export default function SharedInvitationPage() {
       return 'Dovrši profil obitelji u prozoru.'
     }
     if (membershipRequest?.status === 'pending') {
-      return 'Čekanje na odobrenje organizatora, zatim možeš potvrditi dolazak.'
+      // Hint više ne prikazujemo unutar pozivnice (prekriva "Privatni dio pozivnice").
+      // Pending stanje se prikazuje kao zasebna kartica iznad pozivnice.
+      return null
     }
     if (membershipRequest?.status === 'rejected') {
       return 'Zahtjev za pristup je odbijen. Možeš poslati novi zahtjev.'

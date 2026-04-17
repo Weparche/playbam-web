@@ -4799,17 +4799,30 @@
   }
 }
 
+/* Message offset defaults (stabilizira "Vidimo se na tulumu!" u svim kontekstima) */
+@supports (height: 1cqh) {
+  /* Host preview (mobile): guest 3% gore, print 5% dolje */
+  @media (max-width: 640px) {
+    .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) {
+      --pb-invite-message-offset: -3cqh;
+    }
+    .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print {
+      --pb-invite-message-offset: 5cqh;
+    }
+  }
+}
+
 /* Host /pozivnica (mobile): posebni pomaci poruke u gost/print previewu */
 @media (max-width: 640px) {
   @supports (height: 1cqh) {
     /* Gost pregled: 3% gore */
     .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 1.5cqh + 5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh - 3cqh);
+      margin-top: calc(0.78rem - 1.5cqh + 5cqh - 1.5cqh + 5cqh - 2cqh - 1.5cqh + var(--pb-invite-message-offset, 0cqh));
     }
 
     /* Print pregled: 5% dolje */
     .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh + 5cqh);
+      margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh + var(--pb-invite-message-offset, 0cqh));
     }
   }
 }
@@ -10114,24 +10127,16 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 @supports (height: 1cqh) {
   .pb-inviteHero__message--storybook {
     /* Pomak prema gore 3% visine okvira (container na .pb-inviteHero__frame--storybook) */
-    margin-top: calc(0.78rem - 13px + 3.25px - 1cqh);
+    margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + var(--pb-invite-message-offset, 0cqh));
   }
 
-  /* Gost /pozivnica/… — poruka (npr. „Vidimo se na tulumu!“) ~2% okvira niže */
-  .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
-    /* +0.5% dodatno dolje */
-    margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + 2cqh + 0.5cqh);
+  /* Default za javnu pozivnicu: +2.5% niže */
+  .pb-inviteCard--storybook {
+    --pb-invite-message-offset: 2.5cqh;
   }
 }
 
-/* Samo web (desktop): digni poruku ~0.5% gore */
-@media (min-width: 980px) {
-  @supports (height: 1cqh) {
-    .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + 2cqh + 0.5cqh - 0.5cqh);
-    }
-  }
-}
+/* Desktop javna pozivnica: ne diramo dodatno (stabilna pozicija) */
 
 .pb-inviteHero__printPartyDetails {
   margin: 1.05rem auto 0;

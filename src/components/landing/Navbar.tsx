@@ -41,13 +41,26 @@ export default function Navbar() {
     <>
       <header className={`ew-navbar${scrolled ? ' ew-navbar--scrolled' : ''}`}>
         <div className="ew-navbar__inner">
-          <Link to="/" className="ew-navbar__logo ew-navbar__logo--mark" aria-label="VidimoSe.hr — početna">
-            <img src="/logo.png" alt="" className="ew-navbar__logo-img" width={200} height={52} />
-          </Link>
+          <div className="ew-navbar__leading">
+            <button
+              className="ew-navbar__hamburger"
+              type="button"
+              aria-label={mobileOpen ? 'Zatvori izbornik' : 'Otvori izbornik'}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen((v) => !v)}
+            >
+              <span /><span /><span />
+            </button>
+            <Link to="/" className="ew-navbar__logo ew-navbar__logo--mark" aria-label="VidimoSe.hr — početna">
+              <img src="/logo.png" alt="" className="ew-navbar__logo-img" width={200} height={52} />
+            </Link>
+          </div>
 
           <div className="ew-navbar__menu">
-            {navItems.map(item => (
-              <a key={item.href} href={item.href} className="ew-navbar__link">{item.label}</a>
+            {navItems.map((item) => (
+              <a key={item.href} href={item.href} className="ew-navbar__link">
+                {item.label}
+              </a>
             ))}
             <button
               className="ew-navbar__theme-toggle"
@@ -56,18 +69,14 @@ export default function Navbar() {
             >
               {theme === 'light' ? '☾' : '☼'}
             </button>
-            <Link to="/kreiraj-pozivnicu" className="ew-navbar__cta">Napravi pozivnicu</Link>
+            <Link to="/kreiraj-pozivnicu" className="ew-navbar__cta">
+              Napravi pozivnicu
+            </Link>
           </div>
 
-          <button
-            className="ew-navbar__hamburger"
-            type="button"
-            aria-label={mobileOpen ? 'Zatvori izbornik' : 'Otvori izbornik'}
-            aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen(v => !v)}
-          >
-            <span /><span /><span />
-          </button>
+          <Link to="/kreiraj-pozivnicu" className="ew-navbar__cta ew-navbar__cta--mobileBar">
+            Napravi pozivnicu
+          </Link>
         </div>
       </header>
 

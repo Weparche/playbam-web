@@ -482,6 +482,7 @@ export default function SharedInvitationPage() {
   const hasPrivateAccess = access?.canAccessPrivateInvitation ?? false
   const canViewWishlist = access?.canViewWishlist ?? false
   const canSubmitRsvp = Boolean(user && !isHost && access?.canRsvp)
+  const showHostStudio = Boolean((user || hasHostSession) && !loadingPrivateState && isHost)
 
   const guestModalStep = useMemo(
     () => getGuestModalStep(invitation, isHost, hasPrivateAccess, user, hasFamilyProfile, membershipRequest),
@@ -948,6 +949,17 @@ export default function SharedInvitationPage() {
 
     login({ email, parentName })
     setAuthError("")
+  }
+
+  const handleUserLogout = () => {
+    logout()
+    setAuthError('')
+    setProfileError('')
+    setRequestError('')
+    setHostError('')
+    setWishlistError('')
+    setWishlistFormError('')
+    setGuestModalOpen(false)
   }
 
   const handleHostLogout = () => {
@@ -1437,30 +1449,18 @@ export default function SharedInvitationPage() {
 
           {invitation ? (
             <>
-              {user ? (
+              {user && !showHostStudio ? (
                 <div className="pb-inviteSessionBar">
                   <span className="pb-inviteSessionBar__text">
                     {isHost ? `Organizator: ${user.email}` : `Gost: ${user.parentName || user.email}`}
                   </span>
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      logout()
-                      setAuthError('')
-                      setProfileError('')
-                      setRequestError('')
-                      setHostError('')
-                      setWishlistError('')
-                      setWishlistFormError('')
-                      setGuestModalOpen(false)
-                    }}
-                  >
+                  <Button variant="ghost" onClick={handleUserLogout}>
                     Odjavi se
                   </Button>
                 </div>
               ) : null}
 
-              {!user && hasHostSession ? (
+              {!user && hasHostSession && !showHostStudio ? (
                 <div className="pb-inviteSessionBar">
                   <span className="pb-inviteSessionBar__text">Organizator: host pristup aktivan</span>
                   <Button variant="ghost" onClick={handleHostLogout}>
@@ -1555,8 +1555,18 @@ export default function SharedInvitationPage() {
                 onRequestSubmit={handleRequestSubmit}
               />
 
-              {(user || hasHostSession) && !loadingPrivateState && isHost ? (
-                <div className="pb-hostStudio">
+              {showHostStudio ? (
+                <div className="pb-hostStudioShell">
+                  <div className="pb-inviteSessionBar pb-inviteSessionBar--host">
+                    <span className="pb-inviteSessionBar__text">
+                      {user ? `Organizator: ${user.email}` : 'Organizator: host pristup aktivan'}
+                    </span>
+                    <Button variant="ghost" onClick={user ? handleUserLogout : handleHostLogout}>
+                      {user ? 'Odjavi se' : 'Odjavi host pristup'}
+                    </Button>
+                  </div>
+
+                  <div className="pb-hostStudio">
                   <div className="pb-invitePrivateStack pb-invitePrivateStack--host pb-hostStudio__cards">
                   <Card id="host-update-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
                     <button
@@ -1955,6 +1965,7 @@ export default function SharedInvitationPage() {
                     />
                   </div>
                   </div>
+                </div>
                 </div>
               ) : null}
 

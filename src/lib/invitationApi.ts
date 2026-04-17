@@ -114,6 +114,8 @@ export type CreateInvitationPayload = {
   time: string
   location: string
   message?: string | null
+  /** Set ikona RSVP (mora se spremiti i vratiti u javnom GET-u). */
+  rsvpMood?: string | null
   coverImage?: string | null
   theme?: string | null
   partyDetails?: InvitationPartyDetails | null
@@ -130,6 +132,7 @@ export type UpdateInvitationPayload = {
   time: string
   location: string
   message?: string | null
+  rsvpMood?: string | null
   coverImage?: string | null
   theme?: string | null
   partyDetails?: InvitationPartyDetails | null
@@ -348,11 +351,25 @@ export function isApiError(error: unknown, status?: number) {
   return error instanceof ApiError && (status == null || error.status === status)
 }
 
-export function getPublicInvitation(token: string) {
+type PublicInvitationRaw = PublicInvitation & { rsvp_mood?: string | null }
+
+/** Javni/PUT odgovor: neki backendi šalju `rsvp_mood` umjesto `rsvpMood`. */
+function normalizePublicInvitationResponse(raw: PublicInvitationRaw): PublicInvitation {
+  const mood =
+    typeof raw.rsvpMood === 'string'
+      ? raw.rsvpMood
+      : typeof raw.rsvp_mood === 'string'
+        ? raw.rsvp_mood
+        : null
+  return { ...raw, rsvpMood: mood }
+}
+
+export async function getPublicInvitation(token: string) {
   // Bez identity zaglavlja — jednostavan GET, nema CORS preflighta
-  return request<PublicInvitation>(`/api/public/invitations/${encodeURIComponent(token)}`, {
+  const data = await request<PublicInvitationRaw>(`/api/public/invitations/${encodeURIComponent(token)}`, {
     identity: null,
   })
+  return normalizePublicInvitationResponse(data)
 }
 
 export function createInvitation(payload: CreateInvitationPayload, identity?: TemporaryWebIdentity | null) {
@@ -371,11 +388,12 @@ export async function updateInvitation(
   devMergeBase?: PublicInvitation | null,
 ): Promise<PublicInvitation> {
   try {
-    return await request<PublicInvitation>(`/api/invitations/${encodeURIComponent(invitationId)}`, {
+    const data = await request<PublicInvitationRaw>(`/api/invitations/${encodeURIComponent(invitationId)}`, {
       method: 'PUT',
       body: payload,
       identity,
     })
+    return normalizePublicInvitationResponse(data)
   } catch (error) {
     if (
       import.meta.env.DEV &&
@@ -395,6 +413,7 @@ export async function updateInvitation(
         time: payload.time,
         location: payload.location,
         message: payload.message ?? null,
+        rsvpMood: payload.rsvpMood ?? devMergeBase.rsvpMood ?? null,
         coverImage: payload.coverImage ?? null,
         theme: payload.theme ?? null,
         partyDetails: payload.partyDetails ?? devMergeBase.partyDetails ?? null,

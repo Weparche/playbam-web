@@ -252,6 +252,7 @@ export default function CreateInvitationPage() {
         time: buildTimeRangeValue(draft.time, draft.timeEnd),
         location: [draft.locationName.trim(), draft.locationAddress.trim()].filter(Boolean).join(', '),
         message: draft.message.trim() || undefined,
+        rsvpMood: draft.rsvpMood,
         coverImage: draft.theme,
         theme: draft.theme,
       }, null)

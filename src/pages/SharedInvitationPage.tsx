@@ -60,6 +60,7 @@ import {
   DEFAULT_CREATE_DRAFT,
   getTitleColorValue,
   normalizeCreateTheme,
+  normalizeRsvpMood,
   normalizeTitleColor,
   normalizeTitleFont,
   normalizeTitleOutline,
@@ -182,6 +183,7 @@ function createDraftFromInvitation(invitation: PublicInvitation): InvitationCrea
     locationType: locationName.toLowerCase().includes('igraonica') ? 'Igraonica / lokal' : DEFAULT_CREATE_DRAFT.locationType,
     message: invitation.message ?? '',
     theme: normalizeCreateTheme(invitation.theme || invitation.coverImage || DEFAULT_CREATE_DRAFT.theme),
+    rsvpMood: normalizeRsvpMood(typeof invitation.rsvpMood === 'string' ? invitation.rsvpMood : null),
     wishlistItems: [],
   }
 }
@@ -219,6 +221,7 @@ function buildInvitationUpdatePayload(
     time: buildTimeRangeValue(draft.time, draft.timeEnd),
     location: [draft.locationName.trim(), draft.locationAddress.trim()].filter(Boolean).join(', '),
     message: draft.message.trim() || null,
+    rsvpMood: draft.rsvpMood,
     coverImage: draft.theme,
     theme: draft.theme,
     partyDetails: {

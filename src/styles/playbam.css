@@ -9693,8 +9693,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
-  /* Web (desktop): pomakni RSVP ~10% gore */
-  top: calc(63.4% - 10%);
+  /* Web (desktop): 10% gore pa 7% dolje => neto ~3% gore */
+  top: calc(63.4% - 10% + 7%);
 }
 
 @supports (height: 1cqh) {
@@ -9740,8 +9740,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
-    /* Tablet/mobile breakpoint: zadrži isti pomak kao web */
-    top: calc(62.9% - 10%);
+    /* Tablet/mobile breakpoint: isti neto pomak kao web */
+    top: calc(62.9% - 10% + 7%);
   }
 }
 

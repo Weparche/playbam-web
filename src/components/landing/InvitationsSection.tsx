@@ -1,10 +1,85 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { invitationTemplates } from '../../lib/landing-data'
+import type { InvitationTemplate } from '../../lib/landing-data'
 import { useScrollReveal } from './useScrollReveal'
 
-function InviteMockup({ template }: { template: typeof invitationTemplates[0] }) {
+function InviteLightbox({
+  template,
+  onClose,
+}: {
+  template: InvitationTemplate
+  onClose: () => void
+}) {
+  const overlayRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose])
+
+  return (
+    <div
+      ref={overlayRef}
+      className="ew-lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Pozivnica — ${template.theme}`}
+      onClick={e => { if (e.target === overlayRef.current) onClose() }}
+    >
+      <div className="ew-lightbox__panel">
+        <button
+          className="ew-lightbox__close"
+          onClick={onClose}
+          aria-label="Zatvori"
+        >
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </button>
+
+        <div className="ew-lightbox__img-wrap">
+          <img
+            src={template.fullImage}
+            alt={`Pozivnica ${template.theme} — ${template.childName}`}
+            className="ew-lightbox__img"
+            draggable={false}
+          />
+        </div>
+
+        <div className="ew-lightbox__footer">
+          <div className="ew-lightbox__info">
+            <span className="ew-lightbox__theme">{template.theme}</span>
+            <span className="ew-lightbox__detail">
+              {template.childName} · {template.date} · {template.time}
+            </span>
+          </div>
+          <Link
+            to="/kreiraj-pozivnicu"
+            className="ew-btn-primary ew-lightbox__cta"
+            onClick={onClose}
+          >
+            Napravi ovakvu pozivnicu
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function InviteMockup({
+  template,
+  onOpen,
+}: {
+  template: InvitationTemplate
+  onOpen: () => void
+}) {
   const [hovered, setHovered] = useState(false)
 
   return (
@@ -18,13 +93,27 @@ function InviteMockup({ template }: { template: typeof invitationTemplates[0] })
           {hovered ? 'Print verzija' : 'Digitalna verzija'}
         </div>
         <div className="ew-invite-mockup__theme">{template.theme}</div>
-        <img
-          className="ew-invite-mockup__art"
-          src={template.image}
-          alt=""
-          loading="lazy"
-          decoding="async"
-        />
+        <button
+          className="ew-invite-mockup__preview-btn"
+          onClick={onOpen}
+          aria-label={`Pogledaj pozivnicu ${template.theme} u punoj veličini`}
+        >
+          <img
+            className="ew-invite-mockup__art"
+            src={template.image}
+            alt={`Tema ${template.theme}`}
+            loading="lazy"
+            decoding="async"
+          />
+          <span className="ew-invite-mockup__zoom-hint" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none">
+              <circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M13.5 13.5L17 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M9 6.5v5M6.5 9h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            Pogledaj pozivnicu
+          </span>
+        </button>
         <div className="ew-invite-mockup__detail">
           {template.childName} puni {template.age}.<br />
           {template.date}<br />
@@ -39,6 +128,7 @@ function InviteMockup({ template }: { template: typeof invitationTemplates[0] })
 }
 
 export default function InvitationsSection() {
+  const [openTemplate, setOpenTemplate] = useState<InvitationTemplate | null>(null)
   const headerRef = useScrollReveal()
   const gridRef = useScrollReveal()
 
@@ -57,7 +147,11 @@ export default function InvitationsSection() {
 
         <div ref={gridRef} className="ew-invitations__grid ew-reveal">
           {invitationTemplates.map(t => (
-            <InviteMockup key={t.id} template={t} />
+            <InviteMockup
+              key={t.id}
+              template={t}
+              onOpen={() => setOpenTemplate(t)}
+            />
           ))}
         </div>
 
@@ -80,6 +174,13 @@ export default function InvitationsSection() {
           Isprobaj besplatno
         </Link>
       </div>
+
+      {openTemplate && (
+        <InviteLightbox
+          template={openTemplate}
+          onClose={() => setOpenTemplate(null)}
+        />
+      )}
     </section>
   )
 }

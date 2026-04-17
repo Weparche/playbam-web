@@ -1049,16 +1049,199 @@
   letter-spacing: -0.01em;
 }
 
+/* Preview button wrapper */
+.ew-invite-mockup__preview-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 14px 0 18px;
+}
+
+.ew-invite-mockup__preview-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .ew-invite-mockup__art {
   display: block;
   width: 100%;
   max-height: 148px;
-  margin: 14px 0 18px;
   object-fit: cover;
   object-position: center top;
   border-radius: 6px;
   border: 1px solid var(--color-border-subtle);
   background: rgba(255, 255, 255, 0.4);
+  transition: transform 300ms var(--ease-out);
+}
+
+.ew-invite-mockup__preview-btn:hover .ew-invite-mockup__art {
+  transform: scale(1.03);
+}
+
+.ew-invite-mockup__zoom-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(43, 37, 32, 0.55);
+  color: #fff;
+  font-family: var(--font-work-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 200ms var(--ease-out);
+  pointer-events: none;
+}
+
+.ew-invite-mockup__zoom-hint svg {
+  width: 22px;
+  height: 22px;
+}
+
+.ew-invite-mockup__preview-btn:hover .ew-invite-mockup__zoom-hint {
+  opacity: 1;
+}
+
+/* ============================================
+   INVITATION LIGHTBOX
+   ============================================ */
+.ew-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(43, 37, 32, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: ew-lightbox-in 200ms var(--ease-out) both;
+}
+
+@keyframes ew-lightbox-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.ew-lightbox__panel {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  max-width: 540px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  animation: ew-lightbox-panel-in 250ms var(--ease-out) both;
+  box-shadow: 0 40px 80px rgba(43,37,32,0.35);
+}
+
+@keyframes ew-lightbox-panel-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ew-lightbox__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.ew-lightbox__close:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-accent);
+}
+
+.ew-lightbox__close:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.ew-lightbox__close svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-primary);
+}
+
+.ew-lightbox__img-wrap {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px 24px;
+  background: var(--color-bg-secondary);
+}
+
+.ew-lightbox__img {
+  max-width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 20px 48px rgba(43,37,32,0.18);
+  display: block;
+}
+
+.ew-lightbox__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  border-top: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.ew-lightbox__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ew-lightbox__theme {
+  font-family: var(--font-fraunces);
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 350;
+  color: var(--color-text-primary);
+}
+
+.ew-lightbox__detail {
+  font-family: var(--font-work-sans);
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}
+
+.ew-lightbox__cta {
+  font-size: 14px;
+  padding: 12px 20px;
+  white-space: nowrap;
 }
 
 .ew-invite-mockup__detail {

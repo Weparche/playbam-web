@@ -5,6 +5,8 @@ export type InvitationTemplate = {
   theme: string
   /** Ilustracija teme (ispod naslova u sekciji Kreiraj pozivnicu). */
   image: string
+  /** Puna slika pozivnice za lightbox popup. */
+  fullImage: string
   childName: string
   age: string
   date: string
@@ -59,6 +61,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     id: 'safari',
     theme: 'Safari',
     image: '/safari.png',
+    fullImage: '/pozivnica-home-cura.jpg',
     childName: 'Luka',
     age: '5',
     date: 'Subota, 21. lipnja',
@@ -70,6 +73,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     id: 'unicorn',
     theme: 'Unicorn',
     image: '/unicorns.png',
+    fullImage: '/pozivnica-girl.png',
     childName: 'Mia',
     age: '4',
     date: 'Nedjelja, 8. lipnja',
@@ -81,6 +85,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     id: 'svemir',
     theme: 'Svemir',
     image: '/space.png',
+    fullImage: '/pozivnica-boy.png',
     childName: 'Filip',
     age: '7',
     date: 'Subota, 14. lipnja',
@@ -92,6 +97,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     id: 'princess',
     theme: 'Princeza',
     image: '/princess.png',
+    fullImage: '/pozivnica-home-cura1.jpg',
     childName: 'Petra',
     age: '6',
     date: 'Subota, 28. lipnja',
@@ -263,12 +269,12 @@ export const venues: Venue[] = [
     maxChildren: 20,
     description: '750 m² igraonice u Španskom s velikim labirintom, 4 tobogana, trampolinima, Air Hockeyem, laserskim pištoljima i disco/foam partijima. Dvije privatne animacijske dvorane od 50 m². Isključivo rezervacije za rođendane.',
     amenities: ['Parking', 'Ugostiteljstvo', 'Animatori', 'Trampolini', 'Air Hockey', 'Labirinti', 'Klima'],
-    coverPhoto: 'https://picsum.photos/seed/jumbo-cover/900/500',
+    coverPhoto: 'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-zajednicka-dvorana-napuhanac.jpg',
     photos: [
-      'https://picsum.photos/seed/jumbo-1/800/500',
-      'https://picsum.photos/seed/jumbo-2/800/500',
-      'https://picsum.photos/seed/jumbo-3/800/500',
-      'https://picsum.photos/seed/jumbo-4/800/500',
+      'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-zajednicka-dvorana-tobogani.jpg',
+      'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-zajednicka-dvorana-bazen-s-lopticama.jpg',
+      'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-animacijske-dvorane-desna-1.jpg',
+      'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-animacijske-dvorane-lijeva-1.jpg',
     ],
     packages: [
       { name: 'Standard 2h', price: 350, minChildren: 20, includes: ['2h igranje', '2 animatora', 'pizza', 'Ledo torta', 'pozivnice', 'face painting', 'foto na USB', 'poklon za slavlje'] },

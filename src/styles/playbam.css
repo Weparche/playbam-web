@@ -917,6 +917,14 @@
   padding-right: max(18px, env(safe-area-inset-right, 0px));
 }
 
+/* Nav + footer: isti horizontalni rub kao main (inače logo vs. sadržaj “ne štimaju” lijevo/desno) */
+body:has(.pb-main--demo.pb-invitePage) .pb-nav .pb-container,
+body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
+  box-sizing: border-box;
+  padding-left: max(18px, env(safe-area-inset-left, 0px));
+  padding-right: max(18px, env(safe-area-inset-right, 0px));
+}
+
 /* Safety: nikad ne dopusti horizontalni “lijepi desno” overflow na mobile */
 @media (max-width: 520px) {
   .pb-main--demo.pb-invitePage {
@@ -4906,9 +4914,9 @@
       margin-top: calc(0.78rem - 13px + 3.25px - 0.1cqh);
     }
 
-    /* Javna pozivnica (InvitationCard) */
+    /* Javna pozivnica (InvitationCard) — 5% gore vs. prijašnji pomak */
     .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px + 5cqh - 2cqh + 2cqh);
+      margin-top: calc(0.78rem - 13px + 3.25px + 5cqh - 2cqh + 2cqh - 5cqh);
     }
   }
 }
@@ -9722,7 +9730,6 @@
   margin-right: auto;
   min-width: 0;
   overflow-x: clip;
-  touch-action: pan-y;
 }
 
 .pb-inviteCard--storybook .pb-inviteCard__stack {
@@ -9743,8 +9750,6 @@
   margin: 0 auto;
   border-radius: 28px;
   overflow: hidden;
-  /* Jedan vertikalni scroll (document): iOS ne “locka” gestu na overflow:hidden okviru */
-  touch-action: pan-y;
   background: transparent;
   border: 0;
   box-shadow: none;
@@ -9766,7 +9771,6 @@
   z-index: 1;
   width: 100%;
   height: 100%;
-  touch-action: pan-y;
 }
 
 .pb-inviteHero__printQr {
@@ -10226,6 +10230,11 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 .pb-inviteHero__message--storybook {
   margin: calc(0.78rem - 13px + 3.25px) 0 0;
   width: 82%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  /* Ne hvata touch-scroll kao zaseban sloj (mobile) */
+  touch-action: manipulation;
   padding: 0;
   background: transparent;
   border: 0;
@@ -10248,9 +10257,9 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + var(--pb-invite-message-offset, 0cqh));
   }
 
-  /* Default za javnu pozivnicu: +2.5% niže */
+  /* Javna pozivnica: −2.5cqh (≈ 5% gore u odnosu na prijašnjih +2.5cqh) */
   .pb-inviteCard--storybook {
-    --pb-invite-message-offset: 2.5cqh;
+    --pb-invite-message-offset: -2.5cqh;
   }
 }
 
@@ -10388,28 +10397,20 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   font-size: 1.8rem;
 }
 
-.pb-rsvpBtn--storybookGoing {
-  /* Uskladi s RSVP preview pill bojama */
-  background: rgba(91, 196, 144, 0.16);
-  border-color: rgba(91, 196, 144, 0.24);
-  color: #1d7a4e;
-}
-
-.pb-rsvpBtn--storybookNotGoing {
-  background: rgba(255, 126, 148, 0.16);
-  border-color: rgba(255, 126, 148, 0.22);
-  color: #be3658;
-  border-width: 2px;
+/* Neaktivni: svi bijeli; boje samo uz .is-active ispod */
+.pb-rsvpBtn--storybookGoing:not(.is-active),
+.pb-rsvpBtn--storybookNotGoing:not(.is-active),
+.pb-rsvpBtn--storybookMaybe:not(.is-active) {
+  background: #ffffff;
+  border: 1px solid rgba(122, 122, 220, 0.22);
+  color: #4f5d79;
+  box-shadow: 0 8px 18px rgba(148, 136, 217, 0.12);
 }
 
 .pb-rsvpBtn--storybookMaybe {
   grid-column: 1 / -1;
   width: calc(50% - 0.275rem);
   justify-self: center;
-  background: rgba(245, 195, 68, 0.17);
-  border-color: rgba(245, 195, 68, 0.24);
-  color: #9b6c06;
-  border-width: 2px;
 }
 
 .pb-rsvpBtn--storybook.is-active {
@@ -10442,6 +10443,10 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   color: #21734e;
   background: linear-gradient(180deg, rgba(227, 253, 233, 0.95), rgba(214, 248, 221, 0.96));
   border-color: rgba(104, 214, 148, 0.45);
+  border-width: 2px;
+  box-shadow:
+    0 12px 22px rgba(104, 214, 148, 0.22),
+    inset 0 0 0 2px rgba(104, 214, 148, 0.28);
 }
 
 .pb-inviteHero__rsvpHint--storybook {
@@ -10552,6 +10557,12 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 @media (max-width: 520px) {
   .pb-main--demo.pb-invitePage .pb-container {
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+
+  body:has(.pb-main--demo.pb-invitePage) .pb-nav .pb-container,
+  body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
     padding-left: max(20px, env(safe-area-inset-left, 0px));
     padding-right: max(20px, env(safe-area-inset-right, 0px));
   }

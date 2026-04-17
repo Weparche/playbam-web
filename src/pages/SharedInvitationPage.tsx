@@ -1395,7 +1395,7 @@ export default function SharedInvitationPage() {
   return (
     <>
       <Navbar />
-      <main className="pb-main pb-main--demo">
+      <main className="pb-main pb-main--demo pb-invitePage">
         <div className="pb-invitePage__blobs" aria-hidden>
           <span className="pb-invitePage__blob pb-invitePage__blob--1" />
           <span className="pb-invitePage__blob pb-invitePage__blob--2" />

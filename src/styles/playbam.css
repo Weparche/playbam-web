@@ -910,6 +910,13 @@
   padding-right: max(14px, env(safe-area-inset-right, 0px));
 }
 
+/* Stranica /pozivnica/… — uvijek simetričan rub (ne oslanjati se samo na :has) */
+.pb-main--demo.pb-invitePage .pb-container {
+  box-sizing: border-box;
+  padding-left: max(18px, env(safe-area-inset-left, 0px));
+  padding-right: max(18px, env(safe-area-inset-right, 0px));
+}
+
 .pb-invitePage__blobs {
   position: absolute;
   inset: 0;
@@ -9437,6 +9444,8 @@
   max-width: min(390px, 100%);
   margin-left: auto;
   margin-right: auto;
+  min-width: 0;
+  overflow-x: clip;
 }
 
 .pb-inviteCard--storybook .pb-inviteCard__stack {
@@ -9450,9 +9459,10 @@
 .pb-inviteHero__frame--storybook {
   position: relative;
   width: 100%;
+  max-width: min(379px, 100%);
+  min-width: 0;
   aspect-ratio: 379 / 648;
   min-height: 648px;
-  max-width: 379px;
   margin: 0 auto;
   border-radius: 28px;
   overflow: hidden;
@@ -10140,14 +10150,14 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 @media (max-width: 520px) {
-  /* Isti mali odmak lijevo i desno kao ostatak stranice (ne „zaglaviti” uz desni rub) */
-  .pb-main--demo .pb-container:has(.pb-inviteCard--storybook) {
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  .pb-main--demo.pb-invitePage .pb-container {
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
   }
 
   .pb-inviteHero__frame--storybook {
-    min-height: min(648px, 171vw);
+    min-height: min(648px, 85vh);
+    min-height: min(648px, 155dvh);
   }
 }
 

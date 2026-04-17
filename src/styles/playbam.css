@@ -917,6 +917,13 @@
   padding-right: max(18px, env(safe-area-inset-right, 0px));
 }
 
+/* Safety: nikad ne dopusti horizontalni “lijepi desno” overflow na mobile */
+@media (max-width: 520px) {
+  .pb-main--demo.pb-invitePage {
+    overflow-x: hidden;
+  }
+}
+
 .pb-invitePage__blobs {
   position: absolute;
   inset: 0;
@@ -1770,6 +1777,22 @@
   display: grid;
   gap: 1.35rem;
   align-items: start;
+}
+
+/* Mobile: preview pozivnice prvo, privatni containere ispod */
+@media (max-width: 979px) {
+  .pb-guestPrivateLayout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pb-guestPrivateLayout__right {
+    order: 0;
+  }
+
+  .pb-guestPrivateLayout__left {
+    order: 1;
+  }
 }
 
 @media (min-width: 980px) {
@@ -10316,6 +10339,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   background: rgba(255, 126, 148, 0.16);
   border-color: rgba(255, 126, 148, 0.22);
   color: #be3658;
+  border-width: 2px;
 }
 
 .pb-rsvpBtn--storybookMaybe {
@@ -10325,6 +10349,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   background: rgba(245, 195, 68, 0.17);
   border-color: rgba(245, 195, 68, 0.24);
   color: #9b6c06;
+  border-width: 2px;
 }
 
 .pb-rsvpBtn--storybook.is-active {
@@ -10337,6 +10362,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   color: #b24955;
   background: linear-gradient(180deg, rgba(255, 239, 241, 0.96), rgba(255, 228, 232, 0.96));
   border-color: rgba(228, 134, 149, 0.42);
+  border-width: 2px;
   box-shadow:
     0 12px 22px rgba(223, 124, 139, 0.2),
     inset 0 0 0 2px rgba(223, 124, 139, 0.22);
@@ -10346,6 +10372,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   color: #a56b00;
   background: linear-gradient(180deg, rgba(255, 248, 220, 0.96), rgba(255, 241, 186, 0.96));
   border-color: rgba(233, 196, 87, 0.46);
+  border-width: 2px;
   box-shadow:
     0 12px 22px rgba(222, 186, 88, 0.22),
     inset 0 0 0 2px rgba(222, 186, 88, 0.24);
@@ -10441,7 +10468,9 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 /* /pozivnica: privatna kartica malo niže */
 .pb-invitePage .pb-inviteHero__accessCard {
-  bottom: 0.9%;
+  bottom: 0.55%;
+  /* Manje zauzima, sigurnije ispod RSVP-a */
+  padding: 0.62rem 0.72rem;
 }
 
 @media (max-width: 520px) {

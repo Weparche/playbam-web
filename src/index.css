@@ -52,9 +52,9 @@
 
 html {
   scroll-behavior: smooth;
-  /* Sprječi “proširenje” sadržaja u širinu nakon fontova / UI traka (mobitel) */
-  overflow-x: clip;
+  width: 100%;
   max-width: 100%;
+  overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -68,14 +68,28 @@ body {
   font-family: var(--sans);
   color: var(--text);
   background: var(--bg);
-  overflow-x: clip;
+  width: 100%;
   max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 #root {
-  overflow-x: clip;
+  width: 100%;
   max-width: 100%;
   min-width: 0;
+  overflow-x: hidden;
+}
+
+/* Uži viewport: dodatno zategni (Safari / Chrome mob — subpixel + font swap) */
+@media (max-width: 768px) {
+  html,
+  body,
+  #root {
+    overflow-x: hidden !important;
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
 body:has(.pb-main--demo) {

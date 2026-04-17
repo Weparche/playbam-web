@@ -310,57 +310,71 @@ export default function PrivateInvitationGuest({
                             <span className={wishlistBadgeClass(reservationStatus)}>{getWishCardStatusLabel(item)}</span>
                           </div>
 
-                          <div className="pb-inviteWish__body">
-                            <h3 className="pb-inviteWish__title">{item.title}</h3>
-                            <p className="pb-inviteWish__desc">{item.description || 'Kratki detalji poklona uskoro.'}</p>
-                            {item.priceLabel ? <p className="pb-inviteWish__meta">Cijena: {item.priceLabel}</p> : null}
-                            {purchaseLabel ? (
-                              <p className="pb-inviteWish__purchaseMeta">
-                                <span className="pb-inviteWish__purchaseIcon" aria-hidden>
-                                  +
-                                </span>
-                                <span>{purchaseLabel}</span>
-                              </p>
-                            ) : null}
-                          </div>
-
-                          <div className="pb-inviteWish__side">
-                            <div className="pb-inviteWish__actions" onClick={(event) => event.stopPropagation()}>
-                              <div className="pb-inviteWish__btnRow">
-                                {canReserve ? (
-                                  <>
-                                    <Button type="button" onClick={() => onReserve(item)} disabled={isBusy}>
-                                      {isBusy ? 'Spremamo...' : 'Rezerviraj'}
+                          <div className="pb-inviteWish__right">
+                            <div className="pb-inviteWish__topRow">
+                              <div className="pb-inviteWish__body">
+                                <h3 className="pb-inviteWish__title">{item.title}</h3>
+                                <p className="pb-inviteWish__desc">{item.description || 'Kratki detalji poklona uskoro.'}</p>
+                                {item.priceLabel ? <p className="pb-inviteWish__meta">Cijena: {item.priceLabel}</p> : null}
+                                {purchaseLabel ? (
+                                  <p className="pb-inviteWish__purchaseMeta">
+                                    <span className="pb-inviteWish__purchaseIcon" aria-hidden>
+                                      +
+                                    </span>
+                                    <span>{purchaseLabel}</span>
+                                  </p>
+                                ) : null}
+                              </div>
+                              <span className="pb-inviteWish__chevron" aria-hidden>
+                                <svg className="pb-inviteWish__chevronSvg" viewBox="0 0 24 24" width={22} height={22} fill="none">
+                                  <path
+                                    d="M9 6l6 6-6 6"
+                                    stroke="currentColor"
+                                    strokeWidth="2.2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </span>
+                            </div>
+                            <div className="pb-inviteWish__footer">
+                              <div className="pb-inviteWish__actions" onClick={(event) => event.stopPropagation()}>
+                                <div className="pb-inviteWish__btnRow">
+                                  {canReserve ? (
+                                    <>
+                                      <Button type="button" onClick={() => onReserve(item)} disabled={isBusy}>
+                                        {isBusy ? 'Spremamo...' : 'Rezerviraj'}
+                                      </Button>
+                                    </>
+                                  ) : null}
+                                  {canParticipate ? (
+                                    <Button
+                                      variant="ghost"
+                                      type="button"
+                                      className="pb-inviteWish__participateBtn"
+                                      onClick={() => onParticipate(item)}
+                                      disabled={isBusy}
+                                    >
+                                      {isBusy ? 'Spremamo...' : 'Sudjeluj'}
                                     </Button>
-                                  </>
-                                ) : null}
-                                {canParticipate ? (
-                                  <Button
-                                    variant="ghost"
-                                    type="button"
-                                    className="pb-inviteWish__participateBtn"
-                                    onClick={() => onParticipate(item)}
-                                    disabled={isBusy}
-                                  >
-                                    {isBusy ? 'Spremamo...' : 'Sudjeluj'}
-                                  </Button>
-                                ) : null}
-                                {canCancel ? (
-                                  <Button variant="ghost" type="button" onClick={() => onCancel(item)} disabled={isBusy}>
-                                    {isBusy ? 'Spremamo...' : 'Otkaži'}
-                                  </Button>
-                                ) : null}
-                                {canDelete ? (
-                                  <Button
-                                    className="pb-inviteWish__deleteBtn"
-                                    variant="ghost"
-                                    type="button"
-                                    onClick={() => onDeleteWishlistItem(item)}
-                                    disabled={isBusy}
-                                  >
-                                    {isBusy ? 'Spremamo...' : 'Obriši'}
-                                  </Button>
-                                ) : null}
+                                  ) : null}
+                                  {canCancel ? (
+                                    <Button variant="ghost" type="button" onClick={() => onCancel(item)} disabled={isBusy}>
+                                      {isBusy ? 'Spremamo...' : 'Otkaži'}
+                                    </Button>
+                                  ) : null}
+                                  {canDelete ? (
+                                    <Button
+                                      className="pb-inviteWish__deleteBtn"
+                                      variant="ghost"
+                                      type="button"
+                                      onClick={() => onDeleteWishlistItem(item)}
+                                      disabled={isBusy}
+                                    >
+                                      {isBusy ? 'Spremamo...' : 'Obriši'}
+                                    </Button>
+                                  ) : null}
+                                </div>
                               </div>
                             </div>
                           </div>

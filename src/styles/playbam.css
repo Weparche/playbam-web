@@ -1,8 +1,10 @@
 /* Playbam.hr Landing - custom styling (mobile-first) */
 
 .pb-main {
+  width: 100%;
   max-width: 100%;
-  overflow-x: clip;
+  min-width: 0;
+  overflow-x: hidden;
   background: radial-gradient(
       900px 440px at 15% 0%,
       rgba(30, 123, 230, 0.1),
@@ -36,11 +38,13 @@
   position: sticky;
   top: 0;
   z-index: 50;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.78);
   border-bottom: 1px solid rgba(22, 24, 35, 0.08);
-  overflow-x: clip;
-  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .pb-nav__inner {
@@ -852,6 +856,10 @@
 /* Invitation page — topla pozadina, mobile-first */
 .pb-main--demo {
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   /* Horizontalno 0: PNG ide rub do ruba kao na webu; padding samo u .pb-container */
   padding: 22px 0 40px;
   background-color: #ffffff;
@@ -860,7 +868,7 @@
   background-position: center center;
   background-repeat: no-repeat;
   font-family: var(--invite-font);
-  overflow-x: clip;
+  overflow-x: hidden;
 }
 
 /* Tipografija pozivnice: Plus Jakarta UI; Fredoka display naslov u kartici */
@@ -930,10 +938,14 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   padding-right: max(18px, env(safe-area-inset-right, 0px));
 }
 
-/* Safety: nikad ne dopusti horizontalni “lijepi desno” overflow na mobile */
-@media (max-width: 520px) {
+/* Safety: horizontalni overflow na užim ekranima (ne samo 520px) */
+@media (max-width: 768px) {
   .pb-main--demo.pb-invitePage {
     overflow-x: hidden;
+  }
+
+  .pb-main--demo.pb-invitePage .pb-container {
+    min-width: 0;
   }
 }
 
@@ -1790,6 +1802,10 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   display: grid;
   gap: 1.35rem;
   align-items: start;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 /* Mobile: preview pozivnice prvo, privatni containere ispod */
@@ -2583,9 +2599,15 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   box-sizing: border-box;
   overflow: hidden;
   border-radius: 22px;
-  background:
-    radial-gradient(120% 80% at 20% 0%, rgba(255, 255, 255, 0.55), transparent 55%),
-    linear-gradient(155deg, rgba(255, 248, 252, 0.97), rgba(244, 240, 255, 0.96));
+  background-color: rgba(252, 249, 255, 0.97);
+  /* public/listazelja.png — lagani overlay da tekst ostane čitljiv */
+  background-image:
+    radial-gradient(120% 80% at 20% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
+    linear-gradient(155deg, rgba(255, 248, 252, 0.88), rgba(244, 240, 255, 0.82)),
+    url('/listazelja.png');
+  background-position: center, center, center;
+  background-size: auto, auto, cover;
+  background-repeat: no-repeat;
   padding: 1rem;
 }
 
@@ -2814,9 +2836,11 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 
 .pb-inviteWish {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 0.45rem 0.75rem;
-  align-items: start;
+  align-items: stretch;
+  min-width: 0;
+  max-width: 100%;
   padding: 0.72rem 0.8rem;
   border-radius: 16px;
   border: 1px solid rgba(31, 36, 48, 0.06);
@@ -2831,8 +2855,44 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 }
 
 .pb-inviteWish--compact {
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: start;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: stretch;
+}
+
+/* Tekst puna širina + chevron desno (popup); gumbi u donjem desnom kutu */
+.pb-inviteWish__right {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  align-self: stretch;
+}
+
+.pb-inviteWish__topRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.pb-inviteWish__chevron {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(31, 36, 48, 0.38);
+  pointer-events: none;
+}
+
+.pb-inviteWish__chevronSvg {
+  display: block;
+}
+
+.pb-inviteWish__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-top: auto;
+  padding-top: 0.4rem;
 }
 
 /* Slika + status badge (Dostupno, …) ispod slike — web i mobile */
@@ -2870,6 +2930,7 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 }
 
 .pb-inviteWish__body {
+  flex: 1;
   min-width: 0;
   display: grid;
   gap: 0.12rem;
@@ -2883,6 +2944,8 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   letter-spacing: -0.02em;
   line-height: 1.24;
   color: var(--invite-text, #1f2430);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .pb-inviteWish__desc,
@@ -3026,17 +3089,6 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   padding: 0.26rem 0.4rem;
 }
 
-.pb-inviteWish__side {
-  display: flex;
-  flex-direction: column;
-  gap: 0.18rem;
-  height: 100%;
-  align-self: stretch;
-  justify-self: end;
-  justify-items: end;
-  align-items: flex-end;
-}
-
 .pb-inviteWish__status--available {
   background: rgba(111, 207, 104, 0.18);
   color: #2d7a32;
@@ -3061,9 +3113,8 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   display: flex;
   flex-direction: column;
   gap: 0.12rem;
-  margin-top: 0;
-  justify-self: end;
-  align-self: start;
+  width: 100%;
+  align-items: flex-end;
 }
 
 .pb-inviteWish__img {
@@ -9157,6 +9208,10 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 
 .pb-inviteWish--clickable {
   cursor: pointer;
+}
+
+.pb-inviteWish--clickable:hover .pb-inviteWish__chevron {
+  color: rgba(31, 36, 48, 0.52);
 }
 
 .pb-inviteWish--clickable:focus-visible {

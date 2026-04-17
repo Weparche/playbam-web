@@ -222,16 +222,12 @@ export default function PrivateInvitationGuest({
   return (
     <>
       <div className="pb-invitePrivateStack">
-        <section className="pb-invitePrivateCard pb-invitePrivateCard--intro" aria-labelledby="private-invite-title">
-          <h2 id="private-invite-title" className="pb-invitePrivateCard__title">
-            Privatni dio pozivnice
-          </h2>
-          <span className="pb-invitePrivateCard__lead">
-            Odluku možeš promijeniti do 24h prije rođendana.
-          </span>
-          {savingRsvp ? <div className="pb-inlineNote pb-inlineNote--info">Spremamo tvoj odgovor...</div> : null}
-          {requestError ? <div className="pb-inlineNote pb-inlineNote--error">{requestError}</div> : null}
-        </section>
+        {savingRsvp || requestError ? (
+          <div className="pb-invitePrivateAlerts" aria-live="polite">
+            {savingRsvp ? <div className="pb-inlineNote pb-inlineNote--info">Spremamo tvoj odgovor...</div> : null}
+            {requestError ? <div className="pb-inlineNote pb-inlineNote--error">{requestError}</div> : null}
+          </div>
+        ) : null}
 
         <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-details-toggle">
           <button

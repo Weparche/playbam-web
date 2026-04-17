@@ -1792,6 +1792,15 @@
 
   .pb-guestPrivateLayout__left {
     order: 1;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Puna širina ekrana za tri privatna bloka (bez suženja na 44rem) */
+  .pb-guestPrivateLayout .pb-invitePrivateStack {
+    width: 100%;
+    max-width: none;
+    margin: 0.85rem 0 0;
   }
 }
 
@@ -2252,6 +2261,12 @@
 .pb-invitePrivateStack > * {
   min-width: 0;
   max-width: 100%;
+}
+
+.pb-invitePrivateAlerts {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .pb-card.pb-inviteHostPanel {
@@ -10471,6 +10486,23 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   bottom: 0.55%;
   /* Manje zauzima, sigurnije ispod RSVP-a */
   padding: 0.62rem 0.72rem;
+}
+
+/* Odobren gost: "Privatni dio…" + 24h tekst na dnu pozadine, ispod RSVP (z-index ispod RSVP) */
+.pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__accessCard {
+  bottom: 1.35%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  transform-origin: center bottom;
+  z-index: 1;
+}
+
+@media (max-width: 520px) {
+  .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__accessCard {
+    /* Malo više od dna da ne dira RSVP; ostaje centrirano */
+    bottom: 3.35%;
+    max-width: min(calc(100cqw / 0.9), 96%);
+  }
 }
 
 @media (max-width: 520px) {

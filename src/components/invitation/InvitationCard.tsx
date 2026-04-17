@@ -55,7 +55,10 @@ export default function InvitationCard({
   }
 
   return (
-    <section className="pb-inviteCard pb-inviteCard--storybook" aria-label="Web pozivnica za rođendan">
+    <section
+      className={`pb-inviteCard pb-inviteCard--storybook${access === 'private' ? ' pb-inviteCard--guestPrivate' : ''}`}
+      aria-label="Web pozivnica za rođendan"
+    >
       <div className="pb-inviteCard__stack">
         <PublicInvitationHero
           celebrantTitle={celebrantTitle}
@@ -75,7 +78,7 @@ export default function InvitationCard({
           onRsvpClick={handleRsvpClick}
           accessTitle={accessTitle}
           accessText={accessText}
-          showAccessCard={access !== 'private'}
+          showAccessCard
         />
       </div>
     </section>

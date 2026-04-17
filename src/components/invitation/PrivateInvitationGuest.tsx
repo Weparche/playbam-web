@@ -299,12 +299,15 @@ export default function PrivateInvitationGuest({
                           role="button"
                           tabIndex={0}
                         >
-                          <div className="pb-inviteWish__thumbWrap">
-                            {imageUrl ? (
-                              <img src={imageUrl} alt="" className="pb-inviteWish__thumbImage" loading="lazy" />
-                            ) : (
-                              <div className="pb-inviteWish__thumb" aria-hidden />
-                            )}
+                          <div className="pb-inviteWish__mediaCol">
+                            <div className="pb-inviteWish__thumbWrap">
+                              {imageUrl ? (
+                                <img src={imageUrl} alt="" className="pb-inviteWish__thumbImage" loading="lazy" />
+                              ) : (
+                                <div className="pb-inviteWish__thumb" aria-hidden />
+                              )}
+                            </div>
+                            <span className={wishlistBadgeClass(reservationStatus)}>{getWishCardStatusLabel(item)}</span>
                           </div>
 
                           <div className="pb-inviteWish__body">
@@ -322,7 +325,6 @@ export default function PrivateInvitationGuest({
                           </div>
 
                           <div className="pb-inviteWish__side">
-                            <span className={wishlistBadgeClass(reservationStatus)}>{getWishCardStatusLabel(item)}</span>
                             <div className="pb-inviteWish__actions" onClick={(event) => event.stopPropagation()}>
                               <div className="pb-inviteWish__btnRow">
                                 {canReserve ? (

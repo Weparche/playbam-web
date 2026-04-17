@@ -2730,10 +2730,12 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   overflow-wrap: anywhere;
 }
 
+/* Web (desktop grid): ista širina kao dva accordiona ispod (42.5rem), ne puna širina stupca */
 .pb-guestPrivateLayout .pb-invitePrivateCard--guestPartyFacts {
-  width: 100%;
-  max-width: none;
-  margin-inline: 0;
+  width: min(100%, 42.5rem);
+  max-width: 42.5rem;
+  margin-inline: auto;
+  box-sizing: border-box;
 }
 
 .pb-partyFact {
@@ -2812,7 +2814,7 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 
 .pb-inviteWish {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 0.45rem 0.75rem;
   align-items: start;
   padding: 0.72rem 0.8rem;
@@ -2829,8 +2831,20 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 }
 
 .pb-inviteWish--compact {
-  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+/* Slika + status badge (Dostupno, …) ispod slike — web i mobile */
+.pb-inviteWish__mediaCol {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  width: min-content;
+  max-width: 6.75rem;
+  align-self: start;
 }
 
 .pb-inviteWish__thumbWrap {
@@ -3002,6 +3016,16 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   align-self: start;
 }
 
+.pb-inviteWish__mediaCol .pb-inviteWish__status {
+  justify-self: unset;
+  align-self: stretch;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.2;
+  max-width: 100%;
+  padding: 0.26rem 0.4rem;
+}
+
 .pb-inviteWish__side {
   display: flex;
   flex-direction: column;
@@ -3037,7 +3061,7 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   display: flex;
   flex-direction: column;
   gap: 0.12rem;
-  margin-top: auto;
+  margin-top: 0;
   justify-self: end;
   align-self: start;
 }

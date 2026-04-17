@@ -78,6 +78,7 @@
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   max-width: 100%;
+  padding-top: 64px;
 }
 
 .ew-container {
@@ -245,8 +246,10 @@
    NAVBAR
    ============================================ */
 .ew-navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   padding: 0 24px;
   transition: background var(--duration-fast) var(--ease-out),

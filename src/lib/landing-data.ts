@@ -3,6 +3,8 @@
 export type InvitationTemplate = {
   id: string
   theme: string
+  /** Ilustracija teme (ispod naslova u sekciji Kreiraj pozivnicu). */
+  image: string
   childName: string
   age: string
   date: string
@@ -36,6 +38,7 @@ export const invitationTemplates: InvitationTemplate[] = [
   {
     id: 'safari',
     theme: 'Safari',
+    image: '/safari.png',
     childName: 'Luka',
     age: '5',
     date: 'Subota, 21. lipnja',
@@ -46,6 +49,7 @@ export const invitationTemplates: InvitationTemplate[] = [
   {
     id: 'unicorn',
     theme: 'Unicorn',
+    image: '/unicorns.png',
     childName: 'Mia',
     age: '4',
     date: 'Nedjelja, 8. lipnja',
@@ -56,6 +60,7 @@ export const invitationTemplates: InvitationTemplate[] = [
   {
     id: 'svemir',
     theme: 'Svemir',
+    image: '/space.png',
     childName: 'Filip',
     age: '7',
     date: 'Subota, 14. lipnja',
@@ -64,8 +69,9 @@ export const invitationTemplates: InvitationTemplate[] = [
     time: '14:00 — 16:30',
   },
   {
-    id: 'sport',
-    theme: 'Sport',
+    id: 'princess',
+    theme: 'Princeza',
+    image: '/princess.png',
     childName: 'Petra',
     age: '6',
     date: 'Subota, 28. lipnja',

@@ -18,6 +18,13 @@ function InviteMockup({ template }: { template: typeof invitationTemplates[0] })
           {hovered ? 'Print verzija' : 'Digitalna verzija'}
         </div>
         <div className="ew-invite-mockup__theme">{template.theme}</div>
+        <img
+          className="ew-invite-mockup__art"
+          src={template.image}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
         <div className="ew-invite-mockup__detail">
           {template.childName} puni {template.age}.<br />
           {template.date}<br />

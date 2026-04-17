@@ -7,6 +7,7 @@ export type CoverTheme =
   | 'barbie'
   | 'princess'
   | 'unicorns'
+  | 'pirates'
 export type EffectStyle = 'confetti' | 'streamers' | 'glow'
 export type TitleFont =
   | 'lilita'
@@ -92,6 +93,7 @@ export const COVER_THEME_OPTIONS = [
   { id: 'barbie', label: 'Barbie', description: 'Ružičasta Barbie atmosfera.', image: '/barbie.png' },
   { id: 'princess', label: 'Princeza', description: 'Kraljevski i princeza mood.', image: '/princess.png' },
   { id: 'unicorns', label: 'Jednorozi', description: 'Šareni jednorozi i čarolija.', image: '/unicorns.png' },
+  { id: 'pirates', label: 'Pirati', description: 'Piratska avantura i more.', image: '/pirates.png' },
 ] as const satisfies ReadonlyArray<{ id: CoverTheme; label: string; description: string; image: string }>
 
 export const EFFECT_OPTIONS = [
@@ -481,6 +483,7 @@ export function normalizeCreateTheme(themeValue: string | null | undefined): Cov
     case 'barbie':
     case 'princess':
     case 'unicorns':
+    case 'pirates':
       return normalized
     case 'pozivnica-boys':
     case 'pozivnica-girls':

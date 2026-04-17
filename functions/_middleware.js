@@ -25,6 +25,7 @@ const INVITATION_BACKGROUND_MAP = Object.freeze({
   barbie: '/barbie.png',
   princess: '/princess.png',
   unicorns: '/unicorns.png',
+  pirates: '/pirates.png',
 })
 
 function buildInvitationHeroTitle(title, celebrantName) {

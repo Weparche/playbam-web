@@ -1805,7 +1805,8 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  overflow-x: hidden;
+  /* Ne overflow-x: hidden — na mobitelu obrezuje desni rub border-radiusa na pozivnici */
+  overflow-x: visible;
 }
 
 /* Mobile: preview pozivnice prvo, privatni containere ispod */
@@ -1817,12 +1818,19 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 
   .pb-guestPrivateLayout__right {
     order: 0;
+    width: 100%;
+    min-width: 0;
   }
 
   .pb-guestPrivateLayout__left {
     order: 1;
     width: 100%;
     min-width: 0;
+  }
+
+  /* Okvir pozivnice: ne clipaj zaobljene rubove (overflow na kartici reže desni rub) */
+  .pb-guestPrivateLayout__right .pb-inviteCard--storybook {
+    overflow: visible;
   }
 
   /* Puna širina ekrana za tri privatna bloka (bez suženja na 44rem) */

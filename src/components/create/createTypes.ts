@@ -1,4 +1,15 @@
-export type CoverTheme = 'pozivnica-girl' | 'pozivnica-boy' | 'pozivnica-boys' | 'pozivnica-girls' | 'pozivnica-mix'
+export type CoverTheme =
+  | 'pozivnica-girl'
+  | 'pozivnica-boy'
+  | 'pozivnica-boys'
+  | 'pozivnica-girls'
+  | 'pozivnica-mix'
+  | 'safari'
+  | 'space'
+  | 'sport'
+  | 'barbie'
+  | 'princess'
+  | 'unicorns'
 export type EffectStyle = 'confetti' | 'streamers' | 'glow'
 export type TitleFont =
   | 'lilita'
@@ -81,6 +92,12 @@ export const COVER_THEME_OPTIONS = [
   { id: 'pozivnica-boys', label: 'Dva dečka', description: 'Tema za dva dječaka na istoj pozivnici.', image: '/pozivnica-boys.png' },
   { id: 'pozivnica-girls', label: 'Dvije cure', description: 'Tema s dvije cure i istim storybook stilom.', image: '/pozivnica-girls.png' },
   { id: 'pozivnica-mix', label: 'Cura i dečko', description: 'Miks ilustracija za pozivnicu s curom i dečkom.', image: '/pozivnica-mix.png' },
+  { id: 'safari', label: 'Safari', description: 'Afričke životinje i safari avantura.', image: '/safari.png' },
+  { id: 'space', label: 'Svemir', description: 'Astronauti, zvijezde i svemirski party.', image: '/space.png' },
+  { id: 'sport', label: 'Sport', description: 'Aktivan tulum za male sportaše.', image: '/sport.png' },
+  { id: 'barbie', label: 'Barbie', description: 'Ružičasta Barbie atmosfera.', image: '/barbie.png' },
+  { id: 'princess', label: 'Princeza', description: 'Kraljevski i princeza mood.', image: '/princess.png' },
+  { id: 'unicorns', label: 'Jednorozi', description: 'Šareni jednorozi i čarolija.', image: '/unicorns.png' },
 ] as const satisfies ReadonlyArray<{ id: CoverTheme; label: string; description: string; image: string }>
 
 export const EFFECT_OPTIONS = [
@@ -467,6 +484,12 @@ export function normalizeCreateTheme(themeValue: string | null | undefined): Cov
     case 'pozivnica-boys':
     case 'pozivnica-girls':
     case 'pozivnica-mix':
+    case 'safari':
+    case 'space':
+    case 'sport':
+    case 'barbie':
+    case 'princess':
+    case 'unicorns':
       return normalized
     case 'konfeti':
       return 'pozivnica-boys'

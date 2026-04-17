@@ -13,6 +13,12 @@ const INVITATION_BACKGROUND_MAP: Record<string, string> = {
   'pozivnica-boy': '/pozivnica-boy.png',
   'pozivnica-girls': '/pozivnica-girls.png',
   'pozivnica-mix': '/pozivnica-mix.png',
+  safari: '/safari.png',
+  space: '/space.png',
+  sport: '/sport.png',
+  barbie: '/barbie.png',
+  princess: '/princess.png',
+  unicorns: '/unicorns.png',
 }
 
 export function formatInvitationDateText(dateValue: string) {

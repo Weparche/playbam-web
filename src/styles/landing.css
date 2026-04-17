@@ -146,7 +146,9 @@
   margin: 0;
 }
 
-.ew-h1 em {
+.ew-h1 em,
+.ew-h2 em,
+.ew-h3 em {
   font-style: italic;
   font-weight: 300;
   color: var(--color-accent);

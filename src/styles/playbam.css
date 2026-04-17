@@ -9693,7 +9693,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
-  top: 63.4%;
+  /* Web (desktop): pomakni RSVP ~10% gore */
+  top: calc(63.4% - 10%);
 }
 
 @supports (height: 1cqh) {
@@ -9739,7 +9740,15 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
-    top: 62.9%;
+    /* Tablet/mobile breakpoint: zadrži isti pomak kao web */
+    top: calc(62.9% - 10%);
+  }
+}
+
+@media (max-width: 520px) {
+  /* Mobile: još malo više razmaka između 1. i 2. reda naslova */
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--storybook {
+    line-height: 1.28;
   }
 }
 
@@ -9956,7 +9965,8 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
   /* Gost /pozivnica/… — poruka (npr. „Vidimo se na tulumu!“) ~2% okvira niže */
   .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + 2cqh);
+    /* +0.5% dodatno dolje */
+    margin-top: calc(0.78rem - 13px + 3.25px - 1cqh + 2cqh + 0.5cqh);
   }
 }
 

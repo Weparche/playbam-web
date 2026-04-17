@@ -27,7 +27,7 @@ export default function VenuesPage() {
   const toggleAmenity = (a: string) =>
     setSelectedAmenities(prev => {
       const next = new Set(prev)
-      if (next.has(a)) next.delete(a) else next.add(a)
+      if (next.has(a)) { next.delete(a) } else { next.add(a) }
       return next
     })
 

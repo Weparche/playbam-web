@@ -34,7 +34,10 @@ export default function Hero() {
           </div>
 
           <h1 className="ew-h1 ew-hero__title" style={stagger(150)}>
-            Rođendan kao <em>mali ritual.</em>
+            Rođendan kao{' '}
+            <span className="ew-hero__title-accent">
+              <em>mali ritual.</em>
+            </span>
           </h1>
 
           <p className="ew-hero__sub" style={stagger(300)}>

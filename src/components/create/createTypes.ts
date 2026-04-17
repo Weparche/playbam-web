@@ -1,9 +1,6 @@
 export type CoverTheme =
   | 'pozivnica-girl'
   | 'pozivnica-boy'
-  | 'pozivnica-boys'
-  | 'pozivnica-girls'
-  | 'pozivnica-mix'
   | 'safari'
   | 'space'
   | 'sport'
@@ -89,9 +86,6 @@ export const LOCATION_TYPES: readonly LocationType[] = ['Igraonica / lokal', 'Ko
 export const COVER_THEME_OPTIONS = [
   { id: 'pozivnica-girl', label: 'Cura', description: 'Topla ilustracija za pozivnicu s jednom curom.', image: '/pozivnica-girl.png' },
   { id: 'pozivnica-boy', label: 'Dečko', description: 'Varijanta s jednim dečkom na naslovnici.', image: '/pozivnica-boy.png' },
-  { id: 'pozivnica-boys', label: 'Dva dečka', description: 'Tema za dva dječaka na istoj pozivnici.', image: '/pozivnica-boys.png' },
-  { id: 'pozivnica-girls', label: 'Dvije cure', description: 'Tema s dvije cure i istim storybook stilom.', image: '/pozivnica-girls.png' },
-  { id: 'pozivnica-mix', label: 'Cura i dečko', description: 'Miks ilustracija za pozivnicu s curom i dečkom.', image: '/pozivnica-mix.png' },
   { id: 'safari', label: 'Safari', description: 'Afričke životinje i safari avantura.', image: '/safari.png' },
   { id: 'space', label: 'Svemir', description: 'Astronauti, zvijezde i svemirski party.', image: '/space.png' },
   { id: 'sport', label: 'Sport', description: 'Aktivan tulum za male sportaše.', image: '/sport.png' },
@@ -220,7 +214,7 @@ export const ACCENT_OPTIONS = [
 export const STYLE_PRESETS = [
   { id: 'birthday-pop', label: 'Birthday Pop', vibe: 'Šaren i vedar', theme: 'pozivnica-girl', font: 'lilita', effect: 'confetti', accent: 'berry' },
   { id: 'soft-party', label: 'Soft Party', vibe: 'Topliji i nježniji', theme: 'pozivnica-boy', font: 'merienda', effect: 'glow', accent: 'mint' },
-  { id: 'magic-night', label: 'Magic Night', vibe: 'Malo čarobniji mood', theme: 'pozivnica-mix', font: 'playfair', effect: 'streamers', accent: 'sky' },
+  { id: 'magic-night', label: 'Magic Night', vibe: 'Malo čarobniji mood', theme: 'pozivnica-girl', font: 'playfair', effect: 'streamers', accent: 'sky' },
 ] as const satisfies ReadonlyArray<{
   id: string
   label: string
@@ -481,9 +475,6 @@ export function normalizeCreateTheme(themeValue: string | null | undefined): Cov
   switch (normalized) {
     case 'pozivnica-girl':
     case 'pozivnica-boy':
-    case 'pozivnica-boys':
-    case 'pozivnica-girls':
-    case 'pozivnica-mix':
     case 'safari':
     case 'space':
     case 'sport':
@@ -491,11 +482,13 @@ export function normalizeCreateTheme(themeValue: string | null | undefined): Cov
     case 'princess':
     case 'unicorns':
       return normalized
+    case 'pozivnica-boys':
+    case 'pozivnica-girls':
+    case 'pozivnica-mix':
     case 'konfeti':
-      return 'pozivnica-boys'
     case 'zvjezdice':
     case 'pozivnica-bg1':
-      return 'pozivnica-mix'
+      return 'pozivnica-girl'
     case 'baloni':
     case 'pozivnica-bg':
     case 'pozivnica-boys1':

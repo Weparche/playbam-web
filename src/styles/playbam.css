@@ -1876,6 +1876,34 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     box-sizing: border-box;
   }
 
+  /* Host studio: isti centrirani širinski blok kao gost layout (kartice + preview + shortcuti). */
+  .pb-main--demo.pb-invitePage .pb-hostStudio {
+    max-width: min(60rem, 100%);
+    margin-inline: auto;
+    box-sizing: border-box;
+  }
+
+  .pb-main--demo.pb-invitePage .pb-hostStudio__previewColumn,
+  .pb-main--demo.pb-invitePage .pb-hostStudio__previewCluster {
+    align-items: center;
+  }
+
+  .pb-main--demo.pb-invitePage .pb-hostStudio__previewColumn > .pb-hostPrintToolbar {
+    align-self: center;
+  }
+
+  .pb-main--demo.pb-invitePage .pb-hostStudio__previewColumn .pb-hostPrintToolbar {
+    justify-content: center;
+  }
+
+  .pb-main--demo.pb-invitePage .pb-hostPreviewMode {
+    align-self: center;
+  }
+
+  .pb-main--demo.pb-invitePage .pb-hostStudio__rail {
+    justify-self: center;
+  }
+
   .pb-guestPrivateLayout__left {
     min-width: 0;
     overflow-x: clip;
@@ -2343,22 +2371,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-hostStudio__preview .pb-inviteCard--storybook {
   margin: 0;
-}
-
-/* Host /pozivnica: „Vidimo se…” ~0.5% okvira gore (gost i print tab) */
-.pb-hostStudio__preview .pb-createLivePreview .pb-inviteHero__message--storybook {
-  margin-top: calc(0.78rem - 13px + 3.25px - 0.2rem);
-}
-
-@supports (height: 1cqh) {
-  .pb-hostStudio__preview .pb-createLivePreview .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px - 0.5cqh);
-  }
-}
-
-/* Samo gost pregled: RSVP malo lijevo */
-.pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-  transform: translateX(calc(-50% - 0.55rem)) scale(0.9);
 }
 
 .pb-invitePrivateStack > * {
@@ -5043,6 +5055,25 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
   margin-top: calc(0.78rem - 13px + 3.25px);
+}
+
+/*
+ * Host /pozivnica (gost + print tab): „Vidimo se…” ~0.5cqh gore — POSLIJE općih .pb-createLivePreview i .pb-invitePage pravila.
+ */
+.pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
+.pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
+  margin-top: calc(0.78rem - 13px + 3.25px - 0.2rem);
+}
+
+@supports (height: 1cqh) {
+  .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
+  .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 13px + 3.25px - 0.5cqh);
+  }
+}
+
+.pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
+  transform: translateX(calc(-50% - 0.55rem)) scale(0.9);
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {

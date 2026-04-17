@@ -117,7 +117,6 @@ export default function PrivateInvitationGuest({
   savingRsvp,
   requestError,
 }: Props) {
-  const [detailsOpen, setDetailsOpen] = useState(false)
   const [venueOpen, setVenueOpen] = useState(false)
   const [wishlistOpen, setWishlistOpen] = useState(false)
   const [addingGiftOpen, setAddingGiftOpen] = useState(false)
@@ -192,18 +191,14 @@ export default function PrivateInvitationGuest({
   const selectedWishPurchaseLabel = selectedWishItem ? wishlistPurchaseLabel(selectedWishItem) : null
   const selectedVenueImageUrl = selectedVenueImageIndex !== null ? VENUE_GALLERY[selectedVenueImageIndex] : null
   const selectedVenueImageNumber = selectedVenueImageIndex !== null ? selectedVenueImageIndex + 1 : 0
-  const partyDetails = [
-    invitation.location?.trim() ? { label: 'Lokacija', value: invitation.location.trim() } : null,
-    invitation.partyDetails?.parkingLocation?.trim()
-      ? { label: 'Parking', value: invitation.partyDetails.parkingLocation.trim() }
-      : null,
-    invitation.partyDetails?.cafeLocation?.trim()
-      ? { label: 'Kafić', value: invitation.partyDetails.cafeLocation.trim() }
-      : null,
-    invitation.partyDetails?.extraDetails?.trim()
-      ? { label: 'Ostali detalji', value: invitation.partyDetails.extraDetails.trim() }
-      : null,
-  ].filter(Boolean) as Array<{ label: string; value: string }>
+  const pd = invitation.partyDetails
+  const guestPartyDetailRows: Array<{ label: string; value: string; spanFull?: boolean }> = [
+    { label: 'Ime kontakta', value: pd?.contactName?.trim() || '—' },
+    { label: 'Kontakt mobitel', value: pd?.contactMobile?.trim() || '—' },
+    { label: 'Lokacija parkinga', value: pd?.parkingLocation?.trim() || '—' },
+    { label: 'Lokacija kafića', value: pd?.cafeLocation?.trim() || '—' },
+    { label: 'Ostali detalji', value: pd?.extraDetails?.trim() || '—', spanFull: true },
+  ]
 
   const showPreviousVenueImage = () => {
     setSelectedVenueImageIndex((current) => {
@@ -229,50 +224,18 @@ export default function PrivateInvitationGuest({
           </div>
         ) : null}
 
-        <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-details-toggle">
-          <button
-            id="private-details-toggle"
-            type="button"
-            className={`pb-privateToggle ${detailsOpen ? 'is-open' : ''}`}
-            onClick={() => setDetailsOpen((current) => !current)}
-            aria-expanded={detailsOpen}
-          >
-            <span className="pb-privateToggle__copy">
-              <span className="pb-privateToggle__eyebrow">Privatni sadržaj</span>
-              <span className="pb-privateToggle__title">Detalji rođendana</span>
-            </span>
-            <span className="pb-privateToggle__arrow" aria-hidden>
-              <PrivateToggleChevron />
-            </span>
-          </button>
-
-          {detailsOpen ? (
-            <div className="pb-privateAccordionBody">
-              <section className="pb-privateDetails" aria-labelledby="party-details-title">
-                <header className="pb-invitePrivateCard__header">
-                  <h3 id="party-details-title" className="pb-invitePrivateCard__title">
-                    Detalji tuluma
-                  </h3>
-                  <p className="pb-invitePrivateCard__subtitle">
-                    Sve što trebaš znati o proslavi na jednom mjestu.
-                  </p>
-                </header>
-
-                {partyDetails.length > 0 ? (
-                  <div className="pb-partyFacts">
-                    {partyDetails.map((item) => (
-                      <div key={item.label} className="pb-partyFact">
-                        <div className="pb-partyFact__label">{item.label}</div>
-                        <div className="pb-partyFact__value">{item.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="pb-inlineNote pb-inlineNote--info">Organizator još nije dodao dodatne detalje tuluma.</div>
-                )}
-              </section>
-            </div>
-          ) : null}
+        <section className="pb-invitePrivateCard pb-invitePrivateCard--guestPartyFacts" aria-label="Kontakt i detalji tuluma">
+          <div className="pb-partyFacts pb-partyFacts--guestGrid">
+            {guestPartyDetailRows.map((row) => (
+              <div
+                key={row.label}
+                className={`pb-partyFact${row.spanFull ? ' pb-partyFact--guestSpanFull pb-partyFact--note' : ''}`}
+              >
+                <div className="pb-partyFact__label">{row.label}</div>
+                <div className="pb-partyFact__value">{row.value}</div>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-wishlist-toggle">

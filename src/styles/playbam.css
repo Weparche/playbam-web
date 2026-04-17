@@ -9432,8 +9432,11 @@
 
 /* Storybook invitation layout */
 .pb-inviteCard--storybook {
-  max-width: 390px;
-  margin: 0 auto;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(390px, 100%);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .pb-inviteCard--storybook .pb-inviteCard__stack {
@@ -10132,11 +10135,17 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 .pb-inviteCard--storybook .pb-inviteHero__accessCard {
   transform: translateX(-50%) scale(0.85);
   transform-origin: center bottom;
-  /* Širina slijedi sadržaj (bez 71% cap-a na hero kartici) */
-  max-width: min(calc(100cqw / 0.85), 100vw);
+  /* 100vw širi layout preko desnog ruba (scrollbar); ostajemo unutar okvira pozivnice */
+  max-width: min(calc(100cqw / 0.85), 100%);
 }
 
 @media (max-width: 520px) {
+  /* Isti mali odmak lijevo i desno kao ostatak stranice (ne „zaglaviti” uz desni rub) */
+  .pb-main--demo .pb-container:has(.pb-inviteCard--storybook) {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
   .pb-inviteHero__frame--storybook {
     min-height: min(648px, 171vw);
   }

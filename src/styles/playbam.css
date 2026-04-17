@@ -1943,6 +1943,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   gap: 0.65rem;
   min-width: 0;
   align-self: start;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .pb-hostStudio__preview {
@@ -1952,7 +1954,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 .pb-hostStudio__previewCluster {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.35rem;
   width: 100%;
   min-width: 0;
@@ -1962,8 +1964,9 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   position: relative;
   z-index: 3;
   flex-shrink: 0;
-  align-self: stretch;
+  align-self: flex-start;
   width: 100%;
+  max-width: 100%;
 }
 
 .pb-hostStudio__previewCluster > .pb-hostStudio__preview {
@@ -1981,6 +1984,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   border-radius: 999px;
   background: rgba(16, 24, 40, 0.06);
   border: 1px solid rgba(132, 148, 178, 0.22);
+  align-self: stretch;
+  box-sizing: border-box;
 }
 
 .pb-hostPreviewMode__btn {
@@ -2023,6 +2028,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   align-items: center;
   width: 100%;
   max-width: 22rem;
+}
+
+.pb-hostStudio__previewColumn .pb-hostPrintToolbar {
+  justify-content: flex-start;
 }
 
 .pb-hostPrintToolbar__hint {
@@ -2334,6 +2343,22 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-hostStudio__preview .pb-inviteCard--storybook {
   margin: 0;
+}
+
+/* Host /pozivnica: „Vidimo se…” ~0.5% okvira gore (gost i print tab) */
+.pb-hostStudio__preview .pb-createLivePreview .pb-inviteHero__message--storybook {
+  margin-top: calc(0.78rem - 13px + 3.25px - 0.2rem);
+}
+
+@supports (height: 1cqh) {
+  .pb-hostStudio__preview .pb-createLivePreview .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 13px + 3.25px - 0.5cqh);
+  }
+}
+
+/* Samo gost pregled: RSVP malo lijevo */
+.pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
+  transform: translateX(calc(-50% - 0.55rem)) scale(0.9);
 }
 
 .pb-invitePrivateStack > * {
@@ -8349,6 +8374,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
   .pb-hostStudio__rail {
     align-self: start;
+    justify-self: start;
   }
 
   .pb-shortcutRail {

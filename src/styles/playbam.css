@@ -9667,6 +9667,82 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   font-size: clamp(0.98rem, 3.85vw, 1.48rem);
 }
 
+/* Javna /pozivnica/ — naslov: ista pozicija i veličina kao Gost pregled na hostu */
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__logo {
+  top: calc(1.21% - 1cqh);
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook {
+  top: calc(8.8% + 1cqh);
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
+  top: calc(7.04% + 1cqh);
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--size-lg {
+  transform: translate(-50%, -12.5%);
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--storybook.pb-inviteHero__title--size-lg {
+  font-size: clamp(1.456rem, 5.216vw, 2.624rem);
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
+  top: 37.9%;
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
+  top: 63.4%;
+}
+
+@supports (height: 1cqh) {
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
+    top: calc(37.9% - 0.5cqh);
+  }
+}
+
+/* Malo veći razmak između prvog i drugog retka naslova */
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--storybook {
+  line-height: 1.22;
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--merienda {
+  line-height: 1.12;
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--great-vibes {
+  line-height: 1.06;
+}
+
+@media (max-width: 979px) {
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__logo {
+    top: calc(0.76% - 1cqh);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook {
+    top: calc(8.4% + 1cqh);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
+    top: calc(6.72% + 1cqh);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
+    top: 37.4%;
+  }
+
+  @supports (height: 1cqh) {
+    .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
+      top: calc(37.4% - 0.5cqh);
+    }
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
+    top: 62.9%;
+  }
+}
+
 .pb-inviteHero__title--outline-none {
   -webkit-text-stroke: 0 transparent;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);

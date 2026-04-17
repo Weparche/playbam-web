@@ -328,9 +328,24 @@
   text-decoration: none;
 }
 
+.ew-navbar__logo--mark {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  font-size: 0;
+}
+
+.ew-navbar__logo-img {
+  height: clamp(34px, 4.2vw, 78px);
+  width: auto;
+  max-width: min(400px, 52vw);
+  object-fit: contain;
+  display: block;
+}
+
 .ew-navbar__menu {
   display: none;
-  gap: 36px;
+  gap: calc(36px * 1.3);
   align-items: center;
 }
 
@@ -341,7 +356,7 @@
 .ew-navbar__link {
   color: var(--color-text-primary);
   text-decoration: none;
-  font-size: 14px;
+  font-size: calc(14px * 1.3);
   font-weight: 400;
   transition: opacity 300ms ease;
 }
@@ -351,10 +366,10 @@
 .ew-navbar__cta {
   background: var(--color-text-primary);
   color: var(--color-bg-primary);
-  padding: 11px 20px;
+  padding: calc(11px * 1.3) calc(20px * 1.3);
   border-radius: 2px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: calc(14px * 1.3);
   text-decoration: none;
   transition: opacity 300ms ease;
 }
@@ -365,11 +380,11 @@
 .ew-navbar__hamburger {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: calc(5px * 1.3);
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: calc(8px * 1.3);
 }
 
 @media (min-width: 768px) {
@@ -377,8 +392,9 @@
 }
 
 .ew-navbar__hamburger span {
-  width: 22px;
-  height: 1.5px;
+  width: calc(22px * 1.3);
+  height: calc(1.5px * 1.3);
+  min-height: 1px;
   background: var(--color-text-primary);
   transition: transform 300ms ease, opacity 300ms ease;
 }
@@ -388,10 +404,10 @@
   background: none;
   border: 1px solid var(--color-border-subtle);
   border-radius: 2px;
-  padding: 6px 8px;
+  padding: calc(6px * 1.3) calc(8px * 1.3);
   cursor: pointer;
   color: var(--color-text-tertiary);
-  font-size: 14px;
+  font-size: calc(14px * 1.3);
   line-height: 1;
   transition: border-color 300ms ease;
 }
@@ -608,186 +624,46 @@
   outline-offset: 4px;
 }
 
-/* ----- Digital card ----- */
-.ew-digital-card {
-  width: 78%;
-  aspect-ratio: 9/16;
-  background: var(--color-bg-elevated);
-  border-radius: 28px;
-  box-shadow: var(--shadow-elevated);
-  padding: 20px 16px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.ew-digital-card__bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  padding: 0 8px 12px;
-}
-
-.ew-digital-card__bar-dots {
-  display: flex;
-  gap: 4px;
-}
-
-.ew-digital-card__bar-dots span {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--color-text-primary);
-}
-
-.ew-digital-card__chat-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 8px 12px;
-  border-bottom: 1px solid var(--color-border-subtle);
-  margin-bottom: 12px;
-}
-
-.ew-digital-card__avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--color-accent-soft);
-  color: var(--color-text-primary);
-  font-size: 11px;
-  font-weight: 600;
+/* Hero: stvarne slike pozivnica (digitalno / print) */
+.ew-hero-visual__photo {
+  margin: 0;
+  padding: 0;
+  width: min(88%, 380px);
+  max-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.ew-digital-card__chat-name {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.ew-digital-card__chat-url {
-  font-size: 10px;
-  color: var(--color-text-tertiary);
-}
-
-.ew-digital-card__invite {
-  flex: 1;
-  background: var(--color-bg-primary);
-  border-radius: 12px;
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 0 4px;
-  position: relative;
   overflow: hidden;
 }
 
-/* Circle + number badge */
-.ew-digital-card__invite::before {
-  content: "";
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--color-accent-soft);
-}
-
-.ew-digital-card__invite::after {
-  content: "06";
-  position: absolute;
-  top: 22px;
-  right: 16px;
-  width: 40px;
-  height: 28px;
-  text-align: center;
-  font-family: var(--font-fraunces);
-  font-style: italic;
-  font-size: 18px;
-  color: var(--color-accent);
-  font-weight: 400;
-}
-
-.ew-digital-card__invite-label {
-  font-size: 8px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-}
-
-.ew-digital-card__invite-sublabel {
-  font-size: 8px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-  margin-bottom: 8px;
-}
-
-.ew-digital-card__invite-title {
-  font-family: var(--font-fraunces);
-  font-size: 30px;
-  font-weight: 350;
-  line-height: 1.02;
-  font-style: italic;
-  color: var(--color-text-primary);
-  margin: 8px 0;
-  letter-spacing: -0.01em;
-}
-
-.ew-digital-card__invite-when {
-  font-size: 10px;
-  color: var(--color-text-secondary);
-  line-height: 1.7;
-  letter-spacing: 0.02em;
-}
-
-.ew-digital-card__rsvp {
-  margin-top: 12px;
-  display: flex;
-  gap: 6px;
-}
-
-.ew-digital-card__rsvp-btn {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  border-radius: 8px;
-  font-family: var(--font-work-sans);
-  font-size: 10px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.ew-digital-card__rsvp-btn--yes {
-  background: var(--color-text-primary);
-  color: var(--color-bg-primary);
-}
-
-.ew-digital-card__rsvp-btn--no {
-  background: transparent;
-  color: var(--color-text-secondary);
+.ew-hero-visual__photo--digital {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  width: min(78%, 300px);
+  max-width: 300px;
+  border-radius: 28px;
   border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-elevated);
+  background: var(--color-bg-elevated);
 }
 
-/* ----- Print card ----- */
+.ew-hero-visual__photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+/* Print: blagi nagib + „drugi list” iza */
 .ew-print-wrapper {
   position: relative;
-  width: 82%;
-  aspect-ratio: 3/4;
+  width: min(88%, 400px);
+  aspect-ratio: 3 / 4;
+  max-height: 100%;
   transform: rotate(-2deg);
 }
 
-/* Background offset shadow card */
 .ew-print-wrapper::before {
   content: "";
   position: absolute;
@@ -799,113 +675,29 @@
   border-radius: 2px;
   transform: rotate(1.5deg);
   z-index: 0;
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
-.ew-print-card {
+.ew-print-wrapper .ew-hero-visual__photo--print {
   position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
-  background: var(--color-bg-card);
+  max-height: none;
+  border-radius: 4px;
   border: 1px solid var(--color-border);
-  padding: 36px 30px;
-  font-family: var(--font-fraunces);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   box-shadow: var(--shadow-print);
-  z-index: 1;
-  overflow: hidden;
+  background: var(--color-bg-elevated);
 }
 
-/* Paper grain texture */
-.ew-print-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5'/><feColorMatrix values='0 0 0 0 0.79 0 0 0 0 0.7 0 0 0 0 0.55 0 0 0 0.15 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
-  pointer-events: none;
+.ew-print-wrapper .ew-hero-visual__photo-img {
+  object-fit: cover;
 }
 
-.ew-print-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  z-index: 1;
-}
-
-.ew-print-card__small {
-  font-family: var(--font-work-sans);
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-  position: relative;
-  z-index: 1;
-}
-
-.ew-print-card__number {
-  font-family: var(--font-fraunces);
-  font-style: italic;
-  font-size: 28px;
-  font-weight: 300;
-  color: var(--color-accent);
-  line-height: 1;
-}
-
-.ew-print-card__main {
-  position: relative;
-  z-index: 1;
-}
-
-.ew-print-card__eyebrow {
-  font-family: var(--font-work-sans);
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-  margin-bottom: 10px;
-}
-
-.ew-print-card__title {
-  font-size: 42px;
-  font-weight: 350;
-  line-height: 1.0;
-  font-style: italic;
-  color: var(--color-text-primary);
-  letter-spacing: -0.01em;
-}
-
-.ew-print-card__divider {
-  width: 40px;
-  height: 1px;
-  background: var(--color-text-tertiary);
-  margin: 20px 0;
-  position: relative;
-  z-index: 1;
-}
-
-.ew-print-card__detail {
-  font-family: var(--font-work-sans);
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  line-height: 1.8;
-  position: relative;
-  z-index: 1;
-}
-
-.ew-print-card__footer {
-  font-family: var(--font-work-sans);
-  font-size: 9px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-  text-align: center;
-  padding-top: 12px;
-  border-top: 1px solid var(--color-border-subtle);
-  position: relative;
-  z-index: 1;
+@media (max-width: 919px) {
+  .ew-hero-visual__photo--digital {
+    width: min(82%, 280px);
+  }
 }
 
 /* ============================================

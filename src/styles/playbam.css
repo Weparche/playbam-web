@@ -1866,12 +1866,12 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
   /*
    * Suženi, centrirani blok: preview nije uz sam rub viewporta/containera (1120px).
-   * ~52rem ≈ 832px — dva stupca ostaju, cijeli blok je vizualno “bliže” sredini.
+   * 56rem — malo širi lijevi stupac nego 52rem; i dalje centrirano u containeru.
    */
   .pb-guestPrivateLayout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 390px);
     width: 100%;
-    max-width: min(52rem, 100%);
+    max-width: min(56rem, 100%);
     margin-inline: auto;
     box-sizing: border-box;
   }

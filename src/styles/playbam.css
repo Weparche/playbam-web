@@ -1842,11 +1842,15 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
     min-width: 0;
   }
 
+  /* Preview pozivnice: lijevo u stupcu (uz “unutarnji rub” containera / gutter), ne centrirano */
   .pb-guestPrivateLayout__right {
     min-width: 0;
     position: sticky;
     top: 92px;
     align-self: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   /* U grid layoutu ne radimo negativni overlap preko previewa */
@@ -1858,6 +1862,8 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 
   .pb-guestPrivateLayout .pb-inviteCard--storybook {
     margin-top: 0;
+    margin-left: 0;
+    margin-right: auto;
   }
 }
 

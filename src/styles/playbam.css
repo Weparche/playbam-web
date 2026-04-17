@@ -938,6 +938,22 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   padding-right: max(18px, env(safe-area-inset-right, 0px));
 }
 
+/* Jedan horizontalni rez na /pozivnica — izbjegni višestruke trake od html/body/#root/main lanca */
+html:has(.pb-main--demo.pb-invitePage) {
+  overflow-x: clip;
+}
+
+body:has(.pb-main--demo.pb-invitePage),
+body:has(.pb-main--demo.pb-invitePage) #root {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.pb-main--demo.pb-invitePage {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
 /* Safety: horizontalni overflow na užim ekranima (ne samo 520px) */
 @media (max-width: 768px) {
   .pb-main--demo.pb-invitePage {
@@ -1805,8 +1821,8 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  /* Ne overflow-x: hidden — na mobitelu obrezuje desni rub border-radiusa na pozivnici */
-  overflow-x: visible;
+  /* Desktop: zatvori horizontalni overflow (jedan scrollport). Na mobitelu override → visible (zaobljeni rubovi). */
+  overflow-x: clip;
 }
 
 /* Mobile: preview pozivnice prvo, privatni containere ispod */
@@ -1814,6 +1830,7 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
   .pb-guestPrivateLayout {
     display: flex;
     flex-direction: column;
+    overflow-x: visible;
   }
 
   .pb-guestPrivateLayout__right {
@@ -1842,14 +1859,21 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 }
 
 @media (min-width: 980px) {
-  /* Jedan horizontalni “scrollport” — bez višestrukih traka od overflow lanca */
   .pb-main--demo.pb-invitePage .pb-container.pb-flowLayout {
     overflow-x: clip;
+    min-width: 0;
   }
 
+  /*
+   * Suženi, centrirani blok: preview nije uz sam rub viewporta/containera (1120px).
+   * ~52rem ≈ 832px — dva stupca ostaju, cijeli blok je vizualno “bliže” sredini.
+   */
   .pb-guestPrivateLayout {
-    /* Uska kolona = širina same kartice (390px); preview ne “visi” uz desni rub containera */
     grid-template-columns: minmax(0, 1fr) minmax(0, 390px);
+    width: 100%;
+    max-width: min(52rem, 100%);
+    margin-inline: auto;
+    box-sizing: border-box;
   }
 
   .pb-guestPrivateLayout__left {
@@ -1863,6 +1887,7 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
     position: sticky;
     top: 92px;
     align-self: start;
+    justify-self: stretch;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

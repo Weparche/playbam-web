@@ -263,12 +263,12 @@ export const venues: Venue[] = [
     maxChildren: 20,
     description: '750 m² igraonice u Španskom s velikim labirintom, 4 tobogana, trampolinima, Air Hockeyem, laserskim pištoljima i disco/foam partijima. Dvije privatne animacijske dvorane od 50 m². Isključivo rezervacije za rođendane.',
     amenities: ['Parking', 'Ugostiteljstvo', 'Animatori', 'Trampolini', 'Air Hockey', 'Labirinti', 'Klima'],
-    coverPhoto: 'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-zajednicka-dvorana-labirint-1.jpg',
+    coverPhoto: 'https://picsum.photos/seed/jumbo-cover/900/500',
     photos: [
-      'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-zajednicka-dvorana-napuhanac.jpg',
-      'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-zajednicka-dvorana-tobogani.jpg',
-      'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-zajednicka-dvorana-bazen-s-lopticama.jpg',
-      'https://www.igraonice.hr/media/images/modules/igraonice/galerije/original/djecja-igraonica-jumbo-animacijske-dvorane-desna-1.jpg',
+      'https://picsum.photos/seed/jumbo-1/800/500',
+      'https://picsum.photos/seed/jumbo-2/800/500',
+      'https://picsum.photos/seed/jumbo-3/800/500',
+      'https://picsum.photos/seed/jumbo-4/800/500',
     ],
     packages: [
       { name: 'Standard 2h', price: 350, minChildren: 20, includes: ['2h igranje', '2 animatora', 'pizza', 'Ledo torta', 'pozivnice', 'face painting', 'foto na USB', 'poklon za slavlje'] },

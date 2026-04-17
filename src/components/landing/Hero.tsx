@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { venues } from '../../lib/landing-data'
 import HeroInvitationPreview from './HeroInvitationPreview'
 
 export default function Hero() {
@@ -49,8 +50,25 @@ export default function Hero() {
             <Link to="/kreiraj-pozivnicu" className="ew-btn-primary">
               Napravi pozivnicu
             </Link>
-            <Link to="/igraonice" className="ew-btn-secondary">
-              Pronađi igraonicu →
+            <Link to="/igraonice" className="ew-hero__venue-pill">
+              <span className="ew-hero__venue-avatars" aria-hidden="true">
+                {venues.slice(0, 3).map(v => (
+                  <img
+                    key={v.id}
+                    src={v.coverPhoto}
+                    alt=""
+                    className="ew-hero__venue-avatar"
+                    loading="eager"
+                    decoding="async"
+                  />
+                ))}
+              </span>
+              <span className="ew-hero__venue-pill-text">
+                Pronađi igraonicu
+              </span>
+              <svg className="ew-hero__venue-pill-arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </Link>
           </div>
 

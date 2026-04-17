@@ -1842,12 +1842,19 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
 }
 
 @media (min-width: 980px) {
+  /* Jedan horizontalni “scrollport” — bez višestrukih traka od overflow lanca */
+  .pb-main--demo.pb-invitePage .pb-container.pb-flowLayout {
+    overflow-x: clip;
+  }
+
   .pb-guestPrivateLayout {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    /* Uska kolona = širina same kartice (390px); preview ne “visi” uz desni rub containera */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 390px);
   }
 
   .pb-guestPrivateLayout__left {
     min-width: 0;
+    overflow-x: clip;
   }
 
   /* Preview pozivnice: lijevo u stupcu (uz “unutarnji rub” containera / gutter), ne centrirano */
@@ -1861,7 +1868,10 @@ body:has(.pb-main--demo.pb-invitePage) .pb-footer .pb-container {
     align-items: flex-start;
   }
 
-  /* U grid layoutu ne radimo negativni overlap preko previewa */
+  /*
+   * Gost s odobrenim pristupom: iznad nema javne hero kartice — globalni negativni margin
+   * na .pb-invitePrivateStack inače vuče blok prema gore (preklapanje, čudan overflow).
+   */
   .pb-guestPrivateLayout .pb-invitePrivateStack {
     width: 100%;
     max-width: none;

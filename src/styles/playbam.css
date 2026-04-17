@@ -1961,12 +1961,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   margin: 0;
 }
 
-.pb-hostStudio .pb-invitePrivateCard--accordion {
-  width: 100%;
-  max-width: none;
-  margin-inline: 0;
-}
-
 .pb-hostStudio__cards {
   align-self: start;
 }

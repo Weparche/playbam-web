@@ -2241,7 +2241,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     visibility: visible !important;
     overflow: visible !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 4mm !important;
+    gap: 3mm !important;
     align-items: start !important;
     align-content: start !important;
     justify-items: center !important;
@@ -2275,14 +2275,14 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {
-    width: calc(86.4mm * 1.1) !important;
-    max-width: calc(86.4mm * 1.1) !important;
+    width: calc(86.4mm * 1.07) !important;
+    max-width: calc(86.4mm * 1.07) !important;
     margin: 0 auto !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__frame--storybook {
-    width: calc(86.4mm * 1.1) !important;
-    max-width: calc(86.4mm * 1.1) !important;
+    width: calc(86.4mm * 1.07) !important;
+    max-width: calc(86.4mm * 1.07) !important;
     min-height: auto !important;
     margin: 0 auto !important;
   }

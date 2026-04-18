@@ -54,23 +54,21 @@ export default function InvitationLiveChatPanel({
       {messages.length > 0 ? (
         <div className="pb-inviteChat__list" role="log" aria-live="polite">
           {messages.map((message) => (
-            <article
-              key={message.id}
-              className={`pb-inviteChat__item pb-inviteChat__item--${message.senderRole}`}
-            >
-              <div className="pb-inviteChat__meta">
-                <strong>{message.senderName || (message.senderRole === 'host' ? 'Organizator' : 'Gost')}</strong>
-                <span>{formatChatTimestamp(message.createdAt)}</span>
-              </div>
-              <p className="pb-inviteChat__message">{message.message}</p>
-            </article>
+            <div key={message.id} className={`pb-inviteChat__row pb-inviteChat__row--${message.senderRole}`}>
+              <article className={`pb-inviteChat__item pb-inviteChat__item--${message.senderRole}`}>
+                <div className="pb-inviteChat__meta">
+                  <strong>{message.senderName || (message.senderRole === 'host' ? 'Organizator' : 'Gost')}</strong>
+                  <span>{formatChatTimestamp(message.createdAt)}</span>
+                </div>
+                <p className="pb-inviteChat__message">{message.message}</p>
+              </article>
+            </div>
           ))}
         </div>
       ) : null}
 
       <div className="pb-inviteChat__composer">
         <label className="pb-formField pb-inviteChat__field">
-          <span className="pb-formLabel">Nova poruka</span>
           <textarea
             className="pb-input pb-inviteChat__textarea"
             value={draft}

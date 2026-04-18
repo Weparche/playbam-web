@@ -5,7 +5,21 @@
       "Skill(update-config:*)",
       "WebSearch",
       "WebFetch(domain:www.findglocal.com)",
-      "WebFetch(domain:ententini-igraonica.wheree.com)"
+      "WebFetch(domain:ententini-igraonica.wheree.com)",
+      "WebFetch(domain:sarenibalon.com)",
+      "WebFetch(domain:minipolis.hr)",
+      "WebFetch(domain:djecjiescaperoom.eu)",
+      "WebFetch(domain:familypark.hr)",
+      "WebFetch(domain:jogica.com.hr)",
+      "Bash(curl -s \"https://sarenibalon.com/\")",
+      "Bash(curl -s \"https://minipolis.hr/\")",
+      "Bash(curl -s \"https://djecjiescaperoom.eu/\")",
+      "Bash(curl -s \"https://familypark.hr/\")",
+      "Bash(curl -s \"https://jogica.com.hr/\")",
+      "Bash(curl -s \"https://sarenibalon.com/rodendani/\")",
+      "WebFetch(domain:rockas.hr)",
+      "Bash(grep -o '//sarenibalon.com/wp-content/uploads/2018/06/1200x500[^\"]*\\\\.jpg')",
+      "Bash(npx tsc *)"
     ]
   }
 }

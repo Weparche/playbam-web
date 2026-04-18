@@ -34,6 +34,13 @@ const amenityIcons: Record<string, string> = {
   'Ekskluzivni prostor': '🔒',
   'Air Hockey': '🏒',
   'Labirinti': '🌀',
+  'Karting staza': '🏎',
+  'Escape room': '🔐',
+  'Restoran': '🍽',
+  'VR simulator': '🕹',
+  'Mini Cars': '🚗',
+  'DJ oprema': '🎵',
+  'Face painting': '🎨',
 }
 
 export default function VenueDetailPage() {

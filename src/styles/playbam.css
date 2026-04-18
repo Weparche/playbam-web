@@ -2324,6 +2324,29 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     aspect-ratio: auto !important;
     margin: 0 !important;
   }
+
+  /* @media (max-width: 979px) se primijenjuje na print viewport (A4 ≈ 733px) i
+     pomakne infoBlock / titleWrap na uže-ekranske vrijednosti.
+     Na korisnikovom ekranu (> 979px) vrijede šire vrijednosti — vraćamo ih natrag. */
+  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__logo {
+    top: 1.15% !important;
+  }
+
+  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__titleWrap--storybook {
+    top: 9% !important;
+  }
+
+  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
+    top: 7.2% !important;
+  }
+
+  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__titleWrap--size-lg {
+    transform: translate(-50%, -12.5%) !important;
+  }
+
+  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__infoBlock {
+    top: 37.9% !important;
+  }
 }
 
 .pb-hostPrintOnlySheet {

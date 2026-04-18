@@ -2285,11 +2285,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     overflow: hidden !important;
   }
 
-  html.pb-print-host-invite .pb-hostStudio__preview .pb-createLivePreview {
-    min-height: 0 !important;
-    height: auto !important;
-  }
-
   /* Kartica: visina 135mm, širina = 135 * 379/648 ≈ 79mm.
      2 kartice + gap ≈ 160mm → stane u 194mm širine. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {

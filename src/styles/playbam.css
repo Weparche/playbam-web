@@ -2347,6 +2347,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__infoBlock {
     top: 37.9% !important;
   }
+
+  html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-createLivePreview .pb-inviteHero__message--storybook {
+    margin-top: calc(0.78rem - 13px + 3.25px + 5px) !important;
+  }
 }
 
 .pb-hostPrintOnlySheet {

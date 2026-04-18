@@ -2349,7 +2349,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-createLivePreview .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px + 5px) !important;
+    margin-top: calc(0.78rem - 13px + 3.25px + 7px) !important;
   }
 }
 
@@ -10556,7 +10556,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 .pb-inviteHero__infoRow--venue {
   justify-self: start;
-  transform: translate(2px, -3px);
+  transform: translate(12px, -3px);
 }
 
 .pb-inviteHero__infoIcon {

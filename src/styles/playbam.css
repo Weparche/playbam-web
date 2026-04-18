@@ -5280,13 +5280,13 @@ body:has(.pb-main--demo.pb-invitePage) #root {
  */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-  margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem);
+  margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);
 }
 
 @supports (height: 1cqh) {
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px + 1rem - 2.5cqh);
+    margin-top: calc(0.78rem - 13px + 3.25px + 1rem - 2.5cqh - 2px);
   }
 }
 

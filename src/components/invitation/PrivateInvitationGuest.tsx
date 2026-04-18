@@ -1,8 +1,14 @@
 import { useState, type ChangeEvent } from 'react'
 
+import InvitationLiveChatPanel from './InvitationLiveChatPanel'
 import Button from '../ui/Button'
 import PrivateToggleChevron from '../ui/PrivateToggleChevron'
-import type { InvitationWishlistItem, InvitationWishlistPayload, PublicInvitation } from '../../lib/invitationApi'
+import type {
+  InvitationChatMessage,
+  InvitationWishlistItem,
+  InvitationWishlistPayload,
+  PublicInvitation,
+} from '../../lib/invitationApi'
 
 type Props = {
   invitation: PublicInvitation
@@ -19,6 +25,15 @@ type Props = {
   savingWishlistItem: boolean
   savingRsvp: boolean
   requestError: string
+  chatOpen: boolean
+  onToggleChatOpen: () => void
+  chatLoading: boolean
+  chatError: string
+  chatMessages: InvitationChatMessage[]
+  chatDraft: string
+  onChatDraftChange: (value: string) => void
+  sendingChatMessage: boolean
+  onSendChatMessage: () => void
 }
 
 function wishlistBadgeClass(status: InvitationWishlistItem['reservation']['status']) {
@@ -116,6 +131,15 @@ export default function PrivateInvitationGuest({
   savingWishlistItem,
   savingRsvp,
   requestError,
+  chatOpen,
+  onToggleChatOpen,
+  chatLoading,
+  chatError,
+  chatMessages,
+  chatDraft,
+  onChatDraftChange,
+  sendingChatMessage,
+  onSendChatMessage,
 }: Props) {
   const [venueOpen, setVenueOpen] = useState(false)
   const [wishlistOpen, setWishlistOpen] = useState(false)
@@ -439,6 +463,38 @@ export default function PrivateInvitationGuest({
                   </div>
                 ) : null}
               </section>
+            </div>
+          ) : null}
+        </section>
+
+        <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-chat-toggle">
+          <button
+            id="private-chat-toggle"
+            type="button"
+            className={`pb-privateToggle ${chatOpen ? 'is-open' : ''}`}
+            onClick={onToggleChatOpen}
+            aria-expanded={chatOpen}
+          >
+            <span className="pb-privateToggle__copy">
+              <span className="pb-privateToggle__eyebrow">Privatni sadržaj</span>
+              <span className="pb-privateToggle__title">Live chat</span>
+            </span>
+            <span className="pb-privateToggle__arrow" aria-hidden>
+              <PrivateToggleChevron />
+            </span>
+          </button>
+
+          {chatOpen ? (
+            <div className="pb-privateAccordionBody">
+              <InvitationLiveChatPanel
+                messages={chatMessages}
+                loading={chatLoading}
+                error={chatError}
+                draft={chatDraft}
+                sending={sendingChatMessage}
+                onDraftChange={onChatDraftChange}
+                onSend={onSendChatMessage}
+              />
             </div>
           ) : null}
         </section>

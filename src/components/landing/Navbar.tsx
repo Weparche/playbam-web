@@ -10,7 +10,7 @@ const navItems: NavItem[] = [
   { label: 'Prijava', href: '#' },
 ]
 
-export default function Navbar() {
+export default function Navbar({ opaque = false }: { opaque?: boolean }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -24,7 +24,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`ew-navbar${scrolled ? ' ew-navbar--scrolled' : ''}`}>
+      <header className={`ew-navbar${opaque || scrolled ? ' ew-navbar--scrolled' : ''}`}>
         <div className="ew-navbar__inner">
           <div className="ew-navbar__leading">
             <button

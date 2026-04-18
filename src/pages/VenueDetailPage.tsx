@@ -56,7 +56,7 @@ export default function VenueDetailPage() {
   return (
     <div className="ew-landing">
       <a className="ew-skip-link" href="#main">Preskoči na sadržaj</a>
-      <Navbar />
+      <Navbar opaque />
 
       <main id="main">
         {/* Breadcrumb */}

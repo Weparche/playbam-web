@@ -13,6 +13,7 @@ import QuickRSVPEditor from '../components/create/QuickRSVPEditor'
 import QuickThemeEditor from '../components/create/QuickThemeEditor'
 import ShortcutRail from '../components/create/ShortcutRail'
 import InvitationCard from '../components/invitation/InvitationCard'
+import InvitationLiveChatPanel from '../components/invitation/InvitationLiveChatPanel'
 import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGuest'
 import { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
 import GuestInvitationModal, { getGuestModalStep } from '../components/invitation/GuestInvitationModal'
@@ -25,11 +26,13 @@ import { useAuth } from '../context/AuthContext'
 import {
   cancelInvitationWishlistReservation,
   createFamilyProfile,
+  createInvitationChatMessage,
   createInvitationWishlistItem,
   createMembershipRequest,
   deleteInvitationWishlistItem,
   getFamilyProfile,
   getInvitationAccess,
+  getInvitationChat,
   getInvitationWishlist,
   getMyMembershipRequest,
   getMyRsvp,
@@ -45,6 +48,7 @@ import {
   type FamilyProfilePayload,
   type FamilyProfileResponse,
   type InvitationAccess,
+  type InvitationChatMessage,
   type InvitationPartyDetails,
   type InvitationRsvp,
   type InvitationWishlistItem,
@@ -89,7 +93,7 @@ type PartyDetailsDraft = {
 
 type HostShortcutId = 'wishlist' | 'settings' | 'partyDetails' | 'requests' | 'shareGuest'
 
-type HostAccordionSection = 'update' | 'details' | 'requests' | 'wishlist'
+type HostAccordionSection = 'update' | 'details' | 'requests' | 'wishlist' | 'chat'
 
 const HOST_SHORTCUT_ITEMS = [
   { id: 'settings', label: 'Ažuriraj', icon: '⚙️' },
@@ -343,6 +347,12 @@ export default function SharedInvitationPage() {
   const [wishlistFormError, setWishlistFormError] = useState('')
   const [editingWishlistItemId, setEditingWishlistItemId] = useState<string | null>(null)
   const [savingWishlistItem, setSavingWishlistItem] = useState(false)
+  const [chatMessages, setChatMessages] = useState<InvitationChatMessage[]>([])
+  const [chatLoading, setChatLoading] = useState(false)
+  const [chatError, setChatError] = useState('')
+  const [chatDraft, setChatDraft] = useState('')
+  const [sendingChatMessage, setSendingChatMessage] = useState(false)
+  const [guestChatOpen, setGuestChatOpen] = useState(false)
   const [guestModalOpen, setGuestModalOpen] = useState(false)
   const [hostAccordionOpen, setHostAccordionOpen] = useState<HostAccordionSection | null>(null)
   const [hostAddGiftOpen, setHostAddGiftOpen] = useState(false)
@@ -755,6 +765,35 @@ export default function SharedInvitationPage() {
     }
   }
 
+  const refreshChat = async (
+    identity: TemporaryWebIdentity | null | undefined = user ?? undefined,
+    options?: { silent?: boolean },
+  ) => {
+    if (!invitation || (!isHost && !hasPrivateAccess)) {
+      return
+    }
+
+    if (!options?.silent) {
+      setChatLoading(true)
+    }
+    setChatError('')
+
+    try {
+      const messages = await getInvitationChat(invitation.id, identity)
+      setChatMessages(messages)
+    } catch (caughtError) {
+      setChatError(
+        isApiError(caughtError, 403)
+          ? 'Live chat je dostupan samo organizatoru i odobrenim gostima.'
+          : 'Live chat trenutno nije dostupan.',
+      )
+    } finally {
+      if (!options?.silent) {
+        setChatLoading(false)
+      }
+    }
+  }
+
   useEffect(() => {
     if (!invitation || (!user && !hasHostSession)) {
       setAccess(null)
@@ -762,6 +801,10 @@ export default function SharedInvitationPage() {
       setMembershipRequest(null)
       setHostRequests([])
       setWishlistItems([])
+      setChatMessages([])
+      setChatError('')
+      setChatDraft('')
+      setGuestChatOpen(false)
       setRsvp(null)
       setSelectedChildIds([])
       setWishlistError('')
@@ -798,6 +841,10 @@ export default function SharedInvitationPage() {
 
           setHostRequests(requests.filter((request) => request.status !== 'rejected'))
           setWishlistItems(wishlist)
+          setChatMessages([])
+          setChatError('')
+          setChatDraft('')
+          setGuestChatOpen(false)
           setFamilyProfile(null)
           setMembershipRequest(null)
           setRsvp(null)
@@ -896,6 +943,39 @@ export default function SharedInvitationPage() {
   }, [invitation, user, hasHostSession, logout])
 
   useEffect(() => {
+    const canPollChat = Boolean(
+      invitation &&
+        !loadingPrivateState &&
+        ((showHostStudio && hostAccordionOpen === 'chat') || (!isHost && hasPrivateAccess && guestChatOpen)),
+    )
+
+    if (!canPollChat) {
+      return
+    }
+
+    const identity = user ?? undefined
+    let disposed = false
+
+    const run = async (silent = false) => {
+      if (disposed) {
+        return
+      }
+      await refreshChat(identity, { silent })
+    }
+
+    void run(false)
+
+    const intervalId = window.setInterval(() => {
+      void run(true)
+    }, 5_000)
+
+    return () => {
+      disposed = true
+      window.clearInterval(intervalId)
+    }
+  }, [guestChatOpen, hasPrivateAccess, hostAccordionOpen, invitation, isHost, loadingPrivateState, showHostStudio, user])
+
+  useEffect(() => {
     if (!invitation || !isHost || loadingPrivateState || (!user && !hasHostSession)) {
       return
     }
@@ -958,6 +1038,10 @@ export default function SharedInvitationPage() {
     setRequestError('')
     setHostError('')
     setWishlistError('')
+    setChatMessages([])
+    setChatError('')
+    setChatDraft('')
+    setGuestChatOpen(false)
     setWishlistFormError('')
     setGuestModalOpen(false)
   }
@@ -968,9 +1052,50 @@ export default function SharedInvitationPage() {
     setAccess(null)
     setHostRequests([])
     setWishlistItems([])
+    setChatMessages([])
+    setChatError('')
+    setChatDraft('')
+    setGuestChatOpen(false)
     setRsvp(null)
     setMembershipRequest(null)
     setFamilyProfile(null)
+  }
+
+  const handleSendChatMessage = async () => {
+    if (!invitation || (!isHost && !hasPrivateAccess)) {
+      return
+    }
+
+    const message = chatDraft.trim()
+
+    if (!message) {
+      setChatError('Upiši poruku prije slanja.')
+      return
+    }
+
+    if (message.length > 500) {
+      setChatError('Poruka može imati najviše 500 znakova.')
+      return
+    }
+
+    setSendingChatMessage(true)
+    setChatError('')
+
+    try {
+      await createInvitationChatMessage(invitation.id, { message }, user ?? undefined)
+      setChatDraft('')
+      await refreshChat(user ?? undefined)
+    } catch (caughtError) {
+      setChatError(
+        isApiError(caughtError, 400)
+          ? 'Poruka nije valjana. Provjeri unos i pokušaj ponovno.'
+          : isApiError(caughtError, 403)
+            ? 'Nemaš pristup live chatu za ovu pozivnicu.'
+            : 'Slanje poruke trenutno nije uspjelo.',
+      )
+    } finally {
+      setSendingChatMessage(false)
+    }
   }
 
   const handleHostInvitationSave = async () => {
@@ -1516,6 +1641,15 @@ export default function SharedInvitationPage() {
                       savingWishlistItem={savingWishlistItem}
                       savingRsvp={savingRsvp}
                       requestError={requestError}
+                      chatOpen={guestChatOpen}
+                      onToggleChatOpen={() => setGuestChatOpen((current) => !current)}
+                      chatLoading={chatLoading}
+                      chatError={chatError}
+                      chatMessages={chatMessages}
+                      chatDraft={chatDraft}
+                      onChatDraftChange={setChatDraft}
+                      sendingChatMessage={sendingChatMessage}
+                      onSendChatMessage={handleSendChatMessage}
                     />
                   </div>
                   <div className="pb-guestPrivateLayout__right">
@@ -1886,6 +2020,38 @@ export default function SharedInvitationPage() {
                             Dodaj poklon
                           </Button>
                         </div>
+                      </div>
+                    ) : null}
+                  </Card>
+
+                  <Card id="host-chat-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                    <button
+                      id="host-chat-toggle"
+                      type="button"
+                      className={`pb-privateToggle ${hostAccordionOpen === 'chat' ? 'is-open' : ''}`}
+                      onClick={() => toggleHostAccordion('chat')}
+                      aria-expanded={hostAccordionOpen === 'chat'}
+                    >
+                      <span className="pb-privateToggle__copy">
+                        <span className="pb-privateToggle__eyebrow">Organizator</span>
+                        <span className="pb-privateToggle__title">Live chat</span>
+                      </span>
+                      <span className="pb-privateToggle__arrow" aria-hidden>
+                        <PrivateToggleChevron />
+                      </span>
+                    </button>
+
+                    {hostAccordionOpen === 'chat' ? (
+                      <div className="pb-privateAccordionBody">
+                        <InvitationLiveChatPanel
+                          messages={chatMessages}
+                          loading={chatLoading}
+                          error={chatError}
+                          draft={chatDraft}
+                          sending={sendingChatMessage}
+                          onDraftChange={setChatDraft}
+                          onSend={handleSendChatMessage}
+                        />
                       </div>
                     ) : null}
                   </Card>

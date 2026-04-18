@@ -53,7 +53,7 @@ export default function VenuesPage() {
   return (
     <div className="ew-landing">
       <a className="ew-skip-link" href="#main">Preskoči na sadržaj</a>
-      <Navbar />
+      <Navbar opaque />
 
       <main id="main">
         {/* Page hero */}

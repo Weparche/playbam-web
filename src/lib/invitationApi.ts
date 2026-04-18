@@ -279,6 +279,17 @@ export type InvitationWishlistPayload = {
   isActive?: boolean
 }
 
+export type InvitationChatMessage = {
+  id: string
+  invitationId: string
+  userId: string
+  senderRole: 'host' | 'guest'
+  senderName: string
+  message: string
+  createdAt: string
+  updatedAt: string
+}
+
 class ApiError extends Error {
   status: number
 
@@ -556,6 +567,30 @@ export async function getInvitationWishlist(invitationId: string, identity?: Tem
     { identity },
   )
   return data.items
+}
+
+export async function getInvitationChat(invitationId: string, identity?: TemporaryWebIdentity | null) {
+  const data = await request<{ messages: InvitationChatMessage[] }>(
+    `/api/invitations/${encodeURIComponent(invitationId)}/chat`,
+    { identity },
+  )
+  return data.messages
+}
+
+export async function createInvitationChatMessage(
+  invitationId: string,
+  payload: { message: string },
+  identity?: TemporaryWebIdentity | null,
+) {
+  const data = await request<{ message: InvitationChatMessage }>(
+    `/api/invitations/${encodeURIComponent(invitationId)}/chat`,
+    {
+      method: 'POST',
+      body: payload,
+      identity,
+    },
+  )
+  return data.message
 }
 
 export async function createInvitationWishlistItem(

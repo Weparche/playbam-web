@@ -2270,7 +2270,7 @@
    VENUES PAGE — HERO
    ============================================ */
 .ew-vp-hero {
-  padding: 80px 0 64px;
+  padding: clamp(100px, 13vw, 160px) 0 64px;
   background: var(--color-bg-primary);
   border-bottom: 1px solid var(--color-border);
 }
@@ -2691,7 +2691,7 @@
    VENUE DETAIL PAGE
    ============================================ */
 .ew-vd-breadcrumb {
-  padding: 16px 0;
+  padding: clamp(100px, 13vw, 160px) 0 16px;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg-primary);
 }

@@ -17,7 +17,7 @@ import InvitationLiveChatPanel from '../components/invitation/InvitationLiveChat
 import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGuest'
 import { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
 import GuestInvitationModal, { getGuestModalStep } from '../components/invitation/GuestInvitationModal'
-import Navbar from '../components/layout/Navbar'
+import Navbar from '../components/landing/Navbar'
 import Footer from '../components/layout/Footer'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
@@ -1534,7 +1534,7 @@ export default function SharedInvitationPage() {
 
   return (
     <>
-      <Navbar />
+      <Navbar opaque />
       <main className="pb-main pb-main--demo pb-invitePage">
         <div className="pb-invitePage__blobs" aria-hidden>
           <span className="pb-invitePage__blob pb-invitePage__blob--1" />

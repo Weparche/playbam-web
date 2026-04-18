@@ -28,7 +28,7 @@ import {
   type WishlistDraftItem,
 } from '../components/create/createTypes'
 import Footer from '../components/layout/Footer'
-import Navbar from '../components/layout/Navbar'
+import Navbar from '../components/landing/Navbar'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import { createInvitation, createInvitationWishlistItem, type InvitationWishlistPayload } from '../lib/invitationApi'
@@ -399,7 +399,7 @@ export default function CreateInvitationPage() {
 
   return (
     <>
-      <Navbar />
+      <Navbar opaque />
       <main className="pb-main pb-main--createV2">
         <InvitationCreateShell
           autosaveLabel={autosaveLabel}

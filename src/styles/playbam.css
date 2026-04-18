@@ -2102,23 +2102,30 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   html.pb-print-host-invite {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    height: fit-content !important;
-    max-height: none !important;
+    font-size: 16px !important;
+    height: auto !important;
+    max-height: 281mm !important;
+    overflow: hidden !important;
   }
 
-  html.pb-print-host-invite body,
+  html.pb-print-host-invite body {
+    height: auto !important;
+    max-height: 281mm !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
   html.pb-print-host-invite #root,
   html.pb-print-host-invite .pb-main {
     height: auto !important;
     min-height: 0 !important;
   }
 
-  html.pb-print-host-invite body {
-    height: fit-content !important;
-  }
-
   html.pb-print-host-invite #root {
     max-height: none !important;
+    overflow: visible !important;
   }
 
   html.pb-print-host-invite .pb-container,
@@ -2127,6 +2134,9 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   html.pb-print-host-invite .pb-hostStudio__previewColumn {
     min-height: 0 !important;
     height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 0 !important;
   }
 
   html.pb-print-host-invite .pb-footer {
@@ -2260,9 +2270,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     break-after: avoid !important;
   }
 
-  /* Svaki item je fiksno 79×135mm s clipanjem prekoračenja scale boxa. */
+  /* Svaki item je 79×135mm. zoom: 0.766 mijenja layout box pa nema overflow izvan A4. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet__item {
-    position: relative !important;
     width: 79mm !important;
     height: 135mm !important;
     max-width: 79mm !important;
@@ -2275,13 +2284,13 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     break-inside: avoid !important;
   }
 
-  /* Renderiraj u prirodnoj veličini, pa scale(0.766) = 79mm/390px. */
+  /* zoom: 0.766 → layout box 298.7px × 509px (≈ 79mm × 135mm).
+     Za razliku od transform: scale(), zoom smanjuje layout box pa Chrome ne pravi page 2. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-createLivePreview {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
+    zoom: 0.766 !important;
+    position: static !important;
     width: 390px !important;
-    height: 665px !important;
+    height: auto !important;
     min-height: 0 !important;
     max-width: none !important;
     max-height: none !important;
@@ -2291,9 +2300,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    overflow: hidden !important;
-    transform-origin: top left !important;
-    transform: scale(0.766) !important;
+    overflow: visible !important;
+    transform: none !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {

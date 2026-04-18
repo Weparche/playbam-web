@@ -2229,29 +2229,43 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     break-inside: avoid;
   }
 
-  /* Na ekranu gledamo 1 pozivnicu; u print dijalogu ispisujemo 4 (2×2) */
+  /* Na ekranu gledamo 1 pozivnicu; u print dijalogu ispisujemo 4 (2×2) na 1 A4 stranici. */
   html.pb-print-host-invite .pb-hostScreenPrintPreview {
     display: none !important;
   }
 
+  /* A4 portrait s 8mm margin = ~194mm × 281mm usable.
+     2 reda × 135mm = 270mm + gap ≤ 281mm → stane na 1 stranicu. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet {
     display: grid !important;
     width: 100% !important;
+    max-width: 194mm !important;
+    height: 281mm !important;
+    max-height: 281mm !important;
     margin: 0 auto !important;
+    padding: 0 !important;
     visibility: visible !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 2.5mm !important;
+    grid-template-rows: repeat(2, 135mm) !important;
+    gap: 2mm !important;
     align-items: start !important;
     align-content: start !important;
     justify-items: center !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet__item {
     width: 100% !important;
+    height: 135mm !important;
+    max-height: 135mm !important;
     display: flex !important;
     justify-content: center !important;
     align-items: flex-start !important;
+    overflow: hidden !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
@@ -2259,6 +2273,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-createLivePreview {
     width: fit-content !important;
     max-width: 100% !important;
+    height: 135mm !important;
+    max-height: 135mm !important;
     margin: 0 auto !important;
     padding: 0 !important;
     border: 0 !important;
@@ -2266,7 +2282,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     background: transparent !important;
     box-shadow: none !important;
     min-height: 0 !important;
-    height: auto !important;
+    overflow: hidden !important;
   }
 
   html.pb-print-host-invite .pb-hostStudio__preview .pb-createLivePreview {
@@ -2274,18 +2290,24 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     height: auto !important;
   }
 
+  /* Kartica: visina 135mm, širina = 135 * 379/648 ≈ 79mm.
+     2 kartice + gap ≈ 160mm → stane u 194mm širine. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {
-    width: 79mm !important;
-    max-width: 79mm !important;
-    height: calc(79mm * 648 / 379 * 1.15) !important;
+    width: calc(135mm * 379 / 648) !important;
+    max-width: calc(135mm * 379 / 648) !important;
+    height: 135mm !important;
+    max-height: 135mm !important;
     margin: 0 auto !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__frame--storybook {
-    width: 79mm !important;
-    max-width: 79mm !important;
-    height: calc(79mm * 648 / 379 * 1.15) !important;
-    min-height: calc(79mm * 648 / 379 * 1.15) !important;
+    width: calc(135mm * 379 / 648) !important;
+    max-width: calc(135mm * 379 / 648) !important;
+    height: 135mm !important;
+    min-height: 0 !important;
+    max-height: 135mm !important;
     aspect-ratio: auto !important;
     margin: 0 auto !important;
   }

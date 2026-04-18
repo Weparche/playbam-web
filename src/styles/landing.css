@@ -257,10 +257,12 @@
 }
 
 .ew-navbar--scrolled {
-  background: color-mix(in srgb, var(--color-bg-primary) 85%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(243, 237, 227, 0.92);
+  background: color-mix(in srgb, var(--color-bg-primary) 92%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border-subtle);
+  box-shadow: 0 1px 12px rgba(43, 37, 32, 0.08);
 }
 
 @media (min-width: 768px) {
@@ -273,11 +275,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: calc(20px * 1.3) 0;
+  padding: 14px 0;
 }
 
 @media (min-width: 768px) {
-  .ew-navbar__inner { padding: calc(28px * 1.3) 0; }
+  .ew-navbar__inner { padding: 20px 0; }
 }
 
 .ew-navbar__leading {
@@ -383,11 +385,11 @@
 
 .ew-navbar__cta:hover { opacity: 0.85; }
 
-/* Mobile header CTA: mora biti nakon .ew-navbar__cta (inače se prepisuje) — −30% */
+/* Mobile header CTA: mora biti nakon .ew-navbar__cta (inače se prepisuje) — −20% */
 @media (max-width: 767px) {
   .ew-navbar__cta.ew-navbar__cta--mobileBar {
-    padding: calc(11px * 1.3 * 0.7) calc(20px * 1.3 * 0.7);
-    font-size: calc(14px * 1.3 * 0.7);
+    padding: calc(11px * 1.3 * 0.56) calc(20px * 1.3 * 0.56);
+    font-size: calc(14px * 1.3 * 0.56);
     line-height: 1.2;
   }
 }
@@ -2270,7 +2272,7 @@
    VENUES PAGE — HERO
    ============================================ */
 .ew-vp-hero {
-  padding: clamp(100px, 13vw, 160px) 0 64px;
+  padding: clamp(72px, 9vw, 110px) 0 64px;
   background: var(--color-bg-primary);
   border-bottom: 1px solid var(--color-border);
 }
@@ -2691,7 +2693,7 @@
    VENUE DETAIL PAGE
    ============================================ */
 .ew-vd-breadcrumb {
-  padding: clamp(100px, 13vw, 160px) 0 16px;
+  padding: clamp(72px, 9vw, 110px) 0 16px;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg-primary);
 }

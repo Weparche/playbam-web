@@ -861,12 +861,8 @@
   min-width: 0;
   box-sizing: border-box;
   /* Horizontalno 0: PNG ide rub do ruba kao na webu; padding samo u .pb-container */
-  padding: 22px 0 40px;
-  background-color: #ffffff;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
+  padding: 74px 0 40px;
+  background: var(--color-bg-primary, #F3EDE3);
   font-family: var(--invite-font);
   overflow-x: hidden;
 }
@@ -4912,6 +4908,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 /* Quick Create v2 */
 .pb-main--createV2 {
+  padding-top: 74px;
   --pb-create-rail-button-width: 4.9rem;
   --pb-create-rail-button-height: 5.35rem;
   --pb-create-rail-icon-size: 1.72rem;
@@ -4919,11 +4916,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   --pb-create-rail-gap: 0.72rem;
   --pb-create-rail-padding: 0.78rem;
   --pb-create-rail-column: calc(var(--pb-create-rail-button-width) + (var(--pb-create-rail-padding) * 2) + 0.35rem);
-  background:
-    radial-gradient(820px 420px at 4% -12%, rgba(255, 180, 140, 0.18), transparent 65%),
-    radial-gradient(960px 520px at 96% 0%, rgba(114, 147, 255, 0.18), transparent 62%),
-    radial-gradient(620px 320px at 50% 8%, rgba(255, 255, 255, 0.9), transparent 72%),
-    linear-gradient(180deg, #fffaf4 0%, #f8f8fc 48%, #f2f7ff 100%);
+  background: var(--color-bg-primary, #F3EDE3);
 }
 
 .pb-createShell {

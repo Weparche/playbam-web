@@ -43,8 +43,7 @@ export default function InvitationCreateShell({
   return (
     <div className="pb-createShell">
       <header className="pb-createShell__header" ref={headerRef}>
-        <span className="pb-createShell__eyebrow">VidimoSe.hr pozivnice</span>
-        <h1 className="pb-createShell__title">Jednostavno kreiranje pozivnice za tulume!</h1>
+<h1 className="pb-createShell__title">Jednostavno kreiranje pozivnice za tulume!</h1>
         <div className="pb-createShell__statusRow">
           <span className={`pb-createShell__autosave ${saveState === 'saved' ? 'pb-createShell__autosave--saved' : ''}`}>
             <span className={autosaveIconClass} aria-hidden="true">

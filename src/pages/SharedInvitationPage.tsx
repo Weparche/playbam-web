@@ -1542,15 +1542,6 @@ export default function SharedInvitationPage() {
           <span className="pb-invitePage__blob pb-invitePage__blob--3" />
         </div>
         <div className="pb-container pb-flowLayout">
-          <div className="pb-backRow">
-            <a className="pb-backLink" href="https://vidimose.hr">
-              <span className="pb-backLink__icon" aria-hidden>
-                &larr;
-              </span>
-              <span>Nazad na VidimoSe.hr</span>
-            </a>
-          </div>
-
           {loading ? (
             <Card className="pb-flowCard">
               <h1 className="pb-flowCard__title">Učitavamo pozivnicu...</h1>

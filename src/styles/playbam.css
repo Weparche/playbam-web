@@ -2229,82 +2229,92 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     break-inside: avoid;
   }
 
-  /* Na ekranu gledamo 1 pozivnicu; u print dijalogu ispisujemo 4 (2×2) na 1 A4 stranici. */
+  /* Na ekranu gledamo 1 pozivnicu; u print dijalogu ispisujemo 4 (2×2) na 1 A4 stranici.
+     Kartica renderira na prirodnoj veličini (390×665px) i zatim se skalira s
+     transform: scale() — sve (fontovi, margine, QR) skalira proporcionalno,
+     pa izgled je identičan screen preview-u, samo manji. */
   html.pb-print-host-invite .pb-hostScreenPrintPreview {
     display: none !important;
   }
 
   /* A4 portrait s 8mm margin = ~194mm × 281mm usable.
-     2 reda × 135mm = 270mm + gap ≤ 281mm → stane na 1 stranicu. */
+     Grid: 2×79mm + 2mm gap = 160mm ≤ 194mm, 2×135mm + 2mm gap = 272mm ≤ 281mm. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet {
     display: grid !important;
-    width: 100% !important;
+    width: auto !important;
     max-width: 194mm !important;
-    height: 281mm !important;
-    max-height: 281mm !important;
+    height: 272mm !important;
+    max-height: 272mm !important;
     margin: 0 auto !important;
     padding: 0 !important;
     visibility: visible !important;
     overflow: hidden !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(2, 79mm) !important;
     grid-template-rows: repeat(2, 135mm) !important;
     gap: 2mm !important;
-    align-items: start !important;
+    justify-content: center !important;
     align-content: start !important;
-    justify-items: center !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     page-break-after: avoid !important;
     break-after: avoid !important;
   }
 
+  /* Svaki item je fiksno 79×135mm s clipanjem prekoračenja scale boxa. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet__item {
-    width: 100% !important;
+    position: relative !important;
+    width: 79mm !important;
     height: 135mm !important;
+    max-width: 79mm !important;
     max-height: 135mm !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: flex-start !important;
     overflow: hidden !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
+  /* Renderiraj u prirodnoj veličini, pa scale(0.766) = 79mm/390px. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-createLivePreview {
-    width: fit-content !important;
-    max-width: 100% !important;
-    height: 135mm !important;
-    max-height: 135mm !important;
-    margin: 0 auto !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 390px !important;
+    height: 665px !important;
+    min-height: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    min-height: 0 !important;
     overflow: hidden !important;
+    transform-origin: top left !important;
+    transform: scale(0.766) !important;
   }
 
-  /* Kartica: visina 135mm, širina = 135 * 379/648 ≈ 79mm.
-     2 kartice + gap ≈ 160mm → stane u 194mm širine. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteCard--storybook {
-    width: calc(135mm * 379 / 648) !important;
-    max-width: calc(135mm * 379 / 648) !important;
-    height: 135mm !important;
-    max-height: 135mm !important;
-    margin: 0 auto !important;
+    width: 390px !important;
+    max-width: 390px !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 !important;
+    box-shadow: none !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__frame--storybook {
-    width: calc(135mm * 379 / 648) !important;
-    max-width: calc(135mm * 379 / 648) !important;
-    height: 135mm !important;
-    min-height: 0 !important;
-    max-height: 135mm !important;
+    width: 390px !important;
+    max-width: 390px !important;
+    height: 665px !important;
+    min-height: 665px !important;
+    max-height: 665px !important;
     aspect-ratio: auto !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
   }
 }
 

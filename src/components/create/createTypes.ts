@@ -19,7 +19,7 @@ export type TitleFont =
   | 'libre-baskerville'
   | 'jakarta'
   | 'nunito'
-export type TitleColor = 'playbam-blue' | 'ink' | 'berry' | 'mint' | 'sunset'
+export type TitleColor = 'vidimose-logo' | 'playbam-blue' | 'ink' | 'berry' | 'mint' | 'sunset'
 export type TitleOutline = 'none' | 'soft' | 'bold'
 export type TitleSize = 'sm' | 'md' | 'lg'
 export type RsvpMood = 'party' | 'sweet' | 'icons' | 'spark' | 'balloon' | 'thumbs' | 'check' | 'zoo' | 'sport' | 'space' | 'music' | 'crown' | 'heart' | 'fire' | 'nature' | 'pirate'
@@ -115,6 +115,12 @@ export const TITLE_FONT_OPTIONS = [
 ] as const satisfies ReadonlyArray<{ id: TitleFont; label: string; description: string; preview: string }>
 
 export const TITLE_COLOR_OPTIONS = [
+  {
+    id: 'vidimose-logo',
+    label: 'VidimoSe logo boje',
+    swatch: 'conic-gradient(#FFB020 0% 33%, #FF451A 33% 66%, #1BBFCF 66% 100%)',
+    description: 'Šareni naslov u bojama VidimoSe loga — žuto-narančasta, crvena i teal.',
+  },
   {
     id: 'playbam-blue',
     label: 'VidimoSe plava',
@@ -405,6 +411,7 @@ export function normalizeTitleColor(value: string | null | undefined): TitleColo
   const normalized = value?.trim().toLowerCase() ?? ''
 
   switch (normalized) {
+    case 'vidimose-logo':
     case 'playbam-blue':
     case 'ink':
     case 'berry':
@@ -445,6 +452,7 @@ export function normalizeTitleSize(value: string | null | undefined): TitleSize 
 }
 
 export function getTitleColorValue(color: TitleColor) {
+  if (color === 'vidimose-logo') return '#FFB020'
   return TITLE_COLOR_OPTIONS.find((option) => option.id === color)?.swatch ?? '#336fd6'
 }
 

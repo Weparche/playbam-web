@@ -78,7 +78,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
           <h3
             ref={previewTitleRef}
-            className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}`}
+            className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}${titleColor === 'vidimose-logo' ? ' pb-previewCard__title--logo-colors' : ''}`}
             style={{ ['--pb-preview-title-color' as string]: getTitleColorValue(titleColor) }}
           >
             {displayTitle}

@@ -180,29 +180,38 @@ export default function MojVidimosePage() {
               </section>
 
               {/* Invitations */}
-              <section style={{ marginBottom: '3rem' }}>
-                <h2 className="ew-h3" style={{ marginBottom: '1rem' }}>Moje pozivnice</h2>
+              <section className="pb-mojVidimose__inviteSection" aria-labelledby="moj-vs-invites-heading">
+                <h2 id="moj-vs-invites-heading" className="ew-h3 pb-mojVidimose__inviteHeading">
+                  Moje pozivnice
+                </h2>
                 {invitations.length === 0 ? (
-                  <p style={{ color: 'var(--color-text-muted, #888)' }}>
+                  <p className="pb-mojVidimose__inviteEmpty">
                     Još nisi kreirao/la pozivnicu.{' '}
-                    <Link to="/kreiraj-pozivnicu" style={{ color: 'inherit', textDecoration: 'underline' }}>
+                    <Link to="/kreiraj-pozivnicu" className="pb-mojVidimose__inviteEmptyLink">
                       Kreiraj prvu
                     </Link>
                     .
                   </p>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div className="pb-mojVidimose__inviteList">
                     {invitations.map((inv) => (
                       <Link
                         key={inv.id}
                         to={`/pozivnica/${inv.publicSlug || inv.shareToken}`}
-                        style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}
+                        className="pb-mojVidimose__inviteLink"
                       >
-                        <div className="pb-flowCard" style={{ padding: '1rem 1.25rem', cursor: 'pointer' }}>
-                          <div style={{ fontWeight: 700, marginBottom: '0.2rem' }}>{inv.title}</div>
-                          <div style={{ fontSize: '0.875rem', color: 'var(--color-text-muted, #888)' }}>
-                            {formatDate(inv.date)} · {inv.location}
+                        <div className="pb-flowCard pb-mojVidimose__inviteCard">
+                          <div className="pb-mojVidimose__inviteCardBody">
+                            <div className="pb-mojVidimose__inviteTitle">{inv.title}</div>
+                            <div className="pb-mojVidimose__inviteMeta">
+                              {formatDate(inv.date)} · {inv.location}
+                            </div>
                           </div>
+                          <span className="pb-mojVidimose__inviteChevron" aria-hidden>
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="9 6 15 12 9 18" />
+                            </svg>
+                          </span>
                         </div>
                       </Link>
                     ))}

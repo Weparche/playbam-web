@@ -3,6 +3,5 @@ compatibility_date = "2024-09-23"
 pages_build_output_dir = "dist"
 
 [vars]
-# Postaviti u Cloudflare Pages dashboard → Settings → Environment variables:
-# PLAYBAM_BACKEND_ORIGIN = https://api.vidimose.hr
-# VITE_API_BASE_URL = https://api.vidimose.hr  (Build variables)
+PLAYBAM_BACKEND_ORIGIN = "https://api.vidimose.hr"
+VITE_API_BASE_URL = "https://api.vidimose.hr"

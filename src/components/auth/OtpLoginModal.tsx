@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import Button from '../ui/Button'
 import { useAuth } from '../../context/AuthContext'
 import { isApiError, sendOtp, verifyOtp } from '../../lib/invitationApi'
@@ -9,11 +9,19 @@ type Props = {
   title?: string
   lead?: string
   onSuccess: () => void
+  onClose?: () => void
 }
 
-export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess }: Props) {
+export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess, onClose }: Props) {
   const { sessionLogin } = useAuth()
   const titleId = useId()
+
+  useEffect(() => {
+    if (!open || !onClose) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open, onClose])
   const [step, setStep] = useState<'email_name' | 'verify_code'>('email_name')
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
@@ -70,12 +78,19 @@ export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess
   }
 
   return (
-    <div className="pb-modalOverlay" role="presentation">
+    <div
+      className="pb-modalOverlay"
+      role="presentation"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose?.() }}
+    >
       <div className="pb-modalDialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="pb-modalDialog__head">
           <h2 id={titleId} className="pb-modalDialog__title">
             {step === 'email_name' ? title : 'Unesi kod'}
           </h2>
+          {onClose && (
+            <button type="button" className="pb-modalDialog__close" onClick={onClose} aria-label="Zatvori">×</button>
+          )}
         </div>
         <div className="pb-modalDialog__body">
           {step === 'email_name' ? (

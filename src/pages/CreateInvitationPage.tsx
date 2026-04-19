@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import OtpLoginModal from '../components/auth/OtpLoginModal'
 import InvitationCreateShell from '../components/create/InvitationCreateShell'
@@ -117,6 +118,7 @@ async function syncQuickCreateWishlist(invitationId: string, quickDraft: Invitat
 
 export default function CreateInvitationPage() {
   const { session } = useAuth()
+  const navigate = useNavigate()
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [draft, setDraft] = useState<InvitationCreateDraft>(() => readStoredDraft())
   const [activeShortcut, setActiveShortcut] = useState<ShortcutId | null>(null)
@@ -407,6 +409,7 @@ export default function CreateInvitationPage() {
         title="Prijava za kreiranje pozivnice"
         lead="Upiši e-mail i ime — poslat ćemo ti jednokratni kod za brzu prijavu."
         onSuccess={() => {}}
+        onClose={() => navigate('/')}
       />
       <Navbar opaque />
       <main className="pb-main pb-main--createV2">

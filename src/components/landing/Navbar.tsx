@@ -6,9 +6,9 @@ import OtpLoginModal from '../auth/OtpLoginModal'
 type NavItem = { label: string } & ({ href: string; to?: never } | { to: string; href?: never })
 
 const navItems: NavItem[] = [
-  { label: 'Pozivnice', href: '#pozivnice' },
+  { label: 'Pozivnice', href: '/#pozivnice' },
   { label: 'Igraonice', to: '/igraonice' },
-  { label: 'Česta pitanja', href: '#cesta-pitanja' },
+  { label: 'Česta pitanja', href: '/#cesta-pitanja' },
 ]
 
 export default function Navbar({ opaque = false }: { opaque?: boolean }) {

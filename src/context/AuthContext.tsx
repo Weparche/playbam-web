@@ -23,8 +23,22 @@ function sessionToIdentity(session: VidimoseSession): TemporaryWebIdentity {
   return { email: session.email, parentName: session.displayName }
 }
 
+const PROFILE_PENDING_KEY = 'vidimose-profile-pending'
+export const markProfilePending = () => localStorage.setItem(PROFILE_PENDING_KEY, '1')
+export const clearProfilePending = () => localStorage.removeItem(PROFILE_PENDING_KEY)
+const isProfilePending = () => !!localStorage.getItem(PROFILE_PENDING_KEY)
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<VidimoseSession | null>(() => readStoredSession())
+  const [session, setSession] = useState<VidimoseSession | null>(() => {
+    const sess = readStoredSession()
+    if (sess && isProfilePending()) {
+      writeStoredSession(null)
+      clearProfilePending()
+      authLogout().catch(() => {})
+      return null
+    }
+    return sess
+  })
   const [user, setUser] = useState<TemporaryWebIdentity | null>(() => {
     const sess = readStoredSession()
     if (sess) return sessionToIdentity(sess)

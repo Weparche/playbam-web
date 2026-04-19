@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from 'react'
 import Button from '../ui/Button'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth, markProfilePending, clearProfilePending } from '../../context/AuthContext'
 import {
   isApiError,
   sendOtp,
@@ -53,7 +53,7 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose, step])
 
-  if (!open) return null
+  if (!open && step !== 'complete_profile') return null
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
 
@@ -96,6 +96,7 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
               : [{ name: '', age: '' }],
           })
         }
+        markProfilePending()
         setStep('complete_profile')
       }
     } catch (err) {
@@ -122,6 +123,7 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
       } else {
         await createFamilyProfile(payload, null)
       }
+      clearProfilePending()
       onSuccess()
     } catch (err) {
       setError(isApiError(err) ? (err as Error).message : 'Greška pri spremanju profila.')

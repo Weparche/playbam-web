@@ -1,7 +1,6 @@
 {
   "name": "VidimoSe.hr",
-  "short_name": "VidimoSe",
-  "description": "Pozivnice i igraonice za dječje rođendane u Hrvatskoj.",
+  "short_name": "VidimoSe.hr",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -16,9 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#F3EDE3",
-  "background_color": "#F3EDE3",
-  "display": "standalone",
-  "start_url": "/",
-  "lang": "hr"
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
 }

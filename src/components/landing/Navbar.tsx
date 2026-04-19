@@ -72,9 +72,15 @@ export default function Navbar({ opaque = false }: { opaque?: boolean }) {
             )}
           </div>
 
-          <Link to="/kreiraj-pozivnicu" className="ew-navbar__cta ew-navbar__cta--mobileBar">
-            Napravi pozivnicu
-          </Link>
+          {session ? (
+            <Link to="/moj-vidimose" className="ew-navbar__cta ew-navbar__cta--mobileBar">
+              Moj VidimoSe
+            </Link>
+          ) : (
+            <button type="button" className="ew-navbar__cta ew-navbar__cta--mobileBar" onClick={() => setLoginOpen(true)}>
+              Prijava
+            </button>
+          )}
         </div>
       </header>
 

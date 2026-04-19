@@ -47,11 +47,11 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
   }, [open])
 
   useEffect(() => {
-    if (!open || !onClose) return
+    if (!open || !onClose || step === 'complete_profile') return
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, onClose])
+  }, [open, onClose, step])
 
   if (!open) return null
 
@@ -146,7 +146,7 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
       <div className="pb-modalDialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="pb-modalDialog__head">
           <h2 id={titleId} className="pb-modalDialog__title">{title}</h2>
-          {onClose && (
+          {onClose && step !== 'complete_profile' && (
             <button type="button" className="pb-modalDialog__close" onClick={onClose} aria-label="Zatvori">×</button>
           )}
         </div>

@@ -406,8 +406,6 @@ export default function CreateInvitationPage() {
     <>
       <OtpLoginModal
         open={!session}
-        title="Prijava za kreiranje pozivnice"
-        lead="Upiši e-mail i ime — poslat ćemo ti jednokratni kod za brzu prijavu."
         onSuccess={() => {}}
         onClose={() => navigate('/')}
       />

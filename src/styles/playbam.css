@@ -2186,7 +2186,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   html.pb-print-host-invite .pb-hostStudio__cards,
   html.pb-print-host-invite .pb-hostStudio__rail,
   html.pb-print-host-invite .pb-hostPreviewMode,
-  html.pb-print-host-invite .pb-modalOverlay {
+  html.pb-print-host-invite .pb-modalOverlay,
+  html.pb-print-host-invite .ew-navbar {
     display: none !important;
   }
 

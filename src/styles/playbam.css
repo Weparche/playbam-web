@@ -6983,16 +6983,38 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   font-size: clamp(0.96rem, 3.2vw, 1.42rem);
 }
 
-.pb-previewCard__title--color-white {
+.pb-previewCard__title--logo-colors {
+  -webkit-text-fill-color: unset;
+  color: unset;
+  text-shadow: none;
+}
+
+.pb-previewCard__title--color-white.pb-previewCard__title--outline-soft {
   text-shadow:
-    -1px -1px 0 rgba(0, 0, 0, 0.88),
-    1px -1px 0 rgba(0, 0, 0, 0.88),
-    -1px 1px 0 rgba(0, 0, 0, 0.88),
-    1px 1px 0 rgba(0, 0, 0, 0.88),
-    0 -1px 0 rgba(0, 0, 0, 0.88),
-    0 1px 0 rgba(0, 0, 0, 0.88),
-    -1px 0 0 rgba(0, 0, 0, 0.88),
-    1px 0 0 rgba(0, 0, 0, 0.88) !important;
+    -1px -1px 0 rgba(0, 0, 0, 0.82),
+    1px -1px 0 rgba(0, 0, 0, 0.82),
+    -1px 1px 0 rgba(0, 0, 0, 0.82),
+    1px 1px 0 rgba(0, 0, 0, 0.82),
+    0 -1px 0 rgba(0, 0, 0, 0.82),
+    0 1px 0 rgba(0, 0, 0, 0.82),
+    -1px 0 0 rgba(0, 0, 0, 0.82),
+    1px 0 0 rgba(0, 0, 0, 0.82);
+}
+
+.pb-previewCard__title--color-white.pb-previewCard__title--outline-bold {
+  text-shadow:
+    -2px -2px 0 rgba(0, 0, 0, 0.90),
+    2px -2px 0 rgba(0, 0, 0, 0.90),
+    -2px 2px 0 rgba(0, 0, 0, 0.90),
+    2px 2px 0 rgba(0, 0, 0, 0.90),
+    0 -2px 0 rgba(0, 0, 0, 0.90),
+    0 2px 0 rgba(0, 0, 0, 0.90),
+    -2px 0 0 rgba(0, 0, 0, 0.90),
+    2px 0 0 rgba(0, 0, 0, 0.90),
+    -3px 0 0 rgba(0, 0, 0, 0.60),
+    3px 0 0 rgba(0, 0, 0, 0.60),
+    0 -3px 0 rgba(0, 0, 0, 0.60),
+    0 3px 0 rgba(0, 0, 0, 0.60);
 }
 
 .pb-previewCard__title--outline-none {

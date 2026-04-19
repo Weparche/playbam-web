@@ -35,7 +35,7 @@ function renderLogoColors(text: string): ReactNode {
     } else {
       const chunk = text.slice(i, i + 2).replace(/ .*/, '')
       const c = LOGO_COLORS[colorIdx % LOGO_COLORS.length]
-      nodes.push(<span key={i} style={{ color: c, WebkitTextFillColor: c }}>{chunk}</span>)
+      nodes.push(<span key={i} style={{ color: c, WebkitTextFillColor: c, textShadow: 'none' }}>{chunk}</span>)
       colorIdx++
       i += chunk.length
     }
@@ -99,7 +99,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
           <h3
             ref={previewTitleRef}
-            className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}${titleColor === 'white' ? ' pb-previewCard__title--color-white' : ''}`}
+            className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}${titleColor === 'white' ? ' pb-previewCard__title--color-white' : ''}${titleColor === 'vidimose-logo' ? ' pb-previewCard__title--logo-colors' : ''}`}
             style={{ ['--pb-preview-title-color' as string]: getTitleColorValue(titleColor) }}
           >
             {titleColor === 'vidimose-logo' ? renderLogoColors(displayTitle) : displayTitle}

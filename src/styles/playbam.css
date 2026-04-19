@@ -1,5 +1,7 @@
 /* Playbam.hr Landing - custom styling (mobile-first) */
 
+html, body { scrollbar-gutter: stable; }
+
 .pb-main {
   width: 100%;
   max-width: 100%;
@@ -6910,15 +6912,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   word-break: break-word;
   hyphens: auto;
   text-wrap: balance;
-}
-
-.pb-previewCard__title--logo-colors {
-  background: linear-gradient(90deg, #FFB020 0% 33%, #FF451A 33% 66%, #1BBFCF 66% 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none;
 }
 
 .pb-previewCard__title--poster {

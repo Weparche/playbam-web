@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import Card from '../ui/Card'
 import { buildInvitationHeroTitle, resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
 import { useInvitationTitleAutoFit } from '../invitation/useInvitationTitleAutoFit'
@@ -20,6 +20,26 @@ import {
 type Props = {
   draft: InvitationCreateDraft
   compact?: boolean
+}
+
+const LOGO_COLORS = ['#FFB020', '#FF451A', '#1BBFCF']
+
+function renderLogoColors(text: string): ReactNode {
+  const nodes: ReactNode[] = []
+  let colorIdx = 0
+  let i = 0
+  while (i < text.length) {
+    if (text[i] === ' ') {
+      nodes.push(' ')
+      i++
+    } else {
+      const chunk = text.slice(i, i + 2).replace(/ .*/, '')
+      nodes.push(<span key={i} style={{ color: LOGO_COLORS[colorIdx % LOGO_COLORS.length] }}>{chunk}</span>)
+      colorIdx++
+      i += chunk.length
+    }
+  }
+  return nodes
 }
 
 export default function InvitationPreviewCard({ draft, compact }: Props) {
@@ -78,10 +98,10 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
           <h3
             ref={previewTitleRef}
-            className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}${titleColor === 'vidimose-logo' ? ' pb-previewCard__title--logo-colors' : ''}`}
+            className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}`}
             style={{ ['--pb-preview-title-color' as string]: getTitleColorValue(titleColor) }}
           >
-            {displayTitle}
+            {titleColor === 'vidimose-logo' ? renderLogoColors(displayTitle) : displayTitle}
           </h3>
         </div>
       </div>

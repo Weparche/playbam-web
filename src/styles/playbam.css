@@ -861,7 +861,7 @@
   min-width: 0;
   box-sizing: border-box;
   /* Horizontalno 0: PNG ide rub do ruba kao na webu; padding samo u .pb-container */
-  padding: 74px 0 40px;
+  padding: 104px 0 40px;
   background: var(--color-bg-primary, #F3EDE3);
   font-family: var(--invite-font);
   overflow-x: hidden;
@@ -4908,7 +4908,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 /* Quick Create v2 */
 .pb-main--createV2 {
-  padding-top: 74px;
+  padding-top: 104px;
   --pb-create-rail-button-width: 4.9rem;
   --pb-create-rail-button-height: 5.35rem;
   --pb-create-rail-icon-size: 1.72rem;

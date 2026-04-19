@@ -19,7 +19,8 @@
       "Bash(curl -s \"https://sarenibalon.com/rodendani/\")",
       "WebFetch(domain:rockas.hr)",
       "Bash(grep -o '//sarenibalon.com/wp-content/uploads/2018/06/1200x500[^\"]*\\\\.jpg')",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(npm run *)"
     ]
   }
 }

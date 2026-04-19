@@ -382,6 +382,77 @@
 .ew-navbar__link--active { font-weight: 600; }
 button.ew-navbar__link { background: none; border: none; cursor: pointer; padding: 0; }
 
+.ew-navbar__auth {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 4px;
+  padding-left: 12px;
+  border-left: 1.5px solid color-mix(in srgb, var(--color-text-primary) 18%, transparent);
+}
+
+.ew-navbar__auth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 150ms, color 150ms, border-color 150ms, opacity 150ms;
+  white-space: nowrap;
+}
+
+.ew-navbar__auth-btn--login {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1.5px solid color-mix(in srgb, var(--color-text-primary) 38%, transparent);
+}
+.ew-navbar__auth-btn--login:hover {
+  background: color-mix(in srgb, var(--color-text-primary) 7%, transparent);
+  border-color: var(--color-text-primary);
+}
+
+.ew-navbar__auth-btn--account {
+  background: var(--color-accent);
+  color: #fff;
+  border: 1.5px solid transparent;
+}
+.ew-navbar__auth-btn--account:hover { opacity: 0.85; }
+
+.ew-navbar__auth-btn--logout {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1.5px solid color-mix(in srgb, var(--color-text-primary) 38%, transparent);
+}
+.ew-navbar__auth-btn--logout:hover {
+  background: color-mix(in srgb, var(--color-text-primary) 7%, transparent);
+  border-color: var(--color-text-primary);
+}
+
+button.ew-navbar__auth-btn { font-family: inherit; }
+
+.ew-navbar__sheet-link--auth {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
 .ew-navbar__cta {
   background: var(--color-text-primary);
   color: var(--color-bg-primary);
@@ -1899,6 +1970,16 @@ button.ew-navbar__link { background: none; border: none; cursor: pointer; paddin
   .ew-landing .ew-navbar__cta {
     padding: calc(11px * 1.3 * 1.3) calc(20px * 1.3 * 1.3);
     font-size: calc(14px * 1.3 * 1.3);
+  }
+
+  .ew-landing .ew-navbar__auth-btn {
+    padding: calc(7px * 1.3) calc(14px * 1.3);
+    font-size: calc(13px * 1.3);
+  }
+
+  .ew-landing .ew-navbar__auth {
+    gap: calc(8px * 1.3);
+    padding-left: calc(12px * 1.3);
   }
 
   .ew-landing .ew-navbar__hamburger {

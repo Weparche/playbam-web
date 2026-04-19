@@ -152,7 +152,7 @@ export default function MojVidimosePage() {
                     <div style={{ marginTop: '1rem' }}>
                       <Button type="button" variant="ghost" onClick={handleAddChild}>
                         Ažuriraj profil ili dodaj još jedno dijete
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 6 }} aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 8 }} aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
                       </Button>
                     </div>
                   )}

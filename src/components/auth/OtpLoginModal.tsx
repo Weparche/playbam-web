@@ -1,20 +1,50 @@
 import { useEffect, useId, useState } from 'react'
 import Button from '../ui/Button'
 import { useAuth } from '../../context/AuthContext'
-import { isApiError, sendOtp, verifyOtp } from '../../lib/invitationApi'
+import {
+  isApiError,
+  sendOtp,
+  verifyOtp,
+  getFamilyProfile,
+  createFamilyProfile,
+  updateFamilyProfile,
+} from '../../lib/invitationApi'
 import { writeStoredSession } from '../../lib/vidimoseSession'
+import FamilyProfileForm, { type FamilyProfileDraft } from '../invitation/FamilyProfileForm'
 
 type Props = {
   open: boolean
-  title?: string
-  lead?: string
   onSuccess: () => void
   onClose?: () => void
 }
 
-export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess, onClose }: Props) {
+type Step = 'email' | 'verify_code' | 'complete_profile'
+
+const emptyDraft: FamilyProfileDraft = { parentName: '', children: [{ name: '', age: '' }] }
+
+export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
   const { sessionLogin } = useAuth()
   const titleId = useId()
+
+  const [step, setStep] = useState<Step>('email')
+  const [email, setEmail] = useState('')
+  const [code, setCode] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [profileDraft, setProfileDraft] = useState<FamilyProfileDraft>(emptyDraft)
+  const [profileHasExisting, setProfileHasExisting] = useState(false)
+  const [savingProfile, setSavingProfile] = useState(false)
+
+  useEffect(() => {
+    if (!open) {
+      setStep('email')
+      setEmail('')
+      setCode('')
+      setError('')
+      setProfileDraft(emptyDraft)
+      setProfileHasExisting(false)
+    }
+  }, [open])
 
   useEffect(() => {
     if (!open || !onClose) return
@@ -22,27 +52,17 @@ export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
-  const [step, setStep] = useState<'email_name' | 'verify_code'>('email_name')
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
-  const [code, setCode] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-
-  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
-  const canSubmit = isEmailValid && name.trim().length > 0
 
   if (!open) return null
 
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+
   const handleSendOtp = async () => {
-    if (!email.trim() || !name.trim()) {
-      setError('Upiši e-mail adresu i ime.')
-      return
-    }
+    if (!isEmailValid) { setError('Upiši ispravnu e-mail adresu.'); return }
     setLoading(true)
     setError('')
     try {
-      await sendOtp(email.trim().toLowerCase(), name.trim())
+      await sendOtp(email.trim().toLowerCase())
       setStep('verify_code')
     } catch (err) {
       setError(isApiError(err) ? (err as Error).message : 'Greška pri slanju koda. Pokušaj ponovno.')
@@ -52,17 +72,32 @@ export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess
   }
 
   const handleVerifyOtp = async () => {
-    if (!code.trim()) {
-      setError('Upiši kod.')
-      return
-    }
+    if (!code.trim()) { setError('Upiši kod.'); return }
     setLoading(true)
     setError('')
     try {
       const session = await verifyOtp(email.trim().toLowerCase(), code.trim())
       writeStoredSession(session)
       sessionLogin(session)
-      onSuccess()
+
+      const profileRes = await getFamilyProfile(null)
+      const hasParentName = !!profileRes.profile?.parentName?.trim()
+      const hasChildren = profileRes.children.length > 0
+
+      if (hasParentName && hasChildren) {
+        onSuccess()
+      } else {
+        setProfileHasExisting(!!profileRes.profile)
+        if (profileRes.profile) {
+          setProfileDraft({
+            parentName: profileRes.profile.parentName || '',
+            children: profileRes.children.length > 0
+              ? profileRes.children.map((c) => ({ id: c.id, name: c.name, age: String(c.age) }))
+              : [{ name: '', age: '' }],
+          })
+        }
+        setStep('complete_profile')
+      }
     } catch (err) {
       setError(isApiError(err) ? (err as Error).message : 'Netočan kod. Pokušaj ponovno.')
     } finally {
@@ -70,65 +105,77 @@ export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      if (step === 'email_name') handleSendOtp()
-      else handleVerifyOtp()
+  const handleSaveProfile = async () => {
+    const parentName = profileDraft.parentName.trim()
+    const validChildren = profileDraft.children.filter((c) => c.name.trim() && c.age)
+    if (!parentName) { setError('Upiši ime mame ili tate.'); return }
+    if (validChildren.length === 0) { setError('Dodaj barem jedno dijete.'); return }
+    setSavingProfile(true)
+    setError('')
+    try {
+      const payload = {
+        parentName,
+        children: validChildren.map((c) => ({ ...(c.id ? { id: c.id } : {}), name: c.name.trim(), age: Number(c.age) })),
+      }
+      if (profileHasExisting) {
+        await updateFamilyProfile(payload, null)
+      } else {
+        await createFamilyProfile(payload, null)
+      }
+      onSuccess()
+    } catch (err) {
+      setError(isApiError(err) ? (err as Error).message : 'Greška pri spremanju profila.')
+    } finally {
+      setSavingProfile(false)
     }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Enter') return
+    if (step === 'email') handleSendOtp()
+    else if (step === 'verify_code') handleVerifyOtp()
+  }
+
+  const title =
+    step === 'email' ? 'Prijava za VidimoSe.hr'
+    : step === 'verify_code' ? 'Unesi kod'
+    : 'Tvoja obitelj'
+
   return (
-    <div
-      className="pb-modalOverlay"
-      role="presentation"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose?.() }}
-    >
+    <div className="pb-modalOverlay" role="presentation">
       <div className="pb-modalDialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="pb-modalDialog__head">
-          <h2 id={titleId} className="pb-modalDialog__title">
-            {step === 'email_name' ? title : 'Unesi kod'}
-          </h2>
+          <h2 id={titleId} className="pb-modalDialog__title">{title}</h2>
           {onClose && (
             <button type="button" className="pb-modalDialog__close" onClick={onClose} aria-label="Zatvori">×</button>
           )}
         </div>
+
         <div className="pb-modalDialog__body">
-          {step === 'email_name' ? (
-            <>
-              {lead && <p className="pb-modalDialog__lead">{lead}</p>}
-              <div className="pb-formGrid" onKeyDown={handleKeyDown}>
-                <label className="pb-formField">
-                  <span className="pb-formLabel">E-mail adresa</span>
-                  <input
-                    className="pb-input"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="ime@primjer.hr"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoFocus
-                  />
-                </label>
-                <label className="pb-formField">
-                  <span className="pb-formLabel">Ime mame ili tate</span>
-                  <input
-                    className="pb-input"
-                    type="text"
-                    autoComplete="name"
-                    placeholder="Ana Horvat"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </label>
-              </div>
+          {step === 'email' && (
+            <div className="pb-formGrid" onKeyDown={handleKeyDown}>
+              <label className="pb-formField">
+                <span className="pb-formLabel">E-mail adresa</span>
+                <input
+                  className="pb-input"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="ime@primjer.hr"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoFocus
+                />
+              </label>
               {error && <div className="pb-inlineNote pb-inlineNote--error">{error}</div>}
               <div className="pb-flowActions pb-flowActions--modal">
-                <Button type="button" onClick={handleSendOtp} disabled={loading || !canSubmit}>
+                <Button type="button" onClick={handleSendOtp} disabled={loading || !isEmailValid}>
                   {loading ? 'Šaljemo...' : 'Prijavi se'}
                 </Button>
               </div>
-            </>
-          ) : (
+            </div>
+          )}
+
+          {step === 'verify_code' && (
             <>
               <p className="pb-modalDialog__lead">
                 Poslali smo kod na <strong>{email}</strong>. Unesi ga ispod — vrijedi 10 minuta.
@@ -158,11 +205,26 @@ export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess
                 <button
                   type="button"
                   className="pb-inlineLink"
-                  onClick={() => { setStep('email_name'); setCode(''); setError('') }}
+                  onClick={() => { setStep('email'); setCode(''); setError('') }}
                 >
                   Promijeni e-mail ili zatraži novi kod
                 </button>
               </p>
+            </>
+          )}
+
+          {step === 'complete_profile' && (
+            <>
+              <p className="pb-modalDialog__lead">
+                Dodaj ime mame ili tate i djecu — koristimo za potvrdu dolaska.
+              </p>
+              <FamilyProfileForm
+                draft={profileDraft}
+                error={error}
+                saving={savingProfile}
+                onChange={setProfileDraft}
+                onSave={handleSaveProfile}
+              />
             </>
           )}
         </div>

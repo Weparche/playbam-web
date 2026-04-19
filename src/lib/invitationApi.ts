@@ -732,8 +732,8 @@ export type MyRsvpSummary = {
   invitation: MyInvitationSummary
 }
 
-export async function sendOtp(email: string, name: string): Promise<void> {
-  await request('/api/auth/send-otp', { method: 'POST', body: { email, name }, identity: null })
+export async function sendOtp(email: string, name?: string): Promise<void> {
+  await request('/api/auth/send-otp', { method: 'POST', body: { email, ...(name ? { name } : {}) }, identity: null })
 }
 
 export async function verifyOtp(email: string, code: string): Promise<VidimoseSession> {

@@ -110,6 +110,9 @@ export default function GuestInvitationModal({
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identityDraft.email.trim())
+  const canSendOtp = isEmailValid && identityDraft.parentName.trim().length > 0
+
   const handleSendOtp = async () => {
     const email = identityDraft.email.trim().toLowerCase()
     const parentName = identityDraft.parentName.trim()
@@ -208,8 +211,8 @@ export default function GuestInvitationModal({
               </div>
               {(otpError || authError) ? <div className="pb-inlineNote pb-inlineNote--error">{otpError || authError}</div> : null}
               <div className="pb-flowActions pb-flowActions--modal">
-                <Button type="button" onClick={handleSendOtp} disabled={otpSending}>
-                  {otpSending ? 'Šaljemo...' : 'Pošalji kod na e-mail'}
+                <Button type="button" onClick={handleSendOtp} disabled={otpSending || !canSendOtp}>
+                  {otpSending ? 'Šaljemo...' : 'Prijavi se'}
                 </Button>
               </div>
             </>

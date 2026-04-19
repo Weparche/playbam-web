@@ -21,6 +21,9 @@ export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+  const canSubmit = isEmailValid && name.trim().length > 0
+
   if (!open) return null
 
   const handleSendOtp = async () => {
@@ -105,8 +108,8 @@ export default function OtpLoginModal({ open, title = 'Prijava', lead, onSuccess
               </div>
               {error && <div className="pb-inlineNote pb-inlineNote--error">{error}</div>}
               <div className="pb-flowActions pb-flowActions--modal">
-                <Button type="button" onClick={handleSendOtp} disabled={loading}>
-                  {loading ? 'Šaljemo...' : 'Pošalji kod na e-mail'}
+                <Button type="button" onClick={handleSendOtp} disabled={loading || !canSubmit}>
+                  {loading ? 'Šaljemo...' : 'Prijavi se'}
                 </Button>
               </div>
             </>

@@ -1,9 +1,12 @@
-import { useEffect, useId } from 'react'
+import { useEffect, useId, useState } from 'react'
 
 import Button from '../ui/Button'
 import FamilyProfileForm, { type FamilyProfileDraft } from './FamilyProfileForm'
 import type { TemporaryWebIdentity } from '../../lib/tempWebIdentity'
 import type { FamilyProfileResponse, MembershipRequest } from '../../lib/invitationApi'
+import { isApiError, sendOtp, verifyOtp } from '../../lib/invitationApi'
+import { writeStoredSession } from '../../lib/vidimoseSession'
+import { useAuth } from '../../context/AuthContext'
 
 export type GuestModalStep = 'login' | 'profile' | 'request' | 'waiting'
 
@@ -73,10 +76,19 @@ export default function GuestInvitationModal({
   submittingRequest,
   onRequestSubmit,
 }: Props) {
+  const { sessionLogin } = useAuth()
   const titleId = useId()
+  const [loginSubStep, setLoginSubStep] = useState<'email_name' | 'verify_code'>('email_name')
+  const [otpSending, setOtpSending] = useState(false)
+  const [otpVerifying, setOtpVerifying] = useState(false)
+  const [otpError, setOtpError] = useState('')
+  const [otpCode, setOtpCode] = useState('')
 
   useEffect(() => {
     if (!open) {
+      setLoginSubStep('email_name')
+      setOtpCode('')
+      setOtpError('')
       return
     }
     const prev = document.body.style.overflow
@@ -98,6 +110,44 @@ export default function GuestInvitationModal({
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
+  const handleSendOtp = async () => {
+    const email = identityDraft.email.trim().toLowerCase()
+    const parentName = identityDraft.parentName.trim()
+    if (!email || !parentName) {
+      setOtpError('Upiši e-mail adresu i ime.')
+      return
+    }
+    setOtpSending(true)
+    setOtpError('')
+    try {
+      await sendOtp(email, parentName)
+      setLoginSubStep('verify_code')
+    } catch (err) {
+      setOtpError(isApiError(err) ? (err as Error).message : 'Greška pri slanju koda. Pokušaj ponovno.')
+    } finally {
+      setOtpSending(false)
+    }
+  }
+
+  const handleVerifyOtp = async () => {
+    if (!otpCode.trim()) {
+      setOtpError('Upiši kod.')
+      return
+    }
+    setOtpVerifying(true)
+    setOtpError('')
+    try {
+      const session = await verifyOtp(identityDraft.email.trim().toLowerCase(), otpCode.trim())
+      writeStoredSession(session)
+      sessionLogin(session)
+      onLogin()
+    } catch (err) {
+      setOtpError(isApiError(err) ? (err as Error).message : 'Netočan kod. Pokušaj ponovno.')
+    } finally {
+      setOtpVerifying(false)
+    }
+  }
+
   if (!open) {
     return null
   }
@@ -115,7 +165,8 @@ export default function GuestInvitationModal({
       <div className="pb-modalDialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="pb-modalDialog__head">
           <h2 id={titleId} className="pb-modalDialog__title">
-            {step === 'login' && 'Prijava za potvrdu dolaska'}
+            {step === 'login' && loginSubStep === 'email_name' && 'Prijava za potvrdu dolaska'}
+            {step === 'login' && loginSubStep === 'verify_code' && 'Unesi kod'}
             {step === 'profile' && 'Tvoja obitelj'}
             {step === 'request' && 'Zahtjev za pristup'}
             {step === 'waiting' && 'Zahtjev je poslan'}
@@ -126,10 +177,10 @@ export default function GuestInvitationModal({
         </div>
 
         <div className="pb-modalDialog__body">
-          {step === 'login' ? (
+          {step === 'login' && loginSubStep === 'email_name' ? (
             <>
               <p className="pb-modalDialog__lead">
-                Za potvrdu dolaska, rezervaciju poklona i privatni sadržaj trebamo tvoj kontakt. Podaci se spremaju u tvoj VidimoSe.hr profil.
+                Za potvrdu dolaska i pristup privatnom dijelu trebamo tvoj kontakt. Poslat ćemo ti jednokratni kod.
               </p>
               <div className="pb-formGrid">
                 <label className="pb-formField">
@@ -155,13 +206,50 @@ export default function GuestInvitationModal({
                   />
                 </label>
               </div>
-              {authError ? <div className="pb-inlineNote pb-inlineNote--error">{authError}</div> : null}
+              {(otpError || authError) ? <div className="pb-inlineNote pb-inlineNote--error">{otpError || authError}</div> : null}
               <div className="pb-flowActions pb-flowActions--modal">
-                <Button type="button" onClick={onLogin}>
-                  Nastavi
+                <Button type="button" onClick={handleSendOtp} disabled={otpSending}>
+                  {otpSending ? 'Šaljemo...' : 'Pošalji kod na e-mail'}
                 </Button>
               </div>
-              <p className="pb-helperText pb-helperText--modal">Privremeni web identitet, kasnije zamjena pravom prijavom.</p>
+            </>
+          ) : null}
+
+          {step === 'login' && loginSubStep === 'verify_code' ? (
+            <>
+              <p className="pb-modalDialog__lead">
+                Poslali smo kod na <strong>{identityDraft.email}</strong>. Unesi ga ispod — vrijedi 10 minuta.
+              </p>
+              <div className="pb-formGrid">
+                <label className="pb-formField">
+                  <span className="pb-formLabel">Kod (6 znamenki)</span>
+                  <input
+                    className="pb-input"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    placeholder="123456"
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                    autoFocus
+                  />
+                </label>
+              </div>
+              {otpError ? <div className="pb-inlineNote pb-inlineNote--error">{otpError}</div> : null}
+              <div className="pb-flowActions pb-flowActions--modal">
+                <Button type="button" onClick={handleVerifyOtp} disabled={otpVerifying}>
+                  {otpVerifying ? 'Provjeravamo...' : 'Potvrdi kod'}
+                </Button>
+              </div>
+              <p className="pb-helperText pb-helperText--modal">
+                <button
+                  type="button"
+                  className="pb-inlineLink"
+                  onClick={() => { setLoginSubStep('email_name'); setOtpCode(''); setOtpError('') }}
+                >
+                  Promijeni e-mail ili zatraži novi kod
+                </button>
+              </p>
             </>
           ) : null}
 

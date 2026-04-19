@@ -312,7 +312,7 @@ function clearHostLocalDraft(invitationId: string) {
 
 export default function SharedInvitationPage() {
   const { token = '' } = useParams()
-  const { user, login, logout } = useAuth()
+  const { user, logout } = useAuth()
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [hostToken, setHostToken] = useState(() => readStoredHostToken())
   const [invitation, setInvitation] = useState<PublicInvitation | null>(null)
@@ -1019,16 +1019,8 @@ export default function SharedInvitationPage() {
   }, [invitation, isHost, loadingPrivateState, user, hasHostSession])
 
   const handleLogin = () => {
-    const email = identityDraft.email.trim().toLowerCase()
-    const parentName = identityDraft.parentName.trim()
-
-    if (!email || !parentName) {
-      setAuthError('Upiši e-mail adresu i ime roditelja.')
-      return
-    }
-
-    login({ email, parentName })
-    setAuthError("")
+    // OTP verification is handled inside GuestInvitationModal — sessionLogin() already called
+    setAuthError('')
   }
 
   const handleUserLogout = () => {

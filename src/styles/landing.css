@@ -379,6 +379,8 @@
 }
 
 .ew-navbar__link:hover { opacity: 0.65; }
+.ew-navbar__link--active { font-weight: 600; }
+button.ew-navbar__link { background: none; border: none; cursor: pointer; padding: 0; }
 
 .ew-navbar__cta {
   background: var(--color-text-primary);

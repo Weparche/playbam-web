@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { AuthProvider } from './context/AuthContext'
 import CreateInvitationPage from './pages/CreateInvitationPage'
 import LandingPage from './pages/LandingPage'
+import MojVidimosePage from './pages/MojVidimosePage'
 import SharedInvitationPage from './pages/SharedInvitationPage'
 import VenueDetailPage from './pages/VenueDetailPage'
 import VenuesPage from './pages/VenuesPage'
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/kreiraj-pozivnicu" element={<CreateInvitationPage />} />
           <Route path="/igraonice" element={<VenuesPage />} />
           <Route path="/igraonice/:slug" element={<VenueDetailPage />} />
+          <Route path="/moj-vidimose" element={<MojVidimosePage />} />
           <Route path="/pozivnica-demo" element={<Navigate to="/pozivnica/luka-istrazivaci" replace />} />
           <Route path="/pozivnica/:token" element={<SharedInvitationPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

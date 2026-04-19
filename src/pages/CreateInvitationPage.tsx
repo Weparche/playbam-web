@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
+import OtpLoginModal from '../components/auth/OtpLoginModal'
 import InvitationCreateShell from '../components/create/InvitationCreateShell'
 import InvitationLivePreview from '../components/create/InvitationLivePreview'
 import InvitationMainEditor from '../components/create/InvitationMainEditor'
@@ -34,6 +35,7 @@ import Card from '../components/ui/Card'
 import { createInvitation, createInvitationWishlistItem, type InvitationWishlistPayload } from '../lib/invitationApi'
 import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
 import { writeStoredTemporaryIdentity } from '../lib/tempWebIdentity'
+import { useAuth } from '../context/AuthContext'
 
 const LOCAL_STORAGE_KEY = 'playbam.quick-create.draft'
 const DEV_HOST_AUTH_TOKEN =
@@ -114,6 +116,7 @@ async function syncQuickCreateWishlist(invitationId: string, quickDraft: Invitat
 }
 
 export default function CreateInvitationPage() {
+  const { session } = useAuth()
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [draft, setDraft] = useState<InvitationCreateDraft>(() => readStoredDraft())
   const [activeShortcut, setActiveShortcut] = useState<ShortcutId | null>(null)
@@ -399,6 +402,12 @@ export default function CreateInvitationPage() {
 
   return (
     <>
+      <OtpLoginModal
+        open={!session}
+        title="Prijava za kreiranje pozivnice"
+        lead="Upiši e-mail i ime — poslat ćemo ti jednokratni kod za brzu prijavu."
+        onSuccess={() => {}}
+      />
       <Navbar opaque />
       <main className="pb-main pb-main--createV2">
         <InvitationCreateShell

@@ -3743,6 +3743,21 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   font-weight: 700;
 }
 
+.pb-inlineLink {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(16, 24, 40, 0.6);
+  font-size: inherit;
+  font-weight: inherit;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.pb-inlineLink:hover {
+  color: rgba(16, 24, 40, 0.9);
+}
+
 .pb-summaryCard {
   margin-top: 16px;
   padding: 14px;

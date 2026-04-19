@@ -1,6 +1,7 @@
 import type { TemporaryWebIdentity } from './tempWebIdentity'
 import { buildTemporaryIdentityHeaders, readStoredTemporaryIdentity } from './tempWebIdentity'
 import { readStoredHostToken } from './hostWebSession'
+import { readStoredSession, type VidimoseSession } from './vidimoseSession'
 
 /**
  * U devu: prazan base → zahtjevi na isti origin (Vite proxy šalje /api na backend).
@@ -313,8 +314,12 @@ function parseJsonResponse(text: string) {
 }
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const identity =
-    options.identity !== undefined ? options.identity : readStoredTemporaryIdentity()
+  const sessionToken = readStoredSession()?.token
+  // If session exists, don't use X-Playbam headers (Bearer takes priority)
+  const identity = sessionToken
+    ? null
+    : options.identity !== undefined ? options.identity : readStoredTemporaryIdentity()
+
   const headers = new Headers({
     Accept: 'application/json',
   })
@@ -324,7 +329,9 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     headers.set('Content-Type', 'application/json')
   }
 
-  if (
+  if (sessionToken && !path.startsWith('/api/public/')) {
+    headers.set('Authorization', `Bearer ${sessionToken}`)
+  } else if (
     storedHostToken &&
     shouldAttachStoredHostBearer(path, Boolean(identity))
   ) {
@@ -337,9 +344,11 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     headers.set('Authorization', `Bearer ${DEV_HOST_AUTH_TOKEN}`)
   }
 
-  const identityHeaders = buildTemporaryIdentityHeaders(identity)
-  for (const [key, value] of Object.entries(identityHeaders)) {
-    headers.set(key, value)
+  if (!sessionToken) {
+    const identityHeaders = buildTemporaryIdentityHeaders(identity)
+    for (const [key, value] of Object.entries(identityHeaders)) {
+      headers.set(key, value)
+    }
   }
 
   const response = await fetch(`${API_BASE}${path}`, {
@@ -697,4 +706,52 @@ export function proxyImageUrl(url: string): string {
   }
 
   return url
+}
+
+export type { VidimoseSession }
+
+export type MyInvitationSummary = {
+  id: string
+  shareToken: string
+  publicSlug: string
+  title: string
+  celebrantName: string
+  date: string
+  time: string
+  location: string
+  theme: string | null
+  webShareUrl: string
+  createdAt: string
+}
+
+export type MyRsvpSummary = {
+  id: string
+  status: 'going' | 'not_going' | 'maybe'
+  note: string | null
+  createdAt: string
+  invitation: MyInvitationSummary
+}
+
+export async function sendOtp(email: string, name: string): Promise<void> {
+  await request('/api/auth/send-otp', { method: 'POST', body: { email, name }, identity: null })
+}
+
+export async function verifyOtp(email: string, code: string): Promise<VidimoseSession> {
+  return request('/api/auth/verify-otp', { method: 'POST', body: { email, code }, identity: null })
+}
+
+export async function authGetMe(): Promise<VidimoseSession> {
+  return request('/api/auth/me', { identity: null })
+}
+
+export async function authLogout(): Promise<void> {
+  await request('/api/auth/logout', { method: 'POST', identity: null })
+}
+
+export async function getMyInvitations(): Promise<{ invitations: MyInvitationSummary[] }> {
+  return request('/api/my/invitations', { identity: null })
+}
+
+export async function getMyRsvps(): Promise<{ rsvps: MyRsvpSummary[] }> {
+  return request('/api/my/rsvps', { identity: null })
 }

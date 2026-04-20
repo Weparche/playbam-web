@@ -1488,7 +1488,6 @@ export default function SharedInvitationPage() {
           <FloatingEditPanel
             open
             title="Tema"
-            description="Promijeni naslovnicu pozivnice."
             onClose={closeHostEditorPanel}
           >
             <QuickThemeEditor

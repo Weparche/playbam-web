@@ -763,6 +763,11 @@ export default function InvitationMainEditor({
                         }`}
                         onClick={() => {
                           onFieldChange('titleColor', option.id)
+                          if (option.id === 'white' && (draft.titleOutline === 'soft' || draft.titleOutline === 'bold')) {
+                            onFieldChange('titleOutline', 'soft-black')
+                          } else if (option.id !== 'white' && (draft.titleOutline === 'soft-black' || draft.titleOutline === 'bold-black')) {
+                            onFieldChange('titleOutline', 'soft')
+                          }
                           setTitleStylePanel(null)
                         }}
                       >
@@ -802,7 +807,11 @@ export default function InvitationMainEditor({
                     Outline je svijetli obrub oko slova koji pomaže čitljivosti na šarenim ilustracijama. Pregled koristi tvoju boju i veličinu.
                   </p>
                   <div className="pb-createEditor__titleStyleOptionList">
-                    {TITLE_OUTLINE_OPTIONS.map((option) => (
+                    {TITLE_OUTLINE_OPTIONS.filter((o) =>
+                      draft.titleColor === 'white'
+                        ? o.id === 'none' || o.id === 'soft-black' || o.id === 'bold-black'
+                        : o.id === 'none' || o.id === 'soft' || o.id === 'bold'
+                    ).map((option) => (
                       <button
                         key={option.id}
                         type="button"

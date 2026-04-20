@@ -8,6 +8,11 @@ export type CoverTheme =
   | 'princess'
   | 'unicorns'
   | 'pirates'
+  | 'frozen'
+  | 'sirena'
+  | 'beba_cura'
+  | 'beba_decko'
+export type CoverThemeTab = 'birthday' | 'birth'
 export type EffectStyle = 'confetti' | 'streamers' | 'glow'
 export type TitleFont =
   | 'lilita'
@@ -84,7 +89,12 @@ export type InvitationCreateDraft = {
 
 export const LOCATION_TYPES: readonly LocationType[] = ['Igraonica / lokal', 'Kod kuće', 'Na otvorenom', 'Druga lokacija']
 
-export const COVER_THEME_OPTIONS = [
+export const LEGACY_COVER_THEME_TABS = [
+  { id: 'birthday', label: 'DjeÄji roÄ‘endan' },
+  { id: 'birth', label: 'RoÄ‘enje' },
+] as const satisfies ReadonlyArray<{ id: CoverThemeTab; label: string }>
+
+const LEGACY_COVER_THEME_OPTIONS = [
   { id: 'pozivnica-girl', label: 'Cura', description: 'Topla ilustracija za pozivnicu s jednom curom.', image: '/pozivnica-girl.png' },
   { id: 'pozivnica-boy', label: 'Dečko', description: 'Varijanta s jednim dečkom na naslovnici.', image: '/pozivnica-boy.png' },
   { id: 'safari', label: 'Safari', description: 'Afričke životinje i safari avantura.', image: '/safari.png' },
@@ -94,7 +104,20 @@ export const COVER_THEME_OPTIONS = [
   { id: 'princess', label: 'Princeza', description: 'Kraljevski i princeza mood.', image: '/princess.png' },
   { id: 'unicorns', label: 'Jednorozi', description: 'Šareni jednorozi i čarolija.', image: '/unicorns.png' },
   { id: 'pirates', label: 'Pirati', description: 'Piratska avantura i more.', image: '/pirates.png' },
-] as const satisfies ReadonlyArray<{ id: CoverTheme; label: string; description: string; image: string }>
+] as const satisfies ReadonlyArray<{ id: Exclude<CoverTheme, 'frozen' | 'sirena' | 'beba_cura' | 'beba_decko'>; label: string; description: string; image: string }>
+
+export const COVER_THEME_MODAL_TABS = [
+  { id: 'birthday', label: 'Dje\u010dji ro\u0111endan' },
+  { id: 'birth', label: 'Ro\u0111enje' },
+] as const satisfies ReadonlyArray<{ id: CoverThemeTab; label: string }>
+
+export const COVER_THEME_OPTIONS = [
+  ...LEGACY_COVER_THEME_OPTIONS.map((option) => ({ ...option, tab: 'birthday' as const })),
+  { id: 'frozen', tab: 'birthday', label: 'Frozen', description: 'Ledena bajka za malu zimsku avanturu.', image: '/frozen.png' },
+  { id: 'sirena', tab: 'birthday', label: 'Sirena', description: 'Podvodna bajka s morskim detaljima.', image: '/sirena.png' },
+  { id: 'beba_cura', tab: 'birth', label: 'Beba cura', description: 'Nje\u017ena naslovnica za dolazak djevoj\u010dice.', image: '/beba_cura.png' },
+  { id: 'beba_decko', tab: 'birth', label: 'Beba de\u010dko', description: 'Nje\u017ena naslovnica za dolazak dje\u010daka.', image: '/beba_decko.png' },
+] as const satisfies ReadonlyArray<{ id: CoverTheme; tab: CoverThemeTab; label: string; description: string; image: string }>
 
 export const EFFECT_OPTIONS = [
   { id: 'confetti', label: 'Konfeti', description: 'Sitni party detalji preko postera.' },
@@ -487,6 +510,10 @@ export function getThemeLabel(theme: CoverTheme) {
   return COVER_THEME_OPTIONS.find((option) => option.id === theme)?.label ?? theme
 }
 
+export function getThemeTab(theme: CoverTheme): CoverThemeTab {
+  return COVER_THEME_OPTIONS.find((option) => option.id === theme)?.tab ?? 'birthday'
+}
+
 export function getAccentClass(accent: AccentPalette) {
   return `pb-quickCreate--accent-${accent}`
 }
@@ -504,6 +531,10 @@ export function normalizeCreateTheme(themeValue: string | null | undefined): Cov
     case 'princess':
     case 'unicorns':
     case 'pirates':
+    case 'frozen':
+    case 'sirena':
+    case 'beba_cura':
+    case 'beba_decko':
       return normalized
     case 'pozivnica-boys':
     case 'pozivnica-girls':

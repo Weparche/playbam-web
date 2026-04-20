@@ -7993,6 +7993,42 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   gap: 0.75rem;
 }
 
+.pb-quickEditor__tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.pb-quickEditor__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(16, 24, 40, 0.1);
+  border-radius: 999px;
+  background: rgba(245, 247, 251, 0.92);
+  color: rgba(16, 24, 40, 0.72);
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.pb-quickEditor__tab:hover {
+  transform: translateY(-1px);
+  border-color: rgba(91, 61, 245, 0.18);
+  color: #17243b;
+}
+
+.pb-quickEditor__tab.is-active {
+  border-color: rgba(91, 61, 245, 0.26);
+  background: linear-gradient(135deg, rgba(91, 61, 245, 0.12), rgba(139, 106, 255, 0.18));
+  color: #3f2bb3;
+  box-shadow: 0 10px 24px rgba(91, 61, 245, 0.12);
+}
+
 .pb-quickEditor__preset,
 .pb-quickEditor__optionCard,
 .pb-quickEditor__fontCard {
@@ -10711,6 +10747,40 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     0 16px 34px rgba(25, 45, 80, 0.12);
 }
 
+.pb-inviteHero__title--outline-soft-black {
+  -webkit-text-stroke: 0 transparent;
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.82),
+    1px -1px 0 rgba(0, 0, 0, 0.82),
+    -1px 1px 0 rgba(0, 0, 0, 0.82),
+    1px 1px 0 rgba(0, 0, 0, 0.82),
+    0 -1px 0 rgba(0, 0, 0, 0.82),
+    0 1px 0 rgba(0, 0, 0, 0.82),
+    -1px 0 0 rgba(0, 0, 0, 0.82),
+    1px 0 0 rgba(0, 0, 0, 0.82);
+}
+
+.pb-inviteHero__title--outline-bold-black {
+  -webkit-text-stroke: 0 transparent;
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.90),
+    1px -1px 0 rgba(0, 0, 0, 0.90),
+    -1px 1px 0 rgba(0, 0, 0, 0.90),
+    1px 1px 0 rgba(0, 0, 0, 0.90),
+    0 -1px 0 rgba(0, 0, 0, 0.90),
+    0 1px 0 rgba(0, 0, 0, 0.90),
+    -1px 0 0 rgba(0, 0, 0, 0.90),
+    1px 0 0 rgba(0, 0, 0, 0.90),
+    -2px 0 0 rgba(0, 0, 0, 0.70),
+    2px 0 0 rgba(0, 0, 0, 0.70),
+    0 -2px 0 rgba(0, 0, 0, 0.70),
+    0 2px 0 rgba(0, 0, 0, 0.70),
+    -2px -2px 0 rgba(0, 0, 0, 0.60),
+    2px -2px 0 rgba(0, 0, 0, 0.60),
+    -2px 2px 0 rgba(0, 0, 0, 0.60),
+    2px 2px 0 rgba(0, 0, 0, 0.60);
+}
+
 @media (max-width: 979px) {
   .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-soft,
   .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-soft {
@@ -10746,6 +10816,40 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
       -3px 3px 0 rgba(255, 255, 255, 0.88),
       3px 3px 0 rgba(255, 255, 255, 0.88),
       0 14px 32px rgba(25, 45, 80, 0.12);
+  }
+
+  .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-soft-black,
+  .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-soft-black {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.84),
+      2px -2px 0 rgba(0, 0, 0, 0.84),
+      -2px 2px 0 rgba(0, 0, 0, 0.84),
+      2px 2px 0 rgba(0, 0, 0, 0.84),
+      0 -2px 0 rgba(0, 0, 0, 0.84),
+      0 2px 0 rgba(0, 0, 0, 0.84),
+      -2px 0 0 rgba(0, 0, 0, 0.84),
+      2px 0 0 rgba(0, 0, 0, 0.84);
+  }
+
+  .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-bold-black,
+  .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-bold-black {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.92),
+      2px -2px 0 rgba(0, 0, 0, 0.92),
+      -2px 2px 0 rgba(0, 0, 0, 0.92),
+      2px 2px 0 rgba(0, 0, 0, 0.92),
+      0 -2px 0 rgba(0, 0, 0, 0.92),
+      0 2px 0 rgba(0, 0, 0, 0.92),
+      -2px 0 0 rgba(0, 0, 0, 0.92),
+      2px 0 0 rgba(0, 0, 0, 0.92),
+      -3px 0 0 rgba(0, 0, 0, 0.70),
+      3px 0 0 rgba(0, 0, 0, 0.70),
+      0 -3px 0 rgba(0, 0, 0, 0.70),
+      0 3px 0 rgba(0, 0, 0, 0.70),
+      -3px -3px 0 rgba(0, 0, 0, 0.60),
+      3px -3px 0 rgba(0, 0, 0, 0.60),
+      -3px 3px 0 rgba(0, 0, 0, 0.60),
+      3px 3px 0 rgba(0, 0, 0, 0.60);
   }
 
   .pb-previewCard__title--outline-soft {

@@ -329,7 +329,6 @@ export default function CreateInvitationPage() {
           <FloatingEditPanel
             open
             title="Tema"
-            description="Odaberi jednu od pet gotovih naslovnica za pozivnicu."
             onClose={() => setActiveShortcut(null)}
           >
             <QuickThemeEditor

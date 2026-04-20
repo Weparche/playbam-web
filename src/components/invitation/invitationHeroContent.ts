@@ -20,6 +20,10 @@ const INVITATION_BACKGROUND_MAP: Record<string, string> = {
   princess: '/princess.png',
   unicorns: '/unicorns.png',
   pirates: '/pirates.png',
+  frozen: '/frozen.png',
+  sirena: '/sirena.png',
+  beba_cura: '/beba_cura.png',
+  beba_decko: '/beba_decko.png',
 }
 
 export function formatInvitationDateText(dateValue: string) {

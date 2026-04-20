@@ -1,4 +1,5 @@
-import { COVER_THEME_OPTIONS, type CoverTheme, type InvitationCreateDraft } from './createTypes'
+import { useEffect, useMemo, useState } from 'react'
+import { COVER_THEME_MODAL_TABS, COVER_THEME_OPTIONS, getThemeTab, type CoverTheme, type CoverThemeTab, type InvitationCreateDraft } from './createTypes'
 
 type Props = {
   draft: InvitationCreateDraft
@@ -9,13 +10,37 @@ export default function QuickThemeEditor({ draft, onThemeChange }: Props) {
   const activeTheme = COVER_THEME_OPTIONS.some((option) => option.id === draft.theme)
     ? draft.theme
     : COVER_THEME_OPTIONS[0].id
+  const [activeTab, setActiveTab] = useState<CoverThemeTab>(() => getThemeTab(activeTheme))
+  const filteredThemes = useMemo(() => COVER_THEME_OPTIONS.filter((option) => option.tab === activeTab), [activeTab])
+
+  useEffect(() => {
+    if (!filteredThemes.some((option) => option.id === activeTheme)) {
+      setActiveTab(getThemeTab(activeTheme))
+    }
+  }, [activeTheme, filteredThemes])
 
   return (
     <div className="pb-quickEditor">
       <div className="pb-quickEditor__block">
-        <span className="pb-quickEditor__label">Tema</span>
+        <div className="pb-quickEditor__tabs" role="tablist" aria-label="Vrsta pozivnice">
+          {COVER_THEME_MODAL_TABS.map((tab) => {
+            const isActive = tab.id === activeTab
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={`pb-quickEditor__tab ${isActive ? 'is-active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            )
+          })}
+        </div>
         <div className="pb-quickEditor__themeGrid">
-          {COVER_THEME_OPTIONS.map((option) => {
+          {filteredThemes.map((option) => {
             const isActive = activeTheme === option.id
             return (
               <button

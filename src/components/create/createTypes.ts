@@ -514,6 +514,10 @@ export function getThemeTab(theme: CoverTheme): CoverThemeTab {
   return COVER_THEME_OPTIONS.find((option) => option.id === theme)?.tab ?? 'birthday'
 }
 
+export function isBirthTheme(theme: CoverTheme) {
+  return getThemeTab(theme) === 'birth'
+}
+
 export function getAccentClass(accent: AccentPalette) {
   return `pb-quickCreate--accent-${accent}`
 }

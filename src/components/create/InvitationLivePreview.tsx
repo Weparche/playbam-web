@@ -8,7 +8,7 @@ import {
   formatInvitationTimeText,
   resolveInvitationBackgroundImage,
 } from '../invitation/invitationHeroContent'
-import { buildPreviewLocation, buildTimeRangeValue, type InvitationCreateDraft } from './createTypes'
+import { buildPreviewLocation, buildTimeRangeValue, isBirthTheme, type InvitationCreateDraft } from './createTypes'
 
 export type LivePreviewMode = 'guest' | 'print'
 
@@ -58,6 +58,7 @@ export default function InvitationLivePreview({
   partyDetails = null,
   inviteUrl = null,
 }: Props) {
+  const birthInvitation = isBirthTheme(draft.theme)
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
   const messageText = draft.message.trim() || 'Vidimo se na tulumu!'
   const accessText = buildPreviewAccessText(draft)
@@ -128,6 +129,7 @@ export default function InvitationLivePreview({
           venueText={location}
           messageText={messageText}
           backgroundImage={resolveInvitationBackgroundImage(draft.theme, draft.theme)}
+          isBirthInvitation={birthInvitation}
           rsvpMood={draft.rsvpMood}
           showRsvp={!isPrint}
           rsvp={null}

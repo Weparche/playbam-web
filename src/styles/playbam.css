@@ -5366,6 +5366,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   top: 37.9%;
 }
 
+.pb-createLivePreview .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
+  top: calc(37.9% + 5px);
+}
+
 .pb-createLivePreview .pb-inviteHero__rsvpBlock--storybook {
   top: 63.4%;
   gap: calc(0.8rem * 1.15);
@@ -5395,12 +5399,24 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   margin-top: calc(0.78rem - 13px + 3.25px);
 }
 
+.pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+  margin-top: calc(0.78rem - 13px + 3.25px + 5px);
+}
+
 .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
   margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem);
 }
 
+.pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+  margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem + 5px);
+}
+
 .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
   margin-top: calc(0.78rem - 13px + 3.25px);
+}
+
+.pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+  margin-top: calc(0.78rem - 13px + 3.25px + 5px);
 }
 
 /*
@@ -5411,10 +5427,20 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);
 }
 
+.pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth,
+.pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+  margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px + 5px);
+}
+
 @supports (height: 1cqh) {
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
     margin-top: calc(0.78rem - 13px + 3.25px + 1rem - 2.5cqh - 2px);
+  }
+
+  .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth,
+  .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+    margin-top: calc(0.78rem - 13px + 3.25px + 1rem - 2.5cqh - 2px + 5px);
   }
 }
 
@@ -10665,6 +10691,10 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   top: 37.9%;
 }
 
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
+  top: calc(37.9% + 5px);
+}
+
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
   /* Web (desktop): 10% gore pa 7% dolje => neto ~3% gore */
   top: calc(63.4% - 10% + 7%);
@@ -10698,6 +10728,10 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
     top: 37.4%;
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
+    top: calc(37.4% + 5px);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
@@ -11050,6 +11084,10 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
+.pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
+  top: calc(100% + 5px);
+}
+
 .pb-inviteHero--storybook .pb-inviteHero__venueHint {
   font-family: var(--invite-font-meta);
   font-size: 0.62rem;
@@ -11086,10 +11124,18 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   text-shadow: 0 1px 1px rgba(61, 44, 120, 0.18);
 }
 
+.pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+  margin-top: calc(0.78rem - 13px + 3.25px + 5px);
+}
+
 /* Uži ekran: malo niže u odnosu na staro +1cqh (sada fiksno) */
 @media (max-width: 640px) {
   .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
     margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem);
+  }
+
+  .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 5px);
   }
 }
 
@@ -11101,9 +11147,17 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   margin-top: calc(0.78rem - 13px + 3.25px + 0.2rem);
 }
 
+.pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+  margin-top: calc(0.78rem - 13px + 3.25px + 0.2rem + 5px);
+}
+
 @media (max-width: 640px) {
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
     margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.2rem);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.2rem + 5px);
   }
 }
 
@@ -11112,9 +11166,17 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     margin-top: calc(0.78rem - 13px + 3.25px + 0.5cqh);
   }
 
+  .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.5cqh + 5px);
+  }
+
   @media (max-width: 640px) {
     .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
       margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.5cqh);
+    }
+
+    .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+      margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.5cqh + 5px);
     }
   }
 }

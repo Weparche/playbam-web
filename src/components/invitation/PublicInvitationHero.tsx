@@ -29,6 +29,7 @@ type Props = {
   venueText: string
   messageText: string
   backgroundImage: string
+  isBirthInvitation?: boolean
   rsvpMood?: RsvpMood | string | null
   showRsvp?: boolean
   rsvp?: 'going' | 'not_going' | 'maybe' | null
@@ -98,6 +99,7 @@ export default function PublicInvitationHero({
   venueText,
   messageText,
   backgroundImage,
+  isBirthInvitation = false,
   rsvpMood = null,
   showRsvp = false,
   rsvp = null,
@@ -121,6 +123,8 @@ export default function PublicInvitationHero({
   const normalizedTitleSize = normalizeTitleSize(titleSize)
   const resolvedMood = normalizeRsvpMood(typeof rsvpMood === 'string' ? rsvpMood : null)
   const infoContrastClass = normalizedTitleColor === 'white' ? ' pb-inviteHero__infoBlock--soft-outline' : ''
+  const birthInfoClass = isBirthInvitation ? ' pb-inviteHero__infoBlock--birth' : ''
+  const birthMessageClass = isBirthInvitation ? ' pb-inviteHero__message--birth' : ''
   const frameRef = useRef<HTMLDivElement>(null)
   const titleWrapRef = useRef<HTMLElement>(null)
   const heroTitleRef = useRef<HTMLHeadingElement>(null)
@@ -189,7 +193,7 @@ export default function PublicInvitationHero({
             </h1>
           </header>
 
-          <div className={`pb-inviteHero__infoBlock${infoContrastClass}`}>
+          <div className={`pb-inviteHero__infoBlock${infoContrastClass}${birthInfoClass}`}>
             <div className="pb-inviteHero__infoRow pb-inviteHero__infoRow--date">
               <span className="pb-inviteHero__infoIcon" aria-hidden>
                 <IconCalendar />
@@ -214,7 +218,7 @@ export default function PublicInvitationHero({
               </span>
             </a>
 
-            <p className="pb-inviteHero__message pb-inviteHero__message--storybook">{messageText}</p>
+            <p className={`pb-inviteHero__message pb-inviteHero__message--storybook${birthMessageClass}`}>{messageText}</p>
 
             {printPartyDetails && printPartyDetails.length > 0 ? (
               <div className="pb-inviteHero__printPartyDetails" aria-label="Detalji tuluma">

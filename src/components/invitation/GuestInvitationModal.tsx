@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react'
 
+import { lockScroll, unlockScroll } from '../../lib/scrollLock'
 import Button from '../ui/Button'
 import FamilyProfileForm, { type FamilyProfileDraft } from './FamilyProfileForm'
 import type { TemporaryWebIdentity } from '../../lib/tempWebIdentity'
@@ -91,10 +92,9 @@ export default function GuestInvitationModal({
       setOtpError('')
       return
     }
-    const prev = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    lockScroll()
     return () => {
-      document.body.style.overflow = prev
+      unlockScroll()
     }
   }, [open])
 

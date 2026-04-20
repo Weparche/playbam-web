@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { lockScroll, unlockScroll } from '../../lib/scrollLock'
 import { invitationTemplates } from '../../lib/landing-data'
 import type { InvitationTemplate } from '../../lib/landing-data'
 import { useScrollReveal } from './useScrollReveal'
@@ -17,10 +18,10 @@ function InviteLightbox({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
+    lockScroll()
     return () => {
       document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
+      unlockScroll()
     }
   }, [onClose])
 

@@ -5832,6 +5832,40 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     0 14px 28px rgba(23, 36, 59, 0.12);
 }
 
+.pb-createEditor__titleOutline--soft-black {
+  -webkit-text-stroke: 0 transparent;
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.82),
+    1px -1px 0 rgba(0, 0, 0, 0.82),
+    -1px 1px 0 rgba(0, 0, 0, 0.82),
+    1px 1px 0 rgba(0, 0, 0, 0.82),
+    0 -1px 0 rgba(0, 0, 0, 0.82),
+    0 1px 0 rgba(0, 0, 0, 0.82),
+    -1px 0 0 rgba(0, 0, 0, 0.82),
+    1px 0 0 rgba(0, 0, 0, 0.82);
+}
+
+.pb-createEditor__titleOutline--bold-black {
+  -webkit-text-stroke: 0 transparent;
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.90),
+    1px -1px 0 rgba(0, 0, 0, 0.90),
+    -1px 1px 0 rgba(0, 0, 0, 0.90),
+    1px 1px 0 rgba(0, 0, 0, 0.90),
+    0 -1px 0 rgba(0, 0, 0, 0.90),
+    0 1px 0 rgba(0, 0, 0, 0.90),
+    -1px 0 0 rgba(0, 0, 0, 0.90),
+    1px 0 0 rgba(0, 0, 0, 0.90),
+    -2px 0 0 rgba(0, 0, 0, 0.70),
+    2px 0 0 rgba(0, 0, 0, 0.70),
+    0 -2px 0 rgba(0, 0, 0, 0.70),
+    0 2px 0 rgba(0, 0, 0, 0.70),
+    -2px -2px 0 rgba(0, 0, 0, 0.60),
+    2px -2px 0 rgba(0, 0, 0, 0.60),
+    -2px 2px 0 rgba(0, 0, 0, 0.60),
+    2px 2px 0 rgba(0, 0, 0, 0.60);
+}
+
 /* Jači vanjski outline na mobilnom — čitljiviji na Retini i u input polju */
 @media (max-width: 979px) {
   .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft {
@@ -5866,6 +5900,38 @@ body:has(.pb-main--demo.pb-invitePage) #root {
       -3px 3px 0 rgba(255, 255, 255, 0.85),
       3px 3px 0 rgba(255, 255, 255, 0.85),
       0 14px 30px rgba(23, 36, 59, 0.14);
+  }
+
+  .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft-black {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.84),
+      2px -2px 0 rgba(0, 0, 0, 0.84),
+      -2px 2px 0 rgba(0, 0, 0, 0.84),
+      2px 2px 0 rgba(0, 0, 0, 0.84),
+      0 -2px 0 rgba(0, 0, 0, 0.84),
+      0 2px 0 rgba(0, 0, 0, 0.84),
+      -2px 0 0 rgba(0, 0, 0, 0.84),
+      2px 0 0 rgba(0, 0, 0, 0.84);
+  }
+
+  .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold-black {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.92),
+      2px -2px 0 rgba(0, 0, 0, 0.92),
+      -2px 2px 0 rgba(0, 0, 0, 0.92),
+      2px 2px 0 rgba(0, 0, 0, 0.92),
+      0 -2px 0 rgba(0, 0, 0, 0.92),
+      0 2px 0 rgba(0, 0, 0, 0.92),
+      -2px 0 0 rgba(0, 0, 0, 0.92),
+      2px 0 0 rgba(0, 0, 0, 0.92),
+      -3px 0 0 rgba(0, 0, 0, 0.70),
+      3px 0 0 rgba(0, 0, 0, 0.70),
+      0 -3px 0 rgba(0, 0, 0, 0.70),
+      0 3px 0 rgba(0, 0, 0, 0.70),
+      -3px -3px 0 rgba(0, 0, 0, 0.60),
+      3px -3px 0 rgba(0, 0, 0, 0.60),
+      -3px 3px 0 rgba(0, 0, 0, 0.60),
+      3px 3px 0 rgba(0, 0, 0, 0.60);
   }
 }
 

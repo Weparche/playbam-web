@@ -10,6 +10,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from 'react'
 
+import { lockScroll, unlockScroll } from '../../lib/scrollLock'
 import Card from '../ui/Card'
 import { resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
 import {
@@ -221,8 +222,7 @@ export default function InvitationMainEditor({
     if (!titleStylePanel) {
       return undefined
     }
-    const prevOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    lockScroll()
     const onKey = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape') {
         setTitleStylePanel(null)
@@ -230,7 +230,7 @@ export default function InvitationMainEditor({
     }
     window.addEventListener('keydown', onKey)
     return () => {
-      document.body.style.overflow = prevOverflow
+      unlockScroll()
       window.removeEventListener('keydown', onKey)
     }
   }, [titleStylePanel])

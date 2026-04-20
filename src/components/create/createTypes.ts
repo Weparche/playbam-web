@@ -19,8 +19,8 @@ export type TitleFont =
   | 'libre-baskerville'
   | 'jakarta'
   | 'nunito'
-export type TitleColor = 'vidimose-logo' | 'white' | 'playbam-blue' | 'ink' | 'berry' | 'mint' | 'sunset'
-export type TitleOutline = 'none' | 'soft' | 'bold'
+export type TitleColor = 'white' | 'playbam-blue' | 'ink' | 'berry' | 'mint' | 'sunset'
+export type TitleOutline = 'none' | 'soft' | 'bold' | 'soft-black' | 'bold-black'
 export type TitleSize = 'sm' | 'md' | 'lg'
 export type RsvpMood = 'party' | 'sweet' | 'icons' | 'spark' | 'balloon' | 'thumbs' | 'check' | 'zoo' | 'sport' | 'space' | 'music' | 'crown' | 'heart' | 'fire' | 'nature' | 'pirate'
 export type AccentPalette = 'berry' | 'sky' | 'mint'
@@ -116,12 +116,6 @@ export const TITLE_FONT_OPTIONS = [
 
 export const TITLE_COLOR_OPTIONS = [
   {
-    id: 'vidimose-logo',
-    label: 'VidimoSe logo boje',
-    swatch: 'conic-gradient(#FFB020 0% 33%, #FF451A 33% 66%, #1BBFCF 66% 100%)',
-    description: 'Šareni naslov u bojama VidimoSe loga — žuto-narančasta, crvena i teal.',
-  },
-  {
     id: 'white',
     label: 'Bijela',
     swatch: '#ffffff',
@@ -167,13 +161,23 @@ export const TITLE_OUTLINE_OPTIONS = [
   },
   {
     id: 'soft',
-    label: 'Mekani outline',
-    description: 'Blagi svijetli obrub — bolja čitljivost na šarenim ilustracijama.',
+    label: 'Mekani bijeli',
+    description: 'Blagi bijeli obrub — bolja čitljivost na šarenim ilustracijama.',
   },
   {
     id: 'bold',
-    label: 'Jači outline',
-    description: 'Deblji obrub za jak kontrast i naglašen naslov.',
+    label: 'Jači bijeli',
+    description: 'Deblji bijeli obrub za jak kontrast i naglašen naslov.',
+  },
+  {
+    id: 'soft-black',
+    label: 'Mekani crni',
+    description: 'Blagi crni obrub — idealan za bijeli ili svijetli naslov na tamnoj pozadini.',
+  },
+  {
+    id: 'bold-black',
+    label: 'Jači crni',
+    description: 'Deblji crni obrub za maksimalni kontrast na svjetlijim naslovnicama.',
   },
 ] as const satisfies ReadonlyArray<{ id: TitleOutline; label: string; description: string }>
 
@@ -417,7 +421,6 @@ export function normalizeTitleColor(value: string | null | undefined): TitleColo
   const normalized = value?.trim().toLowerCase() ?? ''
 
   switch (normalized) {
-    case 'vidimose-logo':
     case 'white':
     case 'playbam-blue':
     case 'ink':
@@ -439,6 +442,8 @@ export function normalizeTitleOutline(value: string | null | undefined): TitleOu
     case 'none':
     case 'soft':
     case 'bold':
+    case 'soft-black':
+    case 'bold-black':
       return normalized
     default:
       return 'soft'
@@ -459,7 +464,6 @@ export function normalizeTitleSize(value: string | null | undefined): TitleSize 
 }
 
 export function getTitleColorValue(color: TitleColor) {
-  if (color === 'vidimose-logo') return '#FFB020'
   if (color === 'white') return '#ffffff'
   return TITLE_COLOR_OPTIONS.find((option) => option.id === color)?.swatch ?? '#336fd6'
 }

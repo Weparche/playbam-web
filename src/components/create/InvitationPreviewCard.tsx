@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Card from '../ui/Card'
 import { buildInvitationHeroTitle, resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
 import { useInvitationTitleAutoFit } from '../invitation/useInvitationTitleAutoFit'
@@ -22,26 +22,6 @@ type Props = {
   compact?: boolean
 }
 
-const LOGO_COLORS = ['#FFB020', '#FF451A', '#1BBFCF']
-
-function renderLogoColors(text: string): ReactNode {
-  const nodes: ReactNode[] = []
-  let colorIdx = 0
-  let i = 0
-  while (i < text.length) {
-    if (text[i] === ' ') {
-      nodes.push(' ')
-      i++
-    } else {
-      const chunk = text.slice(i, i + 2).replace(/ .*/, '')
-      const classIdx = colorIdx % LOGO_COLORS.length
-      nodes.push(<span key={i} className={`pb-logo-color-${classIdx}`}>{chunk}</span>)
-      colorIdx++
-      i += chunk.length
-    }
-  }
-  return nodes
-}
 
 export default function InvitationPreviewCard({ draft, compact }: Props) {
   const displayTitle =
@@ -99,10 +79,10 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
           <span className="pb-previewCard__eyebrow">Pozivnica</span>
           <h3
             ref={previewTitleRef}
-            className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}${titleColor === 'white' ? ' pb-previewCard__title--color-white' : ''}${titleColor === 'vidimose-logo' ? ' pb-previewCard__title--logo-colors' : ''}`}
+            className={`pb-previewCard__title pb-previewCard__title--${titleFont} pb-previewCard__title--outline-${titleOutline} pb-previewCard__title--size-${titleSize}${titleColor === 'white' ? ' pb-previewCard__title--color-white' : ''}`}
             style={{ ['--pb-preview-title-color' as string]: getTitleColorValue(titleColor) }}
           >
-            {titleColor === 'vidimose-logo' ? renderLogoColors(displayTitle) : displayTitle}
+            {displayTitle}
           </h3>
         </div>
       </div>

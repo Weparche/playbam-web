@@ -120,6 +120,7 @@ export default function PublicInvitationHero({
   const normalizedTitleOutline = normalizeTitleOutline(titleOutline)
   const normalizedTitleSize = normalizeTitleSize(titleSize)
   const resolvedMood = normalizeRsvpMood(typeof rsvpMood === 'string' ? rsvpMood : null)
+  const infoContrastClass = normalizedTitleColor === 'white' ? ' pb-inviteHero__infoBlock--soft-outline' : ''
   const frameRef = useRef<HTMLDivElement>(null)
   const titleWrapRef = useRef<HTMLElement>(null)
   const heroTitleRef = useRef<HTMLHeadingElement>(null)
@@ -188,7 +189,7 @@ export default function PublicInvitationHero({
             </h1>
           </header>
 
-          <div className="pb-inviteHero__infoBlock">
+          <div className={`pb-inviteHero__infoBlock${infoContrastClass}`}>
             <div className="pb-inviteHero__infoRow pb-inviteHero__infoRow--date">
               <span className="pb-inviteHero__infoIcon" aria-hidden>
                 <IconCalendar />

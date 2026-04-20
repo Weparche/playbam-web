@@ -113,7 +113,7 @@ export const COVER_THEME_MODAL_TABS = [
 
 export const COVER_THEME_OPTIONS = [
   ...LEGACY_COVER_THEME_OPTIONS.map((option) => ({ ...option, tab: 'birthday' as const })),
-  { id: 'frozen', tab: 'birthday', label: 'Frozen', description: 'Ledena bajka za malu zimsku avanturu.', image: '/frozen.png' },
+  { id: 'frozen', tab: 'birthday', label: 'Ledeno', description: 'Ledena bajka za malu zimsku avanturu.', image: '/frozen.png' },
   { id: 'sirena', tab: 'birthday', label: 'Sirena', description: 'Podvodna bajka s morskim detaljima.', image: '/sirena.png' },
   { id: 'beba_cura', tab: 'birth', label: 'Beba cura', description: 'Nje\u017ena naslovnica za dolazak djevoj\u010dice.', image: '/beba_cura.png' },
   { id: 'beba_decko', tab: 'birth', label: 'Beba de\u010dko', description: 'Nje\u017ena naslovnica za dolazak dje\u010daka.', image: '/beba_decko.png' },

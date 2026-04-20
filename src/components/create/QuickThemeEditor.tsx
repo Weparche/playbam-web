@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { COVER_THEME_MODAL_TABS, COVER_THEME_OPTIONS, getThemeTab, type CoverTheme, type CoverThemeTab, type InvitationCreateDraft } from './createTypes'
 
 type Props = {
@@ -11,13 +11,15 @@ export default function QuickThemeEditor({ draft, onThemeChange }: Props) {
     ? draft.theme
     : COVER_THEME_OPTIONS[0].id
   const [activeTab, setActiveTab] = useState<CoverThemeTab>(() => getThemeTab(activeTheme))
+  const previousThemeRef = useRef<CoverTheme>(activeTheme)
   const filteredThemes = useMemo(() => COVER_THEME_OPTIONS.filter((option) => option.tab === activeTab), [activeTab])
 
   useEffect(() => {
-    if (!filteredThemes.some((option) => option.id === activeTheme)) {
+    if (previousThemeRef.current !== activeTheme) {
+      previousThemeRef.current = activeTheme
       setActiveTab(getThemeTab(activeTheme))
     }
-  }, [activeTheme, filteredThemes])
+  }, [activeTheme])
 
   return (
     <div className="pb-quickEditor">

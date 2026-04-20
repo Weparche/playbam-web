@@ -5446,14 +5446,14 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 /* Gost pregled (host): RSVP centrirano kao info blok / pozadina — bez dodatnog pomaka ulijevo */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-  left: calc(50% - 1.95rem - 5px);
+  left: calc(50% - 1.95rem - 10px);
   top: calc(63.4% + 0.7rem);
   transform: translateX(-50%) scale(0.9);
   transform-origin: center top;
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-  transform: translateX(calc(-50% - 0.34rem - 5px)) scale(0.9);
+  transform: translateX(calc(-50% - 0.34rem - 10px)) scale(0.9);
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__accessCard {
@@ -10701,7 +10701,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-  top: calc(37.9% + 2px);
+  top: calc(37.9% + 5px);
 }
 
 /* Malo veći razmak između prvog i drugog retka naslova */
@@ -10744,7 +10744,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-    top: calc(37.4% + 2px);
+    top: calc(37.4% + 5px);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-lg {
@@ -10752,11 +10752,11 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-md {
-    font-size: clamp(2.8rem, 10.3vw, 4.3rem);
+    font-size: clamp(1.4rem, 5.15vw, 2.15rem);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-sm {
-    font-size: clamp(1.96rem, 7.7vw, 2.96rem);
+    font-size: clamp(0.98rem, 3.85vw, 1.48rem);
   }
 }
 
@@ -10887,35 +10887,35 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-soft-black,
   .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-soft-black {
     text-shadow:
-      -3px -3px 0 rgba(0, 0, 0, 0.84),
-      3px -3px 0 rgba(0, 0, 0, 0.84),
-      -3px 3px 0 rgba(0, 0, 0, 0.84),
-      3px 3px 0 rgba(0, 0, 0, 0.84),
-      0 -3px 0 rgba(0, 0, 0, 0.84),
-      0 3px 0 rgba(0, 0, 0, 0.84),
-      -3px 0 0 rgba(0, 0, 0, 0.84),
-      3px 0 0 rgba(0, 0, 0, 0.84);
+      -2px -2px 0 rgba(0, 0, 0, 0.74),
+      2px -2px 0 rgba(0, 0, 0, 0.74),
+      -2px 2px 0 rgba(0, 0, 0, 0.74),
+      2px 2px 0 rgba(0, 0, 0, 0.74),
+      0 -2px 0 rgba(0, 0, 0, 0.74),
+      0 2px 0 rgba(0, 0, 0, 0.74),
+      -2px 0 0 rgba(0, 0, 0, 0.74),
+      2px 0 0 rgba(0, 0, 0, 0.74);
   }
 
   .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-bold-black,
   .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-bold-black {
     text-shadow:
-      -3px -3px 0 rgba(0, 0, 0, 0.92),
-      3px -3px 0 rgba(0, 0, 0, 0.92),
-      -3px 3px 0 rgba(0, 0, 0, 0.92),
-      3px 3px 0 rgba(0, 0, 0, 0.92),
-      0 -3px 0 rgba(0, 0, 0, 0.92),
-      0 3px 0 rgba(0, 0, 0, 0.92),
-      -3px 0 0 rgba(0, 0, 0, 0.92),
-      3px 0 0 rgba(0, 0, 0, 0.92),
-      -4px 0 0 rgba(0, 0, 0, 0.70),
-      4px 0 0 rgba(0, 0, 0, 0.70),
-      0 -4px 0 rgba(0, 0, 0, 0.70),
-      0 4px 0 rgba(0, 0, 0, 0.70),
-      -4px -4px 0 rgba(0, 0, 0, 0.60),
-      4px -4px 0 rgba(0, 0, 0, 0.60),
-      -4px 4px 0 rgba(0, 0, 0, 0.60),
-      4px 4px 0 rgba(0, 0, 0, 0.60);
+      -2px -2px 0 rgba(0, 0, 0, 0.84),
+      2px -2px 0 rgba(0, 0, 0, 0.84),
+      -2px 2px 0 rgba(0, 0, 0, 0.84),
+      2px 2px 0 rgba(0, 0, 0, 0.84),
+      0 -2px 0 rgba(0, 0, 0, 0.84),
+      0 2px 0 rgba(0, 0, 0, 0.84),
+      -2px 0 0 rgba(0, 0, 0, 0.84),
+      2px 0 0 rgba(0, 0, 0, 0.84),
+      -3px 0 0 rgba(0, 0, 0, 0.58),
+      3px 0 0 rgba(0, 0, 0, 0.58),
+      0 -3px 0 rgba(0, 0, 0, 0.58),
+      0 3px 0 rgba(0, 0, 0, 0.58),
+      -3px -3px 0 rgba(0, 0, 0, 0.44),
+      3px -3px 0 rgba(0, 0, 0, 0.44),
+      -3px 3px 0 rgba(0, 0, 0, 0.44),
+      3px 3px 0 rgba(0, 0, 0, 0.44);
   }
 
   .pb-previewCard__title--outline-soft {
@@ -11168,7 +11168,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  margin-top: calc(0.78rem - 13px + 3.25px + 0.2rem + 5px);
+  margin-top: calc(0.78rem - 13px + 3.25px + 5px);
 }
 
 @media (max-width: 640px) {
@@ -11177,7 +11177,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.2rem + 5px);
+    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 5px);
   }
 }
 
@@ -11187,7 +11187,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-    margin-top: calc(0.78rem - 13px + 3.25px + 0.5cqh + 5px);
+    margin-top: calc(0.78rem - 13px + 3.25px + 5px);
   }
 
   @media (max-width: 640px) {
@@ -11196,7 +11196,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     }
 
     .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-      margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.5cqh + 5px);
+      margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 5px);
     }
   }
 }
@@ -11277,7 +11277,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   width: 71%;
   margin: 0;
   padding: 0;
-  transform: translateX(calc(-50% - 0.18rem - 5px));
+  transform: translateX(calc(-50% - 0.18rem - 10px));
   display: grid;
   justify-items: center;
   gap: 0.8rem;
@@ -11465,7 +11465,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 /* /pozivnica: privatna kartica malo niže */
 .pb-invitePage .pb-inviteHero__accessCard {
-  bottom: 0.55%;
+  bottom: 3px;
   /* Manje zauzima, sigurnije ispod RSVP-a */
   padding: 0.62rem 0.72rem;
 }

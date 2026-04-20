@@ -10752,7 +10752,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__title--size-lg {
-    font-size: clamp(1.932rem, 7.015vw, 3.45rem);
+    font-size: clamp(2.2218rem, 8.06725vw, 3.9675rem);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-md {

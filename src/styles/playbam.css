@@ -10748,7 +10748,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-lg {
-    font-size: clamp(2.912rem, 10.432vw, 5.248rem);
+    font-size: clamp(1.68rem, 6.1vw, 3rem);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-md {
@@ -10887,35 +10887,31 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-soft-black,
   .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-soft-black {
     text-shadow:
-      -2px -2px 0 rgba(0, 0, 0, 0.74),
-      2px -2px 0 rgba(0, 0, 0, 0.74),
-      -2px 2px 0 rgba(0, 0, 0, 0.74),
-      2px 2px 0 rgba(0, 0, 0, 0.74),
-      0 -2px 0 rgba(0, 0, 0, 0.74),
-      0 2px 0 rgba(0, 0, 0, 0.74),
-      -2px 0 0 rgba(0, 0, 0, 0.74),
-      2px 0 0 rgba(0, 0, 0, 0.74);
+      -1px -1px 0 rgba(0, 0, 0, 0.62),
+      1px -1px 0 rgba(0, 0, 0, 0.62),
+      -1px 1px 0 rgba(0, 0, 0, 0.62),
+      1px 1px 0 rgba(0, 0, 0, 0.62),
+      0 -1px 0 rgba(0, 0, 0, 0.62),
+      0 1px 0 rgba(0, 0, 0, 0.62),
+      -1px 0 0 rgba(0, 0, 0, 0.62),
+      1px 0 0 rgba(0, 0, 0, 0.62);
   }
 
   .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-bold-black,
   .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-bold-black {
     text-shadow:
-      -2px -2px 0 rgba(0, 0, 0, 0.84),
-      2px -2px 0 rgba(0, 0, 0, 0.84),
-      -2px 2px 0 rgba(0, 0, 0, 0.84),
-      2px 2px 0 rgba(0, 0, 0, 0.84),
-      0 -2px 0 rgba(0, 0, 0, 0.84),
-      0 2px 0 rgba(0, 0, 0, 0.84),
-      -2px 0 0 rgba(0, 0, 0, 0.84),
-      2px 0 0 rgba(0, 0, 0, 0.84),
-      -3px 0 0 rgba(0, 0, 0, 0.58),
-      3px 0 0 rgba(0, 0, 0, 0.58),
-      0 -3px 0 rgba(0, 0, 0, 0.58),
-      0 3px 0 rgba(0, 0, 0, 0.58),
-      -3px -3px 0 rgba(0, 0, 0, 0.44),
-      3px -3px 0 rgba(0, 0, 0, 0.44),
-      -3px 3px 0 rgba(0, 0, 0, 0.44),
-      3px 3px 0 rgba(0, 0, 0, 0.44);
+      -1px -1px 0 rgba(0, 0, 0, 0.72),
+      1px -1px 0 rgba(0, 0, 0, 0.72),
+      -1px 1px 0 rgba(0, 0, 0, 0.72),
+      1px 1px 0 rgba(0, 0, 0, 0.72),
+      0 -1px 0 rgba(0, 0, 0, 0.72),
+      0 1px 0 rgba(0, 0, 0, 0.72),
+      -1px 0 0 rgba(0, 0, 0, 0.72),
+      1px 0 0 rgba(0, 0, 0, 0.72),
+      -2px 0 0 rgba(0, 0, 0, 0.46),
+      2px 0 0 rgba(0, 0, 0, 0.46),
+      0 -2px 0 rgba(0, 0, 0, 0.46),
+      0 2px 0 rgba(0, 0, 0, 0.46);
   }
 
   .pb-previewCard__title--outline-soft {

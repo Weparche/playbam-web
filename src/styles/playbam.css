@@ -10758,6 +10758,18 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-sm {
     font-size: clamp(0.98rem, 3.85vw, 1.48rem);
   }
+
+  .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__title--size-lg {
+    font-size: clamp(2.184rem, 7.93vw, 3.9rem);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__title--size-md {
+    font-size: clamp(1.82rem, 6.695vw, 2.795rem);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__title--size-sm {
+    font-size: clamp(1.274rem, 5.005vw, 1.924rem);
+  }
 }
 
 @media (max-width: 520px) {

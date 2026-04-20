@@ -5446,14 +5446,14 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 /* Gost pregled (host): RSVP centrirano kao info blok / pozadina — bez dodatnog pomaka ulijevo */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-  left: calc(50% - 1.95rem);
+  left: calc(50% - 1.95rem - 5px);
   top: calc(63.4% + 0.7rem);
   transform: translateX(-50%) scale(0.9);
   transform-origin: center top;
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-  transform: translateX(calc(-50% - 0.34rem)) scale(0.9);
+  transform: translateX(calc(-50% - 0.34rem - 5px)) scale(0.9);
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__accessCard {
@@ -10700,6 +10700,10 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   top: calc(63.4% - 10% + 7%);
 }
 
+.pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
+  top: calc(37.9% + 2px);
+}
+
 /* Malo veći razmak između prvog i drugog retka naslova */
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--storybook {
   line-height: 1.22;
@@ -10737,6 +10741,22 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
     /* Tablet/mobile breakpoint: isti neto pomak kao web */
     top: calc(62.9% - 10% + 7%);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
+    top: calc(37.4% + 2px);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-lg {
+    font-size: clamp(2.912rem, 10.432vw, 5.248rem);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-md {
+    font-size: clamp(2.8rem, 10.3vw, 4.3rem);
+  }
+
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-sm {
+    font-size: clamp(1.96rem, 7.7vw, 2.96rem);
   }
 }
 
@@ -10831,71 +10851,71 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-soft,
   .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-soft {
     text-shadow:
-      -2px -2px 0 rgba(255, 255, 255, 0.96),
-      2px -2px 0 rgba(255, 255, 255, 0.96),
-      -2px 2px 0 rgba(255, 255, 255, 0.96),
-      2px 2px 0 rgba(255, 255, 255, 0.96),
-      0 -2px 0 rgba(255, 255, 255, 0.96),
-      0 2px 0 rgba(255, 255, 255, 0.96),
-      -2px 0 0 rgba(255, 255, 255, 0.96),
-      2px 0 0 rgba(255, 255, 255, 0.96),
+      -3px -3px 0 rgba(255, 255, 255, 0.96),
+      3px -3px 0 rgba(255, 255, 255, 0.96),
+      -3px 3px 0 rgba(255, 255, 255, 0.96),
+      3px 3px 0 rgba(255, 255, 255, 0.96),
+      0 -3px 0 rgba(255, 255, 255, 0.96),
+      0 3px 0 rgba(255, 255, 255, 0.96),
+      -3px 0 0 rgba(255, 255, 255, 0.96),
+      3px 0 0 rgba(255, 255, 255, 0.96),
       0 12px 30px rgba(25, 45, 80, 0.1);
   }
 
   .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-bold,
   .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-bold {
     text-shadow:
-      -2px -2px 0 rgba(255, 255, 255, 0.98),
-      2px -2px 0 rgba(255, 255, 255, 0.98),
-      -2px 2px 0 rgba(255, 255, 255, 0.98),
-      2px 2px 0 rgba(255, 255, 255, 0.98),
-      0 -2px 0 rgba(255, 255, 255, 0.98),
-      0 2px 0 rgba(255, 255, 255, 0.98),
-      -2px 0 0 rgba(255, 255, 255, 0.98),
-      2px 0 0 rgba(255, 255, 255, 0.98),
-      -3px 0 0 rgba(255, 255, 255, 0.92),
-      3px 0 0 rgba(255, 255, 255, 0.92),
-      0 -3px 0 rgba(255, 255, 255, 0.92),
-      0 3px 0 rgba(255, 255, 255, 0.92),
-      -3px -3px 0 rgba(255, 255, 255, 0.88),
-      3px -3px 0 rgba(255, 255, 255, 0.88),
-      -3px 3px 0 rgba(255, 255, 255, 0.88),
-      3px 3px 0 rgba(255, 255, 255, 0.88),
+      -3px -3px 0 rgba(255, 255, 255, 0.98),
+      3px -3px 0 rgba(255, 255, 255, 0.98),
+      -3px 3px 0 rgba(255, 255, 255, 0.98),
+      3px 3px 0 rgba(255, 255, 255, 0.98),
+      0 -3px 0 rgba(255, 255, 255, 0.98),
+      0 3px 0 rgba(255, 255, 255, 0.98),
+      -3px 0 0 rgba(255, 255, 255, 0.98),
+      3px 0 0 rgba(255, 255, 255, 0.98),
+      -4px 0 0 rgba(255, 255, 255, 0.92),
+      4px 0 0 rgba(255, 255, 255, 0.92),
+      0 -4px 0 rgba(255, 255, 255, 0.92),
+      0 4px 0 rgba(255, 255, 255, 0.92),
+      -4px -4px 0 rgba(255, 255, 255, 0.88),
+      4px -4px 0 rgba(255, 255, 255, 0.88),
+      -4px 4px 0 rgba(255, 255, 255, 0.88),
+      4px 4px 0 rgba(255, 255, 255, 0.88),
       0 14px 32px rgba(25, 45, 80, 0.12);
   }
 
   .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-soft-black,
   .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-soft-black {
     text-shadow:
-      -2px -2px 0 rgba(0, 0, 0, 0.84),
-      2px -2px 0 rgba(0, 0, 0, 0.84),
-      -2px 2px 0 rgba(0, 0, 0, 0.84),
-      2px 2px 0 rgba(0, 0, 0, 0.84),
-      0 -2px 0 rgba(0, 0, 0, 0.84),
-      0 2px 0 rgba(0, 0, 0, 0.84),
-      -2px 0 0 rgba(0, 0, 0, 0.84),
-      2px 0 0 rgba(0, 0, 0, 0.84);
+      -3px -3px 0 rgba(0, 0, 0, 0.84),
+      3px -3px 0 rgba(0, 0, 0, 0.84),
+      -3px 3px 0 rgba(0, 0, 0, 0.84),
+      3px 3px 0 rgba(0, 0, 0, 0.84),
+      0 -3px 0 rgba(0, 0, 0, 0.84),
+      0 3px 0 rgba(0, 0, 0, 0.84),
+      -3px 0 0 rgba(0, 0, 0, 0.84),
+      3px 0 0 rgba(0, 0, 0, 0.84);
   }
 
   .pb-inviteHero__title--storybook.pb-inviteHero__title--outline-bold-black,
   .pb-inviteHero__rsvpTitle--storybook.pb-inviteHero__title--outline-bold-black {
     text-shadow:
-      -2px -2px 0 rgba(0, 0, 0, 0.92),
-      2px -2px 0 rgba(0, 0, 0, 0.92),
-      -2px 2px 0 rgba(0, 0, 0, 0.92),
-      2px 2px 0 rgba(0, 0, 0, 0.92),
-      0 -2px 0 rgba(0, 0, 0, 0.92),
-      0 2px 0 rgba(0, 0, 0, 0.92),
-      -2px 0 0 rgba(0, 0, 0, 0.92),
-      2px 0 0 rgba(0, 0, 0, 0.92),
-      -3px 0 0 rgba(0, 0, 0, 0.70),
-      3px 0 0 rgba(0, 0, 0, 0.70),
-      0 -3px 0 rgba(0, 0, 0, 0.70),
-      0 3px 0 rgba(0, 0, 0, 0.70),
-      -3px -3px 0 rgba(0, 0, 0, 0.60),
-      3px -3px 0 rgba(0, 0, 0, 0.60),
-      -3px 3px 0 rgba(0, 0, 0, 0.60),
-      3px 3px 0 rgba(0, 0, 0, 0.60);
+      -3px -3px 0 rgba(0, 0, 0, 0.92),
+      3px -3px 0 rgba(0, 0, 0, 0.92),
+      -3px 3px 0 rgba(0, 0, 0, 0.92),
+      3px 3px 0 rgba(0, 0, 0, 0.92),
+      0 -3px 0 rgba(0, 0, 0, 0.92),
+      0 3px 0 rgba(0, 0, 0, 0.92),
+      -3px 0 0 rgba(0, 0, 0, 0.92),
+      3px 0 0 rgba(0, 0, 0, 0.92),
+      -4px 0 0 rgba(0, 0, 0, 0.70),
+      4px 0 0 rgba(0, 0, 0, 0.70),
+      0 -4px 0 rgba(0, 0, 0, 0.70),
+      0 4px 0 rgba(0, 0, 0, 0.70),
+      -4px -4px 0 rgba(0, 0, 0, 0.60),
+      4px -4px 0 rgba(0, 0, 0, 0.60),
+      -4px 4px 0 rgba(0, 0, 0, 0.60),
+      4px 4px 0 rgba(0, 0, 0, 0.60);
   }
 
   .pb-previewCard__title--outline-soft {
@@ -11257,7 +11277,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   width: 71%;
   margin: 0;
   padding: 0;
-  transform: translateX(calc(-50% - 0.18rem));
+  transform: translateX(calc(-50% - 0.18rem - 5px));
   display: grid;
   justify-items: center;
   gap: 0.8rem;

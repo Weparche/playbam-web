@@ -6984,9 +6984,31 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-previewCard__title--logo-colors {
-  -webkit-text-fill-color: unset;
-  color: unset;
-  text-shadow: none;
+  -webkit-text-fill-color: unset !important;
+  color: unset !important;
+  text-shadow: none !important;
+}
+
+.pb-logo-color-0 {
+  color: #FFB020 !important;
+  -webkit-text-fill-color: #FFB020 !important;
+  text-shadow: none !important;
+}
+
+.pb-logo-color-1 {
+  color: #FF451A !important;
+  -webkit-text-fill-color: #FF451A !important;
+  text-shadow: none !important;
+}
+
+.pb-logo-color-2 {
+  color: #1BBFCF !important;
+  -webkit-text-fill-color: #1BBFCF !important;
+  text-shadow: none !important;
+}
+
+.pb-previewCard__title--color-white.pb-previewCard__title--outline-none {
+  text-shadow: none !important;
 }
 
 .pb-previewCard__title--color-white.pb-previewCard__title--outline-soft {
@@ -6998,7 +7020,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     0 -1px 0 rgba(0, 0, 0, 0.82),
     0 1px 0 rgba(0, 0, 0, 0.82),
     -1px 0 0 rgba(0, 0, 0, 0.82),
-    1px 0 0 rgba(0, 0, 0, 0.82);
+    1px 0 0 rgba(0, 0, 0, 0.82) !important;
 }
 
 .pb-previewCard__title--color-white.pb-previewCard__title--outline-bold {
@@ -7014,7 +7036,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     -3px 0 0 rgba(0, 0, 0, 0.60),
     3px 0 0 rgba(0, 0, 0, 0.60),
     0 -3px 0 rgba(0, 0, 0, 0.60),
-    0 3px 0 rgba(0, 0, 0, 0.60);
+    0 3px 0 rgba(0, 0, 0, 0.60) !important;
 }
 
 .pb-previewCard__title--outline-none {
@@ -10683,6 +10705,38 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
       3px -3px 0 rgba(255, 255, 255, 0.82),
       -3px 3px 0 rgba(255, 255, 255, 0.82),
       3px 3px 0 rgba(255, 255, 255, 0.82);
+  }
+
+  .pb-previewCard__title--color-white.pb-previewCard__title--outline-soft {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.85),
+      2px -2px 0 rgba(0, 0, 0, 0.85),
+      -2px 2px 0 rgba(0, 0, 0, 0.85),
+      2px 2px 0 rgba(0, 0, 0, 0.85),
+      0 -2px 0 rgba(0, 0, 0, 0.85),
+      0 2px 0 rgba(0, 0, 0, 0.85),
+      -2px 0 0 rgba(0, 0, 0, 0.85),
+      2px 0 0 rgba(0, 0, 0, 0.85) !important;
+  }
+
+  .pb-previewCard__title--color-white.pb-previewCard__title--outline-bold {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.92),
+      2px -2px 0 rgba(0, 0, 0, 0.92),
+      -2px 2px 0 rgba(0, 0, 0, 0.92),
+      2px 2px 0 rgba(0, 0, 0, 0.92),
+      0 -2px 0 rgba(0, 0, 0, 0.92),
+      0 2px 0 rgba(0, 0, 0, 0.92),
+      -2px 0 0 rgba(0, 0, 0, 0.92),
+      2px 0 0 rgba(0, 0, 0, 0.92),
+      -3px 0 0 rgba(0, 0, 0, 0.70),
+      3px 0 0 rgba(0, 0, 0, 0.70),
+      0 -3px 0 rgba(0, 0, 0, 0.70),
+      0 3px 0 rgba(0, 0, 0, 0.70),
+      -3px -3px 0 rgba(0, 0, 0, 0.60),
+      3px -3px 0 rgba(0, 0, 0, 0.60),
+      -3px 3px 0 rgba(0, 0, 0, 0.60),
+      3px 3px 0 rgba(0, 0, 0, 0.60) !important;
   }
 }
 

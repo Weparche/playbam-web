@@ -34,8 +34,8 @@ function renderLogoColors(text: string): ReactNode {
       i++
     } else {
       const chunk = text.slice(i, i + 2).replace(/ .*/, '')
-      const c = LOGO_COLORS[colorIdx % LOGO_COLORS.length]
-      nodes.push(<span key={i} style={{ color: c, WebkitTextFillColor: c, textShadow: 'none' }}>{chunk}</span>)
+      const classIdx = colorIdx % LOGO_COLORS.length
+      nodes.push(<span key={i} className={`pb-logo-color-${classIdx}`}>{chunk}</span>)
       colorIdx++
       i += chunk.length
     }

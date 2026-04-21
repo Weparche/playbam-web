@@ -2818,6 +2818,14 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   gap: 1rem;
 }
 
+/* Placeholder naslova: bez „outline” text-shadowa i bez drop sjene (naslov koji korisnik upiše zadržava stil). */
+.pb-hostUpdateEditor .pb-createEditor__titleInput::placeholder {
+  color: rgba(23, 36, 59, 0.36);
+  -webkit-text-fill-color: rgba(23, 36, 59, 0.36);
+  text-shadow: none;
+  -webkit-text-stroke: 0 transparent;
+}
+
 .pb-hostUpdateEditor .pb-createEditor__heroRsvpBlock {
   zoom: 0.91;
 }
@@ -2855,18 +2863,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 
   .pb-hostUpdateEditor .pb-createEditor__titleInput::placeholder {
-    color: rgba(23, 36, 59, 0.36);
-    -webkit-text-fill-color: rgba(23, 36, 59, 0.36);
-    text-shadow: none;
-    -webkit-text-stroke: 0 transparent;
-  }
-
-  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--none,
-  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft,
-  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold,
-  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft-black,
-  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold-black {
-    text-shadow: none;
+    color: rgba(23, 36, 59, 0.36) !important;
+    -webkit-text-fill-color: rgba(23, 36, 59, 0.36) !important;
+    text-shadow: none !important;
+    -webkit-text-stroke: 0 transparent !important;
   }
 
   .pb-hostUpdateEditor .pb-createEditor__statusChip--ready {

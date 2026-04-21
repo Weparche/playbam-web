@@ -39,10 +39,12 @@ import {
   getPublicInvitation,
   isApiError,
   listMembershipRequests,
+  proxyImageUrl,
   updateInvitation,
   reserveInvitationWishlistItem,
   reviewMembershipRequest,
   saveRsvp,
+  unfurlLink,
   updateFamilyProfile,
   updateInvitationWishlistItem,
   type FamilyProfilePayload,
@@ -82,6 +84,14 @@ type WishlistDraft = {
   priceLabel: string
   imageUrl: string
   priorityOrder: string
+  linkMeta?: WishlistLinkMeta
+}
+
+type WishlistLinkMeta = {
+  title?: string
+  image?: string
+  domain?: string
+  favicon?: string
 }
 
 type PartyDetailsDraft = {
@@ -142,6 +152,12 @@ function createWishlistDraft(item?: InvitationWishlistItem | null): WishlistDraf
     priceLabel: item?.priceLabel ?? '',
     imageUrl: item?.imageUrl ?? '',
     priorityOrder: item ? String(item.priorityOrder) : '0',
+    linkMeta: item?.url
+      ? {
+          title: item.title ?? undefined,
+          image: item.imageUrl ?? undefined,
+        }
+      : undefined,
   }
 }
 
@@ -2242,7 +2258,69 @@ export default function SharedInvitationPage() {
   )
 }
 
+function isValidWishlistUrl(value: string) {
+  if (!value.trim()) return false
+  try {
+    const url = new URL(value)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
+function WishlistLinkPreview({ meta }: { meta: WishlistLinkMeta }) {
+  const [imgOk, setImgOk] = useState(true)
+  const hasOgImage = !!meta.image
+  const showImage = hasOgImage && imgOk
+
+  if (!meta.image && !meta.favicon && !meta.domain) return null
+
+  return (
+    <div className={`pb-quickEditor__linkPreview${showImage ? ' pb-quickEditor__linkPreview--rich' : ''}`}>
+      {showImage ? (
+        <img
+          className="pb-quickEditor__linkOgImage"
+          src={proxyImageUrl(meta.image!)}
+          alt=""
+          aria-hidden="true"
+          onError={() => setImgOk(false)}
+        />
+      ) : null}
+      <div className="pb-quickEditor__linkBar">
+        {meta.favicon ? (
+          <img
+            className="pb-quickEditor__linkFavicon"
+            src={proxyImageUrl(meta.favicon)}
+            alt=""
+            aria-hidden="true"
+            onError={(event) => { (event.target as HTMLImageElement).style.display = 'none' }}
+          />
+        ) : null}
+        <div className="pb-quickEditor__linkMeta">
+          {meta.title ? <span className="pb-quickEditor__linkTitle">{meta.title}</span> : null}
+          {meta.domain ? <span className="pb-quickEditor__linkDomain">{meta.domain}</span> : null}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function WishlistForm({ draft, error, saving, isEditing, onChange, onSave, onCancel }: { draft: WishlistDraft; error: string; saving: boolean; isEditing: boolean; onChange: (draft: WishlistDraft) => void; onSave: () => void; onCancel: () => void }) {
+  const [fetchingLinkMeta, setFetchingLinkMeta] = useState(false)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lastFetchedUrlRef = useRef(draft.url)
+  const latestDraftRef = useRef(draft)
+
+  latestDraftRef.current = draft
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current)
+      }
+    }
+  }, [])
+
   const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) {
@@ -2267,12 +2345,71 @@ function WishlistForm({ draft, error, saving, isEditing, onChange, onSave, onCan
     }
   }
 
+  const handleUrlChange = (value: string) => {
+    const nextDraft = { ...latestDraftRef.current, url: value }
+    onChange(nextDraft)
+
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
+
+    if (!isValidWishlistUrl(value)) {
+      lastFetchedUrlRef.current = ''
+      setFetchingLinkMeta(false)
+      if (latestDraftRef.current.linkMeta) {
+        onChange({ ...nextDraft, linkMeta: undefined })
+      }
+      return
+    }
+
+    if (value === lastFetchedUrlRef.current && latestDraftRef.current.linkMeta) {
+      return
+    }
+
+    setFetchingLinkMeta(true)
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const result = await unfurlLink(value)
+        lastFetchedUrlRef.current = value
+        const nextMeta = {
+          title: result.title ?? undefined,
+          image: result.image ?? undefined,
+          domain: result.domain ?? undefined,
+          favicon: result.favicon ?? undefined,
+        }
+
+        const currentDraft = latestDraftRef.current
+        onChange({
+          ...currentDraft,
+          url: value,
+          imageUrl: currentDraft.imageUrl.trim() || result.image || '',
+          linkMeta: nextMeta,
+        })
+      } catch {
+        onChange({ ...latestDraftRef.current, url: value, linkMeta: undefined })
+      } finally {
+        setFetchingLinkMeta(false)
+      }
+    }, 600)
+  }
+
   return (
     <div className="pb-profileForm pb-inviteHostAddCard">
       <div className="pb-formGrid">
         <label className="pb-formField"><span className="pb-formLabel">Naziv poklona <span className="pb-formLabel__required">*</span></span><input className="pb-input" type="text" required aria-required="true" value={draft.title} onChange={(event) => onChange({ ...draft, title: event.target.value })} /></label>
         <label className="pb-formField"><span className="pb-formLabel">Opis</span><input className="pb-input" type="text" value={draft.description} onChange={(event) => onChange({ ...draft, description: event.target.value })} /></label>
-        <label className="pb-formField"><span className="pb-formLabel">Link</span><input className="pb-input" type="url" value={draft.url} onChange={(event) => onChange({ ...draft, url: event.target.value })} /></label>
+        <div className="pb-formField">
+          <span className="pb-formLabel">Link</span>
+          {fetchingLinkMeta ? (
+            <span className="pb-quickEditor__linkSpinner" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M8 1.5a6.5 6.5 0 1 1-4.6 1.9" />
+              </svg>
+            </span>
+          ) : null}
+          {!fetchingLinkMeta && draft.linkMeta ? <WishlistLinkPreview meta={draft.linkMeta} /> : null}
+          <input className="pb-input" type="url" value={draft.url} onChange={(event) => handleUrlChange(event.target.value)} />
+        </div>
         <label className="pb-formField"><span className="pb-formLabel">Cijena</span><input className="pb-input" type="text" value={draft.priceLabel} onChange={(event) => onChange({ ...draft, priceLabel: event.target.value })} /></label>
         <label className="pb-formField">
           <span className="pb-formLabel">Dodaj sliku</span>

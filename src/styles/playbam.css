@@ -2837,6 +2837,67 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   box-sizing: border-box;
 }
 
+@media (max-width: 979px) {
+  .pb-hostUpdateEditor .pb-createEditor__eyebrow,
+  .pb-hostUpdateEditor .pb-createEditor__heroRsvpLabel,
+  .pb-hostUpdateEditor .pb-createEditor__bodyText,
+  .pb-hostUpdateEditor .pb-createEditor__sectionTitle,
+  .pb-hostUpdateEditor .pb-fontOption__name,
+  .pb-hostUpdateEditor .pb-previewCard__rsvpPill,
+  .pb-hostUpdateEditor .pb-previewCard__rsvpGlyph {
+    color: #111111;
+    -webkit-text-fill-color: #111111;
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__titleInput {
+    color: #111111 !important;
+    -webkit-text-fill-color: #111111 !important;
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--none,
+  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft,
+  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold,
+  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft-black,
+  .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold-black {
+    text-shadow: none;
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__statusChip--ready {
+    background: #173f2f;
+    border-color: #173f2f;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(23, 63, 47, 0.2);
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__statusChip--accent {
+    font-weight: 950;
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__infoCard--theme .pb-createEditor__cardHeader {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__infoCard--theme .pb-createEditor__cardMeta {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 0.15rem;
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__themePreviewRow {
+    margin-top: 0.95rem;
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__heroRsvpPreview .pb-previewCard__rsvpPill {
+    font-size: clamp(0.54rem, 3.3cqi + 0.24rem, 0.94rem);
+    min-height: clamp(1.82rem, 10.4cqi, 2.6rem);
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__heroRsvpPreview .pb-previewCard__rsvpGlyph {
+    font-size: clamp(0.82rem, 8.2cqi + 0.18rem, 1.72rem);
+  }
+}
+
 .pb-hostEditorActions {
   display: flex;
   justify-content: flex-start;
@@ -3210,22 +3271,18 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-hostDetailsEditor--matchTitle .pb-partyFact__label {
-  color: var(--pb-host-details-fg, #336fd6);
-  text-shadow:
-    0 0 1px rgba(255, 255, 255, 0.95),
-    0 1px 0 rgba(255, 255, 255, 0.55);
+  color: #111111;
+  text-shadow: none;
 }
 
 .pb-hostDetailsEditor--matchTitle .pb-invitePrivateCard__title {
-  color: var(--pb-host-details-fg, #336fd6);
-  text-shadow:
-    0 0 1px rgba(255, 255, 255, 0.92),
-    0 1px 0 rgba(255, 255, 255, 0.65);
+  color: #111111;
+  text-shadow: none;
 }
 
 .pb-hostDetailsEditor--matchTitle .pb-invitePrivateCard__subtitle {
   color: rgba(31, 36, 48, 0.62);
-  text-shadow: 0 0 1px rgba(255, 255, 255, 0.75);
+  text-shadow: none;
 }
 
 .pb-partyFact__value {
@@ -3237,12 +3294,9 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-hostDetailsEditor--matchTitle .pb-partyFact__value {
-  color: var(--pb-host-details-fg, #336fd6);
-  -webkit-text-fill-color: var(--pb-host-details-fg, #336fd6);
-  text-shadow:
-    0 0 1px rgba(255, 255, 255, 0.95),
-    0 1px 0 rgba(255, 255, 255, 0.75),
-    0 0 8px rgba(255, 255, 255, 0.35);
+  color: #111111;
+  -webkit-text-fill-color: #111111;
+  text-shadow: none;
 }
 
 .pb-inviteWishlist {

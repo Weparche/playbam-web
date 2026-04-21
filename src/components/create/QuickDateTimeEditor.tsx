@@ -1,5 +1,14 @@
 import { createPortal } from 'react-dom'
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
+} from 'react'
 
 import { formatPreviewDate, formatPreviewTime, getUpcomingDateOptions, type InvitationCreateDraft } from './createTypes'
 
@@ -54,7 +63,7 @@ function openNativePicker(input: HTMLInputElement | null) {
     try {
       pickerInput.showPicker()
     } catch {
-      // showPicker nije dostupan svugdje; fokus ostaje fallback.
+      // Fallback ostaje fokus na polju.
     }
   }
 }
@@ -63,14 +72,12 @@ function TimeComboField({
   label,
   value,
   min,
-  step,
   icon,
   onChange,
 }: {
   label: string
   value: string
   min?: string
-  step: number
   icon: ReactNode
   onChange: (value: string) => void
 }) {
@@ -147,6 +154,22 @@ function TimeComboField({
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [menuOpen])
 
+  const toggleMenu = () => {
+    setMenuOpen((open) => !open)
+  }
+
+  const handleShellKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      toggleMenu()
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      setMenuOpen(true)
+    }
+  }
+
   const menu = menuOpen
     ? createPortal(
         <div
@@ -186,18 +209,28 @@ function TimeComboField({
     <>
       <label className="pb-formField pb-quickEditor__pickerField">
         <span className="pb-formLabel">{label}</span>
-        <div ref={shellRef} className="pb-quickEditor__pickerShell">
+        <div
+          ref={shellRef}
+          className="pb-quickEditor__pickerShell"
+          role="button"
+          tabIndex={0}
+          aria-expanded={menuOpen}
+          aria-haspopup="listbox"
+          aria-label={`Otvori odabir za ${label.toLowerCase()}`}
+          onClick={toggleMenu}
+          onKeyDown={handleShellKeyDown}
+        >
           <span className="pb-quickEditor__pickerLeading" aria-hidden="true">
             {icon}
           </span>
           <input
             className="pb-input pb-quickEditor__pickerInput"
-            type="time"
-            min={min}
-            step={step}
+            type="text"
             value={value}
             autoComplete="off"
-            onChange={(event) => onChange(event.target.value)}
+            inputMode="none"
+            readOnly
+            placeholder="Odaberi vrijeme"
           />
           <button
             type="button"
@@ -207,7 +240,8 @@ function TimeComboField({
             aria-label={`Otvori brzi odabir za ${label.toLowerCase()}`}
             onClick={(event) => {
               event.preventDefault()
-              setMenuOpen((open) => !open)
+              event.stopPropagation()
+              toggleMenu()
             }}
           >
             <ChevronDownIcon />
@@ -311,7 +345,6 @@ export default function QuickDateTimeEditor({ draft, today, onFieldChange }: Pro
           <TimeComboField
             label="Vrijeme od"
             value={draft.time}
-            step={1800}
             icon={<ClockIcon />}
             onChange={(value) => onFieldChange('time', value)}
           />
@@ -319,14 +352,13 @@ export default function QuickDateTimeEditor({ draft, today, onFieldChange }: Pro
             label="Vrijeme do"
             min={draft.time || undefined}
             value={draft.timeEnd}
-            step={1800}
             icon={<ClockIcon />}
             onChange={(value) => onFieldChange('timeEnd', value)}
           />
         </div>
       </div>
 
-      <div className="pb-quickEditor__hint">Brzi izbor nudi termine na puni sat i pola sata, a točno vrijeme možeš i ručno upisati.</div>
+      <div className="pb-quickEditor__hint">Brzi izbor nudi termine na puni sat i pola sata preko dropdowna.</div>
       <div className="pb-quickEditor__hint">Termin se odmah vidi na live previewu kao raspon od-do.</div>
       <div className="pb-quickEditor__summary">
         <strong>{formatPreviewDate(draft.date)}</strong>

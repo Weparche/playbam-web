@@ -89,11 +89,12 @@ function TimeComboField({
   const allOptions = useMemo(() => Array.from({ length: 48 }, (_, index) => buildTimeOptionValue(index)), [])
 
   const options = useMemo(() => {
+    const startBoundary = min || (label === 'Vrijeme od' ? '11:30' : '')
     if (!min) {
-      return allOptions
+      return startBoundary ? allOptions.filter((option) => option > startBoundary) : allOptions
     }
-    return allOptions.filter((option) => option > min)
-  }, [allOptions, min])
+    return allOptions.filter((option) => option > startBoundary)
+  }, [allOptions, label, min])
 
   const updateMenuRect = useCallback(() => {
     const shell = shellRef.current

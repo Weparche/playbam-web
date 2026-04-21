@@ -6527,6 +6527,13 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 @media (max-width: 979px) {
+  .pb-main--createV2 .pb-createEditor__heroCard .pb-createEditor__eyebrow,
+  .pb-main--createV2 .pb-createEditor__heroCard .pb-createEditor__heroRsvpLabel,
+  .pb-main--createV2 .pb-createEditor__heroCard .pb-fontOption__name {
+    color: #111111;
+    -webkit-text-fill-color: #111111;
+  }
+
   .pb-createEditor__heroRsvpBlock {
     margin-top: 0.499rem;
     padding-top: 0.499rem;
@@ -6554,13 +6561,13 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   .pb-createEditor__heroRsvpPreview .pb-previewCard__rsvpPill {
     padding-block: clamp(0.253rem, 1.86cqi, 0.432rem);
     padding-inline: clamp(0.12rem, 1.46cqi, 0.479rem);
-    font-size: clamp(0.412rem, 2.53cqi + 0.186rem, 0.718rem);
+    font-size: clamp(0.494rem, 3.036cqi + 0.223rem, 0.862rem);
     gap: clamp(0.08rem, 1.2cqi, 0.306rem);
     min-height: clamp(1.397rem, 7.98cqi, 1.995rem);
   }
 
   .pb-createEditor__heroRsvpPreview .pb-previewCard__rsvpGlyph {
-    font-size: clamp(0.632rem, 6.32cqi + 0.133rem, 1.324rem);
+    font-size: clamp(0.758rem, 7.584cqi + 0.16rem, 1.589rem);
   }
 
   .pb-createEditor__heroRsvpPreview .pb-previewCard__rsvpPill--not-going {

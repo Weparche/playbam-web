@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
 
 import InvitationLiveChatPanel, { type ChatSenderLabelHint } from './InvitationLiveChatPanel'
+import WishlistTipPaymentSection from './WishlistTipPaymentSection'
 import Button from '../ui/Button'
 import PrivateToggleChevron from '../ui/PrivateToggleChevron'
 import PrivateToggleUnreadBadge from '../ui/PrivateToggleUnreadBadge'
@@ -483,6 +484,8 @@ export default function PrivateInvitationGuest({
                     })}
                   </ul>
                 ) : null}
+
+                <WishlistTipPaymentSection partyDetails={invitation.partyDetails} />
 
                 <div className="pb-inviteWish__guestAdd">
                   <Button

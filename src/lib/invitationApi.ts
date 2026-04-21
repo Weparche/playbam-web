@@ -102,6 +102,12 @@ export type InvitationPartyDetails = {
   extraDetails?: string | null
   contactName?: string | null
   contactMobile?: string | null
+  /** Poveznica za KEKS Pay (uklj. fragment #tag ako treba). */
+  wishlistKeksPayUrl?: string | null
+  /** IBAN za ručnu uplatu / kopiranje. */
+  wishlistBankIban?: string | null
+  /** Data URL ili URL slike uplatnice / bankovnog QR koda. */
+  wishlistPaymentImageUrl?: string | null
 }
 
 export type CreateInvitationPayload = {
@@ -417,6 +423,9 @@ function normalizePartyDetails(raw: unknown): InvitationPartyDetails | null {
     extraDetails: pick('extraDetails', 'extra_details'),
     contactName: pick('contactName', 'contact_name'),
     contactMobile: pick('contactMobile', 'contact_mobile'),
+    wishlistKeksPayUrl: pick('wishlistKeksPayUrl', 'wishlist_keks_pay_url'),
+    wishlistBankIban: pick('wishlistBankIban', 'wishlist_bank_iban'),
+    wishlistPaymentImageUrl: pick('wishlistPaymentImageUrl', 'wishlist_payment_image_url'),
   }
 
   if (
@@ -424,7 +433,10 @@ function normalizePartyDetails(raw: unknown): InvitationPartyDetails | null {
     !out.cafeLocation &&
     !out.extraDetails &&
     !out.contactName &&
-    !out.contactMobile
+    !out.contactMobile &&
+    !out.wishlistKeksPayUrl &&
+    !out.wishlistBankIban &&
+    !out.wishlistPaymentImageUrl
   ) {
     return null
   }

@@ -110,6 +110,9 @@ type PartyDetailsDraft = {
   extraDetails: string
   contactName: string
   contactMobile: string
+  wishlistKeksPayUrl: string
+  wishlistBankIban: string
+  wishlistPaymentImageUrl: string
 }
 
 type HostShortcutId = 'wishlist' | 'settings' | 'partyDetails' | 'requests' | 'shareGuest'
@@ -234,6 +237,9 @@ function createPartyDetailsDraft(details?: InvitationPartyDetails | null): Party
     extraDetails: details?.extraDetails ?? '',
     contactName: details?.contactName ?? '',
     contactMobile: details?.contactMobile ?? '',
+    wishlistKeksPayUrl: details?.wishlistKeksPayUrl ?? '',
+    wishlistBankIban: details?.wishlistBankIban ?? '',
+    wishlistPaymentImageUrl: details?.wishlistPaymentImageUrl ?? '',
   }
 }
 
@@ -269,6 +275,9 @@ function buildInvitationUpdatePayload(
       extraDetails: partyDetails.extraDetails.trim() || null,
       contactName: partyDetails.contactName.trim() || null,
       contactMobile: partyDetails.contactMobile.trim() || null,
+      wishlistKeksPayUrl: partyDetails.wishlistKeksPayUrl.trim() || null,
+      wishlistBankIban: partyDetails.wishlistBankIban.trim() || null,
+      wishlistPaymentImageUrl: partyDetails.wishlistPaymentImageUrl.trim() || null,
     },
   }
 }
@@ -656,6 +665,32 @@ export default function SharedInvitationPage() {
     }))
     setHostUpdateError('')
     setHostUpdateNotice('')
+  }
+
+  const handleWishlistTipImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) {
+      return
+    }
+    const maxBytes = 1_500_000
+    if (file.size > maxBytes) {
+      setHostUpdateError('Slika uplate je prevelika. Probaj manju datoteku (do oko 1,5 MB).')
+      return
+    }
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '')
+        reader.onerror = () => reject(new Error('READ_FAIL'))
+        reader.readAsDataURL(file)
+      })
+      if (dataUrl) {
+        updateHostPartyDetails('wishlistPaymentImageUrl', dataUrl)
+      }
+    } catch {
+      setHostUpdateError('Učitavanje slike nije uspjelo.')
+    }
   }
 
   const scrollToHostSection = (elementId: string) => {
@@ -2286,6 +2321,74 @@ export default function SharedInvitationPage() {
                           >
                             Dodaj poklon
                           </Button>
+                        </div>
+
+                        <div className="pb-wishlistTipHost">
+                          <h3 className="pb-wishlistTipHost__title">Uplati iznos po želji</h3>
+                          <p className="pb-wishlistTipHost__lead">
+                            Gosti mogu voljeno uplaćivati putem KEKS Paya ili prema podacima za bankovnu uplatu.
+                          </p>
+                          <div className="pb-formGrid">
+                            <label className="pb-formField">
+                              <span className="pb-formLabel">KEKS Pay poveznica</span>
+                              <input
+                                className="pb-input"
+                                type="url"
+                                autoComplete="off"
+                                placeholder="https://kekspay.hr/keks?a=kekstag&tag=#oznaka"
+                                value={hostPartyDetailsDraft.wishlistKeksPayUrl}
+                                onChange={(event) => updateHostPartyDetails('wishlistKeksPayUrl', event.target.value)}
+                              />
+                            </label>
+                            <label className="pb-formField">
+                              <span className="pb-formLabel">IBAN za uplatu</span>
+                              <input
+                                className="pb-input"
+                                type="text"
+                                autoComplete="off"
+                                placeholder="HR…"
+                                value={hostPartyDetailsDraft.wishlistBankIban}
+                                onChange={(event) => updateHostPartyDetails('wishlistBankIban', event.target.value)}
+                              />
+                            </label>
+                            <label className="pb-formField">
+                              <span className="pb-formLabel">Slika uplatnice ili bankovnog QR koda</span>
+                              <input
+                                className="pb-input pb-input--file"
+                                type="file"
+                                accept="image/*"
+                                onChange={(event) => void handleWishlistTipImageChange(event)}
+                              />
+                              <span className="pb-inviteWish__uploadHint">PNG ili JPG, do oko 1,5 MB.</span>
+                            </label>
+                          </div>
+                          {hostPartyDetailsDraft.wishlistPaymentImageUrl ? (
+                            <div className="pb-wishlistTipHost__preview">
+                              <img
+                                src={hostPartyDetailsDraft.wishlistPaymentImageUrl}
+                                alt="Pregled slike za uplatu"
+                                className="pb-wishlistTipHost__previewImg"
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={() => updateHostPartyDetails('wishlistPaymentImageUrl', '')}
+                              >
+                                Ukloni sliku
+                              </Button>
+                            </div>
+                          ) : null}
+                          <div className="pb-flowActions">
+                            <Button
+                              type="button"
+                              onClick={() => void handleHostInvitationSave()}
+                              disabled={savingHostInvitation}
+                            >
+                              {savingHostInvitation ? 'Spremanje…' : 'Spremi podatke o uplati'}
+                            </Button>
+                          </div>
+                          {hostUpdateError ? <div className="pb-inlineNote pb-inlineNote--error">{hostUpdateError}</div> : null}
+                          {hostUpdateNotice ? <div className="pb-inlineNote pb-inlineNote--info">{hostUpdateNotice}</div> : null}
                         </div>
                         </div>
                       </div>

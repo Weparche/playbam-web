@@ -10321,6 +10321,136 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   border: 1px solid rgba(31, 36, 48, 0.06);
 }
 
+.pb-wishlistTipHost {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(31, 36, 48, 0.08);
+}
+
+.pb-wishlistTipHost__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+.pb-wishlistTipHost__lead {
+  margin: 0 0 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: rgba(16, 24, 40, 0.72);
+}
+
+.pb-wishlistTipHost__preview {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.75rem;
+  justify-items: start;
+}
+
+.pb-wishlistTipHost__previewImg {
+  max-width: min(100%, 280px);
+  border-radius: 14px;
+  border: 1px solid rgba(31, 36, 48, 0.08);
+}
+
+.pb-wishlistTip {
+  margin-top: 1.1rem;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(31, 36, 48, 0.07);
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.06);
+}
+
+.pb-wishlistTip__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+.pb-wishlistTip__disclaimer {
+  margin: 0 0 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: rgba(16, 24, 40, 0.62);
+}
+
+.pb-wishlistTip__block {
+  margin-top: 0.75rem;
+}
+
+.pb-wishlistTip__block:first-of-type {
+  margin-top: 0;
+}
+
+.pb-wishlistTip__label {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(16, 24, 40, 0.52);
+}
+
+.pb-wishlistTip__keksRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.pb-wishlistTip__qr {
+  display: block;
+  border-radius: 12px;
+  border: 1px solid rgba(31, 36, 48, 0.08);
+  background: #fff;
+}
+
+.pb-wishlistTip__qrPlaceholder {
+  width: 200px;
+  height: 200px;
+  border-radius: 12px;
+  border: 1px dashed rgba(31, 36, 48, 0.15);
+  display: grid;
+  place-items: center;
+  color: rgba(16, 24, 40, 0.35);
+  font-size: 1.5rem;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.pb-wishlistTip__keksActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.pb-wishlistTip__payImage {
+  display: block;
+  max-width: 100%;
+  border-radius: 14px;
+  border: 1px solid rgba(31, 36, 48, 0.08);
+  margin-bottom: 0.65rem;
+}
+
+.pb-wishlistTip__ibanRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.pb-wishlistTip__iban {
+  font-size: 0.88rem;
+  word-break: break-all;
+  padding: 0.35rem 0.55rem;
+  border-radius: 10px;
+  background: rgba(31, 36, 48, 0.06);
+  color: #111111;
+}
+
 .pb-flowCard__text--hostWishlist {
   color: #111111;
   margin-top: 1rem;

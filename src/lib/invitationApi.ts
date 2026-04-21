@@ -776,6 +776,29 @@ export async function authGetMe(): Promise<VidimoseSession> {
   return request('/api/auth/me', { identity: null })
 }
 
+export type AdminInvitationRow = {
+  id: string
+  shareToken: string
+  publicSlug: string
+  title: string
+  celebrantName: string
+  date: string
+  time: string
+  location: string
+  theme: string | null
+  createdAt: string
+  updatedAt: string
+  hostEmail: string
+  hostName: string
+  rsvpCount: number
+  guestCount: number
+}
+
+export async function getAdminInvitations(): Promise<AdminInvitationRow[]> {
+  const data = await request<{ invitations: AdminInvitationRow[] }>('/api/admin/invitations')
+  return data.invitations
+}
+
 export async function authLogout(): Promise<void> {
   await request('/api/auth/logout', { method: 'POST', identity: null })
 }

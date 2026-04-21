@@ -63,6 +63,7 @@ import {
 import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
 import {
   countUnreadChatForHost,
+  countUnreadMembershipRequestsForHost,
   countUnreadWishlistForHost,
   ensurePrivateSectionBaseline,
   getPrivateSectionReadAt,
@@ -386,9 +387,14 @@ export default function SharedInvitationPage() {
   const [guestChatOpen, setGuestChatOpen] = useState(false)
   const [guestModalOpen, setGuestModalOpen] = useState(false)
   const [hostAccordionOpen, setHostAccordionOpen] = useState<HostAccordionSection | null>(null)
-  const [hostPrivateReadAt, setHostPrivateReadAt] = useState<{ chat: number | null; wishlist: number | null }>({
+  const [hostPrivateReadAt, setHostPrivateReadAt] = useState<{
+    chat: number | null
+    wishlist: number | null
+    requests: number | null
+  }>({
     chat: null,
     wishlist: null,
+    requests: null,
   })
   const hostAccordionUnreadPrevRef = useRef<HostAccordionSection | null>(null)
   const [hostAddGiftOpen, setHostAddGiftOpen] = useState(false)
@@ -551,9 +557,11 @@ export default function SharedInvitationPage() {
     }
     ensurePrivateSectionBaseline('host', 'chat', id)
     ensurePrivateSectionBaseline('host', 'wishlist', id)
+    ensurePrivateSectionBaseline('host', 'requests', id)
     setHostPrivateReadAt({
       chat: getPrivateSectionReadAt('host', 'chat', id),
       wishlist: getPrivateSectionReadAt('host', 'wishlist', id),
+      requests: getPrivateSectionReadAt('host', 'requests', id),
     })
   }, [invitation?.id, showHostStudio])
 
@@ -574,6 +582,11 @@ export default function SharedInvitationPage() {
       setPrivateSectionReadAt('host', 'wishlist', id, now)
       setHostPrivateReadAt((current) => ({ ...current, wishlist: now }))
     }
+    if (hostAccordionOpen === 'requests' && prev !== 'requests') {
+      const now = Date.now()
+      setPrivateSectionReadAt('host', 'requests', id, now)
+      setHostPrivateReadAt((current) => ({ ...current, requests: now }))
+    }
   }, [hostAccordionOpen, invitation?.id, showHostStudio])
 
   const hostChatUnreadCount = useMemo(
@@ -587,6 +600,14 @@ export default function SharedInvitationPage() {
         ? countUnreadWishlistForHost(wishlistItems, hostPrivateReadAt.wishlist, hostWishlistContributorLabel)
         : 0,
     [hostWishlistContributorLabel, invitation?.id, showHostStudio, wishlistItems, hostPrivateReadAt.wishlist],
+  )
+
+  const hostRequestsUnreadCount = useMemo(
+    () =>
+      showHostStudio && invitation?.id
+        ? countUnreadMembershipRequestsForHost(hostRequests, hostPrivateReadAt.requests)
+        : 0,
+    [hostRequests, hostPrivateReadAt.requests, invitation?.id, showHostStudio],
   )
 
   const guestModalStep = useMemo(
@@ -2060,8 +2081,11 @@ export default function SharedInvitationPage() {
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
                         <span className="pb-privateToggle__title">Zahtjevi za pristup</span>
                       </span>
-                      <span className="pb-privateToggle__arrow" aria-hidden>
-                        <PrivateToggleChevron />
+                      <span className="pb-privateToggle__trail">
+                        <PrivateToggleUnreadBadge count={hostRequestsUnreadCount} />
+                        <span className="pb-privateToggle__arrow" aria-hidden>
+                          <PrivateToggleChevron />
+                        </span>
                       </span>
                     </button>
 

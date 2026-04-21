@@ -3,7 +3,7 @@ import type { InvitationChatMessage, InvitationWishlistItem } from './invitation
 const STORAGE_PREFIX = 'pb-private-read'
 
 export type PrivateReadRole = 'guest' | 'host'
-export type PrivateReadChannel = 'chat' | 'wishlist'
+export type PrivateReadChannel = 'chat' | 'wishlist' | 'requests'
 
 function storageKey(role: PrivateReadRole, channel: PrivateReadChannel, invitationId: string) {
   return `${STORAGE_PREFIX}:${role}:${channel}:${invitationId}`
@@ -89,5 +89,17 @@ export function countUnreadWishlistForHost(
     const by = item.addedByName?.trim().toLowerCase() || ''
     if (hostKey && by === hostKey) return acc
     return acc + 1
+  }, 0)
+}
+
+/** Organizator: novi zahtjevi za pristup — samo pending, nastali nakon zadnjeg „pročitanog”. */
+export function countUnreadMembershipRequestsForHost(
+  requests: Array<{ createdAt: string; status: string }>,
+  readAt: number | null,
+): number {
+  if (readAt === null) return 0
+  return requests.reduce((acc, request) => {
+    if (request.status !== 'pending') return acc
+    return createdAtMs(request.createdAt) > readAt ? acc + 1 : acc
   }, 0)
 }

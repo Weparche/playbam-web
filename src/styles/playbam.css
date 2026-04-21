@@ -3108,11 +3108,11 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   overflow: hidden;
   border-radius: 22px;
   background-color: rgba(252, 249, 255, 0.97);
-  /* public/listazelja.png — lagani overlay da tekst ostane čitljiv */
+  /* public/listazelja.jpeg — lagani overlay da tekst ostane čitljiv */
   background-image:
     radial-gradient(120% 80% at 20% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
     linear-gradient(155deg, rgba(255, 248, 252, 0.88), rgba(244, 240, 255, 0.82)),
-    url('/listazelja.png');
+    url('/listazelja.jpeg');
   background-position: center, center, center;
   background-size: auto, auto, cover;
   background-repeat: no-repeat;
@@ -10318,6 +10318,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-inviteHostPanel .pb-privateWishlist {
   padding: 0.95rem 1rem 1rem;
+}
+
+.pb-privateWishlist--hostPanel {
+  border: 1px solid rgba(31, 36, 48, 0.06);
 }
 
 .pb-flowCard__text--hostWishlist {

@@ -2208,6 +2208,7 @@ export default function SharedInvitationPage() {
 
                     {hostAccordionOpen === 'wishlist' ? (
                       <div className="pb-privateAccordionBody">
+                        <div className="pb-privateWishlist pb-privateWishlist--hostPanel">
                         <p className="pb-flowCard__text pb-flowCard__text--hostWishlist">
                           Dodaj, uredi i organiziraj želje za poklone. Ovdje vidiš i tko je što rezervirao.
                         </p>
@@ -2278,6 +2279,7 @@ export default function SharedInvitationPage() {
                           >
                             Dodaj poklon
                           </Button>
+                        </div>
                         </div>
                       </div>
                     ) : null}

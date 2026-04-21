@@ -2858,6 +2858,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     color: rgba(23, 36, 59, 0.36);
     -webkit-text-fill-color: rgba(23, 36, 59, 0.36);
     text-shadow: none;
+    -webkit-text-stroke: 0 transparent;
   }
 
   .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--none,

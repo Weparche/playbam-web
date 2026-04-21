@@ -3109,9 +3109,9 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   border-radius: 22px;
   background-color: #fcf9ff;
   background-image: url('/listazelja.jpg');
-  /* Slika: uvijek od vrha (cover + top) — vrh listazelja ostaje vidljiv. */
-  background-position: center top;
-  background-size: cover;
+  /* listazelja: malo „zoom out” + vertikalni pomak ~15% prema gore (neg. % u odnosu na centar). */
+  background-position: center -15%;
+  background-size: 90% auto;
   background-repeat: no-repeat;
   padding: 1rem;
 }
@@ -10320,8 +10320,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     linear-gradient(155deg, rgba(255, 248, 252, 0.92), rgba(244, 240, 255, 0.9)),
     radial-gradient(120% 85% at 20% 0%, rgba(255, 255, 255, 0.88), transparent 58%),
     url('/listazelja.jpg');
-  background-position: center top, center top, center top;
-  background-size: auto, auto, cover;
+  background-position: center top, center top, center -15%;
+  background-size: auto, auto, 90% auto;
   background-repeat: no-repeat;
 }
 
@@ -12007,9 +12007,9 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 }
 
-/* Gost pregled /pozivnica — javni dio, samo rođenje: poruka 10px dolje; datum, vrijeme i adresa 3px dolje */
+/* Gost pregled /pozivnica — samo rođenje: poruka 5px gore od izvornog poravnanja (prije +10px dolje, sada ukupno −5px Y) */
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  transform: translate(var(--hero-message-offset-x), 10px);
+  transform: translate(var(--hero-message-offset-x), -5px);
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoRow--date,

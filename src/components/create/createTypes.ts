@@ -95,8 +95,8 @@ export const LEGACY_COVER_THEME_TABS = [
 ] as const satisfies ReadonlyArray<{ id: CoverThemeTab; label: string }>
 
 const LEGACY_COVER_THEME_OPTIONS = [
-  { id: 'pozivnica-girl', label: 'Cura', description: 'Topla ilustracija za pozivnicu s jednom curom.', image: '/pozivnica-girl.png' },
-  { id: 'pozivnica-boy', label: 'Dečko', description: 'Varijanta s jednim dečkom na naslovnici.', image: '/pozivnica-boy.png' },
+  { id: 'pozivnica-girl', label: 'Cura', description: 'VidimoSe.hr službena pozivnica za cure', image: '/pozivnica-girl.png' },
+  { id: 'pozivnica-boy', label: 'Dečko', description: 'VidimoSe.hr službena pozivnica za dečke', image: '/pozivnica-boy.png' },
   { id: 'safari', label: 'Safari', description: 'Afričke životinje i safari avantura.', image: '/safari.png' },
   { id: 'space', label: 'Svemir', description: 'Astronauti, zvijezde i svemirski party.', image: '/space.png' },
   { id: 'sport', label: 'Sport', description: 'Aktivan tulum za male sportaše.', image: '/sport.png' },

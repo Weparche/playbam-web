@@ -5715,14 +5715,14 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
 }
 
-/* Print tab u studiju (ekran, ne Chrome print): desktop −6px (+8px gore od bivših 2px); mobilno 8px (+6px dolje od 2px). */
+/* Print tab u studiju (ekran, ne Chrome print): desktop −9px; mobilno 5px. */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  transform: translate(var(--hero-message-offset-x), -6px);
+  transform: translate(var(--hero-message-offset-x), -9px);
 }
 
 @media (max-width: 640px) {
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-    transform: translate(var(--hero-message-offset-x), 8px);
+    transform: translate(var(--hero-message-offset-x), 5px);
   }
 }
 

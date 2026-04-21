@@ -234,11 +234,6 @@ export default function CreateInvitationPage() {
     handleDateTimePanelClose()
   }
 
-  const handleLocationOpen = () => {
-    locationSnapshotRef.current = { locationName: draft.locationName, locationAddress: draft.locationAddress, locationType: draft.locationType }
-    setActiveShortcut('location')
-  }
-
   const handleLocationClose = () => setActiveShortcut(null)
 
   const handleLocationCancel = () => {

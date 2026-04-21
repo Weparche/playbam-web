@@ -184,6 +184,28 @@ export type FamilyProfilePayload = {
   }>
 }
 
+/**
+ * Za pozivnice rođenja gost u UI-ju unosi samo ime/nadimak; API i dalje očekuje barem jedan zapis u `children`.
+ * Šaljemo jedan red (isto ime kao profil, dob 1). Kod PUT-a zadržavamo `id` postojećeg zapisa ako postoji.
+ */
+export function buildFamilyProfilePayload(
+  parentNameTrimmed: string,
+  resolvedChildren: FamilyProfilePayload['children'],
+  isBirthInvitation: boolean,
+  existingChildren: FamilyChild[],
+): FamilyProfilePayload {
+  if (isBirthInvitation) {
+    const trimmedParent = parentNameTrimmed.trim()
+    const displayName = trimmedParent || 'Gost'
+    const id = existingChildren[0]?.id
+    return {
+      parentName: trimmedParent,
+      children: [{ ...(id ? { id } : {}), name: displayName, age: 1 }],
+    }
+  }
+  return { parentName: parentNameTrimmed, children: resolvedChildren }
+}
+
 export type FamilyProfileResponse = {
   profile: FamilyProfile | null
   children: FamilyChild[]

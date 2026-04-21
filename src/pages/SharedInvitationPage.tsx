@@ -24,6 +24,7 @@ import Card from '../components/ui/Card'
 import PrivateToggleChevron from '../components/ui/PrivateToggleChevron'
 import { useAuth } from '../context/AuthContext'
 import {
+  buildFamilyProfilePayload,
   cancelInvitationWishlistReservation,
   createFamilyProfile,
   createInvitationChatMessage,
@@ -47,7 +48,6 @@ import {
   unfurlLink,
   updateFamilyProfile,
   updateInvitationWishlistItem,
-  type FamilyProfilePayload,
   type FamilyProfileResponse,
   type InvitationAccess,
   type InvitationChatMessage,
@@ -1172,7 +1172,7 @@ export default function SharedInvitationPage() {
 
   const handleProfileSave = async () => {
     const parentName = profileDraft.parentName.trim()
-    const children = profileDraft.children
+    const resolvedChildren = profileDraft.children
       .map((child) => ({
         id: child.id,
         name: child.name.trim(),
@@ -1180,7 +1180,7 @@ export default function SharedInvitationPage() {
       }))
       .filter((child) => child.name && Number.isFinite(child.age) && child.age > 0)
 
-    if (!user || !parentName || (!isBirthInvitation && children.length === 0)) {
+    if (!user || !parentName || (!isBirthInvitation && resolvedChildren.length === 0)) {
       setProfileError(isBirthInvitation ? 'Upiši ime i prezime ili nadimak.' : 'Upiši ime roditelja i barem jedno dijete.')
       return
     }
@@ -1189,7 +1189,12 @@ export default function SharedInvitationPage() {
     setProfileError("")
 
     try {
-      const payload: FamilyProfilePayload = { parentName, children: isBirthInvitation ? [] : children }
+      const payload = buildFamilyProfilePayload(
+        parentName,
+        resolvedChildren,
+        isBirthInvitation,
+        familyProfile?.children ?? [],
+      )
       const nextProfile = hasFamilyProfile
         ? await updateFamilyProfile(payload, user)
         : await createFamilyProfile(payload, user)
@@ -1981,6 +1986,7 @@ export default function SharedInvitationPage() {
                           requests={hostRequests}
                           reviewingRequestId={reviewingRequestId}
                           wishlistItems={wishlistItems}
+                          isBirthInvitation={isBirthInvitation}
                           onReview={handleReview}
                           onSelect={setSelectedHostRequest}
                         />
@@ -2197,6 +2203,7 @@ export default function SharedInvitationPage() {
                 <HostGuestModal
                   request={selectedHostRequest}
                   wishlistItems={wishlistItems}
+                  isBirthInvitation={isBirthInvitation}
                   busy={reviewingRequestId === selectedHostRequest.id}
                   onClose={() => setSelectedHostRequest(null)}
                   onRemove={() => void handleReview(selectedHostRequest.id, 'reject')}
@@ -2555,12 +2562,14 @@ function HostRequestListV2({
   requests,
   reviewingRequestId,
   wishlistItems,
+  isBirthInvitation,
   onReview,
   onSelect,
 }: {
   requests: MembershipRequest[]
   reviewingRequestId: string | null
   wishlistItems: InvitationWishlistItem[]
+  isBirthInvitation: boolean
   onReview: (requestId: string, action: 'approve' | 'reject') => void
   onSelect: (request: MembershipRequest) => void
 }) {
@@ -2579,7 +2588,9 @@ function HostRequestListV2({
             {group.requests.map((request) => {
               const isBusy = reviewingRequestId === request.id
               const parentName = request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'
-              const childrenText = request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'
+              const childrenText = isBirthInvitation
+                ? ''
+                : request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'
               const rsvpLabel = rsvpStatusLabelClean(request.rsvp?.status)
               const rsvpToneClass = getRsvpToneClass(request.rsvp?.status)
               const giftCount = getGuestGiftSummaries(request, wishlistItems).length
@@ -2606,7 +2617,9 @@ function HostRequestListV2({
                   <div className="pb-hostRequestItem__main">
                     <div className="pb-hostRequestItem__headRow">
                       <div className="pb-hostRequestItem__title">{parentName}</div>
-                      <div className="pb-hostRequestItem__children">Djeca: {childrenText}</div>
+                      {!isBirthInvitation ? (
+                        <div className="pb-hostRequestItem__children">Djeca: {childrenText}</div>
+                      ) : null}
                     </div>
                     {canOpenDetails ? (
                       <div className="pb-hostRequestItem__meta">
@@ -2662,19 +2675,23 @@ function HostRequestListV2({
 function HostGuestModal({
   request,
   wishlistItems,
+  isBirthInvitation,
   busy,
   onClose,
   onRemove,
 }: {
   request: MembershipRequest
   wishlistItems: InvitationWishlistItem[]
+  isBirthInvitation: boolean
   busy: boolean
   onClose: () => void
   onRemove: () => void
 }) {
   const giftSummaries = getGuestGiftSummaries(request, wishlistItems)
   const parentName = request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'
-  const childrenText = request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'
+  const childrenText = isBirthInvitation
+    ? ''
+    : request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'
   const rsvpLabel = rsvpStatusLabelClean(request.rsvp?.status)
   const rsvpToneClass = getRsvpToneClass(request.rsvp?.status)
 
@@ -2697,10 +2714,12 @@ function HostGuestModal({
         </div>
         <div className="pb-modalDialog__body pb-hostGuestModal__body">
           <div className="pb-hostGuestModal__card">
-            <div className="pb-hostGuestModal__row">
-              <span className="pb-hostGuestModal__label">Djeca</span>
-              <span>{childrenText}</span>
-            </div>
+            {!isBirthInvitation ? (
+              <div className="pb-hostGuestModal__row">
+                <span className="pb-hostGuestModal__label">Djeca</span>
+                <span>{childrenText}</span>
+              </div>
+            ) : null}
             <div className="pb-hostGuestModal__row">
               <span className="pb-hostGuestModal__label">RSVP</span>
               <span className={`pb-hostRequestItem__rsvpBadge ${rsvpToneClass}`}>{rsvpLabel}</span>

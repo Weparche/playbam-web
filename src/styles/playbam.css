@@ -5082,9 +5082,9 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 /* Mobilni „Pregled“ — ista kartica kao u web sidebaru */
 .pb-createStudio__previewPopup .pb-previewCard {
   width: 100%;
-  max-width: 24rem;
+  max-width: none;
   margin: 0 auto;
-  padding: 0.9rem;
+  padding: 0.85rem;
   border-radius: 1.45rem;
   background: rgba(255, 255, 255, 0.86);
   border: 1px solid rgba(132, 148, 178, 0.18);

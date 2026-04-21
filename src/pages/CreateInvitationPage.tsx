@@ -444,7 +444,7 @@ export default function CreateInvitationPage() {
           <FloatingEditPanel
             open
             title="Pregled"
-            description="Brzi pregled kako pozivnica izgleda gostu."
+            description="Pregled kako pozivnica izgleda gostu."
             panelClassName="pb-floatingPanel--preview"
             onClose={() => setActiveShortcut(null)}
           >

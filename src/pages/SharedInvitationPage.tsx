@@ -370,6 +370,8 @@ export default function SharedInvitationPage() {
   const hostLoadedDraftRef = useRef<InvitationCreateDraft | null>(null)
   const hostLoadedPartyDetailsRef = useRef<PartyDetailsDraft | null>(null)
   const [hostEditorShortcut, setHostEditorShortcut] = useState<ShortcutId | null>(null)
+  const hostDateTimeSnapshotRef = useRef<{ date: string; time: string; timeEnd: string } | null>(null)
+  const hostLocationSnapshotRef = useRef<{ locationName: string; locationAddress: string; locationType: string } | null>(null)
   const [hostShortcutActive, setHostShortcutActive] = useState<HostShortcutId | null>(null)
   const [hostPreviewMode, setHostPreviewMode] = useState<LivePreviewMode>('guest')
   const [savingHostInvitation, setSavingHostInvitation] = useState(false)
@@ -544,6 +546,15 @@ export default function SharedInvitationPage() {
     }))
     setHostUpdateError('')
     setHostUpdateNotice('')
+  }
+
+  const openHostEditorShortcut = (shortcut: ShortcutId) => {
+    if (shortcut === 'dateTime') {
+      hostDateTimeSnapshotRef.current = { date: hostEditorDraft.date, time: hostEditorDraft.time, timeEnd: hostEditorDraft.timeEnd }
+    } else if (shortcut === 'location') {
+      hostLocationSnapshotRef.current = { locationName: hostEditorDraft.locationName, locationAddress: hostEditorDraft.locationAddress, locationType: hostEditorDraft.locationType }
+    }
+    setHostEditorShortcut(shortcut)
   }
 
   const updateHostPartyDetails = <K extends keyof PartyDetailsDraft>(field: K, value: PartyDetailsDraft[K]) => {
@@ -1476,6 +1487,26 @@ export default function SharedInvitationPage() {
       setHostEditorShortcut(null)
     }
 
+    const cancelHostDateTime = () => {
+      const snap = hostDateTimeSnapshotRef.current
+      if (snap) {
+        updateHostField('date', snap.date)
+        updateHostField('time', snap.time)
+        updateHostField('timeEnd', snap.timeEnd)
+      }
+      closeHostEditorPanel()
+    }
+
+    const cancelHostLocation = () => {
+      const snap = hostLocationSnapshotRef.current
+      if (snap) {
+        updateHostField('locationName', snap.locationName)
+        updateHostField('locationAddress', snap.locationAddress)
+        updateHostField('locationType', snap.locationType as InvitationCreateDraft['locationType'])
+      }
+      closeHostEditorPanel()
+    }
+
     switch (hostEditorShortcut) {
       case 'dateTime':
         return (
@@ -1484,6 +1515,12 @@ export default function SharedInvitationPage() {
             title="Datum i vrijeme"
             description="Brzi picker za osnovne informacije koje gost vidi prve."
             onClose={closeHostEditorPanel}
+            footer={
+              <div className="pb-floatingPanel__footerActions">
+                <button type="button" className="pb-btn pb-btn-ghost pb-floatingPanel__footerBtn" onClick={cancelHostDateTime}>Poništi</button>
+                <button type="button" className="pb-btn pb-btn-primary pb-floatingPanel__footerBtn" onClick={closeHostEditorPanel}>Potvrdi</button>
+              </div>
+            }
           >
             <QuickDateTimeEditor draft={hostEditorDraft} today={today} onFieldChange={updateHostField} />
           </FloatingEditPanel>
@@ -1495,6 +1532,12 @@ export default function SharedInvitationPage() {
             title="Lokacija"
             description="Naziv lokacije i dodatni detalji dolaska."
             onClose={closeHostEditorPanel}
+            footer={
+              <div className="pb-floatingPanel__footerActions">
+                <button type="button" className="pb-btn pb-btn-ghost pb-floatingPanel__footerBtn" onClick={cancelHostLocation}>Poništi</button>
+                <button type="button" className="pb-btn pb-btn-primary pb-floatingPanel__footerBtn" onClick={closeHostEditorPanel}>Potvrdi</button>
+              </div>
+            }
           >
             <QuickLocationEditor draft={hostEditorDraft} onFieldChange={updateHostField} />
           </FloatingEditPanel>
@@ -1729,7 +1772,7 @@ export default function SharedInvitationPage() {
                           <InvitationMainEditor
                             draft={hostEditorDraft}
                             onFieldChange={updateHostField}
-                            onOpenShortcut={setHostEditorShortcut}
+                            onOpenShortcut={openHostEditorShortcut}
                             hideWishlistCard
                             activeShortcut={hostEditorShortcut}
                           />

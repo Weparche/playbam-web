@@ -121,6 +121,8 @@ export default function CreateInvitationPage() {
   const [draft, setDraft] = useState<InvitationCreateDraft>(() => readStoredDraft())
   const [activeShortcut, setActiveShortcut] = useState<ShortcutId | null>(null)
   const [pendingOpenLocationAfterDateTime, setPendingOpenLocationAfterDateTime] = useState(false)
+  const dateTimeSnapshotRef = useRef<{ date: string; time: string; timeEnd: string } | null>(null)
+  const locationSnapshotRef = useRef<{ locationName: string; locationAddress: string; locationType: string } | null>(null)
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('saved')
   const [savingInvitation, setSavingInvitation] = useState(false)
   const [formError, setFormError] = useState('')
@@ -173,7 +175,16 @@ export default function CreateInvitationPage() {
   }
 
   const handleShortcutClick = (shortcut: ShortcutId) => {
-    setActiveShortcut((current) => (current === shortcut ? null : shortcut))
+    setActiveShortcut((current) => {
+      if (current !== shortcut) {
+        if (shortcut === 'dateTime') {
+          dateTimeSnapshotRef.current = { date: draft.date, time: draft.time, timeEnd: draft.timeEnd }
+        } else if (shortcut === 'location') {
+          locationSnapshotRef.current = { locationName: draft.locationName, locationAddress: draft.locationAddress, locationType: draft.locationType }
+        }
+      }
+      return current === shortcut ? null : shortcut
+    })
   }
 
   useEffect(() => {
@@ -196,12 +207,14 @@ export default function CreateInvitationPage() {
     const timeEndReady = Boolean(draft.timeEnd.trim())
 
     if (dateReady && timeReady && timeEndReady) {
+      locationSnapshotRef.current = { locationName: draft.locationName, locationAddress: draft.locationAddress, locationType: draft.locationType }
       setPendingOpenLocationAfterDateTime(false)
       setActiveShortcut('location')
     }
   }, [activeShortcut, draft.date, draft.time, draft.timeEnd, pendingOpenLocationAfterDateTime])
 
   const handleOpenScheduleDateTimeFlow = () => {
+    dateTimeSnapshotRef.current = { date: draft.date, time: draft.time, timeEnd: draft.timeEnd }
     setPendingOpenLocationAfterDateTime(true)
     setActiveShortcut('dateTime')
   }
@@ -209,6 +222,33 @@ export default function CreateInvitationPage() {
   const handleDateTimePanelClose = () => {
     setPendingOpenLocationAfterDateTime(false)
     setActiveShortcut(null)
+  }
+
+  const handleDateTimeCancel = () => {
+    const snap = dateTimeSnapshotRef.current
+    if (snap) {
+      updateField('date', snap.date)
+      updateField('time', snap.time)
+      updateField('timeEnd', snap.timeEnd)
+    }
+    handleDateTimePanelClose()
+  }
+
+  const handleLocationOpen = () => {
+    locationSnapshotRef.current = { locationName: draft.locationName, locationAddress: draft.locationAddress, locationType: draft.locationType }
+    setActiveShortcut('location')
+  }
+
+  const handleLocationClose = () => setActiveShortcut(null)
+
+  const handleLocationCancel = () => {
+    const snap = locationSnapshotRef.current
+    if (snap) {
+      updateField('locationName', snap.locationName)
+      updateField('locationAddress', snap.locationAddress)
+      updateField('locationType', snap.locationType as InvitationCreateDraft['locationType'])
+    }
+    handleLocationClose()
   }
 
   const handleResetDraft = () => {
@@ -297,6 +337,12 @@ export default function CreateInvitationPage() {
             title="Datum i vrijeme"
             description="Brzi picker za osnovne informacije koje gost vidi prve."
             onClose={handleDateTimePanelClose}
+            footer={
+              <div className="pb-floatingPanel__footerActions">
+                <button type="button" className="pb-btn pb-btn-ghost pb-floatingPanel__footerBtn" onClick={handleDateTimeCancel}>Poništi</button>
+                <button type="button" className="pb-btn pb-btn-primary pb-floatingPanel__footerBtn" onClick={handleDateTimePanelClose}>Potvrdi</button>
+              </div>
+            }
           >
             <QuickDateTimeEditor draft={draft} today={today} onFieldChange={updateField} />
           </FloatingEditPanel>
@@ -307,7 +353,13 @@ export default function CreateInvitationPage() {
             open
             title="Lokacija"
             description="Naziv igraonice, adresa i kontekst lokacije."
-            onClose={() => setActiveShortcut(null)}
+            onClose={handleLocationClose}
+            footer={
+              <div className="pb-floatingPanel__footerActions">
+                <button type="button" className="pb-btn pb-btn-ghost pb-floatingPanel__footerBtn" onClick={handleLocationCancel}>Poništi</button>
+                <button type="button" className="pb-btn pb-btn-primary pb-floatingPanel__footerBtn" onClick={handleLocationClose}>Potvrdi</button>
+              </div>
+            }
           >
             <QuickLocationEditor draft={draft} onFieldChange={updateField} />
           </FloatingEditPanel>

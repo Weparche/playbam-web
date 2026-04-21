@@ -6,10 +6,11 @@ type Props = {
   description?: string
   onClose: () => void
   children: ReactNode
+  footer?: ReactNode
   panelClassName?: string
 }
 
-export default function FloatingEditPanel({ open, title, description, onClose, children, panelClassName = '' }: Props) {
+export default function FloatingEditPanel({ open, title, description, onClose, children, footer, panelClassName = '' }: Props) {
   const panelRef = useRef<HTMLDivElement | null>(null)
   const [closing, setClosing] = useState(false)
 
@@ -68,6 +69,7 @@ export default function FloatingEditPanel({ open, title, description, onClose, c
           </button>
         </div>
         <div className="pb-floatingPanel__body">{children}</div>
+        {footer ? <div className="pb-floatingPanel__footer">{footer}</div> : null}
       </div>
     </div>
   )

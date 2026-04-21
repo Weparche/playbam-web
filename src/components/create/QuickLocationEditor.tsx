@@ -1,4 +1,4 @@
-import { LOCATION_TYPES, type InvitationCreateDraft } from './createTypes'
+import { type InvitationCreateDraft } from './createTypes'
 
 type Props = {
   draft: InvitationCreateDraft
@@ -18,21 +18,6 @@ export default function QuickLocationEditor({ draft, onFieldChange }: Props) {
         <input className="pb-input" value={draft.locationAddress} onChange={(event) => onFieldChange('locationAddress', event.target.value)} placeholder="Lastovska 2, Zagreb" />
       </label>
 
-      <div className="pb-quickEditor__block">
-        <span className="pb-quickEditor__label">Tip lokacije</span>
-        <div className="pb-quickEditor__chipRow">
-          {LOCATION_TYPES.map((option) => (
-            <button
-              key={option}
-              type="button"
-              className={`pb-quickEditor__chip ${draft.locationType === option ? 'is-active' : ''}`}
-              onClick={() => onFieldChange('locationType', option)}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   )
 }

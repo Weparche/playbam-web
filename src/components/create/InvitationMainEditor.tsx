@@ -546,21 +546,31 @@ export default function InvitationMainEditor({
           </div>
         </div>
 
-        <button
-          type="button"
-          className="pb-createEditor__mobileThemeChip"
-          onClick={() => onOpenShortcut('theme')}
-          aria-label="Promijeni temu"
-        >
-          <span className="pb-createEditor__mobileThemeChipIconWrap" aria-hidden="true">
-            <PaletteIcon />
-          </span>
-          <span className="pb-createEditor__mobileThemeChipContent">
-            <span className="pb-createEditor__mobileThemeChipLabel">Promijeni temu</span>
-            <span className="pb-createEditor__mobileThemeChipHint">Odaberi naslovnicu pozivnice</span>
-          </span>
-          <EditorChevron expanded={activeShortcut === 'theme'} />
-        </button>
+        <div className="pb-createEditor__mobileThemeCard">
+          <Card
+            className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--theme"
+            role="button"
+            tabIndex={0}
+            aria-label="Uredi temu pozivnice"
+            onClick={() => onOpenShortcut('theme')}
+            onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('theme'))}
+          >
+            <div className="pb-createEditor__cardHeader">
+              <div>
+                <span className="pb-createEditor__eyebrow"><PaletteIcon /> Tema</span>
+                <h3 className="pb-createEditor__sectionTitle">Naslovnica pozivnice</h3>
+              </div>
+              <div className="pb-createEditor__cardMeta">
+                <span className={getStatusChipClass(themeStatus.tone)}>{themeStatus.label}</span>
+                <EditorChevron expanded={activeShortcut === 'theme'} />
+              </div>
+            </div>
+            <div className="pb-createEditor__themePreviewRow">
+              <img className="pb-createEditor__themeThumbnail" src={heroThemeImage} alt="" aria-hidden="true" />
+              <p className="pb-createEditor__bodyText">{getThemeLabel(draft.theme)}</p>
+            </div>
+          </Card>
+        </div>
       </Card>
 
       <Card

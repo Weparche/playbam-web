@@ -2819,7 +2819,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-hostUpdateEditor .pb-createEditor__heroRsvpBlock {
-  zoom: 0.7;
+  zoom: 0.91;
 }
 
 .pb-hostUpdateEditor .pb-createEditor__fontStrip {
@@ -2829,6 +2829,11 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 .pb-hostUpdateEditor .pb-createEditor__mobileThemeChip {
   width: 100%;
   max-width: none;
+  box-sizing: border-box;
+}
+
+.pb-hostUpdateEditor .pb-createEditor__mobileThemeCard {
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -5662,6 +5667,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   display: none;
 }
 
+.pb-createEditor__mobileThemeCard {
+  display: none;
+}
+
 .pb-createEditor__panelCard {
   transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
   outline: none;
@@ -6005,6 +6014,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 .pb-createFooterAction {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
   align-items: flex-start;
   flex-wrap: nowrap;
@@ -7812,6 +7822,14 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     opacity: 0.95;
     transform: translateX(4px);
   }
+
+  .pb-createEditor__mobileThemeCard {
+    display: block;
+  }
+
+  .pb-createEditor__grid .pb-createEditor__infoCard--theme {
+    display: none;
+  }
 }
 
 @media (max-width: 520px) {
@@ -7978,6 +7996,26 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-floatingPanel__body {
   padding: 1rem;
+}
+
+.pb-floatingPanel__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(16, 24, 40, 0.06);
+  background: #fff;
+}
+
+.pb-floatingPanel__footerActions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.pb-floatingPanel__footerBtn {
+  padding: 10px 20px;
+  font-size: 0.9rem;
 }
 
 .pb-previewCard__rsvpGlyph {

@@ -610,7 +610,7 @@ export async function getInvitationChat(invitationId: string, identity?: Tempora
 
 export async function createInvitationChatMessage(
   invitationId: string,
-  payload: { message: string },
+  payload: { message: string; senderName?: string },
   identity?: TemporaryWebIdentity | null,
 ) {
   const data = await request<{ message: InvitationChatMessage }>(

@@ -335,7 +335,7 @@ function clearHostLocalDraft(invitationId: string) {
 
 export default function SharedInvitationPage() {
   const { token = '' } = useParams()
-  const { user, logout } = useAuth()
+  const { user, session, logout } = useAuth()
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [hostToken, setHostToken] = useState(() => readStoredHostToken())
   const [invitation, setInvitation] = useState<PublicInvitation | null>(null)
@@ -1113,7 +1113,12 @@ export default function SharedInvitationPage() {
     setChatError('')
 
     try {
-      await createInvitationChatMessage(invitation.id, { message }, user ?? undefined)
+      const profileChatName = familyProfile?.profile?.parentName?.trim()
+      await createInvitationChatMessage(
+        invitation.id,
+        profileChatName ? { message, senderName: profileChatName } : { message },
+        user ?? undefined,
+      )
       setChatDraft('')
       await refreshChat(user ?? undefined)
     } catch (caughtError) {
@@ -1694,7 +1699,7 @@ export default function SharedInvitationPage() {
                       wishlistError={wishlistError}
                       wishlistItems={wishlistItems}
                       wishlistActionId={wishlistActionId}
-                      currentGuestName={user.parentName || null}
+                      currentGuestName={familyProfile?.profile?.parentName?.trim() || user.parentName || null}
                       onReserve={handleReserveWishlistItem}
                       onParticipate={handleParticipateWishlistItem}
                       onCancel={handleCancelWishlistReservation}
@@ -1712,6 +1717,11 @@ export default function SharedInvitationPage() {
                       onChatDraftChange={setChatDraft}
                       sendingChatMessage={sendingChatMessage}
                       onSendChatMessage={handleSendChatMessage}
+                      chatSenderLabelHint={{
+                        profileParentName: familyProfile?.profile?.parentName?.trim() || undefined,
+                        sessionDisplayName: session?.displayName?.trim() || undefined,
+                        accountEmail: session?.email?.trim() || user?.email?.trim() || undefined,
+                      }}
                     />
                   </div>
                   <div className="pb-guestPrivateLayout__right">
@@ -2115,6 +2125,11 @@ export default function SharedInvitationPage() {
                           sending={sendingChatMessage}
                           onDraftChange={setChatDraft}
                           onSend={handleSendChatMessage}
+                          senderLabelHint={{
+                            profileParentName: familyProfile?.profile?.parentName?.trim() || undefined,
+                            sessionDisplayName: session?.displayName?.trim() || undefined,
+                            accountEmail: session?.email?.trim() || user?.email?.trim() || undefined,
+                          }}
                         />
                       </div>
                     ) : null}

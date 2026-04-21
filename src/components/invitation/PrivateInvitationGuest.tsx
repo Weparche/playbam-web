@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent } from 'react'
 
-import InvitationLiveChatPanel from './InvitationLiveChatPanel'
+import InvitationLiveChatPanel, { type ChatSenderLabelHint } from './InvitationLiveChatPanel'
 import Button from '../ui/Button'
 import PrivateToggleChevron from '../ui/PrivateToggleChevron'
 import type {
@@ -34,6 +34,7 @@ type Props = {
   onChatDraftChange: (value: string) => void
   sendingChatMessage: boolean
   onSendChatMessage: () => void
+  chatSenderLabelHint?: ChatSenderLabelHint
 }
 
 function wishlistBadgeClass(status: InvitationWishlistItem['reservation']['status']) {
@@ -140,6 +141,7 @@ export default function PrivateInvitationGuest({
   onChatDraftChange,
   sendingChatMessage,
   onSendChatMessage,
+  chatSenderLabelHint,
 }: Props) {
   const [venueOpen, setVenueOpen] = useState(false)
   const [wishlistOpen, setWishlistOpen] = useState(false)
@@ -494,6 +496,7 @@ export default function PrivateInvitationGuest({
                 sending={sendingChatMessage}
                 onDraftChange={onChatDraftChange}
                 onSend={onSendChatMessage}
+                senderLabelHint={chatSenderLabelHint}
               />
             </div>
           ) : null}

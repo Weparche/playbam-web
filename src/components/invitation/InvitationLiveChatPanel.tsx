@@ -1,6 +1,12 @@
 import Button from '../ui/Button'
 import type { InvitationChatMessage } from '../../lib/invitationApi'
 
+export type ChatSenderLabelHint = {
+  profileParentName?: string
+  sessionDisplayName?: string
+  accountEmail?: string
+}
+
 type Props = {
   messages: InvitationChatMessage[]
   loading: boolean
@@ -9,6 +15,27 @@ type Props = {
   sending: boolean
   onDraftChange: (value: string) => void
   onSend: () => void
+  senderLabelHint?: ChatSenderLabelHint
+}
+
+function resolveChatSenderLabel(message: InvitationChatMessage, hint?: ChatSenderLabelHint) {
+  const roleFallback = message.senderRole === 'host' ? 'Organizator' : 'Gost'
+  const raw = message.senderName?.trim()
+  const profileName = hint?.profileParentName?.trim()
+  const sessionName = hint?.sessionDisplayName?.trim()
+  const email = hint?.accountEmail?.trim()
+
+  if (
+    profileName &&
+    message.senderRole === 'guest' &&
+    raw &&
+    ((sessionName && raw === sessionName) ||
+      (email && (raw === email || raw.toLowerCase() === email.toLowerCase())))
+  ) {
+    return profileName
+  }
+
+  return raw || roleFallback
 }
 
 const chatTimeFormatter = new Intl.DateTimeFormat('hr-HR', {
@@ -35,6 +62,7 @@ export default function InvitationLiveChatPanel({
   sending,
   onDraftChange,
   onSend,
+  senderLabelHint,
 }: Props) {
   return (
     <section className="pb-inviteChat" aria-labelledby="invitation-live-chat-heading">
@@ -57,7 +85,7 @@ export default function InvitationLiveChatPanel({
             <div key={message.id} className={`pb-inviteChat__row pb-inviteChat__row--${message.senderRole}`}>
               <article className={`pb-inviteChat__item pb-inviteChat__item--${message.senderRole}`}>
                 <div className="pb-inviteChat__meta">
-                  <strong>{message.senderName || (message.senderRole === 'host' ? 'Organizator' : 'Gost')}</strong>
+                  <strong>{resolveChatSenderLabel(message, senderLabelHint)}</strong>
                   <span>{formatChatTimestamp(message.createdAt)}</span>
                 </div>
                 <p className="pb-inviteChat__message">{message.message}</p>

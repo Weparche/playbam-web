@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 
 import { unfurlLink, proxyImageUrl } from '../../lib/invitationApi'
 import type { InvitationCreateDraft, LinkMeta, WishlistDraftItem } from './createTypes'
@@ -14,6 +14,10 @@ function isValidUrl(value: string) {
   } catch {
     return false
   }
+}
+
+export type QuickWishlistEditorRef = {
+  addPoklon: () => void
 }
 
 type Props = {
@@ -183,7 +187,10 @@ function WishlistItemEditor({
   )
 }
 
-export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistChange }: Props) {
+const QuickWishlistEditor = forwardRef<QuickWishlistEditorRef, Props>(function QuickWishlistEditor(
+  { draft, onFieldChange, onWishlistChange },
+  ref,
+) {
   const [addGiftError, setAddGiftError] = useState('')
   const [focusTitleItemId, setFocusTitleItemId] = useState<string | null>(null)
 
@@ -199,7 +206,7 @@ export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistCh
     onWishlistChange(draft.wishlistItems.map((item) => (item.id === id ? { ...item, linkMeta: meta } : item)))
   }
 
-  const addItem = () => {
+  const addItem = useCallback(() => {
     const last = draft.wishlistItems[draft.wishlistItems.length - 1]
     if (last && !last.title.trim()) {
       setAddGiftError('Upiši naziv poklona prije dodavanja novog.')
@@ -212,7 +219,9 @@ export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistCh
       ...draft.wishlistItems,
       { id: `wish-${Date.now()}`, title: '', note: '', link: '' },
     ])
-  }
+  }, [draft.wishlistItems, onWishlistChange])
+
+  useImperativeHandle(ref, () => ({ addPoklon: addItem }), [addItem])
 
   const removeItem = (id: string) => {
     onWishlistChange(draft.wishlistItems.filter((item) => item.id !== id))
@@ -240,14 +249,10 @@ export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistCh
             />
           ))}
           {addGiftError ? <div className="pb-inlineNote pb-inlineNote--error">{addGiftError}</div> : null}
-          <button type="button" className="pb-quickEditor__add" onClick={addItem}>
-            + Dodaj poklon
-            {draft.wishlistItems.length > 0 ? (
-              <span className="pb-quickEditor__addBadge">{draft.wishlistItems.length}</span>
-            ) : null}
-          </button>
         </div>
       ) : null}
     </div>
   )
-}
+})
+
+export default QuickWishlistEditor

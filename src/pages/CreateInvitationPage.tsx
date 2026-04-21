@@ -11,7 +11,7 @@ import QuickLocationEditor from '../components/create/QuickLocationEditor'
 import QuickMessageEditor from '../components/create/QuickMessageEditor'
 import QuickRSVPEditor from '../components/create/QuickRSVPEditor'
 import QuickThemeEditor from '../components/create/QuickThemeEditor'
-import QuickWishlistEditor from '../components/create/QuickWishlistEditor'
+import QuickWishlistEditor, { type QuickWishlistEditorRef } from '../components/create/QuickWishlistEditor'
 import ShortcutRail from '../components/create/ShortcutRail'
 import {
   buildEmptyCreateDraft,
@@ -128,6 +128,7 @@ export default function CreateInvitationPage() {
   const [formError, setFormError] = useState('')
   const [loginOpen, setLoginOpen] = useState(false)
   const continueCreateAfterLoginRef = useRef(false)
+  const quickWishlistEditorRef = useRef<QuickWishlistEditorRef>(null)
 
   const { completedSteps, totalSteps, progressPercent, titleReady, dateReady, locationReady } = buildCreateProgress(draft)
   const progressLabel = completedSteps === totalSteps ? 'Spremno za objavu' : `${totalSteps - completedSteps} koraka do objave`
@@ -377,8 +378,35 @@ export default function CreateInvitationPage() {
             title="Lista želja"
             description="Uključi listu želja i dodaj prijedloge poklona."
             onClose={() => setActiveShortcut(null)}
+            footer={(
+              <div className="pb-floatingPanel__footerWishlist">
+                <div className="pb-floatingPanel__footerWishlistStart">
+                  {draft.wishlistEnabled ? (
+                    <button
+                      type="button"
+                      className="pb-quickEditor__add"
+                      onClick={() => quickWishlistEditorRef.current?.addPoklon()}
+                    >
+                      + Dodaj poklon
+                      {draft.wishlistItems.length > 0 ? (
+                        <span className="pb-quickEditor__addBadge">{draft.wishlistItems.length}</span>
+                      ) : null}
+                    </button>
+                  ) : null}
+                </div>
+                <div className="pb-floatingPanel__footerActions">
+                  <button type="button" className="pb-btn pb-btn-ghost pb-floatingPanel__footerBtn" onClick={() => setActiveShortcut(null)}>Poništi</button>
+                  <button type="button" className="pb-btn pb-btn-primary pb-floatingPanel__footerBtn" onClick={() => setActiveShortcut(null)}>Potvrdi</button>
+                </div>
+              </div>
+            )}
           >
-            <QuickWishlistEditor draft={draft} onFieldChange={updateField} onWishlistChange={updateWishlistItems} />
+            <QuickWishlistEditor
+              ref={quickWishlistEditorRef}
+              draft={draft}
+              onFieldChange={updateField}
+              onWishlistChange={updateWishlistItems}
+            />
           </FloatingEditPanel>
         )
       case 'theme':

@@ -8345,6 +8345,26 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   justify-content: flex-end;
 }
 
+.pb-floatingPanel__footerWishlist {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.pb-floatingPanel__footerWishlistStart {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  flex: 1;
+}
+
+.pb-floatingPanel__footerWishlist .pb-floatingPanel__footerActions {
+  flex-shrink: 0;
+}
+
 .pb-floatingPanel__footerBtn {
   padding: 10px 20px;
   font-size: 0.9rem;

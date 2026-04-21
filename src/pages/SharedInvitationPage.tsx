@@ -2786,7 +2786,9 @@ function HostRequestListV2({
     <div className="pb-hostRequestGroups">
       {groupedRequests.map((group) => (
         <section key={group.title} className={`pb-hostRequestGroup ${group.className}`}>
-          <h3 className="pb-hostRequestGroup__title">{group.title}</h3>
+          <h3 className="pb-hostRequestGroup__title">
+            {group.title} ({group.requests.length})
+          </h3>
           <div className="pb-hostRequests">
             {group.requests.map((request) => {
               const isBusy = reviewingRequestId === request.id

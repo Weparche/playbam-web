@@ -811,6 +811,14 @@ export async function getAdminInvitations(): Promise<AdminInvitationRow[]> {
   return data.invitations
 }
 
+export async function bulkDeleteAdminInvitations(ids: string[]): Promise<{ deletedCount: number; requested: number }> {
+  return request<{ deletedCount: number; requested: number }>('/api/admin/invitations/bulk-delete', {
+    method: 'POST',
+    body: { ids },
+    identity: null,
+  })
+}
+
 export async function authLogout(): Promise<void> {
   await request('/api/auth/logout', { method: 'POST', identity: null })
 }

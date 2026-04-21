@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Navigate, Link } from 'react-router-dom'
 
 import Navbar from '../components/landing/Navbar'
 import Footer from '../components/layout/Footer'
+import Button from '../components/ui/Button'
 import { useAuth } from '../context/AuthContext'
-import { getAdminInvitations, type AdminInvitationRow } from '../lib/invitationApi'
+import { bulkDeleteAdminInvitations, getAdminInvitations, type AdminInvitationRow } from '../lib/invitationApi'
 
 const ADMIN_EMAIL = 'ig29007@gmail.com'
 
@@ -26,6 +27,9 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
+  const [deleting, setDeleting] = useState(false)
+  const selectAllRef = useRef<HTMLInputElement>(null)
 
   if (!session || session.email !== ADMIN_EMAIL) {
     return <Navigate to="/" replace />
@@ -48,6 +52,72 @@ export default function AdminPage() {
       r.location.toLowerCase().includes(q)
     )
   })
+
+  const filteredIds = filtered.map((r) => r.id)
+  const selectedInFiltered = filteredIds.filter((id) => selectedIds.has(id)).length
+  const allFilteredSelected = filtered.length > 0 && selectedInFiltered === filtered.length
+
+  useEffect(() => {
+    const el = selectAllRef.current
+    if (!el) {
+      return
+    }
+    el.indeterminate = filtered.length > 0 && selectedInFiltered > 0 && selectedInFiltered < filtered.length
+  }, [filtered.length, selectedInFiltered])
+
+  const toggleRow = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  const toggleSelectAllFiltered = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (allFilteredSelected) {
+        for (const id of filteredIds) {
+          next.delete(id)
+        }
+      } else {
+        for (const id of filteredIds) {
+          next.add(id)
+        }
+      }
+      return next
+    })
+  }
+
+  const handleBulkDelete = async () => {
+    const ids = Array.from(selectedIds)
+    if (ids.length === 0) {
+      return
+    }
+    if (
+      !window.confirm(
+        `Obrisati ${ids.length} pozivnica? Svi povezani podaci (RSVP, lista želja, chat…) bit će uklonjeni. Ova radnja je nepovratna.`,
+      )
+    ) {
+      return
+    }
+    setDeleting(true)
+    setError('')
+    try {
+      await bulkDeleteAdminInvitations(ids)
+      setSelectedIds(new Set())
+      const next = await getAdminInvitations()
+      setRows(next)
+    } catch {
+      setError('Brisanje pozivnica nije uspjelo.')
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   return (
     <>
@@ -80,6 +150,30 @@ export default function AdminPage() {
           />
         </div>
 
+        {!loading && selectedIds.size > 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              flexWrap: 'wrap',
+              marginBottom: '1rem',
+              padding: '0.65rem 0.85rem',
+              background: '#fef3c7',
+              borderRadius: 12,
+              border: '1px solid #fcd34d',
+            }}
+          >
+            <span style={{ fontWeight: 700, color: '#92400e' }}>Označeno: {selectedIds.size}</span>
+            <Button type="button" variant="amber" onClick={() => void handleBulkDelete()} disabled={deleting}>
+              {deleting ? 'Brisanje…' : 'Obriši selektirano'}
+            </Button>
+            <Button type="button" variant="ghost" onClick={() => setSelectedIds(new Set())} disabled={deleting}>
+              Poništi odabir
+            </Button>
+          </div>
+        ) : null}
+
         {loading ? (
           <div style={{ padding: '3rem', textAlign: 'center', color: '#5f6473' }}>Učitavam pozivnice…</div>
         ) : (
@@ -87,6 +181,17 @@ export default function AdminPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
               <thead>
                 <tr style={{ background: '#f4f6fb', textAlign: 'left' }}>
+                  <th style={{ padding: '0.6rem 0.5rem', width: 36, borderBottom: '2px solid #e5e7ef', textAlign: 'center' }}>
+                    <input
+                      ref={selectAllRef}
+                      type="checkbox"
+                      checked={filtered.length > 0 && allFilteredSelected}
+                      disabled={filtered.length === 0}
+                      title="Označi sve u tablici (trenutno filtrirano)"
+                      aria-label="Označi sve u tablici"
+                      onChange={() => toggleSelectAllFiltered()}
+                    />
+                  </th>
                   {['#', 'Naslov', 'Slavljenik', 'Datum', 'Lokacija', 'Host', 'RSVP', 'Gosti', 'Kreirano', 'Link'].map((h) => (
                     <th key={h} style={{ padding: '0.6rem 0.75rem', fontWeight: 700, color: '#17243b', borderBottom: '2px solid #e5e7ef', whiteSpace: 'nowrap' }}>
                       {h}
@@ -97,13 +202,21 @@ export default function AdminPage() {
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={10} style={{ padding: '2rem', textAlign: 'center', color: '#5f6473' }}>
+                    <td colSpan={11} style={{ padding: '2rem', textAlign: 'center', color: '#5f6473' }}>
                       {search ? 'Nema rezultata za tu pretragu.' : 'Nema pozivnica.'}
                     </td>
                   </tr>
                 ) : null}
                 {filtered.map((row, idx) => (
                   <tr key={row.id} style={{ borderBottom: '1px solid #e5e7ef', background: idx % 2 === 0 ? '#fff' : '#f9fafc' }}>
+                    <td style={{ padding: '0.55rem 0.5rem', textAlign: 'center', verticalAlign: 'middle' }}>
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(row.id)}
+                        onChange={() => toggleRow(row.id)}
+                        aria-label={`Označi pozivnicu ${row.title || row.id}`}
+                      />
+                    </td>
                     <td style={{ padding: '0.55rem 0.75rem', color: '#8896b3', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</td>
                     <td style={{ padding: '0.55rem 0.75rem', fontWeight: 700, color: '#17243b', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {row.title || '—'}

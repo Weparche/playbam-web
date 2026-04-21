@@ -1286,12 +1286,18 @@ export default function SharedInvitationPage() {
   }
 
   const handleRequestSubmit = async () => {
-    if (!user || !invitation || (!isBirthInvitation && selectedChildIds.length === 0)) {
+    if (!user || !invitation) {
       setRequestError(
         isBirthInvitation
           ? 'Prijavi se i dovrši svoje podatke prije slanja zahtjeva.'
-          : 'Odaberi barem jedno dijete prije slanja zahtjeva.',
+          : 'Prijavi se prije slanja zahtjeva.',
       )
+      return
+    }
+
+    const profileChildren = familyProfile?.children ?? []
+    if (!isBirthInvitation && profileChildren.length > 0 && selectedChildIds.length === 0) {
+      setRequestError('Odaberi barem jedno dijete prije slanja zahtjeva.')
       return
     }
 
@@ -1299,7 +1305,11 @@ export default function SharedInvitationPage() {
     setRequestError('')
 
     try {
-      const request = await createMembershipRequest(invitation.id, isBirthInvitation ? [] : selectedChildIds, user)
+      const request = await createMembershipRequest(
+        invitation.id,
+        isBirthInvitation ? [] : selectedChildIds,
+        user,
+      )
       setMembershipRequest(request)
       setAccess((current) => current ? { ...current, membershipStatus: request.status } : current)
     } catch (caughtError) {

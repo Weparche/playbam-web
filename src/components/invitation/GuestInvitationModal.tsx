@@ -167,15 +167,7 @@ export default function GuestInvitationModal({
       : 'Bez prijavljene djece'
 
   return (
-    <div
-      className="pb-modalOverlay"
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) {
-          onClose()
-        }
-      }}
-    >
+    <div className="pb-modalOverlay" role="presentation">
       <div className="pb-modalDialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="pb-modalDialog__head">
           <h2 id={titleId} className="pb-modalDialog__title">
@@ -326,7 +318,9 @@ export default function GuestInvitationModal({
                   type="button"
                   onClick={onRequestSubmit}
                   disabled={
-                    (!isBirthInvitation && selectedChildIds.length === 0) ||
+                    (!isBirthInvitation &&
+                      familyProfile.children.length > 0 &&
+                      selectedChildIds.length === 0) ||
                     membershipRequest?.status === 'pending' ||
                     submittingRequest
                   }

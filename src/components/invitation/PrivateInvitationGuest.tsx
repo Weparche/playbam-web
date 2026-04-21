@@ -1,8 +1,16 @@
-import { useState, type ChangeEvent } from 'react'
+import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
 
 import InvitationLiveChatPanel, { type ChatSenderLabelHint } from './InvitationLiveChatPanel'
 import Button from '../ui/Button'
 import PrivateToggleChevron from '../ui/PrivateToggleChevron'
+import PrivateToggleUnreadBadge from '../ui/PrivateToggleUnreadBadge'
+import {
+  countUnreadChatForGuest,
+  countUnreadWishlistForGuest,
+  ensurePrivateSectionBaseline,
+  getPrivateSectionReadAt,
+  setPrivateSectionReadAt,
+} from '../../lib/privateSectionUnread'
 import type {
   InvitationChatMessage,
   InvitationWishlistItem,
@@ -154,6 +162,10 @@ export default function PrivateInvitationGuest({
   const [giftFormError, setGiftFormError] = useState('')
   const [selectedWishItem, setSelectedWishItem] = useState<InvitationWishlistItem | null>(null)
   const [selectedVenueImageIndex, setSelectedVenueImageIndex] = useState<number | null>(null)
+  const [guestPrivateReadAt, setGuestPrivateReadAt] = useState<{ chat: number | null; wishlist: number | null }>({
+    chat: null,
+    wishlist: null,
+  })
 
   const resetGiftForm = () => {
     setGiftTitle('')
@@ -213,18 +225,55 @@ export default function PrivateInvitationGuest({
     resetGiftForm()
   }
 
+  useEffect(() => {
+    const id = invitation.id
+    ensurePrivateSectionBaseline('guest', 'chat', id)
+    ensurePrivateSectionBaseline('guest', 'wishlist', id)
+    setGuestPrivateReadAt({
+      chat: getPrivateSectionReadAt('guest', 'chat', id),
+      wishlist: getPrivateSectionReadAt('guest', 'wishlist', id),
+    })
+  }, [invitation.id])
+
+  useEffect(() => {
+    if (!wishlistOpen) return
+    const now = Date.now()
+    setPrivateSectionReadAt('guest', 'wishlist', invitation.id, now)
+    setGuestPrivateReadAt((current) => ({ ...current, wishlist: now }))
+  }, [wishlistOpen, invitation.id])
+
+  useEffect(() => {
+    if (!chatOpen) return
+    const now = Date.now()
+    setPrivateSectionReadAt('guest', 'chat', invitation.id, now)
+    setGuestPrivateReadAt((current) => ({ ...current, chat: now }))
+  }, [chatOpen, invitation.id])
+
+  const guestChatUnreadCount = useMemo(
+    () => countUnreadChatForGuest(chatMessages, guestPrivateReadAt.chat),
+    [chatMessages, guestPrivateReadAt.chat],
+  )
+  const guestWishlistUnreadCount = useMemo(
+    () => countUnreadWishlistForGuest(wishlistItems, guestPrivateReadAt.wishlist, currentGuestName),
+    [wishlistItems, guestPrivateReadAt.wishlist, currentGuestName],
+  )
+
   const selectedWishImageUrl = selectedWishItem ? resolveWishlistImageUrl(selectedWishItem) : null
   const selectedWishPurchaseLabel = selectedWishItem ? wishlistPurchaseLabel(selectedWishItem) : null
   const selectedVenueImageUrl = selectedVenueImageIndex !== null ? VENUE_GALLERY[selectedVenueImageIndex] : null
   const selectedVenueImageNumber = selectedVenueImageIndex !== null ? selectedVenueImageIndex + 1 : 0
   const pd = invitation.partyDetails
-  const guestPartyDetailRows: Array<{ label: string; value: string; spanFull?: boolean }> = [
-    { label: 'Ime kontakta', value: pd?.contactName?.trim() || '—' },
-    { label: 'Kontakt mobitel', value: pd?.contactMobile?.trim() || '—' },
-    { label: 'Lokacija parkinga', value: pd?.parkingLocation?.trim() || '—' },
-    { label: 'Lokacija kafića', value: pd?.cafeLocation?.trim() || '—' },
-    { label: 'Ostali detalji', value: pd?.extraDetails?.trim() || '—', spanFull: true },
-  ]
+  const guestPartyDetailRows = useMemo(() => {
+    if (!pd) return []
+    const rows: Array<{ label: string; value: string; spanFull?: boolean }> = [
+      { label: 'Ime kontakta', value: pd.contactName?.trim() ?? '' },
+      { label: 'Kontakt mobitel', value: pd.contactMobile?.trim() ?? '' },
+      { label: 'Lokacija parkinga', value: pd.parkingLocation?.trim() ?? '' },
+      { label: 'Lokacija kafića', value: pd.cafeLocation?.trim() ?? '' },
+      { label: 'Ostali detalji', value: pd.extraDetails?.trim() ?? '', spanFull: true },
+    ]
+    return rows.filter((row) => row.value.length > 0)
+  }, [pd])
 
   const showPreviousVenueImage = () => {
     setSelectedVenueImageIndex((current) => {
@@ -250,25 +299,27 @@ export default function PrivateInvitationGuest({
           </div>
         ) : null}
 
-        <section
-          className="pb-invitePrivateCard pb-invitePrivateCard--guestPartyFacts"
-          aria-labelledby="guest-party-details-heading"
-        >
-          <h2 id="guest-party-details-heading" className="pb-invitePrivateCard__guestPartyHeading">
-            Detalji tuluma
-          </h2>
-          <div className="pb-partyFacts pb-partyFacts--guestGrid">
-            {guestPartyDetailRows.map((row) => (
-              <div
-                key={row.label}
-                className={`pb-partyFact${row.spanFull ? ' pb-partyFact--guestSpanFull pb-partyFact--note' : ''}`}
-              >
-                <div className="pb-partyFact__label">{row.label}</div>
-                <div className="pb-partyFact__value">{row.value}</div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {guestPartyDetailRows.length > 0 ? (
+          <section
+            className="pb-invitePrivateCard pb-invitePrivateCard--guestPartyFacts"
+            aria-labelledby="guest-party-details-heading"
+          >
+            <h2 id="guest-party-details-heading" className="pb-invitePrivateCard__guestPartyHeading">
+              Detalji tuluma
+            </h2>
+            <div className="pb-partyFacts pb-partyFacts--guestGrid">
+              {guestPartyDetailRows.map((row) => (
+                <div
+                  key={row.label}
+                  className={`pb-partyFact${row.spanFull ? ' pb-partyFact--guestSpanFull pb-partyFact--note' : ''}`}
+                >
+                  <div className="pb-partyFact__label">{row.label}</div>
+                  <div className="pb-partyFact__value">{row.value}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-wishlist-toggle">
           <button
@@ -282,8 +333,11 @@ export default function PrivateInvitationGuest({
               <span className="pb-privateToggle__eyebrow">Privatni sadržaj</span>
               <span className="pb-privateToggle__title">Lista želja</span>
             </span>
-            <span className="pb-privateToggle__arrow" aria-hidden>
-              <PrivateToggleChevron />
+            <span className="pb-privateToggle__trail">
+              <PrivateToggleUnreadBadge count={guestWishlistUnreadCount} />
+              <span className="pb-privateToggle__arrow" aria-hidden>
+                <PrivateToggleChevron />
+              </span>
             </span>
           </button>
 
@@ -481,8 +535,11 @@ export default function PrivateInvitationGuest({
               <span className="pb-privateToggle__eyebrow">Privatni sadržaj</span>
               <span className="pb-privateToggle__title">Live chat</span>
             </span>
-            <span className="pb-privateToggle__arrow" aria-hidden>
-              <PrivateToggleChevron />
+            <span className="pb-privateToggle__trail">
+              <PrivateToggleUnreadBadge count={guestChatUnreadCount} />
+              <span className="pb-privateToggle__arrow" aria-hidden>
+                <PrivateToggleChevron />
+              </span>
             </span>
           </button>
 

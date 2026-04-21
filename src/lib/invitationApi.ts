@@ -162,7 +162,7 @@ export type FamilyChild = {
   id: string
   familyProfileId: string
   name: string
-  age: number
+  age: number | null
   createdAt: string
   updatedAt: string
 }
@@ -180,13 +180,13 @@ export type FamilyProfilePayload = {
   children: Array<{
     id?: string
     name: string
-    age: number
+    age: number | null
   }>
 }
 
 /**
- * Za pozivnice rođenja gost u UI-ju unosi samo ime/nadimak; API i dalje očekuje barem jedan zapis u `children`.
- * Šaljemo jedan red (isto ime kao profil, dob 1). Kod PUT-a zadržavamo `id` postojećeg zapisa ako postoji.
+ * Za pozivnice rođenja gost u UI-ju unosi samo ime/nadimak; šaljemo jedan red (isto ime kao profil, dob 1).
+ * Kod PUT-a zadržavamo `id` postojećeg zapisa ako postoji. Za ostale pozivnice djeca i dob mogu biti prazni.
  */
 export function buildFamilyProfilePayload(
   parentNameTrimmed: string,
@@ -238,7 +238,7 @@ export type MembershipRequest = {
     id: string
     familyProfileId: string
     name: string
-    age: number
+    age: number | null
     createdAt: string
     updatedAt: string
   }>
@@ -524,6 +524,13 @@ export async function updateFamilyProfile(payload: FamilyProfilePayload, identit
   })
 }
 
+export async function deleteFamilyProfile(identity?: TemporaryWebIdentity | null) {
+  await request<unknown>('/api/me/family-profile', {
+    method: 'DELETE',
+    identity,
+  })
+}
+
 export async function getMyMembershipRequest(invitationId: string, identity?: TemporaryWebIdentity | null) {
   const data = await request<{ request: MembershipRequest | null }>(
     `/api/invitations/${encodeURIComponent(invitationId)}/membership-request/me`,
@@ -774,6 +781,20 @@ export async function getMyInvitations(): Promise<{ invitations: MyInvitationSum
   return request('/api/my/invitations', { identity: null })
 }
 
+export async function deleteMyInvitation(invitationId: string) {
+  await request<unknown>(`/api/my/invitations/${encodeURIComponent(invitationId)}`, {
+    method: 'DELETE',
+    identity: null,
+  })
+}
+
 export async function getMyRsvps(): Promise<{ rsvps: MyRsvpSummary[] }> {
   return request('/api/my/rsvps', { identity: null })
+}
+
+export async function deleteMyRsvp(rsvpId: string) {
+  await request<unknown>(`/api/my/rsvps/${encodeURIComponent(rsvpId)}`, {
+    method: 'DELETE',
+    identity: null,
+  })
 }

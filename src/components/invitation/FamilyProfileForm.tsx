@@ -47,7 +47,7 @@ export default function FamilyProfileForm({
           ? draft.children.map((child, index) => (
               <div key={child.id ?? `child-${index}`} className="pb-childEditor">
                 <label className="pb-formField">
-                  <span className="pb-formLabel">Ime djeteta</span>
+                  <span className="pb-formLabel">Ime djeteta (neobavezno)</span>
                   <input
                     className="pb-input"
                     type="text"
@@ -60,7 +60,7 @@ export default function FamilyProfileForm({
                   />
                 </label>
                 <label className="pb-formField">
-                  <span className="pb-formLabel">Koliko godina ima dijete?</span>
+                  <span className="pb-formLabel">Koliko godina ima dijete? (neobavezno)</span>
                   <input
                     className="pb-input"
                     type="number"

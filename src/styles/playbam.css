@@ -1033,6 +1033,132 @@ html, body { scrollbar-gutter: stable; }
   outline-offset: 2px;
 }
 
+.pb-mojVidimose__listRow {
+  display: flex;
+  align-items: stretch;
+  gap: 0.65rem;
+}
+
+.pb-mojVidimose__listRow .pb-mojVidimose__inviteLink {
+  flex: 1;
+  min-width: 0;
+}
+
+.pb-mojVidimose__rowDelete {
+  align-self: center;
+  flex-shrink: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(185, 28, 28, 0.4);
+  background: rgba(255, 255, 255, 0.95);
+  color: rgb(185, 28, 28);
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.pb-mojVidimose__rowDelete:hover:not(:disabled) {
+  background: rgba(254, 226, 226, 0.85);
+  border-color: rgba(185, 28, 28, 0.55);
+}
+
+.pb-mojVidimose__rowDelete:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pb-mojVidimose__actionError {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.65rem;
+  background: rgba(254, 226, 226, 0.65);
+  color: #7f1d1d;
+  font-size: 0.9rem;
+}
+
+.pb-mojVidimose__rsvpList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pb-mojVidimose__rsvpLink {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.pb-mojVidimose__rsvpCard {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.pb-mojVidimose__rsvpCardInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.pb-mojVidimose__rsvpTitle {
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.pb-mojVidimose__rsvpMeta {
+  font-size: 0.875rem;
+  color: var(--color-text-muted, #888);
+}
+
+.pb-mojVidimose__rsvpPill {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.pb-mojVidimose__rsvpPill--going {
+  background: #d4edda;
+  color: #155724;
+}
+
+.pb-mojVidimose__rsvpPill--not_going {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.pb-mojVidimose__rsvpPill--maybe {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.pb-mojVidimose__dangerFoot {
+  margin-top: 2.5rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--color-border, #e5e5e5);
+}
+
+.pb-mojVidimose__deleteProfileBtn.pb-btn-ghost {
+  color: rgb(185, 28, 28);
+  font-weight: 800;
+  border: 1px solid rgba(185, 28, 28, 0.35);
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+}
+
+.pb-mojVidimose__deleteProfileBtn.pb-btn-ghost:hover:not(:disabled) {
+  background: rgba(254, 226, 226, 0.5);
+}
+
 /* Sadržaj: safe-area; kartica ostaje unutar, pozadina maina je full-bleed */
 .pb-main--demo .pb-container {
   padding-left: max(14px, env(safe-area-inset-left, 0px));
@@ -2768,6 +2894,38 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   letter-spacing: -0.02em;
   line-height: 1.2;
   color: var(--invite-text, #1f2430);
+}
+
+.pb-privateToggle__trail {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.pb-privateToggle__badge {
+  box-sizing: border-box;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.28rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.pb-privateToggle__badge--new {
+  background: rgba(34, 197, 94, 0.22);
+  color: rgb(21, 128, 61);
+}
+
+.pb-privateToggle__badge--zero {
+  background: rgba(239, 68, 68, 0.15);
+  color: rgb(185, 28, 28);
 }
 
 .pb-privateToggle__arrow {

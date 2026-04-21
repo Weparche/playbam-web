@@ -92,7 +92,7 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
           setProfileDraft({
             parentName: profileRes.profile.parentName || '',
             children: profileRes.children.length > 0
-              ? profileRes.children.map((c) => ({ id: c.id, name: c.name, age: String(c.age) }))
+              ? profileRes.children.map((c) => ({ id: c.id, name: c.name, age: c.age == null ? '' : String(c.age) }))
               : [{ name: '', age: '' }],
           })
         }
@@ -108,15 +108,20 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
 
   const handleSaveProfile = async () => {
     const parentName = profileDraft.parentName.trim()
-    const validChildren = profileDraft.children.filter((c) => c.name.trim() && c.age)
     if (!parentName) { setError('Upiši ime mame ili tate.'); return }
-    if (validChildren.length === 0) { setError('Dodaj barem jedno dijete.'); return }
+    const resolvedChildren = profileDraft.children
+      .map((c) => ({
+        ...(c.id ? { id: c.id } : {}),
+        name: c.name.trim(),
+        age: c.age.trim() === '' ? null : Number(c.age),
+      }))
+      .filter((c) => c.name || (c.age != null && Number.isFinite(c.age)))
     setSavingProfile(true)
     setError('')
     try {
       const payload = {
         parentName,
-        children: validChildren.map((c) => ({ ...(c.id ? { id: c.id } : {}), name: c.name.trim(), age: Number(c.age) })),
+        children: resolvedChildren,
       }
       if (profileHasExisting) {
         await updateFamilyProfile(payload, null)

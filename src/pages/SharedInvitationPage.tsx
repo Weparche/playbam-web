@@ -22,6 +22,7 @@ import Footer from '../components/layout/Footer'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import PrivateToggleChevron from '../components/ui/PrivateToggleChevron'
+import PrivateToggleUnreadBadge from '../components/ui/PrivateToggleUnreadBadge'
 import { useAuth } from '../context/AuthContext'
 import {
   buildFamilyProfilePayload,
@@ -60,6 +61,13 @@ import {
   type UpdateInvitationPayload,
 } from '../lib/invitationApi'
 import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
+import {
+  countUnreadChatForHost,
+  countUnreadWishlistForHost,
+  ensurePrivateSectionBaseline,
+  getPrivateSectionReadAt,
+  setPrivateSectionReadAt,
+} from '../lib/privateSectionUnread'
 import { applyInvitationShareMeta, clearInvitationShareMeta } from '../lib/invitationShareMeta'
 import type { TemporaryWebIdentity } from '../lib/tempWebIdentity'
 import {
@@ -136,7 +144,7 @@ function createDraftFromProfile(
       ? familyProfile.children.map((child) => ({
           id: child.id,
           name: child.name,
-          age: String(child.age),
+          age: child.age == null ? '' : String(child.age),
         }))
       : isBirthInvitation
         ? []
@@ -378,6 +386,11 @@ export default function SharedInvitationPage() {
   const [guestChatOpen, setGuestChatOpen] = useState(false)
   const [guestModalOpen, setGuestModalOpen] = useState(false)
   const [hostAccordionOpen, setHostAccordionOpen] = useState<HostAccordionSection | null>(null)
+  const [hostPrivateReadAt, setHostPrivateReadAt] = useState<{ chat: number | null; wishlist: number | null }>({
+    chat: null,
+    wishlist: null,
+  })
+  const hostAccordionUnreadPrevRef = useRef<HostAccordionSection | null>(null)
   const [hostAddGiftOpen, setHostAddGiftOpen] = useState(false)
   const [selectedHostRequest, setSelectedHostRequest] = useState<MembershipRequest | null>(null)
   const [hostEditorDraft, setHostEditorDraft] = useState<InvitationCreateDraft>(DEFAULT_CREATE_DRAFT)
@@ -521,6 +534,60 @@ export default function SharedInvitationPage() {
   const canViewWishlist = access?.canViewWishlist ?? false
   const canSubmitRsvp = Boolean(user && !isHost && access?.canRsvp)
   const showHostStudio = Boolean((user || hasHostSession) && !loadingPrivateState && isHost)
+
+  const hostWishlistContributorLabel = useMemo(
+    () => familyProfile?.profile?.parentName?.trim() || session?.displayName?.trim() || null,
+    [familyProfile, session],
+  )
+
+  useEffect(() => {
+    hostAccordionUnreadPrevRef.current = null
+  }, [invitation?.id])
+
+  useEffect(() => {
+    const id = invitation?.id
+    if (!id || !showHostStudio) {
+      return
+    }
+    ensurePrivateSectionBaseline('host', 'chat', id)
+    ensurePrivateSectionBaseline('host', 'wishlist', id)
+    setHostPrivateReadAt({
+      chat: getPrivateSectionReadAt('host', 'chat', id),
+      wishlist: getPrivateSectionReadAt('host', 'wishlist', id),
+    })
+  }, [invitation?.id, showHostStudio])
+
+  useEffect(() => {
+    const id = invitation?.id
+    if (!id || !showHostStudio) {
+      return
+    }
+    const prev = hostAccordionUnreadPrevRef.current
+    hostAccordionUnreadPrevRef.current = hostAccordionOpen
+    if (hostAccordionOpen === 'chat' && prev !== 'chat') {
+      const now = Date.now()
+      setPrivateSectionReadAt('host', 'chat', id, now)
+      setHostPrivateReadAt((current) => ({ ...current, chat: now }))
+    }
+    if (hostAccordionOpen === 'wishlist' && prev !== 'wishlist') {
+      const now = Date.now()
+      setPrivateSectionReadAt('host', 'wishlist', id, now)
+      setHostPrivateReadAt((current) => ({ ...current, wishlist: now }))
+    }
+  }, [hostAccordionOpen, invitation?.id, showHostStudio])
+
+  const hostChatUnreadCount = useMemo(
+    () => (showHostStudio && invitation?.id ? countUnreadChatForHost(chatMessages, hostPrivateReadAt.chat) : 0),
+    [chatMessages, hostPrivateReadAt.chat, invitation?.id, showHostStudio],
+  )
+
+  const hostWishlistUnreadCount = useMemo(
+    () =>
+      showHostStudio && invitation?.id
+        ? countUnreadWishlistForHost(wishlistItems, hostPrivateReadAt.wishlist, hostWishlistContributorLabel)
+        : 0,
+    [hostWishlistContributorLabel, invitation?.id, showHostStudio, wishlistItems, hostPrivateReadAt.wishlist],
+  )
 
   const guestModalStep = useMemo(
     () => getGuestModalStep(invitation, isHost, hasPrivateAccess, user, hasFamilyProfile, membershipRequest),
@@ -1181,12 +1248,12 @@ export default function SharedInvitationPage() {
       .map((child) => ({
         id: child.id,
         name: child.name.trim(),
-        age: Number(child.age),
+        age: child.age.trim() === '' ? null : Number(child.age),
       }))
-      .filter((child) => child.name && Number.isFinite(child.age) && child.age > 0)
+      .filter((child) => child.name || (child.age != null && Number.isFinite(child.age)))
 
-    if (!user || !parentName || (!isBirthInvitation && resolvedChildren.length === 0)) {
-      setProfileError(isBirthInvitation ? 'Upiši ime i prezime ili nadimak.' : 'Upiši ime roditelja i barem jedno dijete.')
+    if (!user || !parentName) {
+      setProfileError(isBirthInvitation ? 'Upiši ime i prezime ili nadimak.' : 'Upiši ime mame ili tate.')
       return
     }
 
@@ -2016,8 +2083,11 @@ export default function SharedInvitationPage() {
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
                         <span className="pb-privateToggle__title">Lista želja</span>
                       </span>
-                      <span className="pb-privateToggle__arrow" aria-hidden>
-                        <PrivateToggleChevron />
+                      <span className="pb-privateToggle__trail">
+                        <PrivateToggleUnreadBadge count={hostWishlistUnreadCount} />
+                        <span className="pb-privateToggle__arrow" aria-hidden>
+                          <PrivateToggleChevron />
+                        </span>
                       </span>
                     </button>
 
@@ -2110,8 +2180,11 @@ export default function SharedInvitationPage() {
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
                         <span className="pb-privateToggle__title">Live chat</span>
                       </span>
-                      <span className="pb-privateToggle__arrow" aria-hidden>
-                        <PrivateToggleChevron />
+                      <span className="pb-privateToggle__trail">
+                        <PrivateToggleUnreadBadge count={hostChatUnreadCount} />
+                        <span className="pb-privateToggle__arrow" aria-hidden>
+                          <PrivateToggleChevron />
+                        </span>
                       </span>
                     </button>
 
@@ -2605,7 +2678,9 @@ function HostRequestListV2({
               const parentName = request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'
               const childrenText = isBirthInvitation
                 ? ''
-                : request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'
+                : request.children
+                    .map((child) => `${child.name || '—'}${child.age != null ? ` (${child.age})` : ''}`)
+                    .join(', ') || 'Nema odabrane djece'
               const rsvpLabel = rsvpStatusLabelClean(request.rsvp?.status)
               const rsvpToneClass = getRsvpToneClass(request.rsvp?.status)
               const giftCount = getGuestGiftSummaries(request, wishlistItems).length
@@ -2706,7 +2781,9 @@ function HostGuestModal({
   const parentName = request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'
   const childrenText = isBirthInvitation
     ? ''
-    : request.children.map((child) => `${child.name} (${child.age})`).join(', ') || 'Nema odabrane djece'
+    : request.children
+        .map((child) => `${child.name || '—'}${child.age != null ? ` (${child.age})` : ''}`)
+        .join(', ') || 'Nema odabrane djece'
   const rsvpLabel = rsvpStatusLabelClean(request.rsvp?.status)
   const rsvpToneClass = getRsvpToneClass(request.rsvp?.status)
 

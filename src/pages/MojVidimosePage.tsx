@@ -9,6 +9,9 @@ import {
   getFamilyProfile,
   updateFamilyProfile,
   createFamilyProfile,
+  deleteFamilyProfile,
+  deleteMyInvitation,
+  deleteMyRsvp,
   isApiError,
   type MyInvitationSummary,
   type MyRsvpSummary,
@@ -31,13 +34,15 @@ function RsvpLabel({ status }: { status: string }) {
 }
 
 export default function MojVidimosePage() {
-  const { session } = useAuth()
+  const { session, logout } = useAuth()
   const navigate = useNavigate()
   const [invitations, setInvitations] = useState<MyInvitationSummary[]>([])
   const [rsvps, setRsvps] = useState<MyRsvpSummary[]>([])
   const [profile, setProfile] = useState<FamilyProfileResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [actionError, setActionError] = useState('')
+  const [deleteBusyKey, setDeleteBusyKey] = useState<string | null>(null)
 
   const [addingChild, setAddingChild] = useState(false)
   const [profileDraft, setProfileDraft] = useState<FamilyProfileDraft | null>(null)
@@ -72,12 +77,65 @@ export default function MojVidimosePage() {
     load()
   }, [session, navigate])
 
+  const handleDeleteInvitation = async (inv: MyInvitationSummary) => {
+    if (!window.confirm(`Obrisati pozivnicu „${inv.title}”? Ova radnja je trajna.`)) {
+      return
+    }
+    setActionError('')
+    setDeleteBusyKey(`inv:${inv.id}`)
+    try {
+      await deleteMyInvitation(inv.id)
+      setInvitations((list) => list.filter((i) => i.id !== inv.id))
+    } catch (err) {
+      setActionError(isApiError(err) ? (err as Error).message : 'Brisanje pozivnice nije uspjelo.')
+    } finally {
+      setDeleteBusyKey(null)
+    }
+  }
+
+  const handleDeleteRsvp = async (rsvp: MyRsvpSummary) => {
+    if (!window.confirm(`Ukloniti RSVP za „${rsvp.invitation.title}”?`)) {
+      return
+    }
+    setActionError('')
+    setDeleteBusyKey(`rsvp:${rsvp.id}`)
+    try {
+      await deleteMyRsvp(rsvp.id)
+      setRsvps((list) => list.filter((r) => r.id !== rsvp.id))
+    } catch (err) {
+      setActionError(isApiError(err) ? (err as Error).message : 'Brisanje RSVP-a nije uspjelo.')
+    } finally {
+      setDeleteBusyKey(null)
+    }
+  }
+
+  const handleDeleteProfile = async () => {
+    if (
+      !window.confirm(
+        'Obrisati obiteljski profil? Uklonit će se spremljeni podaci o tebi i djeci povezani s ovim računom. Pozivnice koje si kreirao/la ostaju na VidimoSe-u osim ako ih posebno ne obrišeš.',
+      )
+    ) {
+      return
+    }
+    setActionError('')
+    setDeleteBusyKey('profile')
+    try {
+      await deleteFamilyProfile(null)
+      logout()
+      navigate('/', { replace: true })
+    } catch (err) {
+      setActionError(isApiError(err) ? (err as Error).message : 'Brisanje profila nije uspjelo.')
+    } finally {
+      setDeleteBusyKey(null)
+    }
+  }
+
   const handleAddChild = () => {
     if (!profile) return
     setProfileDraft({
       parentName: profile.profile?.parentName ?? '',
       children: [
-        ...profile.children.map((c) => ({ id: c.id, name: c.name, age: String(c.age) })),
+        ...profile.children.map((c) => ({ id: c.id, name: c.name, age: c.age == null ? '' : String(c.age) })),
         { name: '', age: '' },
       ],
     })
@@ -87,15 +145,20 @@ export default function MojVidimosePage() {
   const handleSaveProfile = async () => {
     if (!profileDraft) return
     const parentName = profileDraft.parentName.trim()
-    const validChildren = profileDraft.children.filter((c) => c.name.trim() && c.age)
     if (!parentName) { setProfileError('Upiši ime mame ili tate.'); return }
-    if (validChildren.length === 0) { setProfileError('Dodaj barem jedno dijete.'); return }
+    const resolvedChildren = profileDraft.children
+      .map((c) => ({
+        ...(c.id ? { id: c.id } : {}),
+        name: c.name.trim(),
+        age: c.age.trim() === '' ? null : Number(c.age),
+      }))
+      .filter((c) => c.name || (c.age != null && Number.isFinite(c.age)))
     setSavingProfile(true)
     setProfileError('')
     try {
       const payload = {
         parentName,
-        children: validChildren.map((c) => ({ ...(c.id ? { id: c.id } : {}), name: c.name.trim(), age: Number(c.age) })),
+        children: resolvedChildren,
       }
       const updated = profile?.profile
         ? await updateFamilyProfile(payload, null)
@@ -119,6 +182,11 @@ export default function MojVidimosePage() {
 
           {loading && <p>Učitavam...</p>}
           {error && <p style={{ color: 'red' }}>{error}</p>}
+          {!loading && actionError ? (
+            <p className="pb-mojVidimose__actionError" role="alert">
+              {actionError}
+            </p>
+          ) : null}
 
           {!loading && (
             <>
@@ -137,7 +205,10 @@ export default function MojVidimosePage() {
                     {profile && profile.children.length > 0 && profile.children.map((child) => (
                       <div key={child.id} style={{ display: 'flex', gap: '0.5rem' }}>
                         <span style={{ color: 'var(--color-text-muted, #888)', minWidth: 130, fontSize: '0.875rem' }}>Dijete</span>
-                        <span style={{ fontWeight: 500 }}>{child.name}, {child.age} god.</span>
+                        <span style={{ fontWeight: 500 }}>
+                          {child.name || '—'}
+                          {child.age != null ? `, ${child.age} god.` : ''}
+                        </span>
                       </div>
                     ))}
                     {(!profile || profile.children.length === 0) && (
@@ -195,25 +266,35 @@ export default function MojVidimosePage() {
                 ) : (
                   <div className="pb-mojVidimose__inviteList">
                     {invitations.map((inv) => (
-                      <Link
-                        key={inv.id}
-                        to={`/pozivnica/${inv.publicSlug || inv.shareToken}`}
-                        className="pb-mojVidimose__inviteLink"
-                      >
-                        <div className="pb-flowCard pb-mojVidimose__inviteCard">
-                          <div className="pb-mojVidimose__inviteCardBody">
-                            <div className="pb-mojVidimose__inviteTitle">{inv.title}</div>
-                            <div className="pb-mojVidimose__inviteMeta">
-                              {formatDate(inv.date)} · {inv.location}
+                      <div key={inv.id} className="pb-mojVidimose__listRow">
+                        <Link
+                          to={`/pozivnica/${inv.publicSlug || inv.shareToken}`}
+                          className="pb-mojVidimose__inviteLink"
+                        >
+                          <div className="pb-flowCard pb-mojVidimose__inviteCard">
+                            <div className="pb-mojVidimose__inviteCardBody">
+                              <div className="pb-mojVidimose__inviteTitle">{inv.title}</div>
+                              <div className="pb-mojVidimose__inviteMeta">
+                                {formatDate(inv.date)} · {inv.location}
+                              </div>
                             </div>
+                            <span className="pb-mojVidimose__inviteChevron" aria-hidden>
+                              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="9 6 15 12 9 18" />
+                              </svg>
+                            </span>
                           </div>
-                          <span className="pb-mojVidimose__inviteChevron" aria-hidden>
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="9 6 15 12 9 18" />
-                            </svg>
-                          </span>
-                        </div>
-                      </Link>
+                        </Link>
+                        <button
+                          type="button"
+                          className="pb-mojVidimose__rowDelete"
+                          disabled={deleteBusyKey !== null}
+                          aria-label={`Obriši pozivnicu ${inv.title}`}
+                          onClick={() => void handleDeleteInvitation(inv)}
+                        >
+                          {deleteBusyKey === `inv:${inv.id}` ? '…' : 'Obriši'}
+                        </button>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -227,38 +308,54 @@ export default function MojVidimosePage() {
                     Još nisi potvrdio/la dolazak na nijednu proslavu.
                   </p>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div className="pb-mojVidimose__rsvpList">
                     {rsvps.map((rsvp) => (
-                      <Link
-                        key={rsvp.id}
-                        to={`/pozivnica/${rsvp.invitation.publicSlug || rsvp.invitation.shareToken}`}
-                        style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}
-                      >
-                        <div className="pb-flowCard" style={{ padding: '1rem 1.25rem', cursor: 'pointer' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
-                            <div>
-                              <div style={{ fontWeight: 700, marginBottom: '0.2rem' }}>{rsvp.invitation.title}</div>
-                              <div style={{ fontSize: '0.875rem', color: 'var(--color-text-muted, #888)' }}>
-                                {formatDate(rsvp.invitation.date)} · {rsvp.invitation.location}
+                      <div key={rsvp.id} className="pb-mojVidimose__listRow">
+                        <Link
+                          to={`/pozivnica/${rsvp.invitation.publicSlug || rsvp.invitation.shareToken}`}
+                          className="pb-mojVidimose__rsvpLink"
+                        >
+                          <div className="pb-flowCard pb-mojVidimose__rsvpCard">
+                            <div className="pb-mojVidimose__rsvpCardInner">
+                              <div>
+                                <div className="pb-mojVidimose__rsvpTitle">{rsvp.invitation.title}</div>
+                                <div className="pb-mojVidimose__rsvpMeta">
+                                  {formatDate(rsvp.invitation.date)} · {rsvp.invitation.location}
+                                </div>
                               </div>
+                              <span
+                                className={`pb-mojVidimose__rsvpPill pb-mojVidimose__rsvpPill--${rsvp.status}`}
+                              >
+                                <RsvpLabel status={rsvp.status} />
+                              </span>
                             </div>
-                            <span style={{
-                              fontSize: '0.8rem',
-                              fontWeight: 600,
-                              padding: '0.2rem 0.6rem',
-                              borderRadius: 20,
-                              background: rsvp.status === 'going' ? '#d4edda' : rsvp.status === 'not_going' ? '#f8d7da' : '#fff3cd',
-                              color: rsvp.status === 'going' ? '#155724' : rsvp.status === 'not_going' ? '#721c24' : '#856404',
-                              whiteSpace: 'nowrap',
-                            }}>
-                              <RsvpLabel status={rsvp.status} />
-                            </span>
                           </div>
-                        </div>
-                      </Link>
+                        </Link>
+                        <button
+                          type="button"
+                          className="pb-mojVidimose__rowDelete"
+                          disabled={deleteBusyKey !== null}
+                          aria-label={`Obriši RSVP za ${rsvp.invitation.title}`}
+                          onClick={() => void handleDeleteRsvp(rsvp)}
+                        >
+                          {deleteBusyKey === `rsvp:${rsvp.id}` ? '…' : 'Obriši'}
+                        </button>
+                      </div>
                     ))}
                   </div>
                 )}
+              </section>
+
+              <section className="pb-mojVidimose__dangerFoot" aria-label="Brisanje profila">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="pb-mojVidimose__deleteProfileBtn"
+                  disabled={deleteBusyKey !== null}
+                  onClick={() => void handleDeleteProfile()}
+                >
+                  {deleteBusyKey === 'profile' ? 'Brisanje…' : 'Obriši profil'}
+                </Button>
               </section>
             </>
           )}

@@ -161,7 +161,9 @@ export default function GuestInvitationModal({
 
   const familySummary =
     familyProfile && familyProfile.children.length > 0
-      ? familyProfile.children.map((child) => `${child.name} (${child.age})`).join(', ')
+      ? familyProfile.children
+          .map((child) => `${child.name || '—'}${child.age != null ? ` (${child.age})` : ''}`)
+          .join(', ')
       : 'Bez prijavljene djece'
 
   return (
@@ -307,7 +309,8 @@ export default function GuestInvitationModal({
                         disabled={membershipRequest?.status === 'pending'}
                       />
                       <span>
-                        {child.name} ({child.age})
+                        {child.name || '—'}
+                        {child.age != null ? ` (${child.age})` : ''}
                       </span>
                     </label>
                   ))}

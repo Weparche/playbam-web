@@ -2854,6 +2854,12 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     -webkit-text-fill-color: #111111 !important;
   }
 
+  .pb-hostUpdateEditor .pb-createEditor__titleInput::placeholder {
+    color: rgba(23, 36, 59, 0.36);
+    -webkit-text-fill-color: rgba(23, 36, 59, 0.36);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.24);
+  }
+
   .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--none,
   .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft,
   .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold,
@@ -5490,7 +5496,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
  */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);
+  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem + 1px);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth,
@@ -5499,7 +5505,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__infoBlock,
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__infoBlock {
-  --hero-info-top: calc(37.9% - 2px);
+  --hero-info-top: calc(37.9% + 1px);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth,
@@ -5515,7 +5521,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 @supports (height: 1cqh) {
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-    --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 1rem - 2.5cqh - 2px);
+    --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 1rem - 2.5cqh + 1px);
   }
 
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth,
@@ -5533,7 +5539,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__infoBlock {
-  --hero-info-top: 37.9%;
+  --hero-info-top: calc(37.9% + 3px);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {

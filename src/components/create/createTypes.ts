@@ -279,7 +279,7 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   celebrantName: 'Luka',
   titleFont: 'merienda',
   titleColor: 'white',
-  titleOutline: 'soft',
+  titleOutline: 'soft-black',
   titleSize: 'md',
   date: '2026-06-15',
   time: '15:00',
@@ -469,7 +469,7 @@ export function normalizeTitleOutline(value: string | null | undefined): TitleOu
     case 'bold-black':
       return normalized
     default:
-      return 'soft'
+      return 'soft-black'
   }
 }
 

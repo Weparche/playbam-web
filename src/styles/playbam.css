@@ -5480,7 +5480,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem - 2px);
+  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem - 4px);
+  --hero-message-offset-x: 5px;
 }
 
 .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {

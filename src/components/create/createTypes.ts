@@ -90,8 +90,8 @@ export type InvitationCreateDraft = {
 export const LOCATION_TYPES: readonly LocationType[] = ['Igraonica / lokal', 'Kod kuće', 'Na otvorenom', 'Druga lokacija']
 
 export const LEGACY_COVER_THEME_TABS = [
-  { id: 'birthday', label: 'DjeÄji roÄ‘endan' },
-  { id: 'birth', label: 'RoÄ‘enje' },
+  { id: 'birthday', label: 'Dje\u010dji ro\u0111endan' },
+  { id: 'birth', label: 'Ro\u0111enje' },
 ] as const satisfies ReadonlyArray<{ id: CoverThemeTab; label: string }>
 
 const LEGACY_COVER_THEME_OPTIONS = [

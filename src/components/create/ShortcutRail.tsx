@@ -9,7 +9,7 @@ type Props = {
 
 export default function ShortcutRail({ activeShortcut, onShortcutClick, items = SHORTCUT_ITEMS }: Props) {
   return (
-    <aside className="pb-shortcutRail" aria-label="Brzi shortcuti za uredjivanje">
+    <aside className="pb-shortcutRail" aria-label="Brzi shortcuti za uređivanje">
       {items.map((item) => (
         <ShortcutButton
           key={item.id}

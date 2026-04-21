@@ -375,7 +375,7 @@ export default function CreateInvitationPage() {
           <FloatingEditPanel
             open
             title="Lista želja"
-            description="Uklju?i listu ?elja i dodaj prijedloge poklona."
+            description="Uključi listu želja i dodaj prijedloge poklona."
             onClose={() => setActiveShortcut(null)}
           >
             <QuickWishlistEditor draft={draft} onFieldChange={updateField} onWishlistChange={updateWishlistItems} />
@@ -427,10 +427,10 @@ export default function CreateInvitationPage() {
             <div className="pb-quickEditor">
               <label className="pb-quickEditor__toggle">
                 <input type="checkbox" checked={draft.wishlistEnabled} onChange={(event) => updateField('wishlistEnabled', event.target.checked)} />
-                <span>Lista ?elja uklju?ena</span>
+                <span>Lista želja uključena</span>
               </label>
               <p className="pb-quickEditor__hint">
-                RSVP ostaje uklju?en, a ovdje kasnije mo?emo spojiti privatnost, share settings i pravi autosave draft endpoint.
+                RSVP ostaje uključen, a ovdje kasnije možemo spojiti privatnost, share settings i pravi autosave draft endpoint.
               </p>
             </div>
           </FloatingEditPanel>

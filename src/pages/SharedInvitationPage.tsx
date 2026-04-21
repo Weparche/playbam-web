@@ -62,8 +62,8 @@ import {
 } from '../lib/invitationApi'
 import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
 import {
+  countPendingMembershipRequestsForHost,
   countUnreadChatForHost,
-  countUnreadMembershipRequestsForHost,
   countUnreadWishlistForHost,
   ensurePrivateSectionBaseline,
   getPrivateSectionReadAt,
@@ -387,14 +387,9 @@ export default function SharedInvitationPage() {
   const [guestChatOpen, setGuestChatOpen] = useState(false)
   const [guestModalOpen, setGuestModalOpen] = useState(false)
   const [hostAccordionOpen, setHostAccordionOpen] = useState<HostAccordionSection | null>(null)
-  const [hostPrivateReadAt, setHostPrivateReadAt] = useState<{
-    chat: number | null
-    wishlist: number | null
-    requests: number | null
-  }>({
+  const [hostPrivateReadAt, setHostPrivateReadAt] = useState<{ chat: number | null; wishlist: number | null }>({
     chat: null,
     wishlist: null,
-    requests: null,
   })
   const hostAccordionUnreadPrevRef = useRef<HostAccordionSection | null>(null)
   const [hostAddGiftOpen, setHostAddGiftOpen] = useState(false)
@@ -557,11 +552,9 @@ export default function SharedInvitationPage() {
     }
     ensurePrivateSectionBaseline('host', 'chat', id)
     ensurePrivateSectionBaseline('host', 'wishlist', id)
-    ensurePrivateSectionBaseline('host', 'requests', id)
     setHostPrivateReadAt({
       chat: getPrivateSectionReadAt('host', 'chat', id),
       wishlist: getPrivateSectionReadAt('host', 'wishlist', id),
-      requests: getPrivateSectionReadAt('host', 'requests', id),
     })
   }, [invitation?.id, showHostStudio])
 
@@ -582,11 +575,6 @@ export default function SharedInvitationPage() {
       setPrivateSectionReadAt('host', 'wishlist', id, now)
       setHostPrivateReadAt((current) => ({ ...current, wishlist: now }))
     }
-    if (hostAccordionOpen === 'requests' && prev !== 'requests') {
-      const now = Date.now()
-      setPrivateSectionReadAt('host', 'requests', id, now)
-      setHostPrivateReadAt((current) => ({ ...current, requests: now }))
-    }
   }, [hostAccordionOpen, invitation?.id, showHostStudio])
 
   const hostChatUnreadCount = useMemo(
@@ -603,11 +591,8 @@ export default function SharedInvitationPage() {
   )
 
   const hostRequestsUnreadCount = useMemo(
-    () =>
-      showHostStudio && invitation?.id
-        ? countUnreadMembershipRequestsForHost(hostRequests, hostPrivateReadAt.requests)
-        : 0,
-    [hostRequests, hostPrivateReadAt.requests, invitation?.id, showHostStudio],
+    () => (showHostStudio && invitation?.id ? countPendingMembershipRequestsForHost(hostRequests) : 0),
+    [hostRequests, invitation?.id, showHostStudio],
   )
 
   const guestModalStep = useMemo(

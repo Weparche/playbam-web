@@ -10492,6 +10492,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   margin: 0 auto;
   border-radius: 28px;
   overflow: hidden;
+  overflow: clip;
   background: transparent;
   border: 0;
   box-shadow: none;

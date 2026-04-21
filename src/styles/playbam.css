@@ -10602,7 +10602,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   --hero-title-md-size: clamp(1.4rem, 5.15vw, 2.15rem);
   --hero-title-sm-size: clamp(0.98rem, 3.85vw, 1.48rem);
   --hero-info-top: 37.9%;
-  --hero-info-offset-x: 0px;
+  --hero-info-offset-x: -5px;
   --hero-info-offset-y: 0px;
   --hero-info-birth-offset-y: 5px;
   --hero-message-margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);

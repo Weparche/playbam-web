@@ -7,6 +7,7 @@ html, body { scrollbar-gutter: stable; }
   max-width: 100%;
   min-width: 0;
   overflow-x: hidden;
+  overflow-x: clip;
   background: radial-gradient(
       900px 440px at 15% 0%,
       rgba(30, 123, 230, 0.1),
@@ -867,6 +868,7 @@ html, body { scrollbar-gutter: stable; }
   background: var(--color-bg-primary, #F3EDE3);
   font-family: var(--invite-font);
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Tipografija pozivnice: Plus Jakarta UI; Fredoka display naslov u kartici */
@@ -1072,6 +1074,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 @media (max-width: 768px) {
   .pb-main--demo.pb-invitePage {
     overflow-x: hidden;
+    overflow-x: clip;
   }
 
   .pb-main--demo.pb-invitePage .pb-container {

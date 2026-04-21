@@ -55,6 +55,7 @@ html {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -71,6 +72,7 @@ body {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  overflow-x: clip;
   position: relative;
 }
 
@@ -79,6 +81,7 @@ body {
   max-width: 100%;
   min-width: 0;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Uži viewport: dodatno zategni (Safari / Chrome mob — subpixel + font swap) */
@@ -86,7 +89,8 @@ body {
   html,
   body,
   #root {
-    overflow-x: hidden !important;
+    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100%;
     width: 100%;
   }

@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import QRCode from 'qrcode'
+import { useState } from 'react'
 
 import Button from '../ui/Button'
+import KeksPayQrPreview from './KeksPayQrPreview'
 import type { InvitationPartyDetails } from '../../lib/invitationApi'
 
 type Props = {
@@ -13,30 +13,7 @@ export default function WishlistTipPaymentSection({ partyDetails }: Props) {
   const iban = partyDetails?.wishlistBankIban?.trim() ?? ''
   const payImage = partyDetails?.wishlistPaymentImageUrl?.trim() ?? ''
 
-  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null)
   const [copyDone, setCopyDone] = useState(false)
-
-  useEffect(() => {
-    if (!keksUrl) {
-      setQrDataUrl(null)
-      return
-    }
-    let cancelled = false
-    QRCode.toDataURL(keksUrl, { width: 200, margin: 2, errorCorrectionLevel: 'M' })
-      .then((url) => {
-        if (!cancelled) {
-          setQrDataUrl(url)
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setQrDataUrl(null)
-        }
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [keksUrl])
 
   if (!keksUrl && !iban && !payImage) {
     return null
@@ -55,38 +32,33 @@ export default function WishlistTipPaymentSection({ partyDetails }: Props) {
     }
   }
 
+  const hasBank = Boolean(iban || payImage)
+
   return (
     <div className="pb-wishlistTip">
-      <h3 className="pb-wishlistTip__title">
-        Uplati iznos po želji
-      </h3>
+      <h3 className="pb-wishlistTip__title">Uplati iznos po želji</h3>
       <p className="pb-wishlistTip__disclaimer">Uplata je dobrovoljna. Hvala na gesti.</p>
 
       {keksUrl ? (
-        <div className="pb-wishlistTip__block">
-          <p className="pb-wishlistTip__label">KEKS Pay</p>
-          <div className="pb-wishlistTip__keksRow">
-            {qrDataUrl ? (
-              <img src={qrDataUrl} alt="QR kod za KEKS Pay" className="pb-wishlistTip__qr" width={200} height={200} />
-            ) : (
-              <div className="pb-wishlistTip__qrPlaceholder" aria-hidden>
-                …
-              </div>
-            )}
-            <div className="pb-wishlistTip__keksActions">
-              <a className="pb-btn pb-btn-primary" href={keksUrl} target="_blank" rel="noopener noreferrer">
-                Otvori KEKS Pay
-              </a>
-            </div>
-          </div>
-        </div>
+        <section className="pb-wishlistTip__panel pb-wishlistTip__panel--keks" aria-labelledby="wishlist-tip-keks">
+          <h4 id="wishlist-tip-keks" className="pb-wishlistTip__panelTitle">
+            KEKS Pay
+          </h4>
+          <p className="pb-wishlistTip__panelLead">Skeniraj QR ili otvori poveznicu u aplikaciji.</p>
+          <KeksPayQrPreview url={keksUrl} showOpenLink />
+        </section>
       ) : null}
 
-      {iban || payImage ? (
-        <div className="pb-wishlistTip__block">
-          <p className="pb-wishlistTip__label">Bankovna uplata</p>
+      {keksUrl && hasBank ? <div className="pb-wishlistTip__sep" aria-hidden /> : null}
+
+      {hasBank ? (
+        <section className="pb-wishlistTip__panel pb-wishlistTip__panel--bank" aria-labelledby="wishlist-tip-bank">
+          <h4 id="wishlist-tip-bank" className="pb-wishlistTip__panelTitle">
+            Bankovna uplata (IBAN)
+          </h4>
+          <p className="pb-wishlistTip__panelLead">Podaci za uplatu u aplikaciji banke ili na šalteru.</p>
           {payImage ? (
-            <img src={payImage} alt="Podaci za uplatu" className="pb-wishlistTip__payImage" loading="lazy" />
+            <img src={payImage} alt="Podaci za bankovnu uplatu" className="pb-wishlistTip__payImage" loading="lazy" />
           ) : null}
           {iban ? (
             <div className="pb-wishlistTip__ibanRow">
@@ -96,7 +68,7 @@ export default function WishlistTipPaymentSection({ partyDetails }: Props) {
               </Button>
             </div>
           ) : null}
-        </div>
+        </section>
       ) : null}
     </div>
   )

@@ -14,6 +14,7 @@ import QuickThemeEditor from '../components/create/QuickThemeEditor'
 import ShortcutRail from '../components/create/ShortcutRail'
 import InvitationCard from '../components/invitation/InvitationCard'
 import InvitationLiveChatPanel from '../components/invitation/InvitationLiveChatPanel'
+import KeksPayQrPreview from '../components/invitation/KeksPayQrPreview'
 import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGuest'
 import { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
 import GuestInvitationModal, { getGuestModalStep } from '../components/invitation/GuestInvitationModal'
@@ -2328,7 +2329,10 @@ export default function SharedInvitationPage() {
                           <p className="pb-wishlistTipHost__lead">
                             Gosti mogu voljeno uplaćivati putem KEKS Paya ili prema podacima za bankovnu uplatu.
                           </p>
-                          <div className="pb-formGrid">
+
+                          <div className="pb-wishlistTipHost__panel pb-wishlistTipHost__panel--keks">
+                            <h4 className="pb-wishlistTipHost__panelTitle">KEKS Pay</h4>
+                            <p className="pb-wishlistTipHost__panelLead">QR se odmah ažurira kad zalijepiš poveznicu.</p>
                             <label className="pb-formField">
                               <span className="pb-formLabel">KEKS Pay poveznica</span>
                               <input
@@ -2340,44 +2344,54 @@ export default function SharedInvitationPage() {
                                 onChange={(event) => updateHostPartyDetails('wishlistKeksPayUrl', event.target.value)}
                               />
                             </label>
-                            <label className="pb-formField">
-                              <span className="pb-formLabel">IBAN za uplatu</span>
-                              <input
-                                className="pb-input"
-                                type="text"
-                                autoComplete="off"
-                                placeholder="HR…"
-                                value={hostPartyDetailsDraft.wishlistBankIban}
-                                onChange={(event) => updateHostPartyDetails('wishlistBankIban', event.target.value)}
-                              />
-                            </label>
-                            <label className="pb-formField">
-                              <span className="pb-formLabel">Slika uplatnice ili bankovnog QR koda</span>
-                              <input
-                                className="pb-input pb-input--file"
-                                type="file"
-                                accept="image/*"
-                                onChange={(event) => void handleWishlistTipImageChange(event)}
-                              />
-                              <span className="pb-inviteWish__uploadHint">PNG ili JPG, do oko 1,5 MB.</span>
-                            </label>
+                            <KeksPayQrPreview url={hostPartyDetailsDraft.wishlistKeksPayUrl} />
                           </div>
-                          {hostPartyDetailsDraft.wishlistPaymentImageUrl ? (
-                            <div className="pb-wishlistTipHost__preview">
-                              <img
-                                src={hostPartyDetailsDraft.wishlistPaymentImageUrl}
-                                alt="Pregled slike za uplatu"
-                                className="pb-wishlistTipHost__previewImg"
-                              />
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                onClick={() => updateHostPartyDetails('wishlistPaymentImageUrl', '')}
-                              >
-                                Ukloni sliku
-                              </Button>
+
+                          <div className="pb-wishlistTipHost__sep" aria-hidden />
+
+                          <div className="pb-wishlistTipHost__panel pb-wishlistTipHost__panel--bank">
+                            <h4 className="pb-wishlistTipHost__panelTitle">Bankovna uplata (IBAN)</h4>
+                            <p className="pb-wishlistTipHost__panelLead">IBAN i opcionalna slika uplatnice ili bankovnog koda.</p>
+                            <div className="pb-formGrid">
+                              <label className="pb-formField">
+                                <span className="pb-formLabel">IBAN za uplatu</span>
+                                <input
+                                  className="pb-input"
+                                  type="text"
+                                  autoComplete="off"
+                                  placeholder="HR…"
+                                  value={hostPartyDetailsDraft.wishlistBankIban}
+                                  onChange={(event) => updateHostPartyDetails('wishlistBankIban', event.target.value)}
+                                />
+                              </label>
+                              <label className="pb-formField">
+                                <span className="pb-formLabel">Slika uplatnice ili bankovnog QR koda</span>
+                                <input
+                                  className="pb-input pb-input--file"
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(event) => void handleWishlistTipImageChange(event)}
+                                />
+                                <span className="pb-inviteWish__uploadHint">PNG ili JPG, do oko 1,5 MB.</span>
+                              </label>
                             </div>
-                          ) : null}
+                            {hostPartyDetailsDraft.wishlistPaymentImageUrl ? (
+                              <div className="pb-wishlistTipHost__preview">
+                                <img
+                                  src={hostPartyDetailsDraft.wishlistPaymentImageUrl}
+                                  alt="Pregled slike za uplatu"
+                                  className="pb-wishlistTipHost__previewImg"
+                                />
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  onClick={() => updateHostPartyDetails('wishlistPaymentImageUrl', '')}
+                                >
+                                  Ukloni sliku
+                                </Button>
+                              </div>
+                            ) : null}
+                          </div>
                           <div className="pb-flowActions">
                             <Button
                               type="button"

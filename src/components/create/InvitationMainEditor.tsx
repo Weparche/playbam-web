@@ -21,6 +21,7 @@ import {
   getTitleColorValue,
   getRsvpSymbol,
   getThemeLabel,
+  normalizeTitleColor,
   TITLE_COLOR_OPTIONS,
   TITLE_FONT_OPTIONS,
   TITLE_OUTLINE_OPTIONS,
@@ -209,6 +210,7 @@ export default function InvitationMainEditor({
     : { label: 'Isključeno', tone: 'muted' as const }
 
   const selectedTitleColor = TITLE_COLOR_OPTIONS.find((o) => o.id === draft.titleColor) ?? TITLE_COLOR_OPTIONS[0]
+  const titleIsWhite = normalizeTitleColor(draft.titleColor) === 'white'
   const selectedTitleOutline = TITLE_OUTLINE_OPTIONS.find((o) => o.id === draft.titleOutline) ?? TITLE_OUTLINE_OPTIONS[0]
   const selectedTitleSize = TITLE_SIZE_OPTIONS.find((o) => o.id === draft.titleSize) ?? TITLE_SIZE_OPTIONS[0]
   const normalizedWishlistStatus = {
@@ -413,7 +415,7 @@ export default function InvitationMainEditor({
               <span className="pb-visuallyHidden">Naslov pozivnice</span>
               <div className="pb-createEditor__titleFieldShell">
                 <input
-                  className={`pb-createEditor__titleInput pb-createEditor__title--${draft.titleFont} pb-createEditor__titleOutline--${draft.titleOutline} pb-createEditor__titleSize--${draft.titleSize}`}
+                  className={`pb-createEditor__titleInput${titleIsWhite ? ' pb-createEditor__titleInput--color-white' : ''} pb-createEditor__title--${draft.titleFont} pb-createEditor__titleOutline--${draft.titleOutline} pb-createEditor__titleSize--${draft.titleSize}`}
                   style={titleStyle}
                   value={draft.title}
                   onChange={handleTitleChange}

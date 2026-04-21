@@ -2862,6 +2862,11 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     -webkit-text-fill-color: #111111 !important;
   }
 
+  .pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleInput--color-white {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
   .pb-hostUpdateEditor .pb-createEditor__titleInput::placeholder {
     color: rgba(23, 36, 59, 0.36) !important;
     -webkit-text-fill-color: rgba(23, 36, 59, 0.36) !important;
@@ -6047,6 +6052,209 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 
   .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold-black {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.92),
+      2px -2px 0 rgba(0, 0, 0, 0.92),
+      -2px 2px 0 rgba(0, 0, 0, 0.92),
+      2px 2px 0 rgba(0, 0, 0, 0.92),
+      0 -2px 0 rgba(0, 0, 0, 0.92),
+      0 2px 0 rgba(0, 0, 0, 0.92),
+      -2px 0 0 rgba(0, 0, 0, 0.92),
+      2px 0 0 rgba(0, 0, 0, 0.92),
+      -3px 0 0 rgba(0, 0, 0, 0.70),
+      3px 0 0 rgba(0, 0, 0, 0.70),
+      0 -3px 0 rgba(0, 0, 0, 0.70),
+      0 3px 0 rgba(0, 0, 0, 0.70),
+      -3px -3px 0 rgba(0, 0, 0, 0.60),
+      3px -3px 0 rgba(0, 0, 0, 0.60),
+      -3px 3px 0 rgba(0, 0, 0, 0.60),
+      3px 3px 0 rgba(0, 0, 0, 0.60);
+  }
+}
+
+/* Organizator (Ažuriraj pozivnicu): naslov u inputu kao na pregledu kartice — samo outline prstenovi, bez blur drop sjena i bez baznog „lifta”. */
+.pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--none {
+  text-shadow: none;
+}
+
+.pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleInput--color-white.pb-createEditor__titleOutline--none {
+  text-shadow: none !important;
+}
+
+.pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft {
+  -webkit-text-stroke: 0 transparent;
+  text-shadow:
+    -1px -1px 0 rgba(255, 255, 255, 0.92),
+    1px -1px 0 rgba(255, 255, 255, 0.92),
+    -1px 1px 0 rgba(255, 255, 255, 0.92),
+    1px 1px 0 rgba(255, 255, 255, 0.92),
+    0 -1px 0 rgba(255, 255, 255, 0.92),
+    0 1px 0 rgba(255, 255, 255, 0.92),
+    -1px 0 0 rgba(255, 255, 255, 0.92),
+    1px 0 0 rgba(255, 255, 255, 0.92);
+}
+
+.pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleInput--color-white.pb-createEditor__titleOutline--soft {
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.82),
+    1px -1px 0 rgba(0, 0, 0, 0.82),
+    -1px 1px 0 rgba(0, 0, 0, 0.82),
+    1px 1px 0 rgba(0, 0, 0, 0.82),
+    0 -1px 0 rgba(0, 0, 0, 0.82),
+    0 1px 0 rgba(0, 0, 0, 0.82),
+    -1px 0 0 rgba(0, 0, 0, 0.82),
+    1px 0 0 rgba(0, 0, 0, 0.82) !important;
+}
+
+.pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold {
+  -webkit-text-stroke: 0 transparent;
+  text-shadow:
+    -1px -1px 0 rgba(255, 255, 255, 0.96),
+    1px -1px 0 rgba(255, 255, 255, 0.96),
+    -1px 1px 0 rgba(255, 255, 255, 0.96),
+    1px 1px 0 rgba(255, 255, 255, 0.96),
+    0 -1px 0 rgba(255, 255, 255, 0.96),
+    0 1px 0 rgba(255, 255, 255, 0.96),
+    -1px 0 0 rgba(255, 255, 255, 0.96),
+    1px 0 0 rgba(255, 255, 255, 0.96),
+    -2px 0 0 rgba(255, 255, 255, 0.88),
+    2px 0 0 rgba(255, 255, 255, 0.88),
+    0 -2px 0 rgba(255, 255, 255, 0.88),
+    0 2px 0 rgba(255, 255, 255, 0.88),
+    -2px -2px 0 rgba(255, 255, 255, 0.82),
+    2px -2px 0 rgba(255, 255, 255, 0.82),
+    -2px 2px 0 rgba(255, 255, 255, 0.82),
+    2px 2px 0 rgba(255, 255, 255, 0.82);
+}
+
+.pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleInput--color-white.pb-createEditor__titleOutline--bold {
+  text-shadow:
+    -2px -2px 0 rgba(0, 0, 0, 0.90),
+    2px -2px 0 rgba(0, 0, 0, 0.90),
+    -2px 2px 0 rgba(0, 0, 0, 0.90),
+    2px 2px 0 rgba(0, 0, 0, 0.90),
+    0 -2px 0 rgba(0, 0, 0, 0.90),
+    0 2px 0 rgba(0, 0, 0, 0.90),
+    -2px 0 0 rgba(0, 0, 0, 0.90),
+    2px 0 0 rgba(0, 0, 0, 0.90),
+    -3px 0 0 rgba(0, 0, 0, 0.60),
+    3px 0 0 rgba(0, 0, 0, 0.60),
+    0 -3px 0 rgba(0, 0, 0, 0.60),
+    0 3px 0 rgba(0, 0, 0, 0.60) !important;
+}
+
+.pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft-black {
+  -webkit-text-stroke: 0 transparent;
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.82),
+    1px -1px 0 rgba(0, 0, 0, 0.82),
+    -1px 1px 0 rgba(0, 0, 0, 0.82),
+    1px 1px 0 rgba(0, 0, 0, 0.82),
+    0 -1px 0 rgba(0, 0, 0, 0.82),
+    0 1px 0 rgba(0, 0, 0, 0.82),
+    -1px 0 0 rgba(0, 0, 0, 0.82),
+    1px 0 0 rgba(0, 0, 0, 0.82);
+}
+
+.pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold-black {
+  -webkit-text-stroke: 0 transparent;
+  text-shadow:
+    -2px -2px 0 rgba(0, 0, 0, 0.90),
+    2px -2px 0 rgba(0, 0, 0, 0.90),
+    -2px 2px 0 rgba(0, 0, 0, 0.90),
+    2px 2px 0 rgba(0, 0, 0, 0.90),
+    0 -2px 0 rgba(0, 0, 0, 0.90),
+    0 2px 0 rgba(0, 0, 0, 0.90),
+    -2px 0 0 rgba(0, 0, 0, 0.90),
+    2px 0 0 rgba(0, 0, 0, 0.90),
+    -3px 0 0 rgba(0, 0, 0, 0.60),
+    3px 0 0 rgba(0, 0, 0, 0.60),
+    0 -3px 0 rgba(0, 0, 0, 0.60),
+    0 3px 0 rgba(0, 0, 0, 0.60),
+    -3px -3px 0 rgba(0, 0, 0, 0.60),
+    3px -3px 0 rgba(0, 0, 0, 0.60),
+    -3px 3px 0 rgba(0, 0, 0, 0.60),
+    3px 3px 0 rgba(0, 0, 0, 0.60);
+}
+
+@media (max-width: 979px) {
+  .pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft {
+    text-shadow:
+      -2px -2px 0 rgba(255, 255, 255, 0.94),
+      2px -2px 0 rgba(255, 255, 255, 0.94),
+      -2px 2px 0 rgba(255, 255, 255, 0.94),
+      2px 2px 0 rgba(255, 255, 255, 0.94),
+      0 -2px 0 rgba(255, 255, 255, 0.94),
+      0 2px 0 rgba(255, 255, 255, 0.94),
+      -2px 0 0 rgba(255, 255, 255, 0.94),
+      2px 0 0 rgba(255, 255, 255, 0.94);
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold {
+    text-shadow:
+      -2px -2px 0 rgba(255, 255, 255, 0.96),
+      2px -2px 0 rgba(255, 255, 255, 0.96),
+      -2px 2px 0 rgba(255, 255, 255, 0.96),
+      2px 2px 0 rgba(255, 255, 255, 0.96),
+      0 -2px 0 rgba(255, 255, 255, 0.96),
+      0 2px 0 rgba(255, 255, 255, 0.96),
+      -2px 0 0 rgba(255, 255, 255, 0.96),
+      2px 0 0 rgba(255, 255, 255, 0.96),
+      -3px 0 0 rgba(255, 255, 255, 0.88),
+      3px 0 0 rgba(255, 255, 255, 0.88),
+      0 -3px 0 rgba(255, 255, 255, 0.88),
+      0 3px 0 rgba(255, 255, 255, 0.88),
+      -3px -3px 0 rgba(255, 255, 255, 0.82),
+      3px -3px 0 rgba(255, 255, 255, 0.82),
+      -3px 3px 0 rgba(255, 255, 255, 0.82),
+      3px 3px 0 rgba(255, 255, 255, 0.82);
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleInput--color-white.pb-createEditor__titleOutline--soft {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.85),
+      2px -2px 0 rgba(0, 0, 0, 0.85),
+      -2px 2px 0 rgba(0, 0, 0, 0.85),
+      2px 2px 0 rgba(0, 0, 0, 0.85),
+      0 -2px 0 rgba(0, 0, 0, 0.85),
+      0 2px 0 rgba(0, 0, 0, 0.85),
+      -2px 0 0 rgba(0, 0, 0, 0.85),
+      2px 0 0 rgba(0, 0, 0, 0.85) !important;
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleInput--color-white.pb-createEditor__titleOutline--bold {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.92),
+      2px -2px 0 rgba(0, 0, 0, 0.92),
+      -2px 2px 0 rgba(0, 0, 0, 0.92),
+      2px 2px 0 rgba(0, 0, 0, 0.92),
+      0 -2px 0 rgba(0, 0, 0, 0.92),
+      0 2px 0 rgba(0, 0, 0, 0.92),
+      -2px 0 0 rgba(0, 0, 0, 0.92),
+      2px 0 0 rgba(0, 0, 0, 0.92),
+      -3px 0 0 rgba(0, 0, 0, 0.70),
+      3px 0 0 rgba(0, 0, 0, 0.70),
+      0 -3px 0 rgba(0, 0, 0, 0.70),
+      0 3px 0 rgba(0, 0, 0, 0.70),
+      -3px -3px 0 rgba(0, 0, 0, 0.60),
+      3px -3px 0 rgba(0, 0, 0, 0.60),
+      -3px 3px 0 rgba(0, 0, 0, 0.60),
+      3px 3px 0 rgba(0, 0, 0, 0.60) !important;
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--soft-black {
+    text-shadow:
+      -2px -2px 0 rgba(0, 0, 0, 0.84),
+      2px -2px 0 rgba(0, 0, 0, 0.84),
+      -2px 2px 0 rgba(0, 0, 0, 0.84),
+      2px 2px 0 rgba(0, 0, 0, 0.84),
+      0 -2px 0 rgba(0, 0, 0, 0.84),
+      0 2px 0 rgba(0, 0, 0, 0.84),
+      -2px 0 0 rgba(0, 0, 0, 0.84),
+      2px 0 0 rgba(0, 0, 0, 0.84);
+  }
+
+  .pb-hostUpdateEditor .pb-createEditor__titleField--hero .pb-createEditor__titleInput.pb-createEditor__titleOutline--bold-black {
     text-shadow:
       -2px -2px 0 rgba(0, 0, 0, 0.92),
       2px -2px 0 rgba(0, 0, 0, 0.92),
@@ -11418,6 +11626,20 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
     }
   }
+}
+
+/* Gost pregled /pozivnica — javni dio, samo rođenje: poruka 6px dolje; datum, vrijeme i adresa 3px dolje */
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+  transform: translate(var(--hero-message-offset-x), 6px);
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoRow--date,
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoRow--time {
+  transform: translate(-2px, 0);
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoRow--venue {
+  transform: translate(12px, 0);
 }
 
 /* Desktop javna pozivnica: ne diramo dodatno (stabilna pozicija) */

@@ -560,7 +560,7 @@ export function buildCreateProgress(draft: InvitationCreateDraft) {
   const dateReady = Boolean(draft.date.trim() && draft.time.trim() && draft.timeEnd.trim())
   const locationReady = Boolean(draft.locationName.trim())
   const messageReady = Boolean(draft.message.trim())
-  const wishlistReady = draft.wishlistEnabled ? draft.wishlistItems.length > 0 || draft.savingsEnabled : true
+  const wishlistReady = draft.wishlistEnabled ? draft.wishlistItems.length > 0 : true
   const rsvpReady = draft.rsvpEnabled
 
   const steps = [titleReady, dateReady, locationReady]

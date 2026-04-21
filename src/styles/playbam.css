@@ -6535,6 +6535,39 @@ body:has(.pb-main--demo.pb-invitePage) #root {
     -webkit-text-fill-color: #111111;
   }
 
+  .pb-main--createV2 .pb-createEditor__heroTopRow .pb-createEditor__eyebrow {
+    min-height: 1.9rem;
+    padding: 0.38rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.76);
+    box-shadow:
+      0 10px 22px rgba(17, 24, 39, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .pb-main--createV2 .pb-createEditor__heroCard .pb-createEditor__statusChip--ready {
+    background: linear-gradient(180deg, rgba(25, 73, 54, 0.96), rgba(20, 60, 45, 0.96));
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    box-shadow:
+      0 12px 24px rgba(20, 60, 45, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .pb-main--createV2 .pb-createEditor__heroCard .pb-createEditor__titleInput::placeholder {
+    color: rgba(185, 73, 86, 0.92);
+    -webkit-text-fill-color: rgba(185, 73, 86, 0.92);
+    text-shadow:
+      -1px -1px 0 rgba(0, 0, 0, 0.42),
+      1px -1px 0 rgba(0, 0, 0, 0.42),
+      -1px 1px 0 rgba(0, 0, 0, 0.42),
+      1px 1px 0 rgba(0, 0, 0, 0.42);
+    -webkit-text-stroke: 0 transparent;
+  }
+
   .pb-createEditor__heroRsvpBlock {
     margin-top: 0.499rem;
     padding-top: 0.499rem;
@@ -6562,13 +6595,13 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   .pb-createEditor__heroRsvpPreview .pb-previewCard__rsvpPill {
     padding-block: clamp(0.253rem, 1.86cqi, 0.432rem);
     padding-inline: clamp(0.12rem, 1.46cqi, 0.479rem);
-    font-size: clamp(0.494rem, 3.036cqi + 0.223rem, 0.862rem);
+    font-size: clamp(0.469rem, 2.884cqi + 0.212rem, 0.819rem);
     gap: clamp(0.08rem, 1.2cqi, 0.306rem);
     min-height: clamp(1.397rem, 7.98cqi, 1.995rem);
   }
 
   .pb-createEditor__heroRsvpPreview .pb-previewCard__rsvpGlyph {
-    font-size: clamp(0.758rem, 7.584cqi + 0.16rem, 1.589rem);
+    font-size: clamp(0.72rem, 7.205cqi + 0.152rem, 1.51rem);
   }
 
   .pb-createEditor__heroRsvpPreview .pb-previewCard__rsvpPill--not-going {

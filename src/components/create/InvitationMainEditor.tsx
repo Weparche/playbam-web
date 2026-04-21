@@ -701,7 +701,7 @@ export default function InvitationMainEditor({
             </div>
             <p className="pb-createEditor__bodyText">
               {draft.wishlistEnabled
-                ? `${draft.wishlistItems.length} prijedloga poklona${draft.savingsEnabled ? ' + uključen grupni poklon' : ''}`
+                ? `${draft.wishlistItems.length} prijedloga poklona`
                 : 'Lista želja je trenutno isključena.'}
             </p>
           </Card>

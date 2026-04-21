@@ -22,7 +22,6 @@ type Props = {
   compact?: boolean
 }
 
-
 export default function InvitationPreviewCard({ draft, compact }: Props) {
   const displayTitle =
     buildInvitationHeroTitle(draft.title.trim() || '', draft.celebrantName).trim() || 'Upiši naslov pozivnice'
@@ -135,15 +134,6 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
               )
             })}
           </div>
-        </div>
-      ) : null}
-
-      {draft.savingsEnabled ? (
-        <div className="pb-previewCard__section pb-previewCard__section--savings">
-          <div className="pb-previewCard__sectionHeader">
-            <strong>Štednja / grupni poklon</strong>
-          </div>
-          <p>{draft.savingsLabel.trim() || 'Uključi štednju za veći zajednički poklon.'}</p>
         </div>
       ) : null}
 

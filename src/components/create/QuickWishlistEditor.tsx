@@ -248,18 +248,6 @@ export default function QuickWishlistEditor({ draft, onFieldChange, onWishlistCh
           </button>
         </div>
       ) : null}
-
-      <label className="pb-quickEditor__toggle">
-        <input type="checkbox" checked={draft.savingsEnabled} onChange={(event) => onFieldChange('savingsEnabled', event.target.checked)} />
-        <span>Dodaj i grupni poklon / štednju</span>
-      </label>
-
-      {draft.savingsEnabled ? (
-        <label className="pb-formField">
-          <span className="pb-formLabel">Label za štednju</span>
-          <input className="pb-input" value={draft.savingsLabel} onChange={(event) => onFieldChange('savingsLabel', event.target.value)} />
-        </label>
-      ) : null}
     </div>
   )
 }

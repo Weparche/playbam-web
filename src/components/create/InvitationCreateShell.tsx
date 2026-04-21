@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 
 type Props = {
   autosaveLabel: string
@@ -14,27 +14,12 @@ type Props = {
 export default function InvitationCreateShell({
   autosaveLabel,
   saveState,
-  progressPercent,
-  progressLabel,
   preview,
   rail,
   headerActions,
   children,
 }: Props) {
   const headerRef = useRef<HTMLElement | null>(null)
-  const [showStickyProgress, setShowStickyProgress] = useState(false)
-
-  useEffect(() => {
-    const header = headerRef.current
-    if (!header) return undefined
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowStickyProgress(!entry.isIntersecting),
-      { threshold: 0, rootMargin: '-64px 0px 0px 0px' },
-    )
-    observer.observe(header)
-    return () => observer.disconnect()
-  }, [])
 
   const autosaveIconClass = saveState === 'saving'
     ? 'pb-createShell__autosaveIcon pb-createShell__autosaveIcon--spinning'
@@ -62,16 +47,6 @@ export default function InvitationCreateShell({
           {headerActions ? <div className="pb-createShell__headerActions">{headerActions}</div> : null}
         </div>
       </header>
-
-      <div className={`pb-createShell__stickyProgress ${showStickyProgress ? 'is-visible' : ''}`}>
-        <div className="pb-createShell__stickyProgressInner">
-          <div className="pb-createShell__stickyProgressTrack">
-            <span className="pb-createShell__stickyProgressFill" style={{ width: `${progressPercent}%` }} />
-          </div>
-          <span className="pb-createShell__stickyProgressLabel">{progressLabel}</span>
-        </div>
-      </div>
-
       <div className="pb-createShell__body">
         <div className="pb-createShell__layout">
           <div className="pb-createShell__main">{children}</div>

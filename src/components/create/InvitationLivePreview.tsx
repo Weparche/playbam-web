@@ -32,7 +32,6 @@ type Props = {
 function buildPreviewAccessText(draft: InvitationCreateDraft) {
   const enabledFeatures = [
     draft.wishlistEnabled ? 'listu želja' : null,
-    draft.savingsEnabled ? 'grupni poklon' : null,
     'potvrdu dolaska',
   ].filter(Boolean)
 

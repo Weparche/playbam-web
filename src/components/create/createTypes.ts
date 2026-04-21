@@ -146,7 +146,7 @@ export const TITLE_COLOR_OPTIONS = [
   },
   {
     id: 'playbam-blue',
-    label: 'VidimoSe plava',
+    label: 'Plava',
     swatch: '#336fd6',
     description: 'Brand plava — jasna i pouzdana na većini naslovnica.',
   },
@@ -278,7 +278,7 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   title: 'Luka slavi 6. rođendan',
   celebrantName: 'Luka',
   titleFont: 'merienda',
-  titleColor: 'playbam-blue',
+  titleColor: 'white',
   titleOutline: 'soft',
   titleSize: 'md',
   date: '2026-06-15',
@@ -454,7 +454,7 @@ export function normalizeTitleColor(value: string | null | undefined): TitleColo
     case 'snow':
       return 'ink'
     default:
-      return 'playbam-blue'
+      return 'white'
   }
 }
 

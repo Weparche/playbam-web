@@ -5480,13 +5480,17 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem);
+  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem - 2px);
 }
 
 .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
 }
 
 .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
+}
+
+.pb-main--createV2 .pb-createLivePreview .pb-inviteHero__title--storybook.pb-inviteHero__title--size-lg {
+  font-size: calc(var(--hero-title-lg-size) * 1.3);
 }
 
 .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {

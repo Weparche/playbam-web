@@ -11648,9 +11648,9 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 }
 
-/* Gost pregled /pozivnica — javni dio, samo rođenje: poruka 6px dolje; datum, vrijeme i adresa 3px dolje */
+/* Gost pregled /pozivnica — javni dio, samo rođenje: poruka 10px dolje; datum, vrijeme i adresa 3px dolje */
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  transform: translate(var(--hero-message-offset-x), 6px);
+  transform: translate(var(--hero-message-offset-x), 10px);
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoRow--date,

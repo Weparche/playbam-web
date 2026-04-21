@@ -5715,9 +5715,15 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
 }
 
-/* Print tab u studiju (pregled na ekranu): vertikala ostaje 2px; pravi ispis vidi @media print (7px). */
+/* Print tab u studiju (ekran, ne Chrome print): desktop −6px (+8px gore od bivših 2px); mobilno 8px (+6px dolje od 2px). */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  transform: translate(var(--hero-message-offset-x), 2px);
+  transform: translate(var(--hero-message-offset-x), -6px);
+}
+
+@media (max-width: 640px) {
+  .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+    transform: translate(var(--hero-message-offset-x), 8px);
+  }
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__printQr {
@@ -12009,14 +12015,14 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 }
 
-/* Gost pregled /pozivnica — samo rođenje: desktop malo gore; mobilno još +5px dolje; print (Chrome) +15px dolje od desktop (studio Print tab ostaje 2px). */
+/* Gost pregled /pozivnica — samo rođenje: desktop malo gore; mobilno +3px dolje od prijašnjih 7px; print (Chrome) vidi @media print. */
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
   transform: translate(var(--hero-message-offset-x), -8px);
 }
 
 @media (max-width: 640px) {
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-    transform: translate(var(--hero-message-offset-x), 7px);
+    transform: translate(var(--hero-message-offset-x), 10px);
   }
 }
 

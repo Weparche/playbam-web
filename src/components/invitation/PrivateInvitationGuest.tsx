@@ -61,12 +61,20 @@ function wishlistBadgeLabel(status: InvitationWishlistItem['reservation']['statu
   return 'Na listi'
 }
 
-function isGroupGift(item: InvitationWishlistItem) {
+function isOrganizerGroupGift(item: InvitationWishlistItem) {
+  return item.isGroupGift === true
+}
+
+function hasMultipleWishlistParticipants(item: InvitationWishlistItem) {
   return (item.reservation.participants?.length ?? 0) > 1
 }
 
+function isGroupGiftDisplay(item: InvitationWishlistItem) {
+  return isOrganizerGroupGift(item) || hasMultipleWishlistParticipants(item)
+}
+
 function getWishModalStatusLabel(item: InvitationWishlistItem) {
-  if (isGroupGift(item)) {
+  if (isGroupGiftDisplay(item)) {
     return 'Grupni poklon'
   }
 
@@ -74,7 +82,7 @@ function getWishModalStatusLabel(item: InvitationWishlistItem) {
 }
 
 function getWishCardStatusLabel(item: InvitationWishlistItem) {
-  if (isGroupGift(item)) {
+  if (isGroupGiftDisplay(item)) {
     return 'Grupni poklon'
   }
 
@@ -369,7 +377,8 @@ export default function PrivateInvitationGuest({
                       const isAddedByCurrentGuest =
                         Boolean(currentGuestName) &&
                         item.addedByName?.trim().toLowerCase() === currentGuestName?.trim().toLowerCase()
-                      const canReserve = reservationStatus === 'available'
+                      const groupOnly = isOrganizerGroupGift(item)
+                      const canReserve = reservationStatus === 'available' && !groupOnly
                       const canParticipate = reservationStatus === 'available' || reservationStatus === 'reserved'
                       const canDelete = reservationStatus === 'reserved_by_you' && isAddedByCurrentGuest
                       const canCancel = reservationStatus === 'reserved_by_you' && !isAddedByCurrentGuest
@@ -692,7 +701,8 @@ export default function PrivateInvitationGuest({
                     <span>{selectedWishPurchaseLabel}</span>
                   </div>
                 ) : null}
-                {isGroupGift(selectedWishItem) ? (
+                {(selectedWishItem.reservation.participants?.length ?? 0) > 0 &&
+                (isOrganizerGroupGift(selectedWishItem) || hasMultipleWishlistParticipants(selectedWishItem)) ? (
                   <div className="pb-inviteWishModal__metaRow pb-inviteWishModal__metaRow--stack">
                     <span className="pb-inviteWishModal__metaLabel">Sudjeluju</span>
                     <div className="pb-inviteWishModal__participants">

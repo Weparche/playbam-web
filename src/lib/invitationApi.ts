@@ -283,6 +283,8 @@ export type InvitationWishlistItem = {
   priceLabel: string | null
   imageUrl: string | null
   priorityOrder: number
+  /** Ako je true, gosti ne rezerviraju cijeli poklon — samo se prijavljuju (Sudjeluj). */
+  isGroupGift?: boolean
   isActive: boolean
   addedByUserId?: string | null
   addedByName?: string | null
@@ -299,6 +301,7 @@ export type InvitationWishlistPayload = {
   priceLabel?: string | null
   imageUrl?: string | null
   priorityOrder: number
+  isGroupGift?: boolean
   isActive?: boolean
 }
 

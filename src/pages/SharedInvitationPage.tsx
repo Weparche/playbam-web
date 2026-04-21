@@ -93,6 +93,7 @@ type WishlistDraft = {
   priceLabel: string
   imageUrl: string
   priorityOrder: string
+  isGroupGift: boolean
   linkMeta?: WishlistLinkMeta
 }
 
@@ -161,6 +162,7 @@ function createWishlistDraft(item?: InvitationWishlistItem | null): WishlistDraf
     priceLabel: item?.priceLabel ?? '',
     imageUrl: item?.imageUrl ?? '',
     priorityOrder: item ? String(item.priorityOrder) : '0',
+    isGroupGift: item?.isGroupGift === true,
     linkMeta: item?.url
       ? {
           title: item.title ?? undefined,
@@ -287,6 +289,7 @@ function buildWishlistPayload(draft: WishlistDraft): InvitationWishlistPayload |
     priceLabel: draft.priceLabel.trim() || null,
     imageUrl: draft.imageUrl.trim() || null,
     priorityOrder,
+    isGroupGift: draft.isGroupGift,
     isActive: true,
   }
 }
@@ -1613,9 +1616,13 @@ export default function SharedInvitationPage() {
       return
     }
 
-    const payload = buildWishlistPayload(wishlistDraft)
+    const draftForSave: WishlistDraft = {
+      ...wishlistDraft,
+      priorityOrder: editingWishlistItemId ? wishlistDraft.priorityOrder : String(wishlistItems.length),
+    }
+    const payload = buildWishlistPayload(draftForSave)
     if (!payload) {
-      setWishlistFormError('Unesi naziv poklona i valjan redoslijed.')
+      setWishlistFormError('Unesi naziv poklona.')
       return
     }
 
@@ -2633,7 +2640,16 @@ function WishlistForm({ draft, error, saving, isEditing, onChange, onSave, onCan
             </div>
           ) : null}
         </label>
-        <label className="pb-formField"><span className="pb-formLabel">Redoslijed</span><input className="pb-input" type="number" min="0" value={draft.priorityOrder} onChange={(event) => onChange({ ...draft, priorityOrder: event.target.value })} /></label>
+        <div className="pb-formField" style={{ gridColumn: '1 / -1' }}>
+          <label className="pb-quickEditor__toggle">
+            <input
+              type="checkbox"
+              checked={draft.isGroupGift}
+              onChange={(event) => onChange({ ...draft, isGroupGift: event.target.checked })}
+            />
+            <span>Grupni poklon</span>
+          </label>
+        </div>
       </div>
       <div className="pb-flowActions">
         <Button type="button" onClick={onSave} disabled={saving}>{saving ? 'Spremamo...' : isEditing ? 'Spremi' : 'Dodaj želju'}</Button>
@@ -2678,7 +2694,11 @@ function HostWishlistSection({
                   </a>
                 </div>
               ) : null}
-              <div className="pb-wishlistItem__meta">Redoslijed: {item.priorityOrder}</div>
+              {item.isGroupGift ? (
+                <div className="pb-wishlistItem__meta">Grupni poklon</div>
+              ) : (
+                <div className="pb-wishlistItem__meta">Redoslijed: {item.priorityOrder}</div>
+              )}
               {hasActiveReservation ? (
                 <>
                   <div className="pb-wishlistItem__reserved">Rezervirao/la: {item.reservation.reservedByName || 'Gost'}</div>

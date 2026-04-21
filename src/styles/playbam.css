@@ -3107,15 +3107,11 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   box-sizing: border-box;
   overflow: hidden;
   border-radius: 22px;
-  background-color: rgba(252, 249, 255, 0.97);
-  /* public/listazelja.jpg — lagani overlay da tekst ostane čitljiv */
-  background-image:
-    radial-gradient(120% 80% at 20% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
-    linear-gradient(155deg, rgba(255, 248, 252, 0.88), rgba(244, 240, 255, 0.82)),
-    url('/listazelja.jpg');
+  background-color: #fcf9ff;
+  background-image: url('/listazelja.jpg');
   /* Slika: uvijek od vrha (cover + top) — vrh listazelja ostaje vidljiv. */
-  background-position: center top, center top, center top;
-  background-size: auto, auto, cover;
+  background-position: center top;
+  background-size: cover;
   background-repeat: no-repeat;
   padding: 1rem;
 }

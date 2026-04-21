@@ -12007,9 +12007,15 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 }
 
-/* Gost pregled /pozivnica — samo rođenje: poruka 5px gore od izvornog poravnanja (prije +10px dolje, sada ukupno −5px Y) */
+/* Gost pregled /pozivnica — samo rođenje: poruka malo gore; na mobilnom +10px prema dolje u odnosu na desktop. */
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  transform: translate(var(--hero-message-offset-x), -5px);
+  transform: translate(var(--hero-message-offset-x), -8px);
+}
+
+@media (max-width: 640px) {
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
+    transform: translate(var(--hero-message-offset-x), 2px);
+  }
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoRow--date,

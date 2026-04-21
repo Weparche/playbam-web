@@ -30,6 +30,7 @@ type Props = {
   messageText: string
   backgroundImage: string
   isBirthInvitation?: boolean
+  layoutMode?: 'default' | 'print'
   rsvpMood?: RsvpMood | string | null
   showRsvp?: boolean
   rsvp?: 'going' | 'not_going' | 'maybe' | null
@@ -38,11 +39,8 @@ type Props = {
   accessTitle: string
   accessText: string
   showAccessCard?: boolean
-  /** Ispod poruke (npr. ispis / print pregled). */
   printPartyDetails?: readonly PrintPartyDetailLine[] | null
-  /** QR kod za print/export (prikaz unutar backgrounda pozivnice). */
   printQrDataUrl?: string | null
-  /** Kontakt koji se ispisuje ispod QR koda (print). */
   printContactName?: string | null
   printContactMobile?: string | null
 }
@@ -100,6 +98,7 @@ export default function PublicInvitationHero({
   messageText,
   backgroundImage,
   isBirthInvitation = false,
+  layoutMode = 'default',
   rsvpMood = null,
   showRsvp = false,
   rsvp = null,
@@ -143,7 +142,12 @@ export default function PublicInvitationHero({
   ])
 
   return (
-    <section className="pb-inviteHero pb-inviteHero--storybook" aria-label="Hero dio javne rođendanske pozivnice">
+    <section
+      className="pb-inviteHero pb-inviteHero--storybook"
+      data-layout-mode={layoutMode}
+      data-theme-tab={isBirthInvitation ? 'birth' : 'birthday'}
+      aria-label="Hero dio javne rođendanske pozivnice"
+    >
       <div ref={frameRef} className="pb-inviteHero__frame pb-inviteHero__frame--storybook">
         <img
           className="pb-inviteHero__image pb-inviteHero__image--storybook"

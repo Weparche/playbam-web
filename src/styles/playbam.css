@@ -2445,27 +2445,22 @@ body:has(.pb-main--demo.pb-invitePage) #root {
      pomakne infoBlock / titleWrap na uže-ekranske vrijednosti.
      Na korisnikovom ekranu (> 979px) vrijede šire vrijednosti — vraćamo ih natrag. */
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__logo {
-    top: 1.15% !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__titleWrap--storybook {
-    top: 9% !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
-    top: 7.2% !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__titleWrap--size-lg {
-    transform: translate(-50%, -12.5%) !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__infoBlock {
-    top: 37.9% !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-createLivePreview .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px + 7px) !important;
+    --hero-message-margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px) !important;
   }
 }
 
@@ -5339,39 +5334,53 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   border-radius: 1.35rem;
 }
 
+.pb-createLivePreview .pb-inviteHero--storybook {
+  --hero-logo-top: 1.15%;
+  --hero-title-top: 9%;
+  --hero-title-md-top: 7.2%;
+  --hero-title-lg-shift-y: -12.5%;
+  --hero-title-lg-size: clamp(1.456rem, 5.216vw, 2.624rem);
+  --hero-title-md-size: clamp(1.4rem, 5.15vw, 2.15rem);
+  --hero-title-sm-size: clamp(0.98rem, 3.85vw, 1.48rem);
+  --hero-info-top: 37.9%;
+  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);
+  --hero-rsvp-top: calc(63.4% + 0.7rem);
+  --hero-rsvp-offset-x: calc(-0.34rem - 20px);
+  --hero-rsvp-scale: 0.9;
+  --hero-print-qr-bottom: 5.62%;
+}
+
+.pb-createLivePreview .pb-inviteHero--storybook[data-layout-mode='print'] {
+  --hero-rsvp-top: 61.9%;
+  --hero-rsvp-offset-x: calc(-0.18rem - 20px);
+  --hero-rsvp-scale: 1;
+}
+
 .pb-createLivePreview .pb-inviteHero__logo {
-  top: 1.15%;
 }
 
 .pb-createLivePreview .pb-inviteHero__titleWrap--storybook {
-  top: 9%;
 }
 
 /* Srednji (md) naslov: dodatnih 20% gore u odnosu na glavni pomak */
 .pb-createLivePreview .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
-  top: 7.2%;
 }
 
 /* Live preview: najveći (lg) naslov — dodatni pomak gore */
 .pb-createLivePreview .pb-inviteHero__titleWrap--size-lg {
-  transform: translate(-50%, -12.5%);
 }
 
 /* Live preview: najveći (lg) naslov −20% */
 .pb-createLivePreview .pb-inviteHero__title--storybook.pb-inviteHero__title--size-lg {
-  font-size: clamp(1.456rem, 5.216vw, 2.624rem);
 }
 
 .pb-createLivePreview .pb-inviteHero__infoBlock {
-  top: 37.9%;
 }
 
 .pb-createLivePreview .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-  top: calc(37.9% + 5px);
 }
 
 .pb-createLivePreview .pb-inviteHero__rsvpBlock--storybook {
-  top: 63.4%;
   gap: calc(0.8rem * 1.15);
 }
 
@@ -5396,27 +5405,22 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 /* Live preview: poruka i RSVP — bez cqh (stabilno u editoru / host pregledu) */
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-  margin-top: calc(0.78rem - 13px + 3.25px);
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  margin-top: calc(0.78rem - 13px + 3.25px + 5px);
 }
 
 .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook {
-  margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem);
+  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem);
 }
 
 .pb-main--createV2 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  margin-top: calc(0.78rem - 13px + 3.25px + 0.4rem + 5px);
 }
 
 .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-  margin-top: calc(0.78rem - 13px + 3.25px);
 }
 
 .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  margin-top: calc(0.78rem - 13px + 3.25px + 5px);
 }
 
 /*
@@ -5424,83 +5428,71 @@ body:has(.pb-main--demo.pb-invitePage) #root {
  */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-  margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);
+  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth,
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px + 5px);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__infoBlock,
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__infoBlock {
-  top: calc(37.9% - 2px);
+  --hero-info-top: calc(37.9% - 2px);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth,
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-  top: calc(37.9% + 3px);
+  --hero-info-birth-offset-y: 5px;
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-  transform: translateX(3px);
+  --hero-message-offset-x: 3px;
 }
 
 @supports (height: 1cqh) {
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook,
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px + 1rem - 2.5cqh - 2px);
+    --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 1rem - 2.5cqh - 2px);
   }
 
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth,
   .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-    margin-top: calc(0.78rem - 13px + 3.25px + 1rem - 2.5cqh - 2px + 5px);
   }
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__title--size-lg {
-  font-size: clamp(1.34rem, 4.85vw, 2.42rem);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__title--size-md {
-  font-size: clamp(1.16rem, 4.2vw, 1.82rem);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__title--size-sm {
-  font-size: clamp(0.9rem, 3.15vw, 1.28rem);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__infoBlock {
-  top: calc(37.9% + 3px);
+  --hero-info-top: 37.9%;
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-  top: calc(37.9% + 8px);
+  --hero-info-birth-offset-y: 5px;
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook {
-  margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px + 5px);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px + 10px);
 }
 
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__printQr {
-  bottom: calc(5.62% - 10px);
+  --hero-print-qr-bottom: calc(5.62% - 10px);
 }
 
 /* Gost pregled (host): RSVP centrirano kao info blok / pozadina — bez dodatnog pomaka ulijevo */
 .pb-main--demo.pb-invitePage .pb-hostStudio__preview .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-  left: calc(50% - 1.95rem - 20px);
-  top: calc(63.4% + 0.7rem);
-  transform: translateX(-50%) scale(0.9);
-  transform-origin: center top;
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__rsvpBlock--storybook {
-  transform: translateX(calc(-50% - 0.34rem - 20px)) scale(0.9);
 }
 
 .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__accessCard {
@@ -5528,24 +5520,12 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 @media (max-width: 979px) {
-  .pb-createLivePreview .pb-inviteHero__logo {
-    top: 0.7%;
-  }
-
-  .pb-createLivePreview .pb-inviteHero__titleWrap--storybook {
-    top: 8.65%;
-  }
-
-  .pb-createLivePreview .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
-    top: 6.9%;
-  }
-
-  .pb-createLivePreview .pb-inviteHero__infoBlock {
-    top: 37.4%;
-  }
-
-  .pb-createLivePreview .pb-inviteHero__rsvpBlock--storybook {
-    top: 62.9%;
+  .pb-createLivePreview .pb-inviteHero--storybook {
+    --hero-logo-top: 0.7%;
+    --hero-title-top: 8.65%;
+    --hero-title-md-top: 6.9%;
+    --hero-info-top: 37.4%;
+    --hero-rsvp-top: 62.9%;
   }
 
   .pb-createLivePreview:not(.pb-createLivePreview--print) .pb-inviteHero__accessCard {
@@ -10538,7 +10518,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 .pb-inviteHero__printQr {
   position: absolute;
   left: 50%;
-  bottom: 8.79%;
+  bottom: var(--hero-print-qr-bottom, 8.79%);
   transform: translateX(-50%);
   z-index: 2;
   display: grid;
@@ -10570,14 +10550,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   text-align: center;
   white-space: normal;
   overflow-wrap: anywhere;
-}
-
-.pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__printQr {
-  bottom: 5.62%;
-}
-
-html.pb-print-host-invite .pb-inviteHero__printQr {
-  bottom: 5.62%;
 }
 
 .pb-inviteHero__printQrContactName {
@@ -10621,9 +10593,46 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   transform: translateX(-50%);
 }
 
+.pb-inviteHero--storybook {
+  --hero-logo-top: 1.15%;
+  --hero-title-top: 9%;
+  --hero-title-md-top: 7.2%;
+  --hero-title-lg-shift-y: -12.5%;
+  --hero-title-lg-size: clamp(1.456rem, 5.216vw, 2.624rem);
+  --hero-title-md-size: clamp(1.4rem, 5.15vw, 2.15rem);
+  --hero-title-sm-size: clamp(0.98rem, 3.85vw, 1.48rem);
+  --hero-info-top: 37.9%;
+  --hero-info-offset-x: 0px;
+  --hero-info-offset-y: 0px;
+  --hero-info-birth-offset-y: 5px;
+  --hero-message-margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);
+  --hero-message-offset-x: 0px;
+  --hero-message-birth-extra: 5px;
+  --hero-rsvp-top: calc(63.4% + 0.7rem);
+  --hero-rsvp-offset-x: calc(-0.34rem - 20px);
+  --hero-rsvp-scale: 0.9;
+  --hero-print-qr-bottom: 5.62%;
+}
+
+.pb-inviteHero--storybook[data-layout-mode='print'] {
+  --hero-rsvp-top: 61.9%;
+  --hero-rsvp-offset-x: calc(-0.18rem - 20px);
+  --hero-rsvp-scale: 1;
+}
+
+@media (max-width: 979px) {
+  .pb-inviteHero--storybook {
+    --hero-logo-top: 0.7%;
+    --hero-title-top: 8.65%;
+    --hero-title-md-top: 6.9%;
+    --hero-info-top: 37.4%;
+    --hero-rsvp-top: 62.9%;
+  }
+}
+
 .pb-inviteHero__titleWrap--storybook {
   position: absolute;
-  top: 7.5%;
+  top: var(--hero-title-top);
   left: 50%;
   width: 78%;
   max-width: 22rem;
@@ -10632,7 +10641,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-inviteHero__titleWrap--size-lg {
-  transform: translate(-50%, -12.5%);
+  transform: translate(-50%, var(--hero-title-lg-shift-y));
 }
 
 .pb-inviteHero__titleWrap--size-md {
@@ -10702,57 +10711,46 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 /* lg / md / sm — jasno razmaknute tri razine */
 .pb-inviteHero__title--size-lg {
-  font-size: clamp(1.82rem, 6.52vw, 3.28rem);
+  font-size: var(--hero-title-lg-size);
 }
 
 .pb-inviteHero__title--size-md {
-  font-size: clamp(1.4rem, 5.15vw, 2.15rem);
+  font-size: var(--hero-title-md-size);
 }
 
 .pb-inviteHero__title--size-sm {
-  font-size: clamp(0.98rem, 3.85vw, 1.48rem);
+  font-size: var(--hero-title-sm-size);
 }
 
 /* Javna /pozivnica/ — naslov: ista pozicija i veličina kao Gost pregled na hostu */
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__logo {
-  top: 1.15%;
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook {
-  top: 9%;
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
-  top: 7.2%;
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--size-lg {
-  transform: translate(-50%, -12.5%);
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--storybook.pb-inviteHero__title--size-lg {
-  font-size: clamp(1.456rem, 5.216vw, 2.624rem);
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
-  top: 37.9%;
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-  top: calc(37.9% + 5px);
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
-  /* Web (desktop): 10% gore pa 7% dolje => neto ~3% gore */
-  top: calc(63.4% - 10% + 7%);
 }
 
 .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-  top: calc(37.9% + 10px);
 }
 
 .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__infoBlock {
-  top: calc(37.9% + 10px);
 }
 
 /* Malo veći razmak između prvog i drugog retka naslova */
@@ -10770,52 +10768,39 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 @media (max-width: 979px) {
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__logo {
-    top: 0.7%;
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook {
-    top: 8.65%;
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
-    top: 6.9%;
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock {
-    top: 37.4%;
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-    top: calc(37.4% + 5px);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
-    /* Tablet/mobile breakpoint: isti neto pomak kao web */
-    top: calc(62.9% - 10% + 7%);
   }
 
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-    top: calc(37.4% + 10px);
   }
 
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__infoBlock {
-    top: calc(37.4% + 10px);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-lg {
-    font-size: clamp(1.68rem, 6.1vw, 3rem);
   }
 
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__title--size-lg {
-    font-size: clamp(2.2218rem, 8.06725vw, 3.9675rem);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-md {
-    font-size: clamp(1.4rem, 5.15vw, 2.15rem);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--size-sm {
-    font-size: clamp(0.98rem, 3.85vw, 1.48rem);
   }
 
 }
@@ -10828,7 +10813,6 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
   /* Mobile: RSVP 2% dolje */
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__rsvpBlock--storybook {
-    top: calc(62.9% - 10% + 7% + 2%);
   }
 }
 
@@ -11087,12 +11071,20 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 }
 
+.pb-inviteHero__logo {
+  top: var(--hero-logo-top);
+}
+
+.pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
+  top: var(--hero-title-md-top);
+}
+
 .pb-inviteHero__infoBlock {
   position: absolute;
-  top: 37.4%;
+  top: calc(var(--hero-info-top) + var(--hero-info-offset-y));
   left: 50%;
   width: 77%;
-  transform: translateX(-50%);
+  transform: translate(calc(-50% + var(--hero-info-offset-x)), 0);
   display: grid;
   justify-items: center;
 }
@@ -11177,11 +11169,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birth {
-  top: calc(100% + 5px);
-}
-
-.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birthday {
-  transform: translate(calc(-50% - 5px), -5px);
+  top: calc(var(--hero-info-top) + var(--hero-info-offset-y) + var(--hero-info-birth-offset-y));
 }
 
 .pb-inviteHero--storybook .pb-inviteHero__venueHint {
@@ -11197,7 +11185,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
    * Fiksni pomak (bez cqh): visina okvira i 1cqh mijenjaju se pri resizeu / fontu / mob. URL baru
    * pa je “Vidimo se na tulumu!” stalno “plesalo”.
    */
-  margin: calc(0.78rem - 13px + 3.25px) 0 0;
+  margin: var(--hero-message-margin-top) 0 0;
   width: 82%;
   max-width: 100%;
   margin-left: auto;
@@ -11218,24 +11206,17 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
   text-shadow: 0 1px 1px rgba(61, 44, 120, 0.18);
+  transform: translateX(var(--hero-message-offset-x));
 }
 
 .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  margin-top: calc(0.78rem - 13px + 3.25px + 5px);
-}
-
-.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birthday {
-  transform: translate(-5px, -5px);
+  margin-top: calc(var(--hero-message-margin-top) + var(--hero-message-birth-extra));
 }
 
 /* Uži ekran: malo niže u odnosu na staro +1cqh (sada fiksno) */
 @media (max-width: 640px) {
-  .pb-inviteCard--storybook .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem);
-  }
-
-  .pb-inviteCard--storybook .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 5px);
+  .pb-inviteHero--storybook {
+    --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem);
   }
 }
 
@@ -11244,39 +11225,31 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
  * (Kartica nema .pb-inviteCard--guestPrivate — odvojeno od pravila za odobrenog gosta.)
  */
 .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
-  margin-top: calc(0.78rem - 13px + 3.25px + 10px);
 }
 
 .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-  margin-top: calc(0.78rem - 13px + 3.25px + 10px);
 }
 
 @media (max-width: 640px) {
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 10px);
   }
 
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 10px);
   }
 }
 
 @supports (height: 1cqh) {
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px + 10px);
   }
 
   .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-    margin-top: calc(0.78rem - 13px + 3.25px + 10px);
   }
 
   @media (max-width: 640px) {
     .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 10px);
     }
 
     .pb-invitePage .pb-inviteCard--storybook:not(.pb-inviteCard--guestPrivate) .pb-inviteHero__message--storybook.pb-inviteHero__message--birth {
-      margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 10px);
     }
   }
 }
@@ -11352,12 +11325,13 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 .pb-inviteHero__rsvpBlock--storybook {
   position: absolute;
-  top: 61.9%;
+  top: var(--hero-rsvp-top);
   left: 50%;
   width: 71%;
   margin: 0;
   padding: 0;
-  transform: translateX(calc(-50% - 0.18rem - 20px));
+  transform: translateX(calc(-50% + var(--hero-rsvp-offset-x))) scale(var(--hero-rsvp-scale));
+  transform-origin: center top;
   display: grid;
   justify-items: center;
   gap: 0.8rem;
@@ -11561,23 +11535,19 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 
 /* Gost s odobrenim pristupom: „Vidimo se na tulumu!” ~0.5% visine okvira niže (0.5cqh kad je podržano) */
 .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__message--storybook {
-  margin-top: calc(0.78rem - 13px + 3.25px + 0.2rem);
 }
 
 @media (max-width: 640px) {
   .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.2rem);
   }
 }
 
 @supports (height: 1cqh) {
   .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__message--storybook {
-    margin-top: calc(0.78rem - 13px + 3.25px + 0.5cqh);
   }
 
   @media (max-width: 640px) {
     .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__message--storybook {
-      margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem + 0.5cqh);
     }
   }
 }

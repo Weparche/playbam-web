@@ -74,6 +74,7 @@ export default function InvitationCard({
           messageText={message}
           backgroundImage={backgroundImage}
           isBirthInvitation={birthInvitation}
+          layoutMode="default"
           rsvpMood={invitation.rsvpMood ?? null}
           showRsvp={showGuestRsvp}
           rsvp={rsvp}

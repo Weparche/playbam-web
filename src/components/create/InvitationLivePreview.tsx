@@ -130,6 +130,7 @@ export default function InvitationLivePreview({
           messageText={messageText}
           backgroundImage={resolveInvitationBackgroundImage(draft.theme, draft.theme)}
           isBirthInvitation={birthInvitation}
+          layoutMode={isPrint ? 'print' : 'default'}
           rsvpMood={draft.rsvpMood}
           showRsvp={!isPrint}
           rsvp={null}

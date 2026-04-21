@@ -124,7 +124,9 @@ export default function PublicInvitationHero({
   const resolvedMood = normalizeRsvpMood(typeof rsvpMood === 'string' ? rsvpMood : null)
   const infoContrastClass = normalizedTitleColor === 'white' ? ' pb-inviteHero__infoBlock--soft-outline' : ''
   const birthInfoClass = isBirthInvitation ? ' pb-inviteHero__infoBlock--birth' : ''
+  const birthdayInfoClass = !isBirthInvitation ? ' pb-inviteHero__infoBlock--birthday' : ''
   const birthMessageClass = isBirthInvitation ? ' pb-inviteHero__message--birth' : ''
+  const birthdayMessageClass = !isBirthInvitation ? ' pb-inviteHero__message--birthday' : ''
   const frameRef = useRef<HTMLDivElement>(null)
   const titleWrapRef = useRef<HTMLElement>(null)
   const heroTitleRef = useRef<HTMLHeadingElement>(null)
@@ -193,7 +195,7 @@ export default function PublicInvitationHero({
             </h1>
           </header>
 
-          <div className={`pb-inviteHero__infoBlock${infoContrastClass}${birthInfoClass}`}>
+          <div className={`pb-inviteHero__infoBlock${infoContrastClass}${birthInfoClass}${birthdayInfoClass}`}>
             <div className="pb-inviteHero__infoRow pb-inviteHero__infoRow--date">
               <span className="pb-inviteHero__infoIcon" aria-hidden>
                 <IconCalendar />
@@ -218,7 +220,7 @@ export default function PublicInvitationHero({
               </span>
             </a>
 
-            <p className={`pb-inviteHero__message pb-inviteHero__message--storybook${birthMessageClass}`}>{messageText}</p>
+            <p className={`pb-inviteHero__message pb-inviteHero__message--storybook${birthMessageClass}${birthdayMessageClass}`}>{messageText}</p>
 
             {printPartyDetails && printPartyDetails.length > 0 ? (
               <div className="pb-inviteHero__printPartyDetails" aria-label="Detalji tuluma">

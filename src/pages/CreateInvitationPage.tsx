@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import OtpLoginModal from '../components/auth/OtpLoginModal'
 import InvitationCreateShell from '../components/create/InvitationCreateShell'
@@ -118,7 +117,6 @@ async function syncQuickCreateWishlist(invitationId: string, quickDraft: Invitat
 
 export default function CreateInvitationPage() {
   const { session } = useAuth()
-  const navigate = useNavigate()
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [draft, setDraft] = useState<InvitationCreateDraft>(() => readStoredDraft())
   const [activeShortcut, setActiveShortcut] = useState<ShortcutId | null>(null)
@@ -126,6 +124,8 @@ export default function CreateInvitationPage() {
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('saved')
   const [savingInvitation, setSavingInvitation] = useState(false)
   const [formError, setFormError] = useState('')
+  const [loginOpen, setLoginOpen] = useState(false)
+  const continueCreateAfterLoginRef = useRef(false)
 
   const { completedSteps, totalSteps, progressPercent, titleReady, dateReady, locationReady } = buildCreateProgress(draft)
   const progressLabel = completedSteps === totalSteps ? 'Spremno za objavu' : `${totalSteps - completedSteps} koraka do objave`
@@ -226,22 +226,7 @@ export default function CreateInvitationPage() {
     setDraft(buildEmptyCreateDraft())
   }
 
-  const handleCreateInvitation = async () => {
-    if (!draft.title.trim() || !draft.date.trim() || !draft.time.trim() || !draft.timeEnd.trim() || !draft.locationName.trim()) {
-      setFormError('Upiši naslov, datum, vrijeme od-do i naziv lokacije.')
-      return
-    }
-
-    if (draft.wishlistEnabled && hasIncompleteQuickWishlistItem(draft.wishlistItems)) {
-      setFormError('U Listi želja upiši obavezni naziv poklona ili makni praznu stavku.')
-      return
-    }
-
-    if (draft.timeEnd <= draft.time) {
-      setFormError('Vrijeme završetka mora biti nakon vremena početka.')
-      return
-    }
-
+  const submitInvitation = async () => {
     setSavingInvitation(true)
     setFormError('')
 
@@ -276,6 +261,31 @@ export default function CreateInvitationPage() {
     } finally {
       setSavingInvitation(false)
     }
+  }
+
+  const handleCreateInvitation = async () => {
+    if (!draft.title.trim() || !draft.date.trim() || !draft.time.trim() || !draft.timeEnd.trim() || !draft.locationName.trim()) {
+      setFormError('Upiši naslov, datum, vrijeme od-do i naziv lokacije.')
+      return
+    }
+
+    if (draft.wishlistEnabled && hasIncompleteQuickWishlistItem(draft.wishlistItems)) {
+      setFormError('U Listi želja upiši obavezni naziv poklona ili makni praznu stavku.')
+      return
+    }
+
+    if (draft.timeEnd <= draft.time) {
+      setFormError('Vrijeme završetka mora biti nakon vremena početka.')
+      return
+    }
+
+    if (!session) {
+      continueCreateAfterLoginRef.current = true
+      setLoginOpen(true)
+      return
+    }
+
+    await submitInvitation()
   }
 
   const renderPanel = () => {
@@ -404,9 +414,18 @@ export default function CreateInvitationPage() {
   return (
     <>
       <OtpLoginModal
-        open={!session}
-        onSuccess={() => {}}
-        onClose={() => navigate('/')}
+        open={loginOpen}
+        onSuccess={() => {
+          setLoginOpen(false)
+          if (continueCreateAfterLoginRef.current) {
+            continueCreateAfterLoginRef.current = false
+            void submitInvitation()
+          }
+        }}
+        onClose={() => {
+          continueCreateAfterLoginRef.current = false
+          setLoginOpen(false)
+        }}
       />
       <Navbar opaque />
       <main className="pb-main pb-main--createV2">

@@ -64,6 +64,7 @@ import {
   buildTimeRangeValue,
   DEFAULT_CREATE_DRAFT,
   getTitleColorValue,
+  isBirthTheme,
   normalizeCreateTheme,
   normalizeRsvpMood,
   normalizeTitleColor,
@@ -103,16 +104,20 @@ const HOST_SHORTCUT_ITEMS = [
   { id: 'shareGuest', label: 'Podijeli', icon: '🔗' },
 ] as const satisfies ReadonlyArray<{ id: HostShortcutId; label: string; icon: string }>
 
-function createEmptyDraft(parentName = ''): FamilyProfileDraft {
+function createEmptyDraft(parentName = '', isBirthInvitation = false): FamilyProfileDraft {
   return {
     parentName,
-    children: [{ name: '', age: '' }],
+    children: isBirthInvitation ? [] : [{ name: '', age: '' }],
   }
 }
 
-function createDraftFromProfile(familyProfile: FamilyProfileResponse, fallbackParentName = ''): FamilyProfileDraft {
+function createDraftFromProfile(
+  familyProfile: FamilyProfileResponse,
+  fallbackParentName = '',
+  isBirthInvitation = false,
+): FamilyProfileDraft {
   if (!familyProfile.profile) {
-    return createEmptyDraft(fallbackParentName)
+    return createEmptyDraft(fallbackParentName, isBirthInvitation)
   }
 
   return {
@@ -123,7 +128,9 @@ function createDraftFromProfile(familyProfile: FamilyProfileResponse, fallbackPa
           name: child.name,
           age: String(child.age),
         }))
-      : [{ name: '', age: '' }],
+      : isBirthInvitation
+        ? []
+        : [{ name: '', age: '' }],
   }
 }
 
@@ -489,6 +496,9 @@ export default function SharedInvitationPage() {
   const hasFamilyProfile = Boolean(familyProfile?.profile)
   const hasHostSession = Boolean(hostToken)
   const isHost = access?.isHost ?? false
+  const isBirthInvitation = invitation
+    ? isBirthTheme(normalizeCreateTheme(invitation.theme || invitation.coverImage || DEFAULT_CREATE_DRAFT.theme))
+    : false
   const hasPrivateAccess = access?.canAccessPrivateInvitation ?? false
   const canViewWishlist = access?.canViewWishlist ?? false
   const canSubmitRsvp = Boolean(user && !isHost && access?.canRsvp)
@@ -865,16 +875,18 @@ export default function SharedInvitationPage() {
         }
 
         setFamilyProfile(family)
-        setProfileDraft(createDraftFromProfile(family, currentUser.parentName))
+        setProfileDraft(createDraftFromProfile(family, currentUser.parentName, isBirthInvitation))
 
-        if (family.children.length > 0) {
+        if (isBirthInvitation || family.children.length > 0) {
           const request = await getMyMembershipRequest(currentInvitation.id, currentUser)
           if (cancelled) {
             return
           }
 
           setMembershipRequest(request)
-          setSelectedChildIds(request ? request.children.map((child) => child.id) : family.children.map((child) => child.id))
+          setSelectedChildIds(
+            request ? request.children.map((child) => child.id) : family.children.map((child) => child.id),
+          )
         } else {
           setMembershipRequest(null)
           setSelectedChildIds([])
@@ -918,7 +930,7 @@ export default function SharedInvitationPage() {
           setFamilyProfile({ profile: null, children: [] })
           setMembershipRequest(null)
           setSelectedChildIds([])
-          setProfileDraft(createEmptyDraft(currentUser?.parentName ?? ''))
+          setProfileDraft(createEmptyDraft(currentUser?.parentName ?? '', isBirthInvitation))
         } else if (isApiError(caughtError, 401)) {
           if (currentUser) {
             logout()
@@ -940,7 +952,7 @@ export default function SharedInvitationPage() {
     return () => {
       cancelled = true
     }
-  }, [invitation, user, hasHostSession, logout])
+  }, [invitation, user, hasHostSession, logout, isBirthInvitation])
 
   useEffect(() => {
     const canPollChat = Boolean(
@@ -1141,8 +1153,8 @@ export default function SharedInvitationPage() {
       }))
       .filter((child) => child.name && Number.isFinite(child.age) && child.age > 0)
 
-    if (!user || !parentName || children.length === 0) {
-      setProfileError('Upiši ime roditelja i barem jedno dijete.')
+    if (!user || !parentName || (!isBirthInvitation && children.length === 0)) {
+      setProfileError(isBirthInvitation ? 'Upiši ime i prezime ili nadimak.' : 'Upiši ime roditelja i barem jedno dijete.')
       return
     }
 
@@ -1150,13 +1162,13 @@ export default function SharedInvitationPage() {
     setProfileError("")
 
     try {
-      const payload: FamilyProfilePayload = { parentName, children }
+      const payload: FamilyProfilePayload = { parentName, children: isBirthInvitation ? [] : children }
       const nextProfile = hasFamilyProfile
         ? await updateFamilyProfile(payload, user)
         : await createFamilyProfile(payload, user)
 
       setFamilyProfile(nextProfile)
-      setProfileDraft(createDraftFromProfile(nextProfile, user.parentName))
+      setProfileDraft(createDraftFromProfile(nextProfile, user.parentName, isBirthInvitation))
       setSelectedChildIds(nextProfile.children.map((child) => child.id))
     } catch (caughtError) {
       setProfileError(
@@ -1170,8 +1182,12 @@ export default function SharedInvitationPage() {
   }
 
   const handleRequestSubmit = async () => {
-    if (!user || !invitation || selectedChildIds.length === 0) {
-      setRequestError('Odaberi barem jedno dijete prije slanja zahtjeva.')
+    if (!user || !invitation || (!isBirthInvitation && selectedChildIds.length === 0)) {
+      setRequestError(
+        isBirthInvitation
+          ? 'Prijavi se i dovrši svoje podatke prije slanja zahtjeva.'
+          : 'Odaberi barem jedno dijete prije slanja zahtjeva.',
+      )
       return
     }
 
@@ -1179,7 +1195,7 @@ export default function SharedInvitationPage() {
     setRequestError('')
 
     try {
-      const request = await createMembershipRequest(invitation.id, selectedChildIds, user)
+      const request = await createMembershipRequest(invitation.id, isBirthInvitation ? [] : selectedChildIds, user)
       setMembershipRequest(request)
       setAccess((current) => current ? { ...current, membershipStatus: request.status } : current)
     } catch (caughtError) {
@@ -1653,6 +1669,7 @@ export default function SharedInvitationPage() {
                 open={guestModalOpen && guestModalStep !== null}
                 onClose={() => setGuestModalOpen(false)}
                 step={guestModalStep ?? 'login'}
+                isBirthInvitation={isBirthInvitation}
                 identityDraft={identityDraft}
                 onIdentityChange={setIdentityDraft}
                 authError={authError}

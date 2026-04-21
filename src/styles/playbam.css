@@ -10622,11 +10622,11 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 @media (max-width: 979px) {
   .pb-inviteHero--storybook {
-    --hero-logo-top: 0.7%;
-    --hero-title-top: 8.65%;
-    --hero-title-md-top: 6.9%;
-    --hero-info-top: 37.4%;
-    --hero-rsvp-top: 62.9%;
+    --hero-logo-top: 1.15%;
+    --hero-title-top: 9%;
+    --hero-title-md-top: 7.2%;
+    --hero-info-top: 37.9%;
+    --hero-rsvp-top: calc(63.4% + 0.7rem);
   }
 }
 
@@ -10808,7 +10808,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 @media (max-width: 520px) {
   /* Mobile: još malo više razmaka između 1. i 2. reda naslova */
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__title--storybook {
-    line-height: 1.28;
+    line-height: 1.22;
   }
 
   /* Mobile: RSVP 2% dolje */
@@ -11216,7 +11216,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 /* Uži ekran: malo niže u odnosu na staro +1cqh (sada fiksno) */
 @media (max-width: 640px) {
   .pb-inviteHero--storybook {
-    --hero-message-margin-top: calc(0.78rem - 13px + 3.25px + 0.3rem);
+    --hero-message-margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);
   }
 }
 

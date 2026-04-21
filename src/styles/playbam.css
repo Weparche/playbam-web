@@ -8062,11 +8062,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 @media (max-width: 640px) {
-  .pb-floatingPanel__backdrop {
+  .pb-floatingPanel__backdrop--preview {
     align-items: flex-start;
   }
 
-  .pb-floatingPanel,
   .pb-floatingPanel--preview {
     width: 100%;
     max-width: none;

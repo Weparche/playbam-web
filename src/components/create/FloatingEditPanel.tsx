@@ -13,6 +13,7 @@ type Props = {
 export default function FloatingEditPanel({ open, title, description, onClose, children, footer, panelClassName = '' }: Props) {
   const panelRef = useRef<HTMLDivElement | null>(null)
   const [closing, setClosing] = useState(false)
+  const isPreviewPanel = panelClassName.includes('pb-floatingPanel--preview')
 
   const startClose = useCallback(() => {
     if (closing) return
@@ -50,7 +51,7 @@ export default function FloatingEditPanel({ open, title, description, onClose, c
 
   if (!open && !closing) return null
 
-  const backdropClass = `pb-floatingPanel__backdrop${closing ? ' is-closing' : ''}`
+  const backdropClass = `pb-floatingPanel__backdrop${isPreviewPanel ? ' pb-floatingPanel__backdrop--preview' : ''}${closing ? ' is-closing' : ''}`
   const panelClass = `pb-floatingPanel${panelClassName ? ` ${panelClassName}` : ''}${closing ? ' is-closing' : ''}`
 
   return (

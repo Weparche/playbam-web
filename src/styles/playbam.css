@@ -10860,39 +10860,12 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
     2px 2px 0 rgba(0, 0, 0, 0.60);
 }
 
-.pb-inviteHero__printQrHint.pb-inviteHero__title--outline-soft {
-  text-shadow:
-    -1px -1px 0 rgba(255, 255, 255, 0.72),
-    1px -1px 0 rgba(255, 255, 255, 0.72),
-    -1px 1px 0 rgba(255, 255, 255, 0.72),
-    1px 1px 0 rgba(255, 255, 255, 0.72),
-    0 1px 5px rgba(25, 45, 80, 0.1);
-}
-
-.pb-inviteHero__printQrHint.pb-inviteHero__title--outline-bold {
-  text-shadow:
-    -1px -1px 0 rgba(255, 255, 255, 0.78),
-    1px -1px 0 rgba(255, 255, 255, 0.78),
-    -1px 1px 0 rgba(255, 255, 255, 0.78),
-    1px 1px 0 rgba(255, 255, 255, 0.78),
-    0 1px 6px rgba(25, 45, 80, 0.12);
-}
-
-.pb-inviteHero__printQrHint.pb-inviteHero__title--outline-soft-black {
-  text-shadow:
-    -1px -1px 0 rgba(0, 0, 0, 0.36),
-    1px -1px 0 rgba(0, 0, 0, 0.36),
-    -1px 1px 0 rgba(0, 0, 0, 0.36),
-    1px 1px 0 rgba(0, 0, 0, 0.36);
-}
-
+.pb-inviteHero__printQrHint.pb-inviteHero__title--outline-soft,
+.pb-inviteHero__printQrHint.pb-inviteHero__title--outline-bold,
+.pb-inviteHero__printQrHint.pb-inviteHero__title--outline-soft-black,
 .pb-inviteHero__printQrHint.pb-inviteHero__title--outline-bold-black {
-  text-shadow:
-    -1px -1px 0 rgba(0, 0, 0, 0.44),
-    1px -1px 0 rgba(0, 0, 0, 0.44),
-    -1px 1px 0 rgba(0, 0, 0, 0.44),
-    1px 1px 0 rgba(0, 0, 0, 0.44),
-    0 1px 4px rgba(0, 0, 0, 0.12);
+  -webkit-text-stroke: 0 transparent;
+  text-shadow: none;
 }
 
 @media (max-width: 979px) {
@@ -10963,21 +10936,11 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
   }
 
   .pb-inviteHero__printQrHint.pb-inviteHero__title--outline-soft,
-  .pb-inviteHero__printQrHint.pb-inviteHero__title--outline-bold {
-    text-shadow:
-      -1px -1px 0 rgba(255, 255, 255, 0.62),
-      1px -1px 0 rgba(255, 255, 255, 0.62),
-      -1px 1px 0 rgba(255, 255, 255, 0.62),
-      1px 1px 0 rgba(255, 255, 255, 0.62);
-  }
-
+  .pb-inviteHero__printQrHint.pb-inviteHero__title--outline-bold,
   .pb-inviteHero__printQrHint.pb-inviteHero__title--outline-soft-black,
   .pb-inviteHero__printQrHint.pb-inviteHero__title--outline-bold-black {
-    text-shadow:
-      -1px -1px 0 rgba(0, 0, 0, 0.28),
-      1px -1px 0 rgba(0, 0, 0, 0.28),
-      -1px 1px 0 rgba(0, 0, 0, 0.28),
-      1px 1px 0 rgba(0, 0, 0, 0.28);
+    -webkit-text-stroke: 0 transparent;
+    text-shadow: none;
   }
 
   .pb-previewCard__title--outline-soft {
@@ -11171,7 +11134,7 @@ html.pb-print-host-invite .pb-inviteHero__printQr {
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock.pb-inviteHero__infoBlock--birthday {
-  transform: translate(-5px, -5px);
+  transform: translate(calc(-50% - 5px), -5px);
 }
 
 .pb-inviteHero--storybook .pb-inviteHero__venueHint {

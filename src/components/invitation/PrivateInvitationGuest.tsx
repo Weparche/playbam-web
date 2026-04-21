@@ -43,6 +43,8 @@ type Props = {
   sendingChatMessage: boolean
   onSendChatMessage: () => void
   chatSenderLabelHint?: ChatSenderLabelHint
+  /** Rođendanska pozivnica — bez bloka „Više o igraonici”. */
+  isBirthInvitation?: boolean
 }
 
 function wishlistBadgeClass(status: InvitationWishlistItem['reservation']['status']) {
@@ -150,6 +152,7 @@ export default function PrivateInvitationGuest({
   sendingChatMessage,
   onSendChatMessage,
   chatSenderLabelHint,
+  isBirthInvitation = false,
 }: Props) {
   const [venueOpen, setVenueOpen] = useState(false)
   const [wishlistOpen, setWishlistOpen] = useState(false)
@@ -166,6 +169,14 @@ export default function PrivateInvitationGuest({
     chat: null,
     wishlist: null,
   })
+
+  useEffect(() => {
+    if (!isBirthInvitation) {
+      return
+    }
+    setVenueOpen(false)
+    setSelectedVenueImageIndex(null)
+  }, [isBirthInvitation])
 
   const resetGiftForm = () => {
     setGiftTitle('')
@@ -559,71 +570,73 @@ export default function PrivateInvitationGuest({
           ) : null}
         </section>
 
-        <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-venue-toggle">
-          <button
-            id="private-venue-toggle"
-            type="button"
-            className={`pb-privateToggle ${venueOpen ? 'is-open' : ''}`}
-            onClick={() => setVenueOpen((current) => !current)}
-            aria-expanded={venueOpen}
-          >
-            <span className="pb-privateToggle__copy">
-              <span className="pb-privateToggle__eyebrow">Privatni sadržaj</span>
-              <span className="pb-privateToggle__title">Više o igraonici</span>
-            </span>
-            <span className="pb-privateToggle__arrow" aria-hidden>
-              <PrivateToggleChevron />
-            </span>
-          </button>
+        {!isBirthInvitation ? (
+          <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-venue-toggle">
+            <button
+              id="private-venue-toggle"
+              type="button"
+              className={`pb-privateToggle ${venueOpen ? 'is-open' : ''}`}
+              onClick={() => setVenueOpen((current) => !current)}
+              aria-expanded={venueOpen}
+            >
+              <span className="pb-privateToggle__copy">
+                <span className="pb-privateToggle__eyebrow">Privatni sadržaj</span>
+                <span className="pb-privateToggle__title">Više o igraonici</span>
+              </span>
+              <span className="pb-privateToggle__arrow" aria-hidden>
+                <PrivateToggleChevron />
+              </span>
+            </button>
 
-          {venueOpen ? (
-            <div className="pb-privateAccordionBody">
-              <section className="pb-privateVenue" aria-labelledby="venue-details-title">
-                <header className="pb-invitePrivateCard__header">
-                  <h3 id="venue-details-title" className="pb-invitePrivateCard__title">
-                    Igraonica Jogica
-                  </h3>
-                  <p className="pb-invitePrivateCard__subtitle">
-                    Isti tip pregleda kao u mobile detaljima igraonice: slike prostora i ključne informacije na jednom mjestu.
+            {venueOpen ? (
+              <div className="pb-privateAccordionBody">
+                <section className="pb-privateVenue" aria-labelledby="venue-details-title">
+                  <header className="pb-invitePrivateCard__header">
+                    <h3 id="venue-details-title" className="pb-invitePrivateCard__title">
+                      Igraonica Jogica
+                    </h3>
+                    <p className="pb-invitePrivateCard__subtitle">
+                      Isti tip pregleda kao u mobile detaljima igraonice: slike prostora i ključne informacije na jednom mjestu.
+                    </p>
+                  </header>
+
+                  <div className="pb-privateVenue__gallery">
+                    {VENUE_GALLERY.map((imageUrl, index) => (
+                      <button
+                        key={imageUrl}
+                        type="button"
+                        className="pb-privateVenue__galleryButton"
+                        onClick={() => setSelectedVenueImageIndex(index)}
+                        aria-label={`Otvori fotografiju igraonice ${index + 1}`}
+                      >
+                        <img
+                          src={imageUrl}
+                          alt={`Igraonica Jogica ${index + 1}`}
+                          className="pb-privateVenue__image"
+                          loading="lazy"
+                        />
+                      </button>
+                    ))}
+                  </div>
+
+                  <p className="pb-privateVenue__description">
+                    Šarena i topla igraonica s animatoricama, kutkom za roditelje i rođendanskim programima prilagođenima
+                    manjim i većim ekipama.
                   </p>
-                </header>
 
-                <div className="pb-privateVenue__gallery">
-                  {VENUE_GALLERY.map((imageUrl, index) => (
-                    <button
-                      key={imageUrl}
-                      type="button"
-                      className="pb-privateVenue__galleryButton"
-                      onClick={() => setSelectedVenueImageIndex(index)}
-                      aria-label={`Otvori fotografiju igraonice ${index + 1}`}
-                    >
-                      <img
-                        src={imageUrl}
-                        alt={`Igraonica Jogica ${index + 1}`}
-                        className="pb-privateVenue__image"
-                        loading="lazy"
-                      />
-                    </button>
-                  ))}
-                </div>
-
-                <p className="pb-privateVenue__description">
-                  Šarena i topla igraonica s animatoricama, kutkom za roditelje i rođendanskim programima prilagođenima
-                  manjim i većim ekipama.
-                </p>
-
-                <div className="pb-partyFacts pb-partyFacts--venue">
-                  {VENUE_DETAILS.map((item) => (
-                    <div key={item.label} className="pb-partyFact">
-                      <div className="pb-partyFact__label">{item.label}</div>
-                      <div className="pb-partyFact__value">{item.value}</div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </div>
-          ) : null}
-        </section>
+                  <div className="pb-partyFacts pb-partyFacts--venue">
+                    {VENUE_DETAILS.map((item) => (
+                      <div key={item.label} className="pb-partyFact">
+                        <div className="pb-partyFact__label">{item.label}</div>
+                        <div className="pb-partyFact__value">{item.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            ) : null}
+          </section>
+        ) : null}
       </div>
       {selectedWishItem ? (
         <div className="pb-modalOverlay" role="presentation" onClick={() => setSelectedWishItem(null)}>
@@ -696,7 +709,7 @@ export default function PrivateInvitationGuest({
           </div>
         </div>
       ) : null}
-      {selectedVenueImageUrl ? (
+      {!isBirthInvitation && selectedVenueImageUrl ? (
         <div className="pb-modalOverlay" role="presentation" onClick={() => setSelectedVenueImageIndex(null)}>
           <div
             className="pb-modalDialog pb-privateVenueModal"

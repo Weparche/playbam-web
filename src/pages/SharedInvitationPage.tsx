@@ -1054,6 +1054,101 @@ export default function SharedInvitationPage() {
     }
   }, [invitation, user, hasHostSession, logout, isBirthInvitation])
 
+  /** Dok gost čeka odobrenje, povremeno osvježi pristup — nakon odobrenja otključava se bez ručnog refresha. */
+  useEffect(() => {
+    if (!invitation || !user || isHost) {
+      return
+    }
+
+    const accessPending = access?.membershipStatus === 'pending'
+    const requestPending = membershipRequest?.status === 'pending'
+    if ((!accessPending && !requestPending) || loadingPrivateState) {
+      return
+    }
+
+    let cancelled = false
+    const invitationId = invitation.id
+    const currentUser = user
+
+    async function pollGuestUnlock() {
+      try {
+        const nextAccess = await getInvitationAccess(invitationId, currentUser)
+        if (cancelled) {
+          return
+        }
+        setAccess(nextAccess)
+
+        if (nextAccess.isHost) {
+          return
+        }
+
+        const family = await getFamilyProfile(currentUser)
+        if (cancelled) {
+          return
+        }
+
+        setFamilyProfile(family)
+        setProfileDraft(createDraftFromProfile(family, currentUser.parentName, isBirthInvitation))
+
+        if (isBirthInvitation || family.children.length > 0) {
+          const request = await getMyMembershipRequest(invitationId, currentUser)
+          if (cancelled) {
+            return
+          }
+          setMembershipRequest(request)
+          setSelectedChildIds(
+            request ? request.children.map((child) => child.id) : family.children.map((child) => child.id),
+          )
+        } else {
+          setMembershipRequest(null)
+          setSelectedChildIds([])
+        }
+
+        if (nextAccess.canRsvp) {
+          const nextRsvp = await getMyRsvp(invitationId, currentUser)
+          if (!cancelled) {
+            setRsvp(nextRsvp)
+          }
+        } else {
+          setRsvp(null)
+        }
+
+        if (nextAccess.canViewWishlist) {
+          try {
+            const wishlist = await getInvitationWishlist(invitationId, currentUser)
+            if (!cancelled) {
+              setWishlistItems(wishlist)
+            }
+          } catch {
+            if (!cancelled) {
+              setWishlistItems([])
+            }
+          }
+        } else {
+          setWishlistItems([])
+        }
+      } catch {
+        // Tiha mrežna greška — sljedeći interval pokušava ponovno.
+      }
+    }
+
+    const intervalId = window.setInterval(() => void pollGuestUnlock(), 6000)
+    void pollGuestUnlock()
+
+    return () => {
+      cancelled = true
+      window.clearInterval(intervalId)
+    }
+  }, [
+    access?.membershipStatus,
+    invitation,
+    isBirthInvitation,
+    isHost,
+    loadingPrivateState,
+    membershipRequest?.status,
+    user,
+  ])
+
   useEffect(() => {
     const canPollChat = Boolean(
       invitation &&
@@ -1778,6 +1873,7 @@ export default function SharedInvitationPage() {
                   <div className="pb-guestPrivateLayout__left">
                     <PrivateInvitationGuest
                       invitation={invitation}
+                      isBirthInvitation={isBirthInvitation}
                       wishlistLoading={wishlistLoading}
                       wishlistError={wishlistError}
                       wishlistItems={wishlistItems}

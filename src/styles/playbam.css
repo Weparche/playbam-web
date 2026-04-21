@@ -10315,6 +10315,14 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-inviteHostPanel .pb-privateWishlist {
   padding: 0.95rem 1rem 1rem;
+  /* Organizator: jači „wash” preko listazelja.jpg (gosti vide punu sliku). */
+  background-image:
+    linear-gradient(155deg, rgba(255, 248, 252, 0.92), rgba(244, 240, 255, 0.9)),
+    radial-gradient(120% 85% at 20% 0%, rgba(255, 255, 255, 0.88), transparent 58%),
+    url('/listazelja.jpg');
+  background-position: center top, center top, center top;
+  background-size: auto, auto, cover;
+  background-repeat: no-repeat;
 }
 
 .pb-privateWishlist--hostPanel {

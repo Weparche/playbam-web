@@ -224,7 +224,11 @@ export default function PublicInvitationHero({
               </span>
             </a>
 
-            <p className={`pb-inviteHero__message pb-inviteHero__message--storybook${birthMessageClass}${birthdayMessageClass}`}>{messageText}</p>
+            {messageText.trim() ? (
+              <p className={`pb-inviteHero__message pb-inviteHero__message--storybook${birthMessageClass}${birthdayMessageClass}`}>
+                {messageText}
+              </p>
+            ) : null}
 
             {printPartyDetails && printPartyDetails.length > 0 ? (
               <div className="pb-inviteHero__printPartyDetails" aria-label="Detalji tuluma">

@@ -29,7 +29,7 @@ export default function InvitationCard({
   onGuestRsvpIntent,
   guestRsvpHint = null,
 }: Props) {
-  const message = invitation.message?.trim() || 'Vidimo se na tulumu!'
+  const message = invitation.message?.trim() ?? ''
   const showGuestRsvp = !isHost
   const rsvpActive = canSubmitRsvp && typeof onRsvpChange === 'function'
   const rsvpGate = showGuestRsvp && typeof onGuestRsvpIntent === 'function'

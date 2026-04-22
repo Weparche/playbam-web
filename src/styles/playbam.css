@@ -11944,7 +11944,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 .pb-inviteHero__message--storybook {
   /*
    * Fiksni pomak (bez cqh): visina okvira i 1cqh mijenjaju se pri resizeu / fontu / mob. URL baru
-   * pa je “Vidimo se na tulumu!” stalno “plesalo”.
+   * pa se poruka (kad postoji) vizualno “malo pomiče”.
    */
   margin: var(--hero-message-margin-top) 0 0;
   width: 82%;
@@ -12320,7 +12320,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   z-index: 1;
 }
 
-/* Gost s odobrenim pristupom: „Vidimo se na tulumu!” ~0.5% visine okvira niže (0.5cqh kad je podržano) */
+/* Gost s odobrenim pristupom: .pb-inviteHero__message ~0.5% visine okvira niže (0.5cqh kad je podržano) */
 .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__message--storybook {
 }
 

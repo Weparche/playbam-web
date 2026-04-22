@@ -14,7 +14,7 @@ export default function QuickMessageEditor({ draft, onFieldChange }: Props) {
           className="pb-input pb-quickEditor__textarea"
           value={draft.message}
           onChange={(event) => onFieldChange('message', event.target.value)}
-          placeholder="Vidimo se na tulumu!"
+          placeholder="Dodaj kratku poruku za goste (neobvezno)"
         />
       </label>
     </div>

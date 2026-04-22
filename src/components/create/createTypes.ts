@@ -317,7 +317,7 @@ export const DEFAULT_CREATE_DRAFT: InvitationCreateDraft = {
   locationName: 'Igraonica Jogica',
   locationAddress: 'Lastovska 2, Zagreb',
   locationType: 'Igraonica / lokal',
-  message: 'Vidimo se na tulumu!',
+  message: '',
   theme: 'pozivnica-girl',
   effect: 'glow',
   rsvpMood: 'zoo',

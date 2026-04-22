@@ -59,7 +59,7 @@ export default function InvitationLivePreview({
 }: Props) {
   const birthInvitation = isBirthTheme(draft.theme)
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
-  const messageText = draft.message.trim() || 'Vidimo se na tulumu!'
+  const messageText = draft.message.trim()
   const accessText = buildPreviewAccessText(draft)
   const isPrint = previewMode === 'print'
   const printPartyDetails = useMemo(() => {

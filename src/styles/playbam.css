@@ -1561,7 +1561,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
       rgba(255, 249, 244, 0.6) 45%,
       rgba(255, 255, 255, 0.78) 100%
     ),
-    url('/pozivnica-girl.png');
+    url('/cura.webp');
   /* Pozadina preko cijele kartice */
   background-size: cover, cover;
   background-position: center center, center center;

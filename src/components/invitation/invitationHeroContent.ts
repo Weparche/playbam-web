@@ -2,15 +2,15 @@ type MaybeString = string | null | undefined
 
 /** Ista mapa za Open Graph (WhatsApp): `functions/_middleware.js` */
 const INVITATION_BACKGROUND_MAP: Record<string, string> = {
-  baloni: '/pozivnica-girl.png',
+  baloni: '/cura.webp',
   konfeti: '/pozivnica-boys.png',
   zvjezdice: '/pozivnica-mix.png',
-  'pozivnica-bg': '/pozivnica-girl.png',
+  'pozivnica-bg': '/cura.webp',
   'pozivnica-bg1': '/pozivnica-mix.png',
   'pozivnica-boys': '/pozivnica-boys.png',
   'pozivnica-boys1': '/pozivnica-girls.png',
-  'pozivnica-girl': '/pozivnica-girl.png',
-  'pozivnica-boy': '/pozivnica-boy.png',
+  'pozivnica-girl': '/cura.webp',
+  'pozivnica-boy': '/decko.webp',
   'pozivnica-girls': '/pozivnica-girls.png',
   'pozivnica-mix': '/pozivnica-mix.png',
   safari: '/safari.png',
@@ -22,7 +22,7 @@ const INVITATION_BACKGROUND_MAP: Record<string, string> = {
   pirates: '/pirates.png',
   frozen: '/frozen.png',
   sirena: '/sirena.png',
-  beba_cura: '/beba_cura.png',
+  beba_cura: '/curica.webp',
   beba_decko: '/beba_decko.png',
 }
 
@@ -90,5 +90,5 @@ export function resolveInvitationBackgroundImage(coverImage?: MaybeString, theme
     return INVITATION_BACKGROUND_MAP[themeKey]
   }
 
-  return '/pozivnica-girl.png'
+  return '/cura.webp'
 }

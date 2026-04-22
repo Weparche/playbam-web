@@ -27,7 +27,25 @@ export type TitleFont =
 export type TitleColor = 'white' | 'playbam-blue' | 'ink' | 'berry' | 'mint' | 'sunset'
 export type TitleOutline = 'none' | 'soft' | 'bold' | 'soft-black' | 'bold-black'
 export type TitleSize = 'sm' | 'md' | 'lg'
-export type RsvpMood = 'party' | 'sweet' | 'icons' | 'spark' | 'balloon' | 'thumbs' | 'check' | 'zoo' | 'sport' | 'space' | 'music' | 'crown' | 'heart' | 'fire' | 'nature' | 'pirate'
+export type RsvpMood =
+  | 'party'
+  | 'sweet'
+  | 'icons'
+  | 'spark'
+  | 'balloon'
+  | 'thumbs'
+  | 'check'
+  | 'zoo'
+  | 'sport'
+  | 'space'
+  | 'music'
+  | 'crown'
+  | 'heart'
+  | 'fire'
+  | 'nature'
+  | 'pirate'
+  | 'birtija'
+  | 'lica'
 export type AccentPalette = 'berry' | 'sky' | 'mint'
 export type LocationType = 'Igraonica / lokal' | 'Kod kuće' | 'Na otvorenom' | 'Druga lokacija'
 
@@ -95,8 +113,8 @@ export const LEGACY_COVER_THEME_TABS = [
 ] as const satisfies ReadonlyArray<{ id: CoverThemeTab; label: string }>
 
 const LEGACY_COVER_THEME_OPTIONS = [
-  { id: 'pozivnica-girl', label: 'Cura', description: 'VidimoSe.hr službena pozivnica za cure', image: '/pozivnica-girl.png' },
-  { id: 'pozivnica-boy', label: 'Dečko', description: 'VidimoSe.hr službena pozivnica za dečke', image: '/pozivnica-boy.png' },
+  { id: 'pozivnica-girl', label: 'Cura', description: 'VidimoSe.hr službena pozivnica za cure', image: '/cura.webp' },
+  { id: 'pozivnica-boy', label: 'Dečko', description: 'VidimoSe.hr službena pozivnica za dečke', image: '/decko.webp' },
   { id: 'safari', label: 'Safari', description: 'Afričke životinje i safari avantura.', image: '/safari.png' },
   { id: 'space', label: 'Svemir', description: 'Astronauti, zvijezde i svemirski party.', image: '/space.png' },
   { id: 'sport', label: 'Sport', description: 'Aktivan tulum za male sportaše.', image: '/sport.png' },
@@ -115,7 +133,7 @@ export const COVER_THEME_OPTIONS = [
   ...LEGACY_COVER_THEME_OPTIONS.map((option) => ({ ...option, tab: 'birthday' as const })),
   { id: 'frozen', tab: 'birthday', label: 'Ledeno', description: 'Ledena bajka za malu zimsku avanturu.', image: '/frozen.png' },
   { id: 'sirena', tab: 'birthday', label: 'Sirena', description: 'Podvodna bajka s morskim detaljima.', image: '/sirena.png' },
-  { id: 'beba_cura', tab: 'birth', label: 'Beba cura', description: 'Nje\u017ena naslovnica za dolazak djevoj\u010dice.', image: '/beba_cura.png' },
+  { id: 'beba_cura', tab: 'birth', label: 'Beba cura', description: 'Nje\u017ena naslovnica za dolazak djevoj\u010dice.', image: '/curica.webp' },
   { id: 'beba_decko', tab: 'birth', label: 'Beba de\u010dko', description: 'Nje\u017ena naslovnica za dolazak dje\u010daka.', image: '/beba_decko.png' },
 ] as const satisfies ReadonlyArray<{ id: CoverTheme; tab: CoverThemeTab; label: string; description: string; image: string }>
 
@@ -239,6 +257,18 @@ export const RSVP_MOOD_OPTIONS = [
   { id: 'fire', label: 'Vatra', description: 'Energičan vibe za najluđe tulume.', symbols: { going: '🔥', maybe: '⚡', not_going: '🧊' } },
   { id: 'nature', label: 'Priroda', description: 'Sezonski set inspiriran prirodom.', symbols: { going: '🌻', maybe: '🍂', not_going: '❄️' } },
   { id: 'pirate', label: 'Pirati', description: 'Piratska tema za avanturiste.', symbols: { going: '🏴‍☠️', maybe: '⚓', not_going: '🦈' } },
+  {
+    id: 'birtija',
+    label: 'Birtija',
+    description: 'Nazdravlje s pivom, bik za „možda”, magarac za „ne”.',
+    symbols: { going: '🍻', maybe: '🐂', not_going: '🫏' },
+  },
+  {
+    id: 'lica',
+    label: 'Lica',
+    description: 'Jednostavni smajlići — poznato iz poruka i društvenih mreža.',
+    symbols: { going: '😊', maybe: '🤷', not_going: '😢' },
+  },
 ] as const satisfies ReadonlyArray<{
   id: RsvpMood
   label: string

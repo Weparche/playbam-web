@@ -20,7 +20,7 @@ export default function QuickRSVPEditor({ draft, onFieldChange }: Props) {
             >
               <strong>{option.label}</strong>
               <span className="pb-quickEditor__rsvpGlyphs">
-                {option.symbols.going} {option.symbols.not_going} {option.symbols.maybe}
+                {option.symbols.going} {option.symbols.maybe} {option.symbols.not_going}
               </span>
             </button>
           ))}

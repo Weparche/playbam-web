@@ -112,7 +112,7 @@ export default function PublicInvitationHero({
   printContactName = null,
   printContactMobile = null,
 }: Props) {
-  const fallbackImage = '/pozivnica-girl.png'
+  const fallbackImage = '/cura.webp'
   const resolvedImage = backgroundImage || fallbackImage
   const [failedImage, setFailedImage] = useState<string | null>(null)
   const heroImage = failedImage === resolvedImage ? fallbackImage : resolvedImage

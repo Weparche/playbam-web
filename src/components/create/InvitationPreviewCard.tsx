@@ -36,7 +36,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
   const previewTitleRef = useRef<HTMLHeadingElement>(null)
   const previewHeroTextRef = useRef<HTMLDivElement>(null)
 
-  useInvitationTitleAutoFit(previewTitleRef, null, previewHeroTextRef, 'preview', [
+  useInvitationTitleAutoFit(previewTitleRef, null, previewHeroTextRef, 'preview', titleSize, [
     displayTitle,
     titleFont,
     titleOutline,

@@ -134,7 +134,7 @@ export default function PublicInvitationHero({
     ['--pb-invite-title-color' as string]: getTitleColorValue(normalizedTitleColor),
   } as CSSProperties
 
-  useInvitationTitleAutoFit(heroTitleRef, frameRef, titleWrapRef, 'hero', [
+  useInvitationTitleAutoFit(heroTitleRef, frameRef, titleWrapRef, 'hero', normalizedTitleSize, [
     celebrantTitle,
     normalizedTitleFont,
     normalizedTitleOutline,

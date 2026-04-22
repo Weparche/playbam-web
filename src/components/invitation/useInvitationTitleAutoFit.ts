@@ -1,5 +1,7 @@
 import { useLayoutEffect, type DependencyList, type RefObject } from 'react'
 
+import type { TitleSize } from '../create/createTypes'
+
 type FitMode = 'hero' | 'preview'
 
 const MAX_LINES = 2
@@ -14,6 +16,7 @@ export function useInvitationTitleAutoFit(
   frameRef: RefObject<HTMLElement | null> | null,
   wrapRef: RefObject<HTMLElement | null> | null,
   mode: FitMode,
+  titleSize: TitleSize,
   deps: DependencyList,
 ) {
   useLayoutEffect(() => {
@@ -33,9 +36,13 @@ export function useInvitationTitleAutoFit(
       if (mode === 'hero' && frame) {
         const section = frame.closest?.('.pb-inviteHero') as HTMLElement | null
         const isBirthTab = section?.getAttribute('data-theme-tab') === 'birth'
+        const card = frame.closest?.('.pb-inviteCard--storybook') as HTMLElement | null
+        const isPublicInvite = Boolean(card && !card.classList.contains('pb-inviteCard--guestPrivate'))
         const isMobile = window.innerWidth <= 640
-        const birthMobileBoost = isBirthTab && isMobile ? 1.3 : 1
-        maxBoxPx = Math.min(frame.clientHeight * 0.3 * birthMobileBoost, 168 * birthMobileBoost)
+        /* Mobile: +30% za rođenje; javni dio pozivnice s najvećim (lg) naslovom. */
+        const mobileTitleBoost =
+          isMobile && (isBirthTab || (isPublicInvite && titleSize === 'lg')) ? 1.3 : 1
+        maxBoxPx = Math.min(frame.clientHeight * 0.3 * mobileTitleBoost, 168 * mobileTitleBoost)
       } else if (wrap && wrap.clientHeight > 16) {
         maxBoxPx = Math.min(wrap.clientHeight * 0.42, 112)
       } else {

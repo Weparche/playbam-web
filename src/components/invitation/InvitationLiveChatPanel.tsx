@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, type RefObject } from 'react'
 import Button from '../ui/Button'
 import type { InvitationChatMessage } from '../../lib/invitationApi'
 
@@ -16,6 +17,10 @@ type Props = {
   onDraftChange: (value: string) => void
   onSend: () => void
   senderLabelHint?: ChatSenderLabelHint
+  /** Samo za organizatora: brisanje bilo koje poruke. */
+  canDeleteMessages?: boolean
+  onDeleteMessage?: (messageId: string) => void
+  deletingMessageId?: string | null
 }
 
 function resolveChatSenderLabel(message: InvitationChatMessage, hint?: ChatSenderLabelHint) {
@@ -54,6 +59,20 @@ function formatChatTimestamp(value: string) {
   return chatTimeFormatter.format(date)
 }
 
+function useScrollListToBottom(
+  listRef: RefObject<HTMLDivElement | null>,
+  messagesLength: number,
+  loading: boolean,
+) {
+  useLayoutEffect(() => {
+    const el = listRef.current
+    if (!el) {
+      return
+    }
+    el.scrollTop = el.scrollHeight
+  }, [listRef, messagesLength, loading])
+}
+
 export default function InvitationLiveChatPanel({
   messages,
   loading,
@@ -63,7 +82,13 @@ export default function InvitationLiveChatPanel({
   onDraftChange,
   onSend,
   senderLabelHint,
+  canDeleteMessages = false,
+  onDeleteMessage,
+  deletingMessageId = null,
 }: Props) {
+  const listRef = useRef<HTMLDivElement>(null)
+  useScrollListToBottom(listRef, messages.length, loading)
+
   return (
     <section className="pb-inviteChat" aria-labelledby="invitation-live-chat-heading">
       <div className="pb-inviteChat__header">
@@ -80,13 +105,26 @@ export default function InvitationLiveChatPanel({
       ) : null}
 
       {messages.length > 0 ? (
-        <div className="pb-inviteChat__list" role="log" aria-live="polite">
+        <div ref={listRef} className="pb-inviteChat__list" role="log" aria-live="polite">
           {messages.map((message) => (
             <div key={message.id} className={`pb-inviteChat__row pb-inviteChat__row--${message.senderRole}`}>
               <article className={`pb-inviteChat__item pb-inviteChat__item--${message.senderRole}`}>
                 <div className="pb-inviteChat__meta">
-                  <strong>{resolveChatSenderLabel(message, senderLabelHint)}</strong>
-                  <span>{formatChatTimestamp(message.createdAt)}</span>
+                  <div className="pb-inviteChat__metaText">
+                    <strong>{resolveChatSenderLabel(message, senderLabelHint)}</strong>
+                    <span>{formatChatTimestamp(message.createdAt)}</span>
+                  </div>
+                  {canDeleteMessages && onDeleteMessage ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="pb-inviteChat__delete"
+                      onClick={() => onDeleteMessage(message.id)}
+                      disabled={deletingMessageId === message.id}
+                    >
+                      {deletingMessageId === message.id ? '…' : 'Obriši'}
+                    </Button>
+                  ) : null}
                 </div>
                 <p className="pb-inviteChat__message">{message.message}</p>
               </article>

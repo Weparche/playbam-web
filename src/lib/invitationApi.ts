@@ -646,6 +646,17 @@ export async function createInvitationChatMessage(
   return data.message
 }
 
+export async function deleteInvitationChatMessage(
+  invitationId: string,
+  messageId: string,
+  identity?: TemporaryWebIdentity | null,
+) {
+  await request<unknown>(`/api/invitations/${encodeURIComponent(invitationId)}/chat/${encodeURIComponent(messageId)}`, {
+    method: 'DELETE',
+    identity,
+  })
+}
+
 export async function createInvitationWishlistItem(
   invitationId: string,
   payload: InvitationWishlistPayload,

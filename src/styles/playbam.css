@@ -2583,6 +2583,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__titleWrap--size-lg {
+    transform: translate(-50%, calc(var(--hero-title-lg-shift-y) + 5px)) !important;
   }
 
   html.pb-print-host-invite .pb-hostPrintOnlySheet .pb-inviteHero__infoBlock {
@@ -3108,11 +3109,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   overflow: hidden;
   border-radius: 22px;
   background-color: #fcf9ff;
-  background-image: url('/listazelja.jpg');
-  /* listazelja: malo „zoom out” + vertikalni pomak ~15% prema gore (neg. % u odnosu na centar). */
-  background-position: center -15%;
-  background-size: 90% auto;
-  background-repeat: no-repeat;
   padding: 1rem;
 }
 
@@ -3203,15 +3199,33 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-inviteChat__meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.6rem;
-  align-items: baseline;
+  flex-wrap: nowrap;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 0.5rem;
   font-size: 0.74rem;
   color: rgba(16, 24, 40, 0.48);
 }
 
-.pb-inviteChat__meta strong {
+.pb-inviteChat__metaText {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+  align-items: baseline;
+  min-width: 0;
+  flex: 1;
+}
+
+.pb-inviteChat__delete {
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  padding: 0.2rem 0.45rem !important;
+  min-height: 0 !important;
+  line-height: 1.1 !important;
+  flex-shrink: 0;
+}
+
+.pb-inviteChat__metaText strong {
   font-size: 0.76rem;
   font-weight: 900;
   color: rgba(16, 24, 40, 0.72);
@@ -3475,7 +3489,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-inviteWishlist > .pb-inviteWish:first-child {
-  margin-top: clamp(5.25rem, 15vw, 6.5rem);
+  margin-top: 0;
 }
 
 .pb-inviteWish {
@@ -5597,6 +5611,11 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 /* Live preview: najveći (lg) naslov — dodatni pomak gore */
 .pb-createLivePreview .pb-inviteHero__titleWrap--size-lg {
+}
+
+/* Print pregled: najveći (lg) naslov 5px dolje (transform je na .titleWrap--size-lg) */
+.pb-createLivePreview.pb-createLivePreview--print .pb-inviteHero__titleWrap--size-lg {
+  transform: translate(-50%, calc(var(--hero-title-lg-shift-y) + 5px));
 }
 
 /* Live preview: najveći (lg) naslov −20% */
@@ -10323,13 +10342,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-inviteHostPanel .pb-privateWishlist {
   padding: 0.95rem 1rem 1rem;
-  /* Organizator: jači „wash” preko listazelja.jpg (gosti vide punu sliku). */
-  background-image:
-    linear-gradient(155deg, rgba(255, 248, 252, 0.92), rgba(244, 240, 255, 0.9)),
-    radial-gradient(120% 85% at 20% 0%, rgba(255, 255, 255, 0.88), transparent 58%),
-    url('/listazelja.jpg');
-  background-position: center top, center top, center -15%;
-  background-size: auto, auto, 90% auto;
+  background-image: linear-gradient(155deg, rgba(255, 248, 252, 0.92), rgba(244, 240, 255, 0.9)),
+    radial-gradient(120% 85% at 20% 0%, rgba(255, 255, 255, 0.88), transparent 58%);
+  background-position: center top, center top;
+  background-size: auto, auto;
   background-repeat: no-repeat;
 }
 

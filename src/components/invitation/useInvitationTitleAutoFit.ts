@@ -31,7 +31,11 @@ export function useInvitationTitleAutoFit(
 
       let maxBoxPx: number
       if (mode === 'hero' && frame) {
-        maxBoxPx = Math.min(frame.clientHeight * 0.3, 168)
+        const section = frame.closest?.('.pb-inviteHero') as HTMLElement | null
+        const isBirthTab = section?.getAttribute('data-theme-tab') === 'birth'
+        const isMobile = window.innerWidth <= 640
+        const birthMobileBoost = isBirthTab && isMobile ? 1.3 : 1
+        maxBoxPx = Math.min(frame.clientHeight * 0.3 * birthMobileBoost, 168 * birthMobileBoost)
       } else if (wrap && wrap.clientHeight > 16) {
         maxBoxPx = Math.min(wrap.clientHeight * 0.42, 112)
       } else {

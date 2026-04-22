@@ -30,6 +30,7 @@ import {
   cancelInvitationWishlistReservation,
   createFamilyProfile,
   createInvitationChatMessage,
+  deleteInvitationChatMessage,
   createInvitationWishlistItem,
   createMembershipRequest,
   deleteInvitationWishlistItem,
@@ -397,6 +398,7 @@ export default function SharedInvitationPage() {
   const [chatError, setChatError] = useState('')
   const [chatDraft, setChatDraft] = useState('')
   const [sendingChatMessage, setSendingChatMessage] = useState(false)
+  const [deletingChatId, setDeletingChatId] = useState<string | null>(null)
   const [guestChatOpen, setGuestChatOpen] = useState(false)
   const [guestModalOpen, setGuestModalOpen] = useState(false)
   const [hostAccordionOpen, setHostAccordionOpen] = useState<HostAccordionSection | null>(null)
@@ -1320,12 +1322,7 @@ export default function SharedInvitationPage() {
     setChatError('')
 
     try {
-      const profileChatName = familyProfile?.profile?.parentName?.trim()
-      await createInvitationChatMessage(
-        invitation.id,
-        profileChatName ? { message, senderName: profileChatName } : { message },
-        user ?? undefined,
-      )
+      await createInvitationChatMessage(invitation.id, { message }, user ?? undefined)
       setChatDraft('')
       await refreshChat(user ?? undefined)
     } catch (caughtError) {
@@ -1338,6 +1335,31 @@ export default function SharedInvitationPage() {
       )
     } finally {
       setSendingChatMessage(false)
+    }
+  }
+
+  const handleDeleteChatMessage = async (messageId: string) => {
+    if (!invitation || !isHost) {
+      return
+    }
+    if (!window.confirm('Obrisati ovu poruku?')) {
+      return
+    }
+    setDeletingChatId(messageId)
+    setChatError('')
+    try {
+      await deleteInvitationChatMessage(invitation.id, messageId, user ?? undefined)
+      setChatMessages((list) => list.filter((m) => m.id !== messageId))
+    } catch (caughtError) {
+      setChatError(
+        isApiError(caughtError, 403)
+          ? 'Samo organizator može obrisati poruke.'
+          : isApiError(caughtError, 404)
+            ? 'Poruka nije pronađena.'
+            : 'Brisanje poruke nije uspjelo.',
+      )
+    } finally {
+      setDeletingChatId(null)
     }
   }
 
@@ -2439,6 +2461,9 @@ export default function SharedInvitationPage() {
                           sending={sendingChatMessage}
                           onDraftChange={setChatDraft}
                           onSend={handleSendChatMessage}
+                          canDeleteMessages
+                          deletingMessageId={deletingChatId}
+                          onDeleteMessage={handleDeleteChatMessage}
                           senderLabelHint={{
                             profileParentName: familyProfile?.profile?.parentName?.trim() || undefined,
                             sessionDisplayName: session?.displayName?.trim() || undefined,

@@ -260,8 +260,8 @@ export const RSVP_MOOD_OPTIONS = [
   {
     id: 'birtija',
     label: 'Birtija',
-    description: 'Nazdravlje s pivom, bik za „možda”, magarac za „ne”.',
-    symbols: { going: '🍻', maybe: '🐂', not_going: '🫏' },
+    description: 'Nazdravlje s pivom, bik za „možda”, konj (🐴) za „ne” — bolje iscrtavanje od magarca na starijim fontovima.',
+    symbols: { going: '🍻', maybe: '🐂', not_going: '🐴' },
   },
   {
     id: 'lica',

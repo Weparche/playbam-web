@@ -37,11 +37,15 @@ export function useInvitationTitleAutoFit(
         const section = frame.closest?.('.pb-inviteHero') as HTMLElement | null
         const isBirthTab = section?.getAttribute('data-theme-tab') === 'birth'
         const card = frame.closest?.('.pb-inviteCard--storybook') as HTMLElement | null
-        const isPublicInvite = Boolean(card && !card.classList.contains('pb-inviteCard--guestPrivate'))
-        const isMobile = window.innerWidth <= 640
-        /* Mobile: +30% za rođenje; javni dio pozivnice s najvećim (lg) naslovom. */
-        const mobileTitleBoost =
-          isMobile && (isBirthTab || (isPublicInvite && titleSize === 'lg')) ? 1.3 : 1
+        /* Stvarna stranica pozivnice (/pozivnica/) — nije ugrađeni create pregled. Uključuje i
+         * gostu „privatni” card (desni stupac) – `guestPrivate` je isti hero kao javni, samo s drugačijim labelom. */
+        const inCreatePreview = Boolean(frame.closest?.('.pb-createLivePreview'))
+        const isOnLiveInvitePage =
+          Boolean(card) && !inCreatePreview && Boolean(frame.closest?.('.pb-invitePage'))
+        /* Usklađeno s mobilnim breakovima na invite stranici (np. 979px). */
+        const isNarrow = window.innerWidth <= 979
+        /* +30%: rođenje; ili bilo koji md/lg/sm naslov na stvarnoj (ne-editor) pozivnici. */
+        const mobileTitleBoost = isNarrow && (isBirthTab || isOnLiveInvitePage) ? 1.3 : 1
         maxBoxPx = Math.min(frame.clientHeight * 0.3 * mobileTitleBoost, 168 * mobileTitleBoost)
       } else if (wrap && wrap.clientHeight > 16) {
         maxBoxPx = Math.min(wrap.clientHeight * 0.42, 112)

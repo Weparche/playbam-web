@@ -19,6 +19,8 @@ export function useInvitationTitleAutoFit(
   titleSize: TitleSize,
   deps: DependencyList,
 ) {
+  void titleSize
+
   useLayoutEffect(() => {
     const el = titleRef.current
     if (!el) {

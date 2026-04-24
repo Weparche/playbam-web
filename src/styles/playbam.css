@@ -1464,6 +1464,41 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   font-size: 0.8125rem;
 }
 
+.pb-authMethodButton.pb-btn-ghost {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(22, 24, 35, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  color: rgba(16, 24, 40, 0.88);
+}
+
+.pb-authMethodButton.pb-btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(30, 123, 230, 0.2);
+}
+
+.pb-authMethodDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: rgba(16, 24, 40, 0.5);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pb-authMethodDivider::before,
+.pb-authMethodDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(22, 24, 35, 0.12);
+}
+
 .pb-summaryCard--modal {
   margin-bottom: 14px;
 }

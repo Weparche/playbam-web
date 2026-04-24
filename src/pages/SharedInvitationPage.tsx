@@ -44,6 +44,7 @@ import {
   isApiError,
   listMembershipRequests,
   proxyImageUrl,
+  readGoogleAuthCallbackState,
   updateInvitation,
   reserveInvitationWishlistItem,
   reviewMembershipRequest,
@@ -433,6 +434,14 @@ export default function SharedInvitationPage() {
       parentName: user?.parentName ?? '',
     })
   }, [user])
+
+  useEffect(() => {
+    const callbackState = readGoogleAuthCallbackState()
+    if (callbackState.status === 'callback' && callbackState.modal === 'guest') {
+      setGuestModalOpen(true)
+      setAuthError('')
+    }
+  }, [])
 
   useEffect(() => {
     setHostToken(readStoredHostToken())

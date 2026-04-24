@@ -32,12 +32,13 @@ import Footer from '../components/layout/Footer'
 import Navbar from '../components/landing/Navbar'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
-import { createInvitation, createInvitationWishlistItem, type InvitationWishlistPayload } from '../lib/invitationApi'
+import { createInvitation, createInvitationWishlistItem, readGoogleAuthCallbackState, type InvitationWishlistPayload } from '../lib/invitationApi'
 import { readStoredHostToken, writeStoredHostToken } from '../lib/hostWebSession'
 import { writeStoredTemporaryIdentity } from '../lib/tempWebIdentity'
 import { useAuth } from '../context/AuthContext'
 
 const LOCAL_STORAGE_KEY = 'playbam.quick-create.draft'
+const CREATE_AFTER_LOGIN_KEY = 'playbam.create.after-login'
 const DEV_HOST_AUTH_TOKEN =
   typeof import.meta.env.VITE_DEV_HOST_AUTH_TOKEN === 'string'
     ? import.meta.env.VITE_DEV_HOST_AUTH_TOKEN.trim()
@@ -160,6 +161,13 @@ export default function CreateInvitationPage() {
 
     return () => window.clearTimeout(timeoutId)
   }, [draft])
+
+  useEffect(() => {
+    const callbackState = readGoogleAuthCallbackState()
+    if (callbackState.status === 'callback' && callbackState.modal === 'otp') {
+      setLoginOpen(true)
+    }
+  }, [])
 
   const autosaveLabel = saveState === 'saving' ? 'Spremam lokalno…' : 'Spremljeno lokalno'
 
@@ -317,6 +325,9 @@ export default function CreateInvitationPage() {
 
     if (!session) {
       continueCreateAfterLoginRef.current = true
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.setItem(CREATE_AFTER_LOGIN_KEY, '1')
+      }
       setLoginOpen(true)
       return
     }
@@ -488,17 +499,26 @@ export default function CreateInvitationPage() {
         open={loginOpen}
         onSuccess={() => {
           setLoginOpen(false)
-          if (continueCreateAfterLoginRef.current) {
-            continueCreateAfterLoginRef.current = false
+          const shouldContinue =
+            continueCreateAfterLoginRef.current ||
+            (typeof window !== 'undefined' && window.sessionStorage.getItem(CREATE_AFTER_LOGIN_KEY) === '1')
+          continueCreateAfterLoginRef.current = false
+          if (typeof window !== 'undefined') {
+            window.sessionStorage.removeItem(CREATE_AFTER_LOGIN_KEY)
+          }
+          if (shouldContinue) {
             void submitInvitation()
           }
         }}
         onClose={() => {
           continueCreateAfterLoginRef.current = false
+          if (typeof window !== 'undefined') {
+            window.sessionStorage.removeItem(CREATE_AFTER_LOGIN_KEY)
+          }
           setLoginOpen(false)
         }}
       />
-      <Navbar opaque />
+      <Navbar opaque onLoginClick={() => setLoginOpen(true)} />
       <main className="pb-main pb-main--createV2">
         <InvitationCreateShell
           autosaveLabel={autosaveLabel}

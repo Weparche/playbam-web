@@ -743,6 +743,17 @@ export type UnfurlResult = {
   favicon: string | null
 }
 
+export type GoogleAuthModal = 'otp' | 'guest'
+
+type GoogleAuthCallbackState =
+  | { status: 'idle' }
+  | {
+      status: 'callback'
+      modal: GoogleAuthModal
+      error: string | null
+      session: VidimoseSession | null
+    }
+
 export async function unfurlLink(url: string): Promise<UnfurlResult> {
   const response = await fetch(`${API_BASE}/api/unfurl?url=${encodeURIComponent(url)}`)
   if (!response.ok) {
@@ -797,6 +808,117 @@ export async function verifyOtp(email: string, code: string): Promise<VidimoseSe
 
 export async function authGetMe(): Promise<VidimoseSession> {
   return request('/api/auth/me', { identity: null })
+}
+
+function getGoogleAuthCallbackUrl(modal: GoogleAuthModal, extraParams?: Record<string, string>) {
+  if (typeof window === 'undefined') {
+    return ''
+  }
+
+  const callbackUrl = new URL(window.location.href)
+  callbackUrl.searchParams.set('pbAuthProvider', 'google')
+  callbackUrl.searchParams.set('pbAuthModal', modal)
+  callbackUrl.searchParams.set('pbAuthResult', 'callback')
+
+  if (extraParams) {
+    for (const [key, value] of Object.entries(extraParams)) {
+      if (!value) {
+        callbackUrl.searchParams.delete(key)
+      } else {
+        callbackUrl.searchParams.set(key, value)
+      }
+    }
+  }
+
+  return callbackUrl.toString()
+}
+
+export function startGoogleAuth(modal: GoogleAuthModal, extraParams?: Record<string, string>) {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const startUrl = new URL(`${API_BASE}/api/auth/google/start`, window.location.origin)
+  startUrl.searchParams.set('returnTo', getGoogleAuthCallbackUrl(modal, extraParams))
+  window.location.assign(startUrl.toString())
+}
+
+export function readGoogleAuthCallbackState(): GoogleAuthCallbackState {
+  if (typeof window === 'undefined') {
+    return { status: 'idle' }
+  }
+
+  const url = new URL(window.location.href)
+  const provider = url.searchParams.get('pbAuthProvider')
+  const result = url.searchParams.get('pbAuthResult')
+  const modal = url.searchParams.get('pbAuthModal')
+
+  if (provider !== 'google' || result !== 'callback' || (modal !== 'otp' && modal !== 'guest')) {
+    return { status: 'idle' }
+  }
+
+  const token = (url.searchParams.get('pbAuthToken') || '').trim()
+  const email = (url.searchParams.get('pbAuthEmail') || '').trim()
+  const displayName = (url.searchParams.get('pbAuthDisplayName') || '').trim()
+  const error = (url.searchParams.get('pbAuthError') || '').trim() || null
+
+  return {
+    status: 'callback',
+    modal,
+    error,
+    session: token && email
+      ? {
+          token,
+          email,
+          displayName,
+        }
+      : null,
+  }
+}
+
+export async function completeGoogleAuth(callbackState?: GoogleAuthCallbackState): Promise<VidimoseSession> {
+  const resolvedState = callbackState ?? readGoogleAuthCallbackState()
+  if (resolvedState.status !== 'callback') {
+    throw new Error('GOOGLE_AUTH_CALLBACK_MISSING')
+  }
+  if (resolvedState.error) {
+    throw new Error(resolvedState.error)
+  }
+  if (resolvedState.session) {
+    return resolvedState.session
+  }
+  return authGetMe()
+}
+
+export function clearGoogleAuthCallbackState() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const url = new URL(window.location.href)
+  const keys = [
+    'pbAuthProvider',
+    'pbAuthModal',
+    'pbAuthResult',
+    'pbAuthError',
+    'pbAuthToken',
+    'pbAuthEmail',
+    'pbAuthDisplayName',
+    'pbAuthAction',
+  ]
+
+  let changed = false
+  for (const key of keys) {
+    if (url.searchParams.has(key)) {
+      url.searchParams.delete(key)
+      changed = true
+    }
+  }
+
+  if (changed) {
+    const nextUrl = `${url.pathname}${url.search}${url.hash}`
+    window.history.replaceState({}, document.title, nextUrl)
+  }
 }
 
 export type AdminInvitationRow = {

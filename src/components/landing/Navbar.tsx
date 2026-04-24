@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { readGoogleAuthCallbackState } from '../../lib/invitationApi'
 import OtpLoginModal from '../auth/OtpLoginModal'
 
 type NavItem = { label: string } & ({ href: string; to?: never } | { to: string; href?: never })
@@ -11,7 +12,13 @@ const navItems: NavItem[] = [
   { label: 'Česta pitanja', href: '/#cesta-pitanja' },
 ]
 
-export default function Navbar({ opaque = false }: { opaque?: boolean }) {
+export default function Navbar({
+  opaque = false,
+  onLoginClick,
+}: {
+  opaque?: boolean
+  onLoginClick?: () => void
+}) {
   const { session, logout } = useAuth()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -24,6 +31,23 @@ export default function Navbar({ opaque = false }: { opaque?: boolean }) {
   }, [])
 
   const closeMobile = useCallback(() => setMobileOpen(false), [])
+  const openLogin = useCallback(() => {
+    if (onLoginClick) {
+      onLoginClick()
+      return
+    }
+    setLoginOpen(true)
+  }, [onLoginClick])
+
+  useEffect(() => {
+    if (onLoginClick) {
+      return
+    }
+    const callbackState = readGoogleAuthCallbackState()
+    if (callbackState.status === 'callback' && callbackState.modal === 'otp') {
+      setLoginOpen(true)
+    }
+  }, [onLoginClick])
 
   return (
     <>
@@ -65,7 +89,7 @@ export default function Navbar({ opaque = false }: { opaque?: boolean }) {
                 </button>
               </div>
             ) : (
-              <button type="button" className="ew-navbar__auth-btn ew-navbar__auth-btn--login" onClick={() => setLoginOpen(true)}>
+              <button type="button" className="ew-navbar__auth-btn ew-navbar__auth-btn--login" onClick={openLogin}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                 Prijava
               </button>
@@ -77,18 +101,20 @@ export default function Navbar({ opaque = false }: { opaque?: boolean }) {
               Moj VidimoSe
             </Link>
           ) : (
-            <button type="button" className="ew-navbar__cta ew-navbar__cta--mobileBar" onClick={() => setLoginOpen(true)}>
+            <button type="button" className="ew-navbar__cta ew-navbar__cta--mobileBar" onClick={openLogin}>
               Prijava
             </button>
           )}
         </div>
       </header>
 
-      <OtpLoginModal
-        open={loginOpen}
-        onSuccess={() => setLoginOpen(false)}
-        onClose={() => setLoginOpen(false)}
-      />
+      {!onLoginClick ? (
+        <OtpLoginModal
+          open={loginOpen}
+          onSuccess={() => setLoginOpen(false)}
+          onClose={() => setLoginOpen(false)}
+        />
+      ) : null}
 
       {mobileOpen && (
         <div className="ew-navbar__sheet" role="dialog" aria-modal="true" aria-label="Navigacija">
@@ -118,7 +144,7 @@ export default function Navbar({ opaque = false }: { opaque?: boolean }) {
                 </button>
               </>
             ) : (
-              <button type="button" className="ew-navbar__sheet-link ew-navbar__sheet-link--auth" onClick={() => { closeMobile(); setLoginOpen(true) }}>
+              <button type="button" className="ew-navbar__sheet-link ew-navbar__sheet-link--auth" onClick={() => { closeMobile(); openLogin() }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                 Prijava
               </button>

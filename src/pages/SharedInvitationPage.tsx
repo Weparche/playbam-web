@@ -24,7 +24,7 @@ import Footer from '../components/layout/Footer'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import PrivateToggleChevron from '../components/ui/PrivateToggleChevron'
-import PrivateToggleUnreadBadge from '../components/ui/PrivateToggleUnreadBadge'
+import PrivateToggleSectionCounts from '../components/ui/PrivateToggleSectionCounts'
 import { useAuth } from '../context/AuthContext'
 import {
   buildFamilyProfilePayload,
@@ -564,6 +564,15 @@ export default function SharedInvitationPage() {
   const hostWishlistContributorLabel = useMemo(
     () => familyProfile?.profile?.parentName?.trim() || session?.displayName?.trim() || null,
     [familyProfile, session],
+  )
+
+  const organizerSessionLabel = useMemo(
+    () =>
+      familyProfile?.profile?.parentName?.trim() ||
+      user?.parentName?.trim() ||
+      session?.displayName?.trim() ||
+      null,
+    [familyProfile, user?.parentName, session?.displayName],
   )
 
   useEffect(() => {
@@ -1904,7 +1913,9 @@ export default function SharedInvitationPage() {
               {user && !showHostStudio ? (
                 <div className="pb-inviteSessionBar">
                   <span className="pb-inviteSessionBar__text">
-                    {isHost ? `Organizator: ${user.email}` : `Gost: ${user.parentName || user.email}`}
+                    {isHost
+                      ? `Organizator: ${organizerSessionLabel || '—'}`
+                      : `Gost: ${user.parentName || user.email}`}
                   </span>
                   <Button variant="ghost" onClick={handleUserLogout}>
                     Odjavi se
@@ -2027,7 +2038,7 @@ export default function SharedInvitationPage() {
                 <div className="pb-hostStudioShell">
                   <div className="pb-inviteSessionBar pb-inviteSessionBar--host">
                     <span className="pb-inviteSessionBar__text">
-                      {user ? `Organizator: ${user.email}` : 'Organizator: host pristup aktivan'}
+                      {user ? `Organizator: ${organizerSessionLabel || '—'}` : 'Organizator: host pristup aktivan'}
                     </span>
                     <Button variant="ghost" onClick={user ? handleUserLogout : handleHostLogout}>
                       {user ? 'Odjavi se' : 'Odjavi host pristup'}
@@ -2245,7 +2256,11 @@ export default function SharedInvitationPage() {
                         <span className="pb-privateToggle__title">Zahtjevi za pristup</span>
                       </span>
                       <span className="pb-privateToggle__trail">
-                        <PrivateToggleUnreadBadge count={hostRequestsUnreadCount} />
+                        <PrivateToggleSectionCounts
+                          total={hostRequests.length}
+                          newCount={hostRequestsUnreadCount}
+                          segmentLabel="zahtjeva"
+                        />
                         <span className="pb-privateToggle__arrow" aria-hidden>
                           <PrivateToggleChevron />
                         </span>
@@ -2281,7 +2296,11 @@ export default function SharedInvitationPage() {
                         <span className="pb-privateToggle__title">Lista želja</span>
                       </span>
                       <span className="pb-privateToggle__trail">
-                        <PrivateToggleUnreadBadge count={hostWishlistUnreadCount} />
+                        <PrivateToggleSectionCounts
+                          total={wishlistItems.length}
+                          newCount={hostWishlistUnreadCount}
+                          segmentLabel="želja"
+                        />
                         <span className="pb-privateToggle__arrow" aria-hidden>
                           <PrivateToggleChevron />
                         </span>
@@ -2347,6 +2366,8 @@ export default function SharedInvitationPage() {
                             }}
                             onDelete={handleWishlistDelete}
                             onReleaseReservation={handleHostReleaseReservation}
+                            organizerParentName={hostWishlistContributorLabel}
+                            organizerAccountEmail={session?.email?.trim() || user?.email?.trim() || null}
                           />
                         ) : null}
 
@@ -2461,7 +2482,11 @@ export default function SharedInvitationPage() {
                         <span className="pb-privateToggle__title">Live chat</span>
                       </span>
                       <span className="pb-privateToggle__trail">
-                        <PrivateToggleUnreadBadge count={hostChatUnreadCount} />
+                        <PrivateToggleSectionCounts
+                          total={chatMessages.length}
+                          newCount={hostChatUnreadCount}
+                          segmentLabel="poruka"
+                        />
                         <span className="pb-privateToggle__arrow" aria-hidden>
                           <PrivateToggleChevron />
                         </span>
@@ -2485,6 +2510,8 @@ export default function SharedInvitationPage() {
                             profileParentName: familyProfile?.profile?.parentName?.trim() || undefined,
                             sessionDisplayName: session?.displayName?.trim() || undefined,
                             accountEmail: session?.email?.trim() || user?.email?.trim() || undefined,
+                            hostParentName: familyProfile?.profile?.parentName?.trim() || undefined,
+                            hostAccountEmail: session?.email?.trim() || user?.email?.trim() || undefined,
                           }}
                         />
                       </div>
@@ -2826,6 +2853,8 @@ function HostWishlistSection({
   onEdit,
   onDelete,
   onReleaseReservation,
+  organizerParentName,
+  organizerAccountEmail,
 }: {
   items: InvitationWishlistItem[]
   actionItemId: string | null
@@ -2833,18 +2862,22 @@ function HostWishlistSection({
   onEdit: (item: InvitationWishlistItem) => void
   onDelete: (item: InvitationWishlistItem) => void
   onReleaseReservation: (item: InvitationWishlistItem) => void
+  organizerParentName: string | null
+  organizerAccountEmail: string | null
 }) {
   return (
     <div className="pb-wishlist">
       {items.map((item) => {
         const isBusy = actionItemId === item.id
         const hasActiveReservation = item.reservation.status === 'active'
+        const addedByLabel = formatWishlistAddedBy(item.addedByName, organizerParentName, organizerAccountEmail)
 
         return (
           <div key={item.id} className="pb-wishlistItem">
             <div>
               <div className="pb-wishlistItem__title">{item.title}</div>
               {item.description ? <div className="pb-wishlistItem__meta">{item.description}</div> : null}
+              {addedByLabel ? <div className="pb-wishlistItem__meta">Na listu dodao/la: {addedByLabel}</div> : null}
               {item.priceLabel ? <div className="pb-wishlistItem__meta">Cijena: {item.priceLabel}</div> : null}
               {item.url ? (
                 <div className="pb-wishlistItem__meta">
@@ -2924,6 +2957,37 @@ function groupHostRequestsByRsvpClean(requests: MembershipRequest[]) {
   ].filter((group) => group.requests.length > 0)
 }
 
+function isProbablyEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
+}
+
+function formatWishlistAddedBy(
+  addedByName: string | null | undefined,
+  organizerParentName: string | null | undefined,
+  organizerAccountEmail: string | null | undefined,
+) {
+  const raw = addedByName?.trim() || ''
+  if (!raw) return null
+  const org = organizerParentName?.trim()
+  const em = organizerAccountEmail?.trim()
+  if (em && raw.toLowerCase() === em.toLowerCase()) return org || 'Organizator'
+  if (org && raw.toLowerCase() === org.toLowerCase()) return org
+  if (isProbablyEmail(raw)) return org || 'Organizator'
+  return raw
+}
+
+function membershipRequestParentLabel(request: MembershipRequest) {
+  const fromProfile = request.familyProfile?.parentName?.trim()
+  if (fromProfile) {
+    return fromProfile
+  }
+  const display = request.user?.displayName?.trim()
+  if (display && !isProbablyEmail(display)) {
+    return display
+  }
+  return 'Nepoznata obitelj'
+}
+
 function getGuestGiftSummaries(request: MembershipRequest, wishlistItems: InvitationWishlistItem[]) {
   return wishlistItems
     .filter(
@@ -2973,7 +3037,7 @@ function HostRequestListV2({
           <div className="pb-hostRequests">
             {group.requests.map((request) => {
               const isBusy = reviewingRequestId === request.id
-              const parentName = request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'
+              const parentName = membershipRequestParentLabel(request)
               const childrenText = isBirthInvitation
                 ? ''
                 : request.children
@@ -3076,7 +3140,7 @@ function HostGuestModal({
   onRemove: () => void
 }) {
   const giftSummaries = getGuestGiftSummaries(request, wishlistItems)
-  const parentName = request.familyProfile?.parentName ?? request.user?.displayName ?? 'Nepoznata obitelj'
+  const parentName = membershipRequestParentLabel(request)
   const childrenText = isBirthInvitation
     ? ''
     : request.children

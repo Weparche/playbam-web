@@ -4,7 +4,7 @@ import InvitationLiveChatPanel, { type ChatSenderLabelHint } from './InvitationL
 import WishlistTipPaymentSection from './WishlistTipPaymentSection'
 import Button from '../ui/Button'
 import PrivateToggleChevron from '../ui/PrivateToggleChevron'
-import PrivateToggleUnreadBadge from '../ui/PrivateToggleUnreadBadge'
+import PrivateToggleSectionCounts from '../ui/PrivateToggleSectionCounts'
 import {
   countUnreadChatForGuest,
   countUnreadWishlistForGuest,
@@ -278,6 +278,9 @@ export default function PrivateInvitationGuest({
     [wishlistItems, guestPrivateReadAt.wishlist, currentGuestName],
   )
 
+  const guestWishlistTotalCount = wishlistItems.length
+  const guestChatTotalCount = chatMessages.length
+
   const selectedWishImageUrl = selectedWishItem ? resolveWishlistImageUrl(selectedWishItem) : null
   const selectedWishPurchaseLabel = selectedWishItem ? wishlistPurchaseLabel(selectedWishItem) : null
   const selectedVenueImageUrl = selectedVenueImageIndex !== null ? VENUE_GALLERY[selectedVenueImageIndex] : null
@@ -350,11 +353,15 @@ export default function PrivateInvitationGuest({
             aria-expanded={wishlistOpen}
           >
             <span className="pb-privateToggle__copy">
-              <span className="pb-privateToggle__eyebrow">Privatni sadržaj</span>
+              <span className="pb-privateToggle__eyebrow">Organizator</span>
               <span className="pb-privateToggle__title">Lista želja</span>
             </span>
             <span className="pb-privateToggle__trail">
-              <PrivateToggleUnreadBadge count={guestWishlistUnreadCount} />
+              <PrivateToggleSectionCounts
+                total={guestWishlistTotalCount}
+                newCount={guestWishlistUnreadCount}
+                segmentLabel="želja"
+              />
               <span className="pb-privateToggle__arrow" aria-hidden>
                 <PrivateToggleChevron />
               </span>
@@ -555,11 +562,15 @@ export default function PrivateInvitationGuest({
             aria-expanded={chatOpen}
           >
             <span className="pb-privateToggle__copy">
-              <span className="pb-privateToggle__eyebrow">Privatni sadržaj</span>
+              <span className="pb-privateToggle__eyebrow">Organizator</span>
               <span className="pb-privateToggle__title">Live chat</span>
             </span>
             <span className="pb-privateToggle__trail">
-              <PrivateToggleUnreadBadge count={guestChatUnreadCount} />
+              <PrivateToggleSectionCounts
+                total={guestChatTotalCount}
+                newCount={guestChatUnreadCount}
+                segmentLabel="poruka"
+              />
               <span className="pb-privateToggle__arrow" aria-hidden>
                 <PrivateToggleChevron />
               </span>

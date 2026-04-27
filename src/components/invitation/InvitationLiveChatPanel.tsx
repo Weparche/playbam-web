@@ -3,9 +3,13 @@ import Button from '../ui/Button'
 import type { InvitationChatMessage } from '../../lib/invitationApi'
 
 export type ChatSenderLabelHint = {
+  /** Profil trenutnog korisnika (npr. gost — za zamjenu vlastitog e-maila u prikazu). */
   profileParentName?: string
   sessionDisplayName?: string
   accountEmail?: string
+  /** Organizator pozivnice (kad je poznat) — za poruke uloge host kad `senderName` još uvijek drži e-mail. */
+  hostParentName?: string
+  hostAccountEmail?: string
 }
 
 type Props = {
@@ -23,12 +27,37 @@ type Props = {
   deletingMessageId?: string | null
 }
 
+function looksLikeEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
+}
+
 function resolveChatSenderLabel(message: InvitationChatMessage, hint?: ChatSenderLabelHint) {
   const roleFallback = message.senderRole === 'host' ? 'Organizator' : 'Gost'
-  const raw = message.senderName?.trim()
+  const raw = message.senderName?.trim() || ''
   const profileName = hint?.profileParentName?.trim()
   const sessionName = hint?.sessionDisplayName?.trim()
   const email = hint?.accountEmail?.trim()
+  const hostParent = hint?.hostParentName?.trim()
+  const hostEmail = hint?.hostAccountEmail?.trim()
+
+  if (message.senderRole === 'host') {
+    if (hostParent && hostEmail && raw.toLowerCase() === hostEmail.toLowerCase()) {
+      return hostParent
+    }
+    if (hostParent && sessionName && raw === sessionName) {
+      return hostParent
+    }
+    if (profileName && email && raw.toLowerCase() === email.toLowerCase()) {
+      return profileName
+    }
+    if (profileName && sessionName && raw === sessionName) {
+      return profileName
+    }
+    if (raw && looksLikeEmail(raw)) {
+      return hostParent || 'Organizator'
+    }
+    return raw || hostParent || profileName || roleFallback
+  }
 
   if (
     profileName &&

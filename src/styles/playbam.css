@@ -8,6 +8,7 @@ html, body { scrollbar-gutter: stable; }
   min-width: 0;
   overflow-x: hidden;
   overflow-x: clip;
+  scroll-margin-top: var(--app-navbar-height);
   background: radial-gradient(
       900px 440px at 15% 0%,
       rgba(30, 123, 230, 0.1),
@@ -864,7 +865,7 @@ html, body { scrollbar-gutter: stable; }
   min-width: 0;
   box-sizing: border-box;
   /* Horizontalno 0: PNG ide rub do ruba kao na webu; padding samo u .pb-container */
-  padding: 104px 0 40px;
+  padding: calc(var(--app-navbar-height) + 1.5rem) 0 40px;
   background: var(--color-bg-primary, #F3EDE3);
   font-family: var(--invite-font);
   overflow-x: hidden;
@@ -2769,7 +2770,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 .pb-accountPage,
 .pb-adminPage {
   min-height: 70vh;
-  padding: 2rem 0 3rem;
+  padding: calc(var(--app-navbar-height) + 2rem) 0 3rem;
 }
 
 .pb-accountPage__container,
@@ -3066,7 +3067,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-createShell__progressSticky {
   position: sticky;
-  top: 76px;
+  top: calc(var(--app-navbar-height) + 0.5rem);
   z-index: 52;
   display: flex;
   justify-content: center;
@@ -3363,6 +3364,39 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 .pb-privateToggle__badge--zero {
   background: rgba(239, 68, 68, 0.15);
   color: rgb(185, 28, 28);
+}
+
+.pb-privateToggle__countGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.pb-privateToggle__count {
+  box-sizing: border-box;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.32rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.pb-privateToggle__count--total {
+  background: rgba(59, 130, 246, 0.2);
+  color: rgb(29, 78, 216);
+}
+
+.pb-privateToggle__count--new {
+  background: rgba(34, 197, 94, 0.24);
+  color: rgb(21, 128, 61);
 }
 
 .pb-privateToggle__arrow {
@@ -5717,7 +5751,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 /* Quick Create v2 */
 .pb-main--createV2 {
-  padding-top: 104px;
+  padding-top: calc(var(--app-navbar-height) + 1rem);
   --pb-create-rail-button-width: 4.9rem;
   --pb-create-rail-button-height: 5.35rem;
   --pb-create-rail-icon-size: 1.72rem;
@@ -8522,7 +8556,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 
   .pb-createShell__progressSticky {
-    top: 58px;
+    top: calc(var(--app-navbar-height) + 0.35rem);
     margin-top: 0.55rem;
   }
 

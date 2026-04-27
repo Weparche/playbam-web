@@ -178,7 +178,7 @@ export default function MojVidimosePage() {
   return (
     <>
       <Navbar opaque />
-      <main className="pb-main pb-main--demo pb-accountPage" id="main">
+      <main className="pb-main pb-accountPage" id="main">
         <Container size="narrow" className="pb-accountPage__container">
           <header className="pb-accountPage__header">
             <span className="pb-accountPage__eyebrow">Račun</span>

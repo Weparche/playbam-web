@@ -169,7 +169,7 @@ export default function VenueDetailPage() {
                         to={`/kreiraj-pozivnicu?igraonica=${encodeURIComponent(venue.name)}&paket=${encodeURIComponent(pkg.name)}`}
                         className={i === 1 ? 'ew-btn-primary' : 'ew-btn-secondary'}
                       >
-                        Kreiraj pozivnicu za ovaj paket
+                        Kreiraj pozivnicu s ovim paketom
                       </Link>
                     </div>
                   ))}
@@ -228,7 +228,7 @@ export default function VenueDetailPage() {
                   to={`/kreiraj-pozivnicu?igraonica=${encodeURIComponent(venue.name)}&adresa=${encodeURIComponent(venue.address)}`}
                   className="ew-btn-primary ew-vd-sidebar__cta"
                 >
-                  Kreiraj pozivnicu za ovu igraonicu
+                  Kreiraj pozivnicu s ovom lokacijom
                 </Link>
 
                 <div className="ew-vd-sidebar__meta-row">
@@ -257,7 +257,7 @@ export default function VenueDetailPage() {
               to={`/kreiraj-pozivnicu?igraonica=${encodeURIComponent(venue.name)}&adresa=${encodeURIComponent(venue.address)}`}
               className="ew-btn-primary"
             >
-              Kreiraj pozivnicu za {venue.name}
+              Kreiraj pozivnicu s ovom lokacijom
             </Link>
           </div>
         </section>

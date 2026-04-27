@@ -16,31 +16,7 @@ import type { TemporaryWebIdentity } from '../../lib/tempWebIdentity'
 import { writeStoredSession } from '../../lib/vidimoseSession'
 import Button from '../ui/Button'
 import FamilyProfileForm, { type FamilyProfileDraft } from './FamilyProfileForm'
-
-export type GuestModalStep = 'login' | 'profile' | 'request' | 'waiting'
-
-export function getGuestModalStep(
-  invitation: { id: string } | null,
-  isHost: boolean,
-  hasPrivateAccess: boolean,
-  user: { email: string } | null,
-  hasFamilyProfile: boolean,
-  membershipRequest: MembershipRequest | null,
-): GuestModalStep | null {
-  if (!invitation || isHost || hasPrivateAccess) {
-    return null
-  }
-  if (!user) {
-    return 'login'
-  }
-  if (!hasFamilyProfile) {
-    return 'profile'
-  }
-  if (membershipRequest?.status === 'pending') {
-    return 'waiting'
-  }
-  return 'request'
-}
+import type { GuestModalStep } from './guestModalStep'
 
 type Props = {
   open: boolean
@@ -232,6 +208,13 @@ export default function GuestInvitationModal({
           .map((child) => `${child.name || '—'}${child.age != null ? ` (${child.age})` : ''}`)
           .join(', ')
       : 'Bez prijavljene djece'
+  const modalSteps: { id: GuestModalStep; label: string }[] = [
+    { id: 'login', label: 'Prijava' },
+    { id: 'profile', label: isBirthInvitation ? 'Podaci' : 'Obitelj' },
+    { id: 'request', label: 'Zahtjev' },
+    { id: 'waiting', label: 'Odobrenje' },
+  ]
+  const activeStepIndex = Math.max(modalSteps.findIndex((item) => item.id === step), 0)
 
   return (
     <div className="pb-modalOverlay" role="presentation">
@@ -249,6 +232,22 @@ export default function GuestInvitationModal({
             ×
           </button>
         </div>
+        <ol className="pb-modalSteps" aria-label="Koraci pristupa privatnom dijelu">
+          {modalSteps.map((item, index) => (
+            <li
+              key={item.id}
+              className={[
+                'pb-modalSteps__item',
+                index < activeStepIndex ? 'is-complete' : '',
+                index === activeStepIndex ? 'is-active' : '',
+              ].filter(Boolean).join(' ')}
+              aria-current={index === activeStepIndex ? 'step' : undefined}
+            >
+              <span className="pb-modalSteps__dot">{index + 1}</span>
+              <span>{item.label}</span>
+            </li>
+          ))}
+        </ol>
 
         <div className="pb-modalDialog__body">
           {step === 'login' && loginSubStep === 'method_select' ? (

@@ -17,7 +17,7 @@ export default function QuickThemeEditor({ draft, onThemeChange }: Props) {
   useEffect(() => {
     if (previousThemeRef.current !== activeTheme) {
       previousThemeRef.current = activeTheme
-      setActiveTab(getThemeTab(activeTheme))
+      queueMicrotask(() => setActiveTab(getThemeTab(activeTheme)))
     }
   }, [activeTheme])
 

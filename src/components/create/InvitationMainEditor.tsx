@@ -522,13 +522,11 @@ export default function InvitationMainEditor({
           </div>
           <div className="pb-createEditor__heroRsvpBlock">
             <span className="pb-createEditor__heroRsvpLabel">RSVP preview</span>
-            <div
+            <button
+              type="button"
               className="pb-createEditor__heroRsvpPreview"
-              role="button"
-              tabIndex={0}
               aria-label="Uredi RSVP ikone"
               onClick={() => onOpenShortcut('rsvp')}
-              onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('rsvp'))}
             >
               <div className="pb-createEditor__heroRsvpInner">
                 <div className="pb-previewCard__rsvpRow" aria-hidden="true">
@@ -544,7 +542,7 @@ export default function InvitationMainEditor({
                 </div>
                 <EditorChevron expanded={activeShortcut === 'rsvp'} />
               </div>
-            </div>
+            </button>
           </div>
         </div>
 

@@ -45,7 +45,7 @@ export default function Navbar({
     }
     const callbackState = readGoogleAuthCallbackState()
     if (callbackState.status === 'callback' && callbackState.modal === 'otp') {
-      setLoginOpen(true)
+      queueMicrotask(() => setLoginOpen(true))
     }
   }, [onLoginClick])
 

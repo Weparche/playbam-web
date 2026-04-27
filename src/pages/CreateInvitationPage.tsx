@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import OtpLoginModal from '../components/auth/OtpLoginModal'
 import InvitationCreateShell from '../components/create/InvitationCreateShell'
@@ -118,6 +119,7 @@ async function syncQuickCreateWishlist(invitationId: string, quickDraft: Invitat
 
 export default function CreateInvitationPage() {
   const { session } = useAuth()
+  const routeLocation = useLocation()
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [draft, setDraft] = useState<InvitationCreateDraft>(() => readStoredDraft())
   const [activeShortcut, setActiveShortcut] = useState<ShortcutId | null>(null)
@@ -138,6 +140,11 @@ export default function CreateInvitationPage() {
   if (!titleReady) missingSteps.push('naslov')
   if (!dateReady) missingSteps.push('datum i vrijeme')
   if (!locationReady) missingSteps.push('lokaciju')
+  const missingStepActions = [
+    !titleReady ? { label: 'Dodaj naslov', shortcut: null as ShortcutId | null } : null,
+    !dateReady ? { label: 'Dodaj datum', shortcut: 'dateTime' as ShortcutId } : null,
+    !locationReady ? { label: 'Dodaj lokaciju', shortcut: 'location' as ShortcutId } : null,
+  ].filter((item): item is { label: string; shortcut: ShortcutId | null } => Boolean(item))
 
   const footerHeadline = completedSteps === totalSteps
     ? 'Spremno za objavu'
@@ -183,6 +190,21 @@ export default function CreateInvitationPage() {
     setDraft((current) => ({ ...current, wishlistItems: items }))
   }
 
+  useEffect(() => {
+    const params = new URLSearchParams(routeLocation.search)
+    const venueName = params.get('igraonica')?.trim()
+    const venueAddress = params.get('adresa')?.trim()
+    if (!venueName && !venueAddress) {
+      return
+    }
+    setDraft((current) => ({
+      ...current,
+      locationName: venueName || current.locationName,
+      locationAddress: venueAddress || current.locationAddress,
+      locationType: venueName ? 'Igraonica / lokal' : current.locationType,
+    }))
+  }, [routeLocation.search])
+
   const handleShortcutClick = (shortcut: ShortcutId) => {
     setActiveShortcut((current) => {
       if (current !== shortcut) {
@@ -220,7 +242,7 @@ export default function CreateInvitationPage() {
       setPendingOpenLocationAfterDateTime(false)
       setActiveShortcut('location')
     }
-  }, [activeShortcut, draft.date, draft.time, draft.timeEnd, pendingOpenLocationAfterDateTime])
+  }, [activeShortcut, draft.date, draft.locationAddress, draft.locationName, draft.locationType, draft.time, draft.timeEnd, pendingOpenLocationAfterDateTime])
 
   const handleOpenScheduleDateTimeFlow = () => {
     dateTimeSnapshotRef.current = { date: draft.date, time: draft.time, timeEnd: draft.timeEnd }
@@ -495,6 +517,7 @@ export default function CreateInvitationPage() {
 
   return (
     <>
+      <a className="ew-skip-link" href="#main">Preskoči na sadržaj</a>
       <OtpLoginModal
         open={loginOpen}
         onSuccess={() => {
@@ -519,12 +542,32 @@ export default function CreateInvitationPage() {
         }}
       />
       <Navbar opaque onLoginClick={() => setLoginOpen(true)} />
-      <main className="pb-main pb-main--createV2">
+      <main id="main" className="pb-main pb-main--createV2">
         <InvitationCreateShell
           autosaveLabel={autosaveLabel}
           saveState={saveState}
           progressPercent={progressPercent}
           progressLabel={progressLabel}
+          missingStepActions={missingStepActions.length > 0 ? (
+            missingStepActions.map((step) => (
+              <button
+                key={step.label}
+                type="button"
+                className="pb-createShell__missingAction"
+                onClick={() => {
+                  if (step.shortcut) {
+                    handleShortcutClick(step.shortcut)
+                    return
+                  }
+                  document.querySelector<HTMLInputElement>('.pb-createEditor__titleInput')?.focus()
+                }}
+              >
+                {step.label}
+              </button>
+            ))
+          ) : (
+            <span className="pb-createShell__readyBadge">Sve spremno za objavu</span>
+          )}
           preview={(
             <div className="pb-createShell__previewStack">
               <h2 className="pb-createShell__previewLiveTitle">Live preview pozivnice</h2>
@@ -570,7 +613,7 @@ export default function CreateInvitationPage() {
             </div>
           </Card>
 
-          {formError ? <div className="pb-inlineNote pb-inlineNote--error">{formError}</div> : null}
+          {formError ? <div className="pb-inlineNote pb-inlineNote--error" role="alert">{formError}</div> : null}
         </InvitationCreateShell>
         {renderPanel()}
       </main>

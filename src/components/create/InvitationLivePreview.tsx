@@ -85,14 +85,19 @@ export default function InvitationLivePreview({
   useEffect(() => {
     let alive = true
     if (!isPrint || !qrTargetUrl) {
-      setQrDataUrl('')
-      setQrError(false)
+      queueMicrotask(() => {
+        if (!alive) return
+        setQrDataUrl('')
+        setQrError(false)
+      })
       return () => {
         alive = false
       }
     }
 
-    setQrError(false)
+    queueMicrotask(() => {
+      if (alive) setQrError(false)
+    })
     QRCode.toDataURL(qrTargetUrl, {
       errorCorrectionLevel: 'M',
       margin: 1,

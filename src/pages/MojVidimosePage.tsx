@@ -19,6 +19,8 @@ import {
 } from '../lib/invitationApi'
 import FamilyProfileForm, { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
 import Button from '../components/ui/Button'
+import Card from '../components/ui/Card'
+import Container from '../components/ui/Container'
 
 function formatDate(dateStr: string) {
   try {
@@ -176,12 +178,16 @@ export default function MojVidimosePage() {
   return (
     <>
       <Navbar opaque />
-      <main className="pb-main pb-main--demo" style={{ minHeight: '70vh' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 1rem' }}>
-          <h1 className="ew-h2" style={{ marginBottom: '2rem' }}>Moj VidimoSe</h1>
+      <main className="pb-main pb-main--demo pb-accountPage" id="main">
+        <Container size="narrow" className="pb-accountPage__container">
+          <header className="pb-accountPage__header">
+            <span className="pb-accountPage__eyebrow">Račun</span>
+            <h1 className="ew-h2">Moj VidimoSe</h1>
+            <p>Uredi obiteljski profil, prati svoje pozivnice i RSVP odgovore.</p>
+          </header>
 
-          {loading && <p>Učitavam...</p>}
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {loading && <Card className="pb-dashboardCard pb-dashboardCard--state">Učitavam tvoj račun...</Card>}
+          {error && <div className="pb-inlineNote pb-inlineNote--error" role="alert">{error}</div>}
           {!loading && actionError ? (
             <p className="pb-mojVidimose__actionError" role="alert">
               {actionError}
@@ -191,45 +197,50 @@ export default function MojVidimosePage() {
           {!loading && (
             <>
               {/* Profile section */}
-              <section style={{ marginBottom: '3rem' }}>
-                <div className="pb-flowCard" style={{ padding: '1.25rem 1.5rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <span style={{ color: 'var(--color-text-muted, #888)', minWidth: 130, fontSize: '0.875rem' }}>E-mail</span>
-                      <span style={{ fontWeight: 500 }}>{session?.email}</span>
+              <section className="pb-dashboardSection" aria-labelledby="account-profile-heading">
+                <Card className="pb-dashboardCard">
+                  <div className="pb-dashboardCard__head">
+                    <div>
+                      <span className="pb-dashboardCard__eyebrow">Profil</span>
+                      <h2 id="account-profile-heading" className="pb-dashboardCard__title">Obiteljski podaci</h2>
                     </div>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <span style={{ color: 'var(--color-text-muted, #888)', minWidth: 130, fontSize: '0.875rem' }}>Ime majke ili oca</span>
-                      <span style={{ fontWeight: 500 }}>{profile?.profile?.parentName || <em style={{ color: 'var(--color-text-muted,#888)' }}>nije upisano</em>}</span>
+                  </div>
+                  <dl className="pb-accountFacts">
+                    <div className="pb-accountFacts__row">
+                      <dt>E-mail</dt>
+                      <dd>{session?.email}</dd>
+                    </div>
+                    <div className="pb-accountFacts__row">
+                      <dt>Ime majke ili oca</dt>
+                      <dd>{profile?.profile?.parentName || <em>nije upisano</em>}</dd>
                     </div>
                     {profile && profile.children.length > 0 && profile.children.map((child) => (
-                      <div key={child.id} style={{ display: 'flex', gap: '0.5rem' }}>
-                        <span style={{ color: 'var(--color-text-muted, #888)', minWidth: 130, fontSize: '0.875rem' }}>Dijete</span>
-                        <span style={{ fontWeight: 500 }}>
+                      <div key={child.id} className="pb-accountFacts__row">
+                        <dt>Dijete</dt>
+                        <dd>
                           {child.name || '—'}
                           {child.age != null ? `, ${child.age} god.` : ''}
-                        </span>
+                        </dd>
                       </div>
                     ))}
                     {(!profile || profile.children.length === 0) && (
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <span style={{ color: 'var(--color-text-muted, #888)', minWidth: 130, fontSize: '0.875rem' }}>Dijete</span>
-                        <em style={{ color: 'var(--color-text-muted,#888)' }}>nije upisano</em>
+                      <div className="pb-accountFacts__row">
+                        <dt>Dijete</dt>
+                        <dd><em>nije upisano</em></dd>
                       </div>
                     )}
-                  </div>
+                  </dl>
 
                   {!addingChild && (
-                    <div style={{ marginTop: '1rem' }}>
+                    <div className="pb-dashboardCard__actions">
                       <Button type="button" variant="ghost" onClick={handleAddChild}>
                         Ažuriraj profil ili dodaj još jedno dijete
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 8 }} aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
                       </Button>
                     </div>
                   )}
 
                   {addingChild && profileDraft && (
-                    <div style={{ marginTop: '1.25rem', borderTop: '1px solid var(--color-border, #e5e5e5)', paddingTop: '1.25rem' }}>
+                    <div className="pb-dashboardCard__edit">
                       <FamilyProfileForm
                         draft={profileDraft}
                         error={profileError}
@@ -239,15 +250,14 @@ export default function MojVidimosePage() {
                       />
                       <button
                         type="button"
-                        className="pb-inlineLink"
-                        style={{ marginTop: '0.5rem', display: 'block' }}
+                        className="pb-inlineLink pb-accountPage__cancel"
                         onClick={() => { setAddingChild(false); setProfileDraft(null); setProfileError('') }}
                       >
                         Odustani
                       </button>
                     </div>
                   )}
-                </div>
+                </Card>
               </section>
 
               {/* Invitations */}
@@ -301,12 +311,12 @@ export default function MojVidimosePage() {
               </section>
 
               {/* RSVPs */}
-              <section>
-                <h2 className="ew-h3" style={{ marginBottom: '1rem' }}>Moj RSVP</h2>
+              <section className="pb-dashboardSection" aria-labelledby="moj-vs-rsvp-heading">
+                <h2 id="moj-vs-rsvp-heading" className="ew-h3 pb-mojVidimose__inviteHeading">Moj RSVP</h2>
                 {rsvps.length === 0 ? (
-                  <p style={{ color: 'var(--color-text-muted, #888)' }}>
-                    Još nisi potvrdio/la dolazak na nijednu proslavu.
-                  </p>
+                  <div className="pb-mojVidimose__inviteEmpty">
+                    Još nisi potvrdio/la dolazak na nijednu proslavu. Otvori pozivnicu koju si dobio/la i potvrdi dolazak.
+                  </div>
                 ) : (
                   <div className="pb-mojVidimose__rsvpList">
                     {rsvps.map((rsvp) => (
@@ -359,7 +369,7 @@ export default function MojVidimosePage() {
               </section>
             </>
           )}
-        </div>
+        </Container>
       </main>
       <Footer />
     </>

@@ -23,6 +23,7 @@ export default function VenuesPage() {
   const [priceMax, setPriceMax] = useState(30)
   const [selectedAmenities, setSelectedAmenities] = useState<Set<string>>(new Set())
   const [sortBy, setSortBy] = useState<'rating' | 'price_asc' | 'price_desc'>('rating')
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const toggleAmenity = (a: string) =>
     setSelectedAmenities(prev => {
@@ -49,6 +50,19 @@ export default function VenuesPage() {
 
     return list
   }, [query, ageMin, ageMax, priceMax, selectedAmenities, sortBy])
+  const activeFilterChips = [
+    query ? `Pretraga: ${query}` : null,
+    ageMin > 0 || ageMax < 12 ? `Dob ${ageMin}-${ageMax} god.` : null,
+    priceMax < 30 ? `Do ${priceMax}€/dijete` : null,
+    ...Array.from(selectedAmenities),
+  ].filter((chip): chip is string => Boolean(chip))
+  const resetFilters = () => {
+    setQuery('')
+    setAgeMin(0)
+    setAgeMax(12)
+    setPriceMax(30)
+    setSelectedAmenities(new Set())
+  }
 
   return (
     <div className="ew-landing">
@@ -88,7 +102,16 @@ export default function VenuesPage() {
           <div className="ew-container ew-vp-layout">
 
             {/* Sidebar filters */}
-            <aside className="ew-vp-sidebar" aria-label="Filteri">
+            <button
+              type="button"
+              className="ew-vp-filter-toggle"
+              onClick={() => setFiltersOpen((value) => !value)}
+              aria-expanded={filtersOpen}
+            >
+              Filteri {activeFilterChips.length > 0 ? `(${activeFilterChips.length})` : ''}
+            </button>
+
+            <aside className={`ew-vp-sidebar ${filtersOpen ? 'is-open' : ''}`} aria-label="Filteri">
               <div className="ew-vp-filter-group">
                 <div className="ew-vp-filter-label">Dob djeteta</div>
                 <div className="ew-vp-age-row">
@@ -140,13 +163,7 @@ export default function VenuesPage() {
               {(query || selectedAmenities.size > 0 || priceMax < 30 || ageMin > 0 || ageMax < 12) && (
                 <button
                   className="ew-vp-clear-btn"
-                  onClick={() => {
-                    setQuery('')
-                    setAgeMin(0)
-                    setAgeMax(12)
-                    setPriceMax(30)
-                    setSelectedAmenities(new Set())
-                  }}
+                  onClick={resetFilters}
                 >
                   Poništi filtere
                 </button>
@@ -173,15 +190,22 @@ export default function VenuesPage() {
                 </select>
               </div>
 
+              {activeFilterChips.length > 0 ? (
+                <div className="ew-vp-activeFilters" aria-label="Aktivni filteri">
+                  {activeFilterChips.map((chip) => (
+                    <span key={chip} className="ew-vp-activeFilter">{chip}</span>
+                  ))}
+                  <button type="button" className="ew-vp-activeFilter ew-vp-activeFilter--clear" onClick={resetFilters}>
+                    Poništi sve
+                  </button>
+                </div>
+              ) : null}
+
               {filtered.length === 0 ? (
                 <div className="ew-vp-empty">
                   <p>Nema igraonica koje odgovaraju odabranim filterima.</p>
                   <button className="ew-btn-secondary" onClick={() => {
-                    setQuery('')
-                    setAgeMin(0)
-                    setAgeMax(12)
-                    setPriceMax(30)
-                    setSelectedAmenities(new Set())
+                    resetFilters()
                   }}>Resetiraj filtere</button>
                 </div>
               ) : (

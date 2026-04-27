@@ -1,14 +1,15 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
 import { AuthProvider } from './context/AuthContext'
-import CreateInvitationPage from './pages/CreateInvitationPage'
-import LandingPage from './pages/LandingPage'
-import MojVidimosePage from './pages/MojVidimosePage'
-import AdminPage from './pages/AdminPage'
-import SharedInvitationPage from './pages/SharedInvitationPage'
-import VenueDetailPage from './pages/VenueDetailPage'
-import VenuesPage from './pages/VenuesPage'
+
+const LandingPage = lazy(() => import('./pages/LandingPage'))
+const CreateInvitationPage = lazy(() => import('./pages/CreateInvitationPage'))
+const VenuesPage = lazy(() => import('./pages/VenuesPage'))
+const VenueDetailPage = lazy(() => import('./pages/VenueDetailPage'))
+const MojVidimosePage = lazy(() => import('./pages/MojVidimosePage'))
+const AdminPage = lazy(() => import('./pages/AdminPage'))
+const SharedInvitationPage = lazy(() => import('./pages/SharedInvitationPage'))
 
 function ScrollToTop() {
   const location = useLocation()
@@ -20,22 +21,34 @@ function ScrollToTop() {
   return null
 }
 
+function RouteFallback() {
+  return (
+    <main className="pb-main pb-routeFallback" aria-live="polite">
+      <div className="pb-container">
+        Učitavam...
+      </div>
+    </main>
+  )
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/kreiraj-pozivnicu" element={<CreateInvitationPage />} />
-          <Route path="/igraonice" element={<VenuesPage />} />
-          <Route path="/igraonice/:slug" element={<VenueDetailPage />} />
-          <Route path="/moj-vidimose" element={<MojVidimosePage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/pozivnica-demo" element={<Navigate to="/pozivnica/luka-istrazivaci" replace />} />
-          <Route path="/pozivnica/:token" element={<SharedInvitationPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/kreiraj-pozivnicu" element={<CreateInvitationPage />} />
+            <Route path="/igraonice" element={<VenuesPage />} />
+            <Route path="/igraonice/:slug" element={<VenueDetailPage />} />
+            <Route path="/moj-vidimose" element={<MojVidimosePage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/pozivnica-demo" element={<Navigate to="/pozivnica/luka-istrazivaci" replace />} />
+            <Route path="/pozivnica/:token" element={<SharedInvitationPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </AuthProvider>
   )

@@ -14,7 +14,7 @@ export default function KeksPayQrPreview({ url, showOpenLink = true, className =
 
   useEffect(() => {
     if (!trimmed) {
-      setQrDataUrl(null)
+      queueMicrotask(() => setQrDataUrl(null))
       return
     }
     let cancelled = false

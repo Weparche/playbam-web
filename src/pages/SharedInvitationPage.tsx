@@ -1,8 +1,8 @@
-﻿import { type ChangeEvent, type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
+﻿import { type ChangeEvent, type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toJpeg } from 'html-to-image'
 
 import { buildGoogleFontsEmbedCss } from '../lib/buildGoogleFontsEmbedCss'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import FloatingEditPanel from '../components/create/FloatingEditPanel'
 import InvitationLivePreview, { type LivePreviewMode } from '../components/create/InvitationLivePreview'
@@ -17,7 +17,8 @@ import InvitationLiveChatPanel from '../components/invitation/InvitationLiveChat
 import KeksPayQrPreview from '../components/invitation/KeksPayQrPreview'
 import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGuest'
 import { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
-import GuestInvitationModal, { getGuestModalStep } from '../components/invitation/GuestInvitationModal'
+import GuestInvitationModal from '../components/invitation/GuestInvitationModal'
+import { getGuestModalStep } from '../components/invitation/guestModalStep'
 import Navbar from '../components/landing/Navbar'
 import Footer from '../components/layout/Footer'
 import Button from '../components/ui/Button'
@@ -925,7 +926,7 @@ export default function SharedInvitationPage() {
     }
   }
 
-  const refreshChat = async (
+  const refreshChat = useCallback(async (
     identity: TemporaryWebIdentity | null | undefined = user ?? undefined,
     options?: { silent?: boolean },
   ) => {
@@ -952,7 +953,7 @@ export default function SharedInvitationPage() {
         setChatLoading(false)
       }
     }
-  }
+  }, [hasPrivateAccess, invitation, isHost, user])
 
   useEffect(() => {
     if (!invitation || (!user && !hasHostSession)) {
@@ -1230,7 +1231,7 @@ export default function SharedInvitationPage() {
       disposed = true
       window.clearInterval(intervalId)
     }
-  }, [guestChatOpen, hasPrivateAccess, hostAccordionOpen, invitation, isHost, loadingPrivateState, showHostStudio, user])
+  }, [guestChatOpen, hasPrivateAccess, hostAccordionOpen, invitation, isHost, loadingPrivateState, refreshChat, showHostStudio, user])
 
   useEffect(() => {
     if (!invitation || !isHost || loadingPrivateState || (!user && !hasHostSession)) {
@@ -1406,7 +1407,7 @@ export default function SharedInvitationPage() {
       )
       setInvitation(updatedInvitation)
       setHostUpdateNotice('Pozivnica je ažurirana.')
-    } catch (caughtError) {
+    } catch {
       setHostUpdateError('Spremanje promjena trenutno nije uspjelo.')
     } finally {
       setSavingHostInvitation(false)
@@ -1862,8 +1863,9 @@ export default function SharedInvitationPage() {
 
   return (
     <>
+      <a className="ew-skip-link" href="#main">Preskoči na sadržaj</a>
       <Navbar opaque />
-      <main className="pb-main pb-main--demo pb-invitePage">
+      <main id="main" className="pb-main pb-main--demo pb-invitePage">
         <div className="pb-invitePage__blobs" aria-hidden>
           <span className="pb-invitePage__blob pb-invitePage__blob--1" />
           <span className="pb-invitePage__blob pb-invitePage__blob--2" />
@@ -1881,6 +1883,9 @@ export default function SharedInvitationPage() {
             <Card className="pb-flowCard">
               <h1 className="pb-flowCard__title">Pozivnica nije pronađena.</h1>
               <p className="pb-flowCard__text">Provjeri poveznicu ili se vrati na naslovnicu.</p>
+              <Link to="/" className="pb-btn pb-btn-primary pb-flowCard__cta">
+                Na naslovnicu
+              </Link>
             </Card>
           ) : null}
 
@@ -1888,6 +1893,9 @@ export default function SharedInvitationPage() {
             <Card className="pb-flowCard">
               <h1 className="pb-flowCard__title">Pozivnica trenutno nije dostupna.</h1>
               <p className="pb-flowCard__text">Nismo uspjeli dohvatiti podatke sa servisa. Pokušaj ponovno za nekoliko trenutaka.</p>
+              <button type="button" className="pb-btn pb-btn-primary pb-flowCard__cta" onClick={() => window.location.reload()}>
+                Pokušaj ponovno
+              </button>
             </Card>
           ) : null}
 

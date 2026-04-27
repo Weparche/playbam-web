@@ -2765,6 +2765,394 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   }
 }
 
+/* Account dashboard + admin utilities */
+.pb-accountPage,
+.pb-adminPage {
+  min-height: 70vh;
+  padding: 2rem 0 3rem;
+}
+
+.pb-accountPage__container,
+.pb-dashboardSection {
+  display: grid;
+  gap: 1rem;
+}
+
+.pb-accountPage__header,
+.pb-adminPage__header {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1.5rem;
+}
+
+.pb-accountPage__header p,
+.pb-adminPage__subtitle {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.pb-accountPage__eyebrow,
+.pb-adminPage__eyebrow,
+.pb-dashboardCard__eyebrow {
+  color: var(--invite-accent-sun);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pb-dashboardCard {
+  padding: 1.25rem 1.35rem;
+}
+
+.pb-dashboardCard--state,
+.pb-adminState {
+  padding: 3rem 1rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.pb-dashboardCard__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pb-dashboardCard__title,
+.pb-adminPage__title {
+  margin: 0;
+  color: #17243b;
+  font-size: 1.55rem;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.pb-accountFacts {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.pb-accountFacts__row {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.pb-accountFacts dt {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.pb-accountFacts dd {
+  margin: 0;
+  color: #17243b;
+  font-weight: 700;
+}
+
+.pb-accountFacts em,
+.pb-mojVidimose__inviteEmpty {
+  color: var(--muted);
+}
+
+.pb-dashboardCard__actions {
+  margin-top: 1rem;
+}
+
+.pb-dashboardCard__edit {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.pb-accountPage__cancel {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.pb-adminToolbar {
+  margin-bottom: 1rem;
+}
+
+.pb-adminToolbar__search {
+  max-width: 420px;
+}
+
+.pb-adminBulkBar {
+  position: sticky;
+  top: 78px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #fcd34d;
+  border-radius: 12px;
+  background: #fef3c7;
+  box-shadow: var(--shadow-soft);
+}
+
+.pb-adminBulkBar span {
+  color: #92400e;
+  font-weight: 800;
+}
+
+.pb-adminTableWrap {
+  overflow-x: auto;
+  border: 1px solid #e5e7ef;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+.pb-adminTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.pb-adminTable thead tr {
+  background: #f4f6fb;
+  text-align: left;
+}
+
+.pb-adminTable th,
+.pb-adminTable td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #e5e7ef;
+  color: #344563;
+  white-space: nowrap;
+}
+
+.pb-adminTable th {
+  color: #17243b;
+  font-weight: 800;
+}
+
+.pb-adminTable__check {
+  width: 36px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.pb-adminTable__empty {
+  padding: 2rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.pb-adminTable__index,
+.pb-adminTable__muted {
+  color: #8896b3;
+}
+
+.pb-adminTable__index {
+  font-variant-numeric: tabular-nums;
+}
+
+.pb-adminTable__strong,
+.pb-adminTable__metric {
+  color: #17243b;
+  font-weight: 800;
+}
+
+.pb-adminTable__metric {
+  text-align: center;
+  color: #8896b3;
+}
+
+.pb-adminTable__metric.is-active {
+  color: var(--success);
+}
+
+.pb-adminTable__truncate {
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pb-adminTable__nowrap,
+.pb-adminTable__link {
+  white-space: nowrap;
+}
+
+.pb-adminTable__link {
+  color: var(--primary);
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.pb-adminConfirm {
+  max-width: 520px;
+}
+
+.pb-modalSteps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0.75rem 1.15rem 0;
+  list-style: none;
+}
+
+.pb-modalSteps__item {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  color: rgba(31, 36, 48, 0.48);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.pb-modalSteps__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(31, 36, 48, 0.16);
+  background: #fff;
+}
+
+.pb-modalSteps__item.is-complete,
+.pb-modalSteps__item.is-active {
+  color: #3925a3;
+}
+
+.pb-modalSteps__item.is-complete .pb-modalSteps__dot {
+  border-color: rgba(21, 115, 71, 0.24);
+  background: rgba(21, 115, 71, 0.08);
+  color: var(--success);
+}
+
+.pb-modalSteps__item.is-active .pb-modalSteps__dot {
+  border-color: rgba(91, 61, 245, 0.24);
+  background: rgba(91, 61, 245, 0.1);
+}
+
+.pb-flowCard__cta {
+  margin-top: 1rem;
+}
+
+.pb-inviteWish__footer {
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(31, 36, 48, 0.08);
+}
+
+.pb-inviteWish__btnRow {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pb-inviteWish__btnRow .pb-btn {
+  flex: 1 1 9rem;
+}
+
+.pb-createShell__subtitle {
+  max-width: 56ch;
+  margin: -0.2rem 0 0;
+  color: rgba(23, 36, 59, 0.68);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.pb-createShell__progressSummary {
+  width: min(640px, 100%);
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(77, 124, 238, 0.14);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 14px 30px rgba(37, 66, 125, 0.08);
+}
+
+.pb-createShell__progressCopy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: rgba(23, 36, 59, 0.7);
+  font-size: 0.86rem;
+}
+
+.pb-createShell__progressCopy strong {
+  color: #17243b;
+}
+
+.pb-createShell__progressTrack {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(16, 24, 40, 0.08);
+}
+
+.pb-createShell__progressFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #5b3df5, #ff9f68);
+  transition: width 320ms ease;
+}
+
+.pb-createShell__missingActions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pb-createShell__missingAction,
+.pb-createShell__readyBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.2rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid rgba(91, 61, 245, 0.18);
+  border-radius: 999px;
+  background: rgba(91, 61, 245, 0.07);
+  color: #3925a3;
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.pb-createShell__missingAction {
+  cursor: pointer;
+}
+
+.pb-createShell__missingAction:focus-visible {
+  outline: 3px solid rgba(91, 61, 245, 0.22);
+  outline-offset: 2px;
+}
+
+.pb-createShell__readyBadge {
+  border-color: rgba(21, 115, 71, 0.2);
+  background: rgba(21, 115, 71, 0.08);
+  color: var(--success);
+}
+
+.pb-createEditor__heroRsvpPreview {
+  width: 100%;
+  border: 0;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .pb-accountFacts__row {
+    grid-template-columns: minmax(130px, 0.5fr) 1fr;
+    align-items: baseline;
+  }
+}
+
 .pb-invitePrivateCard__header {
   margin-bottom: 1rem;
 }

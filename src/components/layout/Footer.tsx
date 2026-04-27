@@ -3,7 +3,7 @@ export default function Footer() {
     <footer className="pb-footer" id="footer">
       <div className="pb-container pb-footer__inner">
         <div className="pb-footer__brandWrap">
-          <div className="pb-footer__brand">Playbam</div>
+          <div className="pb-footer__brand">VidimoSe</div>
           <p className="pb-footer__text">
             Jednostavniji početak organizacije dječjeg rođendana.
           </p>
@@ -11,10 +11,16 @@ export default function Footer() {
 
         <div className="pb-footer__col">
           <div className="pb-footer__label">Navigacija</div>
-          <a className="pb-footer__link" href="/#zasto-playbam">
-            O nama
+          <a className="pb-footer__link" href="/#pozivnice">
+            Pozivnice
           </a>
-          <a className="pb-footer__link" href="mailto:kontakt@playbam.hr">
+          <a className="pb-footer__link" href="/#igraonice">
+            Igraonice
+          </a>
+          <a className="pb-footer__link" href="/#cesta-pitanja">
+            Česta pitanja
+          </a>
+          <a className="pb-footer__link" href="mailto:kontakt@vidimose.hr">
             Kontakt
           </a>
         </div>

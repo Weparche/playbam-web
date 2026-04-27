@@ -1,6 +1,18 @@
-import type { ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 
-export default function Container({ children }: { children: ReactNode }) {
-  return <div className="pb-container">{children}</div>
+type Props = HTMLAttributes<HTMLDivElement> & {
+  children: ReactNode
+  size?: 'default' | 'narrow' | 'wide'
+}
+
+export default function Container({ children, className = '', size = 'default', ...rest }: Props) {
+  return (
+    <div
+      className={['pb-container', size !== 'default' ? `pb-container--${size}` : '', className].filter(Boolean).join(' ')}
+      {...rest}
+    >
+      {children}
+    </div>
+  )
 }
 

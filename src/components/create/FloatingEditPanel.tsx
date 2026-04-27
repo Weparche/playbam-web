@@ -12,6 +12,7 @@ type Props = {
 
 export default function FloatingEditPanel({ open, title, description, onClose, children, footer, panelClassName = '' }: Props) {
   const panelRef = useRef<HTMLDivElement | null>(null)
+  const restoreFocusRef = useRef<HTMLElement | null>(null)
   const [closing, setClosing] = useState(false)
   const isPreviewPanel = panelClassName.includes('pb-floatingPanel--preview')
 
@@ -49,6 +50,26 @@ export default function FloatingEditPanel({ open, title, description, onClose, c
     }
   }, [onClose, open, closing, startClose])
 
+  useEffect(() => {
+    if (!open || closing) {
+      if (!open) {
+        restoreFocusRef.current?.focus()
+        restoreFocusRef.current = null
+      }
+      return undefined
+    }
+
+    restoreFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    window.setTimeout(() => {
+      const focusTarget = panelRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )
+      ;(focusTarget ?? panelRef.current)?.focus()
+    }, 0)
+
+    return undefined
+  }, [closing, open])
+
   if (!open && !closing) return null
 
   const backdropClass = `pb-floatingPanel__backdrop${isPreviewPanel ? ' pb-floatingPanel__backdrop--preview' : ''}${closing ? ' is-closing' : ''}`
@@ -56,7 +77,7 @@ export default function FloatingEditPanel({ open, title, description, onClose, c
 
   return (
     <div className={backdropClass}>
-      <div className={panelClass} role="dialog" aria-modal="true" aria-label={title} ref={panelRef}>
+      <div className={panelClass} role="dialog" aria-modal="true" aria-label={title} ref={panelRef} tabIndex={-1}>
         <div className="pb-floatingPanel__header">
           <div>
             <h2 className="pb-floatingPanel__title">{title}</h2>

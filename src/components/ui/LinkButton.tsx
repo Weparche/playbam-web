@@ -22,14 +22,18 @@ export default function LinkButton({
     <a
       {...rest}
       aria-disabled={disabled ? 'true' : undefined}
+      tabIndex={disabled ? -1 : rest.tabIndex}
       className={[
         'pb-btn',
         `pb-btn-${variant}`,
         disabled ? 'pb-btn-disabled' : '',
         className.trim(),
-      ].join(' ')}
+      ].filter(Boolean).join(' ')}
       onClick={(e) => {
-        if (disabled) e.preventDefault()
+        if (disabled) {
+          e.preventDefault()
+          return
+        }
         rest.onClick?.(e)
       }}
     >

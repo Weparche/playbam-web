@@ -3064,15 +3064,28 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   line-height: 1.55;
 }
 
+.pb-createShell__progressSticky {
+  position: sticky;
+  top: 76px;
+  z-index: 52;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.85rem;
+  pointer-events: none;
+}
+
 .pb-createShell__progressSummary {
-  width: min(640px, 100%);
+  width: min(860px, 100%);
   display: grid;
   gap: 0.65rem;
   padding: 0.85rem;
   border: 1px solid rgba(77, 124, 238, 0.14);
   border-radius: 1.25rem;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 14px 30px rgba(37, 66, 125, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  pointer-events: auto;
 }
 
 .pb-createShell__progressCopy {
@@ -8506,6 +8519,46 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
   .pb-createShell__header {
     gap: 0.5rem;
+  }
+
+  .pb-createShell__progressSticky {
+    top: 58px;
+    margin-top: 0.55rem;
+  }
+
+  .pb-createShell__progressSummary {
+    gap: 0.32rem;
+    padding: 0.42rem 0.5rem;
+    border-radius: 0.9rem;
+    box-shadow: 0 8px 20px rgba(37, 66, 125, 0.08);
+  }
+
+  .pb-createShell__progressCopy {
+    gap: 0.45rem;
+    font-size: 0.72rem;
+    line-height: 1.1;
+  }
+
+  .pb-createShell__progressTrack {
+    height: 3px;
+  }
+
+  .pb-createShell__missingActions {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    width: 100%;
+    gap: 0.28rem;
+  }
+
+  .pb-createShell__missingAction,
+  .pb-createShell__readyBadge {
+    justify-content: center;
+    min-height: 1.55rem;
+    padding: 0.22rem 0.34rem;
+    font-size: 0.62rem;
+    line-height: 1;
+    white-space: nowrap;
   }
 
   .pb-createShell__title {

@@ -54,6 +54,8 @@ export default function InvitationCreateShell({
           </span>
           {headerActions ? <div className="pb-createShell__headerActions">{headerActions}</div> : null}
         </div>
+      </header>
+      <div className="pb-createShell__progressSticky">
         <div className="pb-createShell__progressSummary" aria-live="polite">
           <div className="pb-createShell__progressCopy">
             <strong>{progressLabel}</strong>
@@ -64,7 +66,7 @@ export default function InvitationCreateShell({
           </div>
           {missingStepActions ? <div className="pb-createShell__missingActions">{missingStepActions}</div> : null}
         </div>
-      </header>
+      </div>
       <div className="pb-createShell__body">
         <div className="pb-createShell__layout">
           <div className="pb-createShell__main">{children}</div>

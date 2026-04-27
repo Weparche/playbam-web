@@ -1209,11 +1209,12 @@ export default function SharedInvitationPage() {
     user,
   ])
 
+  /** Osvježavaj poruke u pozadini (badges +N) i kad je chat zatvoren — inače se stanje nikad ne ažurira. */
   useEffect(() => {
     const canPollChat = Boolean(
       invitation &&
         !loadingPrivateState &&
-        ((showHostStudio && hostAccordionOpen === 'chat') || (!isHost && hasPrivateAccess && guestChatOpen)),
+        ((showHostStudio && (user || hasHostSession)) || (!isHost && hasPrivateAccess && user)),
     )
 
     if (!canPollChat) {
@@ -1223,24 +1224,54 @@ export default function SharedInvitationPage() {
     const identity = user ?? undefined
     let disposed = false
 
-    const run = async (silent = false) => {
+    const run = async () => {
       if (disposed) {
         return
       }
-      await refreshChat(identity, { silent })
+      await refreshChat(identity, { silent: true })
     }
 
-    void run(false)
+    void run()
 
     const intervalId = window.setInterval(() => {
-      void run(true)
+      void run()
     }, 5_000)
 
     return () => {
       disposed = true
       window.clearInterval(intervalId)
     }
-  }, [guestChatOpen, hasPrivateAccess, hostAccordionOpen, invitation, isHost, loadingPrivateState, refreshChat, showHostStudio, user])
+  }, [hasPrivateAccess, hasHostSession, invitation, isHost, loadingPrivateState, refreshChat, showHostStudio, user])
+
+  /** Gost s pristupom: lista želja u pozadini (inakse se nakon prvog učitavanja ne ažurira, pa +N ne raste). */
+  useEffect(() => {
+    if (!invitation || isHost || !hasPrivateAccess || !user || !canViewWishlist || loadingPrivateState) {
+      return
+    }
+
+    const invitationId = invitation.id
+    const currentUser = user
+    let cancelled = false
+
+    const run = async () => {
+      try {
+        const items = await getInvitationWishlist(invitationId, currentUser)
+        if (!cancelled) {
+          setWishlistItems(items)
+        }
+      } catch {
+        // tiho — sljedeći interval
+      }
+    }
+
+    void run()
+    const intervalId = window.setInterval(() => void run(), 8_000)
+
+    return () => {
+      cancelled = true
+      window.clearInterval(intervalId)
+    }
+  }, [canViewWishlist, hasPrivateAccess, invitation, isHost, loadingPrivateState, user])
 
   useEffect(() => {
     if (!invitation || !isHost || loadingPrivateState || (!user && !hasHostSession)) {
@@ -1270,7 +1301,7 @@ export default function SharedInvitationPage() {
 
     const intervalId = window.setInterval(() => {
       void refreshHostPanels()
-    }, 10_000)
+    }, 5_000)
 
     const handleFocus = () => {
       void refreshHostPanels()

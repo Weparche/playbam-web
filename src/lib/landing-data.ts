@@ -58,6 +58,18 @@ export type FAQItem = {
 
 export const invitationTemplates: InvitationTemplate[] = [
   {
+    id: 'decko',
+    theme: 'Dečko',
+    image: '/decko.webp',
+    fullImage: '/decko.webp',
+    childName: 'Noa',
+    age: '6',
+    date: 'Subota, 7. lipnja',
+    venue: 'Šumska Avantura',
+    address: 'Maksimirska 12, Zagreb',
+    time: '16:00 — 18:00',
+  },
+  {
     id: 'safari',
     theme: 'Safari',
     image: '/safari.png',

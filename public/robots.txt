@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /moj-vidimose
+Disallow: /moj-vidimose/
+Disallow: /pozivnica/
+Disallow: /pozivnica-demo
+
+Sitemap: https://vidimose.hr/sitemap.xml

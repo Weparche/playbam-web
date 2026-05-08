@@ -821,6 +821,12 @@ html, body { scrollbar-gutter: stable; }
   border-top: 1px solid rgba(22, 24, 35, 0.08);
 }
 
+.pb-footer__wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .pb-footer__inner {
   display: grid;
   gap: 16px;
@@ -855,6 +861,49 @@ html, body { scrollbar-gutter: stable; }
     grid-template-columns: 1fr 0.8fr 0.8fr;
     gap: 22px;
   }
+}
+
+.pb-footer__legal {
+  padding-top: 22px;
+  border-top: 1px solid rgba(22, 24, 35, 0.1);
+}
+
+.pb-footer__legal-title {
+  font-weight: 1000;
+  margin: 0 0 10px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(16, 24, 40, 0.55);
+}
+
+.pb-footer__legal-text {
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(16, 24, 40, 0.72);
+}
+
+.pb-footer__legal-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(16, 24, 40, 0.72);
+}
+
+.pb-footer__legal-list li {
+  margin-bottom: 4px;
+}
+
+.pb-footer__legal-link {
+  color: rgba(16, 24, 40, 0.88);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pb-footer__legal-link:hover {
+  color: rgba(16, 24, 40, 0.98);
 }
 
 /* Invitation page — topla pozadina, mobile-first */

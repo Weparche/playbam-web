@@ -10,6 +10,7 @@ const VenueDetailPage = lazy(() => import('./pages/VenueDetailPage'))
 const MojVidimosePage = lazy(() => import('./pages/MojVidimosePage'))
 const AdminPage = lazy(() => import('./pages/AdminPage'))
 const SharedInvitationPage = lazy(() => import('./pages/SharedInvitationPage'))
+const ContactPage = lazy(() => import('./pages/ContactPage'))
 
 function ScrollToTop() {
   const location = useLocation()
@@ -42,6 +43,7 @@ export default function App() {
             <Route path="/kreiraj-pozivnicu" element={<CreateInvitationPage />} />
             <Route path="/igraonice" element={<VenuesPage />} />
             <Route path="/igraonice/:slug" element={<VenueDetailPage />} />
+            <Route path="/kontakt" element={<ContactPage />} />
             <Route path="/moj-vidimose" element={<MojVidimosePage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/pozivnica-demo" element={<Navigate to="/pozivnica/luka-istrazivaci" replace />} />

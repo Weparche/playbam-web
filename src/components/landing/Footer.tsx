@@ -1,22 +1,24 @@
 import { Link } from 'react-router-dom'
 
-type FooterColumn = { title: string; links: { label: string; href: string }[] }
+type FooterColumn = {
+  title: string
+  links: { label: string; href: string; router?: boolean }[]
+}
 
 const columns: FooterColumn[] = [
   {
     title: 'Proizvod',
     links: [
-      { label: 'Pozivnice', href: '#pozivnice' },
-      { label: 'Igraonice', href: '#igraonice' },
-      { label: 'Kako radi', href: '#kako-radi' },
+      { label: 'Pozivnice', href: '/#pozivnice', router: true },
+      { label: 'Igraonice', href: '/#igraonice', router: true },
+      { label: 'Kako radi', href: '/#kako-radi', router: true },
     ],
   },
   {
     title: 'Tvrtka',
     links: [
       { label: 'O nama', href: '#' },
-      { label: 'Blog', href: '#' },
-      { label: 'Kontakt', href: '#' },
+      { label: 'Kontakt', href: '/kontakt', router: true },
     ],
   },
   {
@@ -43,12 +45,43 @@ export default function Footer() {
           {columns.map(col => (
             <div key={col.title}>
               <div className="ew-footer__col-title">{col.title}</div>
-              {col.links.map(link => (
-                <a key={link.label} href={link.href} className="ew-footer__link">{link.label}</a>
-              ))}
+              {col.links.map(link =>
+                link.router ? (
+                  <Link key={link.label} to={link.href} className="ew-footer__link">
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a key={link.label} href={link.href} className="ew-footer__link">
+                    {link.label}
+                  </a>
+                ),
+              )}
             </div>
           ))}
         </div>
+
+        <section className="ew-footer__legal" aria-labelledby="footer-legal-heading">
+          <h2 id="footer-legal-heading" className="ew-footer__legal-title">
+            Poslovni podaci
+          </h2>
+          <p className="ew-footer__legal-line">
+            <a
+              href="https://nepar.hr"
+              className="ew-footer__legal-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Nepar, obrt za digitalna rješenja i usluge
+            </a>
+          </p>
+          <ul className="ew-footer__legal-list">
+            <li>vl. Ivan Gorupić</li>
+            <li>MBO: 99267101</li>
+            <li>
+              <a href="mailto:nepar@nepar.hr" className="ew-footer__legal-link">nepar@nepar.hr</a>
+            </li>
+          </ul>
+        </section>
 
         <div className="ew-footer__bottom">
           <span>© 2026 VidimoSe.hr · Hrvatska · EUR</span>

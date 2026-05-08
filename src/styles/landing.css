@@ -1841,6 +1841,139 @@ button.ew-navbar__auth-btn { font-family: inherit; }
   color: var(--color-text-primary);
 }
 
+.ew-footer__legal {
+  margin-bottom: 40px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-subtle);
+  max-width: 52rem;
+}
+
+.ew-footer__legal-title {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin: 0 0 12px;
+}
+
+.ew-footer__legal-line {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0 0 8px;
+}
+
+.ew-footer__legal-list {
+  margin: 0;
+  padding: 0 0 0 1.15rem;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.ew-footer__legal-list li {
+  margin-bottom: 4px;
+}
+
+.ew-footer__legal-link {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.ew-footer__legal-link:hover {
+  text-decoration: underline;
+}
+
+/* Kontakt stranica */
+.ew-contact-main {
+  min-height: 50vh;
+}
+
+.ew-contact {
+  padding: 48px 0 72px;
+}
+
+.ew-contact__breadcrumb {
+  font-size: 13px;
+  margin-bottom: 24px;
+  color: var(--color-text-tertiary);
+}
+
+.ew-contact__breadcrumb-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.ew-contact__breadcrumb-link:hover {
+  color: var(--color-accent);
+}
+
+.ew-contact__breadcrumb-sep {
+  margin: 0 8px;
+  opacity: 0.6;
+}
+
+.ew-contact__breadcrumb-current {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.ew-contact__title {
+  margin-bottom: 16px;
+}
+
+.ew-contact__lead {
+  max-width: 40rem;
+  margin-bottom: 32px;
+  color: var(--color-text-secondary);
+}
+
+.ew-contact__card {
+  max-width: 28rem;
+  padding: 28px 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  background: var(--color-bg-card);
+}
+
+.ew-contact__label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin: 0 0 10px;
+}
+
+.ew-contact__mailto {
+  display: inline-block;
+  font-family: var(--font-fraunces);
+  font-style: italic;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.ew-contact__mailto:hover {
+  text-decoration: underline;
+}
+
+.ew-contact__note {
+  margin: 16px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 640px) {
+  .ew-contact__mailto {
+    font-size: 20px;
+    word-break: break-all;
+  }
+}
+
 /* ============================================
    SCROLL REVEAL ANIMATION UTILITY
    ============================================ */

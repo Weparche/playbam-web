@@ -2646,6 +2646,61 @@ button.ew-navbar__auth-btn { font-family: inherit; }
 }
 
 /* ============================================
+   VENUES PAGE — MOJA LOKACIJA
+   ============================================ */
+
+.ew-vp-locate-group {
+  position: relative;
+}
+
+.ew-vp-locate {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.ew-vp-locate__icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.ew-vp-locate:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.ew-vp-locate-on {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-work);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.ew-vp-locate-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+  display: inline-block;
+}
+
+.ew-vp-locate-err {
+  margin: 8px 0 0;
+  font-family: var(--font-work);
+  font-size: 12px;
+  color: #b13a2a;
+  line-height: 1.4;
+}
+
+/* ============================================
    VENUES PAGE — RESULTS
    ============================================ */
 .ew-vp-results {
@@ -2659,6 +2714,50 @@ button.ew-navbar__auth-btn { font-family: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ew-vp-results-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ew-vp-map-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-family: var(--font-work);
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--color-accent);
+  color: #fff;
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: filter 120ms ease, transform 120ms ease;
+}
+
+.ew-vp-map-btn:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.ew-vp-map-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.ew-vp-map-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ew-vp-map-btn__icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .ew-vp-activeFilters {
@@ -2823,6 +2922,13 @@ button.ew-navbar__auth-btn { font-family: inherit; }
   color: var(--color-text-tertiary);
   font-family: var(--font-work);
   margin: 0;
+}
+
+.ew-vp-card__distance {
+  font-weight: 600;
+  color: #2563eb;
+  white-space: nowrap;
+  margin-left: 4px;
 }
 
 .ew-vp-card__desc {

@@ -1,0 +1,208 @@
+.ew-vp-mapmodal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(15, 18, 24, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: clamp(8px, 3vw, 32px);
+  animation: ew-vp-mapmodal-fade 160ms ease-out;
+}
+
+@keyframes ew-vp-mapmodal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ew-vp-mapmodal__panel {
+  background: var(--ew-bg, #fff);
+  border-radius: 18px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+  width: min(1100px, 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.ew-vp-mapmodal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.ew-vp-mapmodal__title {
+  font-family: var(--font-fraunces, serif);
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 4px;
+  color: var(--ew-fg, #1a1a1a);
+}
+
+.ew-vp-mapmodal__sub {
+  font-family: var(--font-work, sans-serif);
+  font-size: 13px;
+  color: var(--ew-muted, #6b6b6b);
+  margin: 0;
+}
+
+.ew-vp-mapmodal__close {
+  appearance: none;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--ew-fg, #1a1a1a);
+  border-radius: 999px;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 120ms ease, transform 120ms ease;
+}
+
+.ew-vp-mapmodal__close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ew-vp-mapmodal__close:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.ew-vp-mapmodal__close:focus-visible {
+  outline: 2px solid var(--ew-accent, #ff6a3d);
+  outline-offset: 2px;
+}
+
+.ew-vp-mapmodal__map {
+  flex: 1 1 auto;
+  min-height: 320px;
+  height: clamp(60vh, 75vh, 80vh);
+  width: 100%;
+  background: #e9eef3;
+}
+
+.ew-vp-mapmodal__map .leaflet-container {
+  height: 100%;
+  width: 100%;
+  font-family: var(--font-work, sans-serif);
+}
+
+@media (max-width: 640px) {
+  .ew-vp-mapmodal {
+    padding: 0;
+  }
+  .ew-vp-mapmodal__panel {
+    border-radius: 0;
+    height: 100dvh;
+    width: 100%;
+  }
+  .ew-vp-mapmodal__map {
+    height: auto;
+    flex: 1 1 auto;
+  }
+}
+
+/* User location pin */
+.ew-vp-user-pin {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 22px;
+  pointer-events: auto;
+}
+
+.ew-vp-user-pin__core {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  z-index: 2;
+}
+
+.ew-vp-user-pin__pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.35);
+  animation: ew-vp-user-pulse 1.8s ease-out infinite;
+  z-index: 1;
+}
+
+@keyframes ew-vp-user-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Map popup styling */
+.ew-vp-map-popup {
+  font-family: var(--font-work, sans-serif);
+  min-width: 200px;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ew-vp-map-popup__name {
+  font-family: var(--font-fraunces, serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ew-fg, #1a1a1a);
+}
+
+.ew-vp-map-popup__meta {
+  font-size: 12px;
+  color: var(--ew-muted, #6b6b6b);
+}
+
+.ew-vp-map-popup__address {
+  font-size: 12px;
+  color: var(--ew-muted, #6b6b6b);
+  margin-top: 2px;
+}
+
+.ew-vp-map-popup__distance {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  margin-top: 4px;
+}
+
+.ew-vp-map-popup__cta {
+  margin-top: 8px;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ew-accent, #ff6a3d);
+  text-decoration: none;
+}
+
+.ew-vp-map-popup__cta:hover {
+  text-decoration: underline;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px !important;
+}

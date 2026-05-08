@@ -61,6 +61,13 @@ export type Venue = {
   coverPhoto: string
   photos: string[]
   packages: VenuePackage[]
+  lat: number
+  lng: number
+}
+
+export const REGION_CENTERS: Record<RegionKey, { lat: number; lng: number; zoom: number }> = {
+  zagreb: { lat: 45.815, lng: 15.978, zoom: 11 },
+  split: { lat: 43.508, lng: 16.440, zoom: 11 },
 }
 
 export type Testimonial = {
@@ -143,6 +150,8 @@ export const venues: Venue[] = [
   {
     id: 'habyland',
     slug: 'habyland-zagreb',
+    lat: 45.7790,
+    lng: 15.9655,
     name: 'Habyland',
     city: 'Zagreb',
     address: 'Avenija Dubrovnik 15 (Velesajam, Paviljon 25), 10020 Zagreb',
@@ -172,6 +181,8 @@ export const venues: Venue[] = [
   {
     id: 'play2day',
     slug: 'play2day-zagreb',
+    lat: 45.7785,
+    lng: 15.9670,
     name: 'Play2day',
     city: 'Zagreb',
     address: 'Zagrebački Velesajam, Avenija Dubrovnik 15, Paviljon 33, 10020 Zagreb',
@@ -202,6 +213,8 @@ export const venues: Venue[] = [
   {
     id: 'igrandia',
     slug: 'igrandia-zagreb',
+    lat: 45.8118,
+    lng: 15.8945,
     name: 'iGRANDiA',
     city: 'Zagreb',
     address: 'Ulica Velimira Škorpika 11, 10090 Zagreb (Family Mall, 1. kat)',
@@ -231,6 +244,8 @@ export const venues: Venue[] = [
   {
     id: 'ententini',
     slug: 'ententini-zagreb',
+    lat: 45.8262,
+    lng: 16.0568,
     name: 'EnTenTini',
     city: 'Zagreb',
     address: 'Koledinečka ulica 5, 10000 Zagreb (Dubrava)',
@@ -260,6 +275,8 @@ export const venues: Venue[] = [
   {
     id: 'time2play',
     slug: 'time2play-zagreb',
+    lat: 45.7693,
+    lng: 15.9295,
     name: 'Time2Play',
     city: 'Zagreb',
     address: 'Lanište 1e, 10020 Zagreb (Novi Zagreb)',
@@ -289,6 +306,8 @@ export const venues: Venue[] = [
   {
     id: 'fijubriju',
     slug: 'fijubriju-zagreb',
+    lat: 45.8359,
+    lng: 16.0588,
     name: 'Fiju Briju',
     city: 'Zagreb',
     address: 'Ulica Hrvatskog proljeća 24, 10000 Zagreb (Dubrava)',
@@ -318,6 +337,8 @@ export const venues: Venue[] = [
   {
     id: 'jumbo',
     slug: 'jumbo-igraonica-zagreb',
+    lat: 45.8050,
+    lng: 15.9050,
     name: 'Igraonica Jumbo',
     city: 'Zagreb',
     address: 'Zagrebačka avenija 94, 10010 Zagreb (Špansko)',
@@ -347,6 +368,8 @@ export const venues: Venue[] = [
   {
     id: 'jungleplay2',
     slug: 'jungle-play-2-zagreb',
+    lat: 45.8052,
+    lng: 15.9055,
     name: 'Jungle Play 2',
     city: 'Zagreb',
     address: 'Zagrebačka avenija 94, 10010 Zagreb (Špansko)',
@@ -376,6 +399,8 @@ export const venues: Venue[] = [
   {
     id: 'plavisvijet',
     slug: 'plavi-svijet-zagreb',
+    lat: 45.7780,
+    lng: 15.9805,
     name: 'Plavi Svijet',
     city: 'Zagreb',
     address: 'Ulica Ede Murtića 2B, 10020 Zagreb (Središće)',
@@ -405,6 +430,8 @@ export const venues: Venue[] = [
   {
     id: 'sarenibalon',
     slug: 'sareni-balon-zagreb',
+    lat: 45.7945,
+    lng: 15.9270,
     name: 'Šareni Balon',
     city: 'Zagreb',
     address: 'Rudeška cesta 169a, POINT Shopping Center, 10000 Zagreb',
@@ -434,6 +461,8 @@ export const venues: Venue[] = [
   {
     id: 'minipolis',
     slug: 'minipolis-zagreb',
+    lat: 45.8000,
+    lng: 15.9270,
     name: 'MiniPolis',
     city: 'Zagreb',
     address: 'Ljubljanska avenija 2b, Z-centar, 10000 Zagreb',
@@ -463,6 +492,8 @@ export const venues: Venue[] = [
   {
     id: 'djecjiescaperoom',
     slug: 'djecji-escape-room-zagreb',
+    lat: 45.7790,
+    lng: 15.9670,
     name: 'Dječji Escape Room',
     city: 'Zagreb',
     address: 'Avenija Dubrovnik 15, paviljon 10, 10020 Zagreb',
@@ -492,6 +523,8 @@ export const venues: Venue[] = [
   {
     id: 'familypark',
     slug: 'family-park-jablanovec',
+    lat: 45.8635,
+    lng: 15.8550,
     name: 'Family Park',
     city: 'Jablanovec',
     address: 'Westgate Shopping City, Zaprešićka 2, 10290 Jablanovec',
@@ -521,6 +554,8 @@ export const venues: Venue[] = [
   {
     id: 'jogica',
     slug: 'jogica-zagreb',
+    lat: 45.8260,
+    lng: 16.0710,
     name: 'Jogica',
     city: 'Zagreb',
     address: 'Vojakovačka ulica 39, Gajevo, 10000 Zagreb',
@@ -550,6 +585,8 @@ export const venues: Venue[] = [
   {
     id: 'lollipop',
     slug: 'lollipop-zagreb',
+    lat: 45.8270,
+    lng: 16.0420,
     name: 'Lollipop',
     city: 'Zagreb',
     address: 'Laška ulica 12, 10000 Zagreb (Gornja Dubrava)',
@@ -579,6 +616,8 @@ export const venues: Venue[] = [
   {
     id: 'carpyland',
     slug: 'carpyland-zagreb',
+    lat: 45.7745,
+    lng: 15.9530,
     name: 'Carpyland',
     city: 'Zagreb',
     address: 'Ulica Vice Vukova 6, Arena Centar, 10020 Zagreb',
@@ -608,6 +647,8 @@ export const venues: Venue[] = [
   {
     id: 'kidsjungle',
     slug: 'kids-jungle-cco-zagreb',
+    lat: 45.8118,
+    lng: 15.8975,
     name: "Kid's Jungle",
     city: 'Zagreb',
     address: 'City Center one West, Jankomir 33, 10090 Zagreb',
@@ -637,6 +678,8 @@ export const venues: Venue[] = [
   {
     id: 'cirkus',
     slug: 'cirkus-zagreb',
+    lat: 45.8060,
+    lng: 15.9870,
     name: 'Igraonica Cirkus',
     city: 'Zagreb',
     address: 'Branimirova 29, Branimir centar, 10000 Zagreb',
@@ -666,6 +709,8 @@ export const venues: Venue[] = [
   {
     id: 'camelot',
     slug: 'dvorac-camelot-zagreb',
+    lat: 45.7935,
+    lng: 15.9720,
     name: 'Dvorac Camelot',
     city: 'Zagreb',
     address: 'Cvijete Zuzorić 3, 10000 Zagreb (Trnje – Kruge)',
@@ -695,6 +740,8 @@ export const venues: Venue[] = [
   {
     id: 'zlatnidvorac',
     slug: 'zlatni-dvorac-zagreb',
+    lat: 45.7965,
+    lng: 15.9430,
     name: 'Zlatni Dvorac',
     city: 'Zagreb',
     address: 'Kučerina 74, 10000 Zagreb (Trešnjevka, kod hotela Panorama)',
@@ -724,6 +771,8 @@ export const venues: Venue[] = [
   {
     id: 'zemljacuda',
     slug: 'zemlja-cuda-zagreb',
+    lat: 45.7900,
+    lng: 15.9480,
     name: 'Igraonica Zemlja Čuda',
     city: 'Zagreb',
     address: 'Murati 14, 10000 Zagreb',
@@ -753,6 +802,8 @@ export const venues: Venue[] = [
   {
     id: 'carobnasuma',
     slug: 'carobna-suma-zagreb',
+    lat: 45.7870,
+    lng: 15.9590,
     name: 'Čarobna Šuma',
     city: 'Zagreb',
     address: 'Braće Cvijića 15, 10000 Zagreb (Knežija)',
@@ -782,6 +833,8 @@ export const venues: Venue[] = [
   {
     id: 'sestinskikisobrani',
     slug: 'sestinski-kisobrani-zagreb',
+    lat: 45.8500,
+    lng: 15.9445,
     name: 'Šestinski Kišobrani',
     city: 'Zagreb',
     address: 'Kulmerska ulica 8A, 10000 Zagreb (Šestine)',
@@ -811,6 +864,8 @@ export const venues: Venue[] = [
   {
     id: 'mastograd',
     slug: 'mastograd-zagreb',
+    lat: 45.8120,
+    lng: 15.9655,
     name: 'Maštograd',
     city: 'Zagreb',
     address: 'Božidarevićeva 9, 10000 Zagreb',
@@ -840,6 +895,8 @@ export const venues: Venue[] = [
   {
     id: 'klubjump',
     slug: 'klub-jump-zagreb',
+    lat: 45.8120,
+    lng: 15.9645,
     name: 'Klub JUMP',
     city: 'Zagreb',
     address: 'Ilica 118 (u dvorištu), 10000 Zagreb',
@@ -869,6 +926,8 @@ export const venues: Venue[] = [
   {
     id: 'hrvograd',
     slug: 'hrvograd-zagreb',
+    lat: 45.8265,
+    lng: 15.8870,
     name: 'Hrvograd',
     city: 'Zagreb',
     address: 'Tratina 18, 10000 Zagreb (Gajnice)',
@@ -898,6 +957,8 @@ export const venues: Venue[] = [
   {
     id: 'jungleplay1',
     slug: 'jungle-play-1-zagreb',
+    lat: 45.7665,
+    lng: 15.9650,
     name: 'Jungle Play 1',
     city: 'Zagreb',
     address: 'Vajdin vijenac 2, 10000 Zagreb (Dugave)',
@@ -927,6 +988,8 @@ export const venues: Venue[] = [
   {
     id: 'aqua',
     slug: 'aqua-zagreb',
+    lat: 45.8395,
+    lng: 16.0640,
     name: 'Aqua',
     city: 'Zagreb',
     address: 'Hrvatskog proljeća 32, 10040 Zagreb',
@@ -956,6 +1019,8 @@ export const venues: Venue[] = [
   {
     id: 'pingo',
     slug: 'pingo-dubrava-zagreb',
+    lat: 45.8260,
+    lng: 16.0560,
     name: 'Rođendaonica Pingo',
     city: 'Zagreb',
     address: 'Koledinečka 4, 10000 Zagreb (Dubrava, zgrada Placa, 1. kat)',
@@ -985,6 +1050,8 @@ export const venues: Venue[] = [
   {
     id: 'tigric',
     slug: 'tigric-zagreb',
+    lat: 45.7670,
+    lng: 15.9760,
     name: 'Sportska rođendaonica Tigrić',
     city: 'Zagreb',
     address: 'Kamenarka 2, 10010 Zagreb (Dugave, Tigar Centar)',
@@ -1014,6 +1081,8 @@ export const venues: Venue[] = [
   {
     id: 'ncstenjevec',
     slug: 'nc-stenjevec-zagreb',
+    lat: 45.8050,
+    lng: 15.8780,
     name: 'NC Stenjevec',
     city: 'Zagreb',
     address: 'Hrvatskih branitelja 10, 10000 Zagreb (Poslovna zona Zapad)',
@@ -1043,6 +1112,8 @@ export const venues: Venue[] = [
   {
     id: 'ncsalata',
     slug: 'nc-salata-zagreb',
+    lat: 45.7785,
+    lng: 15.9670,
     name: 'NC Šalata',
     city: 'Zagreb',
     address: 'Avenija Dubrovnik 15, Velesajam paviljon 1, 10010 Zagreb',
@@ -1072,6 +1143,8 @@ export const venues: Venue[] = [
   {
     id: 'olympionic',
     slug: 'olympionic-club-zagreb',
+    lat: 45.7950,
+    lng: 15.9920,
     name: 'Olympionic Club',
     city: 'Zagreb',
     address: '1. Pile 21, 10000 Zagreb (Kruge)',
@@ -1101,6 +1174,8 @@ export const venues: Venue[] = [
   {
     id: 'winnerkids',
     slug: 'winner-kids-zagreb',
+    lat: 45.7990,
+    lng: 15.9210,
     name: 'Winner Kids',
     city: 'Zagreb',
     address: 'Slavenskoga 1/3, 10000 Zagreb (Shopping centar Prečko, 3. kat)',
@@ -1130,6 +1205,8 @@ export const venues: Venue[] = [
   {
     id: 'kidsjungle-split',
     slug: 'kids-jungle-split',
+    lat: 43.5114,
+    lng: 16.4671,
     name: "Kid's Jungle Split",
     city: 'Split',
     address: 'City Center one Split, Vukovarska 207, 21000 Split',
@@ -1159,6 +1236,8 @@ export const venues: Venue[] = [
   {
     id: 'twister-split',
     slug: 'twister-split',
+    lat: 43.5100,
+    lng: 16.4795,
     name: 'Twister Igraonica',
     city: 'Split',
     address: 'Mall of Split, Ulica Josipa Jovića 93, 21000 Split',
@@ -1188,6 +1267,8 @@ export const venues: Venue[] = [
   {
     id: 'lala-split',
     slug: 'la-la-split',
+    lat: 43.5180,
+    lng: 16.4700,
     name: 'La La igraonica-rođendaonica',
     city: 'Split',
     address: 'Osječka 54, 21000 Split',
@@ -1217,6 +1298,8 @@ export const venues: Venue[] = [
   {
     id: 'jokerland-split',
     slug: 'jokerland-split',
+    lat: 43.5135,
+    lng: 16.4565,
     name: 'Jokerland',
     city: 'Split',
     address: 'Joker Shopping Centar, Put Brodarice 6, 21000 Split',
@@ -1246,6 +1329,8 @@ export const venues: Venue[] = [
   {
     id: 'bonboncin-split',
     slug: 'bonboncin-split',
+    lat: 43.5100,
+    lng: 16.4485,
     name: 'Rođendaonica Bonboncin',
     city: 'Split',
     address: 'Kukuljevićeva 1, 21000 Split',
@@ -1275,6 +1360,8 @@ export const venues: Venue[] = [
   {
     id: 'topolino-split',
     slug: 'topolino-split',
+    lat: 43.5102,
+    lng: 16.4798,
     name: 'Topolino Rođendaonica',
     city: 'Split',
     address: 'Mall of Split, Ulica Josipa Jovića 63 (2. kat), 21000 Split',
@@ -1304,6 +1391,8 @@ export const venues: Venue[] = [
   {
     id: 'partyland-split',
     slug: 'partyland-split',
+    lat: 43.5085,
+    lng: 16.4570,
     name: 'Zabavni centar PartyLand',
     city: 'Split',
     address: 'Antuna Branka Šimića 2, 21000 Split',
@@ -1333,6 +1422,8 @@ export const venues: Venue[] = [
   {
     id: 'macak-split',
     slug: 'sc-macak-split',
+    lat: 43.5135,
+    lng: 16.4670,
     name: 'Sportski centar Mačak',
     city: 'Split',
     address: 'Trondheimska ulica 4d, 21000 Split',
@@ -1362,6 +1453,8 @@ export const venues: Venue[] = [
   {
     id: 'dalmalino-split',
     slug: 'dalmalino-split',
+    lat: 43.5160,
+    lng: 16.4790,
     name: 'Dalmalino',
     city: 'Split',
     address: 'Josipa Jovića 22, 21000 Split',
@@ -1391,6 +1484,8 @@ export const venues: Venue[] = [
   {
     id: 'carobnigrad-split',
     slug: 'carobni-grad-split',
+    lat: 43.5189,
+    lng: 16.4360,
     name: 'Čarobni Grad',
     city: 'Split',
     address: 'Mediteranskih igara 2, Stadion Poljud (istočna tribina), 21000 Split',
@@ -1420,6 +1515,8 @@ export const venues: Venue[] = [
   {
     id: 'museum-of-senses-split',
     slug: 'museum-of-senses-split',
+    lat: 43.5116,
+    lng: 16.4673,
     name: 'Museum of Senses Split',
     city: 'Split',
     address: 'Vukovarska 207, City Center one Split, 21000 Split',
@@ -1449,6 +1546,8 @@ export const venues: Venue[] = [
   {
     id: 'cineplexx-split',
     slug: 'cineplexx-split',
+    lat: 43.5118,
+    lng: 16.4669,
     name: 'Cineplexx Split',
     city: 'Split',
     address: 'City Center one Split, Vukovarska 207, 21000 Split',
@@ -1478,6 +1577,8 @@ export const venues: Venue[] = [
   {
     id: 'zazeli-zelju-solin',
     slug: 'zazeli-zelju-solin',
+    lat: 43.5410,
+    lng: 16.4915,
     name: 'Igraonica Zaželi želju',
     city: 'Solin',
     address: 'Ulica Braće Katić 26, 21210 Solin',
@@ -1507,6 +1608,8 @@ export const venues: Venue[] = [
   {
     id: 'guliver-solin',
     slug: 'guliver-solin',
+    lat: 43.5440,
+    lng: 16.4900,
     name: 'Kids Club Guliver Energija',
     city: 'Solin',
     address: 'Zoranićeva 16, Guliver centar, 21210 Solin',
@@ -1536,6 +1639,8 @@ export const venues: Venue[] = [
   {
     id: 'roka-kastel-sucurac',
     slug: 'roka-kastel-sucurac',
+    lat: 43.5470,
+    lng: 16.4170,
     name: 'RoKa Sport rođendaonica',
     city: 'Kaštel Sućurac',
     address: 'Kneza Trpimira 29, 21212 Kaštel Sućurac',
@@ -1565,6 +1670,8 @@ export const venues: Venue[] = [
   {
     id: 'veseli-dupinko-trogir',
     slug: 'veseli-dupinko-trogir',
+    lat: 43.5230,
+    lng: 16.2620,
     name: 'Veseli Dupinko',
     city: 'Trogir',
     address: 'TC Marisa, Kardinala Alojzija Stepinca 112, 21220 Trogir',

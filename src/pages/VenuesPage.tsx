@@ -1,9 +1,14 @@
-import { useMemo, useState } from 'react'
+import { lazy, Suspense, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
-import { REGIONS, venues, type RegionKey } from '../lib/landing-data'
+import { REGIONS, venues, type RegionKey, type Venue } from '../lib/landing-data'
+import { formatKm, haversineKm, type LatLng } from '../lib/distance'
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
+
+const VenuesMapModal = lazy(() => import('../components/venues/VenuesMapModal'))
+
+type FilteredVenue = Venue & { _km?: number }
 
 const amenityOptions = ['Parking', 'Animatori', 'Ugostiteljstvo', 'Torta po narudžbi', 'WC za bebe', 'Klima']
 
@@ -30,8 +35,45 @@ export default function VenuesPage() {
   const [ageMax, setAgeMax] = useState(12)
   const [priceMax, setPriceMax] = useState(30)
   const [selectedAmenities, setSelectedAmenities] = useState<Set<string>>(new Set())
-  const [sortBy, setSortBy] = useState<'rating' | 'price_asc' | 'price_desc'>('rating')
+  const [sortBy, setSortBy] = useState<'rating' | 'price_asc' | 'price_desc' | 'distance'>('rating')
   const [filtersOpen, setFiltersOpen] = useState(false)
+
+  const [userLoc, setUserLoc] = useState<LatLng | null>(null)
+  const [maxKm, setMaxKm] = useState<number>(50)
+  const [locating, setLocating] = useState(false)
+  const [locError, setLocError] = useState<string | null>(null)
+  const [mapOpen, setMapOpen] = useState(false)
+
+  const requestLocation = () => {
+    setLocError(null)
+    if (!('geolocation' in navigator)) {
+      setLocError('Tvoj browser ne podržava lokaciju')
+      return
+    }
+    setLocating(true)
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        setUserLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+        setLocating(false)
+        setSortBy('distance')
+      },
+      err => {
+        setLocating(false)
+        setLocError(
+          err.code === err.PERMISSION_DENIED
+            ? 'Lokacija nije dozvoljena. Provjeri postavke browsera.'
+            : 'Nije moguće dohvatiti lokaciju. Pokušaj ponovno.'
+        )
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+    )
+  }
+
+  const clearLocation = () => {
+    setUserLoc(null)
+    setLocError(null)
+    if (sortBy === 'distance') setSortBy('rating')
+  }
 
   const toggleAmenity = (a: string) =>
     setSelectedAmenities(prev => {
@@ -45,8 +87,8 @@ export default function VenuesPage() {
     [regionMeta]
   )
 
-  const filtered = useMemo(() => {
-    let list = venuesInRegion.filter(v => {
+  const filtered = useMemo<FilteredVenue[]>(() => {
+    let list: FilteredVenue[] = venuesInRegion.filter(v => {
       if (query && !v.name.toLowerCase().includes(query.toLowerCase()) &&
           !v.address.toLowerCase().includes(query.toLowerCase())) return false
       if (v.ageMax < ageMin || v.ageMin > ageMax) return false
@@ -57,16 +99,29 @@ export default function VenuesPage() {
       return true
     })
 
-    if (sortBy === 'rating') list = [...list].sort((a, b) => b.rating - a.rating)
-    else if (sortBy === 'price_asc') list = [...list].sort((a, b) => a.pricePerChild - b.pricePerChild)
-    else if (sortBy === 'price_desc') list = [...list].sort((a, b) => b.pricePerChild - a.pricePerChild)
+    if (userLoc) {
+      list = list
+        .map(v => ({ ...v, _km: haversineKm(userLoc, { lat: v.lat, lng: v.lng }) }))
+        .filter(v => (v._km ?? Infinity) <= maxKm)
+    }
+
+    if (sortBy === 'distance' && userLoc) {
+      list = [...list].sort((a, b) => (a._km ?? Infinity) - (b._km ?? Infinity))
+    } else if (sortBy === 'rating') {
+      list = [...list].sort((a, b) => b.rating - a.rating)
+    } else if (sortBy === 'price_asc') {
+      list = [...list].sort((a, b) => a.pricePerChild - b.pricePerChild)
+    } else if (sortBy === 'price_desc') {
+      list = [...list].sort((a, b) => b.pricePerChild - a.pricePerChild)
+    }
 
     return list
-  }, [venuesInRegion, query, ageMin, ageMax, priceMax, selectedAmenities, sortBy])
+  }, [venuesInRegion, query, ageMin, ageMax, priceMax, selectedAmenities, sortBy, userLoc, maxKm])
   const activeFilterChips = [
     query ? `Pretraga: ${query}` : null,
     ageMin > 0 || ageMax < 12 ? `Dob ${ageMin}-${ageMax} god.` : null,
     priceMax < 30 ? `Do ${priceMax}€/dijete` : null,
+    userLoc ? `Do ${maxKm} km od mene` : null,
     ...Array.from(selectedAmenities),
   ].filter((chip): chip is string => Boolean(chip))
   const resetFilters = () => {
@@ -184,6 +239,48 @@ export default function VenuesPage() {
                 </div>
               </div>
 
+              <div className="ew-vp-filter-group ew-vp-locate-group">
+                <div className="ew-vp-filter-label">Moja lokacija</div>
+                {!userLoc ? (
+                  <>
+                    <button
+                      type="button"
+                      className="ew-btn-secondary ew-vp-locate"
+                      onClick={requestLocation}
+                      disabled={locating}
+                    >
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="ew-vp-locate__icon">
+                        <circle cx="10" cy="10" r="3" fill="currentColor"/>
+                        <circle cx="10" cy="10" r="6.5" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+                        <path d="M10 1.5V4M10 16V18.5M1.5 10H4M16 10H18.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                      </svg>
+                      {locating ? 'Tražim…' : 'Pronađi blizu mene'}
+                    </button>
+                    {locError && <p className="ew-vp-locate-err" role="status">{locError}</p>}
+                  </>
+                ) : (
+                  <>
+                    <div className="ew-vp-locate-on">
+                      <span className="ew-vp-locate-dot" aria-hidden="true" />
+                      Tvoja lokacija aktivna
+                    </div>
+                    <div className="ew-vp-range-row">
+                      <input
+                        type="range" min={1} max={100} step={1}
+                        value={maxKm}
+                        onChange={e => setMaxKm(Number(e.target.value))}
+                        aria-label="Maksimalna udaljenost u kilometrima"
+                        className="ew-vp-range"
+                      />
+                      <span className="ew-vp-range-val">do {maxKm} km</span>
+                    </div>
+                    <button type="button" className="ew-vp-clear-btn" onClick={clearLocation}>
+                      Resetiraj lokaciju
+                    </button>
+                  </>
+                )}
+              </div>
+
               <div className="ew-vp-filter-group">
                 <div className="ew-vp-filter-label">Sadržaj</div>
                 <div className="ew-vp-checkboxes">
@@ -218,16 +315,31 @@ export default function VenuesPage() {
                     ? 'Nema rezultata'
                     : `${filtered.length} igraonic${filtered.length === 1 ? 'a' : filtered.length < 5 ? 'e' : 'a'}`}
                 </span>
-                <select
-                  className="ew-vp-sort"
-                  value={sortBy}
-                  onChange={e => setSortBy(e.target.value as typeof sortBy)}
-                  aria-label="Sortiraj"
-                >
-                  <option value="rating">Najbolja ocjena</option>
-                  <option value="price_asc">Cijena: niža → viša</option>
-                  <option value="price_desc">Cijena: viša → niža</option>
-                </select>
+                <div className="ew-vp-results-actions">
+                  <button
+                    type="button"
+                    className="ew-vp-map-btn"
+                    onClick={() => setMapOpen(true)}
+                    disabled={filtered.length === 0}
+                  >
+                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="ew-vp-map-btn__icon">
+                      <path d="M10 17s-6-5.2-6-9.5A6 6 0 0 1 16 7.5C16 11.8 10 17 10 17Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                      <circle cx="10" cy="7.5" r="2" stroke="currentColor" strokeWidth="1.5"/>
+                    </svg>
+                    Prikaži na karti
+                  </button>
+                  <select
+                    className="ew-vp-sort"
+                    value={sortBy}
+                    onChange={e => setSortBy(e.target.value as typeof sortBy)}
+                    aria-label="Sortiraj"
+                  >
+                    {userLoc && <option value="distance">Najbliže meni</option>}
+                    <option value="rating">Najbolja ocjena</option>
+                    <option value="price_asc">Cijena: niža → viša</option>
+                    <option value="price_desc">Cijena: viša → niža</option>
+                  </select>
+                </div>
               </div>
 
               {activeFilterChips.length > 0 ? (
@@ -278,7 +390,14 @@ export default function VenuesPage() {
                           <h2 className="ew-vp-card__name">{venue.name}</h2>
                           <StarRating rating={venue.rating} />
                         </div>
-                        <p className="ew-vp-card__address">{venue.address}</p>
+                        <p className="ew-vp-card__address">
+                          {venue.address}
+                          {typeof venue._km === 'number' && (
+                            <span className="ew-vp-card__distance" aria-label={`${formatKm(venue._km)} od tebe`}>
+                              · {formatKm(venue._km)} od tebe
+                            </span>
+                          )}
+                        </p>
                         <p className="ew-vp-card__desc">{venue.description.slice(0, 90)}…</p>
                         <div className="ew-vp-card__amenities">
                           {venue.amenities.slice(0, 4).map(a => (
@@ -305,6 +424,17 @@ export default function VenuesPage() {
       </main>
 
       <Footer />
+
+      {mapOpen && (
+        <Suspense fallback={null}>
+          <VenuesMapModal
+            venues={filtered}
+            userLoc={userLoc}
+            region={region}
+            onClose={() => setMapOpen(false)}
+          />
+        </Suspense>
+      )}
     </div>
   )
 }

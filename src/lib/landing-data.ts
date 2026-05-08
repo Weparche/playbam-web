@@ -11,12 +11,18 @@ export const REGIONS = {
     shortLabel: 'Split',
     cities: ['Split', 'Solin', 'Kaštel Sućurac', 'Trogir'] as readonly string[],
   },
+  koprivnica: {
+    label: 'Koprivnica',
+    shortLabel: 'Koprivnica',
+    cities: ['Koprivnica'] as readonly string[],
+  },
 } as const
 
 export type RegionKey = keyof typeof REGIONS
 
 export function regionForCity(city: string): RegionKey {
   if (REGIONS.split.cities.includes(city)) return 'split'
+  if (REGIONS.koprivnica.cities.includes(city)) return 'koprivnica'
   return 'zagreb'
 }
 
@@ -68,6 +74,7 @@ export type Venue = {
 export const REGION_CENTERS: Record<RegionKey, { lat: number; lng: number; zoom: number }> = {
   zagreb: { lat: 45.815, lng: 15.978, zoom: 11 },
   split: { lat: 43.508, lng: 16.440, zoom: 11 },
+  koprivnica: { lat: 46.163, lng: 16.833, zoom: 13 },
 }
 
 export type Testimonial = {
@@ -1696,6 +1703,99 @@ export const venues: Venue[] = [
       { name: 'Dupinko Mini', price: 200, minChildren: 18, includes: ['2h igranje', 'animatori', 'dekoracija', 'sokovi i grickalice', 'pozivnice'] },
       { name: 'Dupinko Tematski', price: 250, minChildren: 18, includes: ['2h igranje', 'tematska dekoracija', 'kostimi', 'animatori', 'pizza', 'torta'] },
       { name: 'Dupinko Premium', price: 300, minChildren: 20, includes: ['2.5h igranje', 'tematska dekoracija', 'kreativna radionica', 'animatori', 'puni catering', 'foto'] },
+    ],
+  },
+  {
+    id: 'veseli-napuhanci-koprivnica',
+    slug: 'veseli-napuhanci-koprivnica',
+    lat: 46.1605,
+    lng: 16.8420,
+    name: 'Veseli Napuhanci',
+    city: 'Koprivnica',
+    address: 'Pavelinska bb, 48000 Koprivnica',
+    phone: '+385 48 000 000',
+    rating: 4.9,
+    reviewCount: 120,
+    pricePerChild: 18,
+    ageRange: '0–12',
+    ageMin: 0,
+    ageMax: 12,
+    maxChildren: 25,
+    description: 'Dječja igraonica i rođendaonica u Koprivnici s napuhancima u zatvorenom prostoru — preko 1000 odrađenih rođendana i 99% zadovoljnih roditelja. Sigurno i klimatizirano okruženje, kutić za roditelje, tematska dekoracija po izboru. Specijalisti za napuhance: Frozen, Minion, Disney, Paw Patrol.',
+    amenities: ['Parking', 'Animatori', 'Trampolini', 'Klima', 'Tematske sobe', 'Kutić za roditelje', 'Dekoracija'],
+    coverPhoto: 'https://veselinapuhancikc.hr/wp-content/uploads/2025/10/igraonica-1.webp',
+    photos: [
+      'https://veselinapuhancikc.hr/wp-content/uploads/2025/10/igraonica2.webp',
+      'https://veselinapuhancikc.hr/wp-content/uploads/2025/10/igraonica3.webp',
+      'https://veselinapuhancikc.hr/wp-content/uploads/2025/10/igraonica4.jpg',
+      'https://veselinapuhancikc.hr/wp-content/uploads/2025/03/jungle-djeca.webp',
+    ],
+    packages: [
+      { name: 'Mini Napuhanac', price: 220, minChildren: 12, includes: ['2h igranje', 'napuhanci u zatvorenom', 'osnovna dekoracija', 'sokovi i grickalice'] },
+      { name: 'Veseli Rođendan', price: 320, minChildren: 18, includes: ['3h najam prostora', 'napuhanci', 'tematska dekoracija', 'animatori', 'pozivnice', 'doplata 6€ po dodatnom djetetu'] },
+      { name: 'Tematski Premium', price: 420, minChildren: 18, includes: ['3h najam prostora', 'tematska dekoracija (Frozen / Paw Patrol / Minion)', 'kostimi', 'animatori', 'puni catering', 'digitalne pozivnice'] },
+    ],
+  },
+  {
+    id: 'guliver-play-koprivnica',
+    slug: 'guliver-play-koprivnica',
+    lat: 46.1640,
+    lng: 16.8285,
+    name: 'Guliver Play',
+    city: 'Koprivnica',
+    address: 'Franje Galovića 6, 48000 Koprivnica',
+    phone: '+385 98 699 279',
+    rating: 4.6,
+    reviewCount: 85,
+    pricePerChild: 15,
+    ageRange: '1–12',
+    ageMin: 1,
+    ageMax: 12,
+    maxChildren: 30,
+    description: 'Igraonica i rođendaonica koja posluje od 2013. godine pod tvrtkom Guliver Land d.o.o. Bogato opremljen prostor sa stručnim i educiranim animatorima — sigurno i zabavno mjesto u centru Koprivnice. Termini se dogovaraju prema potrebi, idealno za rođendane svih dobnih skupina.',
+    amenities: ['Parking', 'Animatori', 'Tematske sobe', 'Klima', 'Ugostiteljstvo', 'Kafić za roditelje'],
+    coverPhoto: 'https://images.unsplash.com/photo-1759330203240-b89ccee8840f?w=1200&q=80',
+    photos: [
+      'https://images.unsplash.com/photo-1750082828854-61333b7b9e95?w=1200&q=80',
+      'https://images.unsplash.com/photo-1720293315630-42f6894d484e?w=1200&q=80',
+      'https://images.unsplash.com/photo-1656850713613-e4b663338bff?w=1200&q=80',
+      'https://images.unsplash.com/photo-1621054392284-e4cab544f1ea?w=1200&q=80',
+    ],
+    packages: [
+      { name: 'Guliver Basic', price: 180, minChildren: 12, includes: ['2h igranje', 'animator', 'osnovna dekoracija', 'sokovi'] },
+      { name: 'Guliver Fun', price: 240, minChildren: 15, includes: ['2.5h igranje', 'tematska dekoracija', 'animatori', 'pizza', 'sokovi', 'pozivnice'] },
+      { name: 'Guliver Premium', price: 320, minChildren: 18, includes: ['3h igranje', 'tematska soba', 'animatori', 'puni catering', 'torta', 'foto reportaža'] },
+    ],
+  },
+  {
+    id: 'igraonica-loptica-koprivnica',
+    slug: 'igraonica-loptica-koprivnica',
+    lat: 46.1645,
+    lng: 16.8290,
+    name: 'Igraonica Loptica',
+    city: 'Koprivnica',
+    address: 'Franje Galovića 6, 48000 Koprivnica (kompleks Guliver)',
+    phone: '+385 99 5000 940',
+    rating: 4.7,
+    reviewCount: 65,
+    pricePerChild: 12,
+    ageRange: '1–10',
+    ageMin: 1,
+    ageMax: 10,
+    maxChildren: 100,
+    description: 'Igraonica i rođendaonica unutar obiteljskog kompleksa Guliver — animatori školovani za predškolski odgoj brinu o djeci dok roditelji uživaju u susjednoj dvorani. Velika sala kapaciteta do 100 ljudi, kuhinja, ozvučenje, stol za picado i pikado. Idealno za veće obiteljske proslave i zajednička druženja.',
+    amenities: ['Parking', 'Animatori', 'Ugostiteljstvo', 'Klima', 'Velika dvorana', 'Kuhinja', 'Ozvučenje'],
+    coverPhoto: 'https://images.unsplash.com/photo-1655842556550-6809c404ce9c?w=1200&q=80',
+    photos: [
+      'https://images.unsplash.com/photo-1600821986515-3ef5b0f29f39?w=1200&q=80',
+      'https://images.unsplash.com/photo-1646148327670-9cee7a31923e?w=1200&q=80',
+      'https://images.unsplash.com/photo-1715653127319-e3145a312caf?w=1200&q=80',
+      'https://images.unsplash.com/photo-1720729706252-40be12690f12?w=1200&q=80',
+    ],
+    packages: [
+      { name: 'Loptica Mini', price: 150, minChildren: 10, includes: ['2h najam dvorane', 'animatorica', 'osnovna dekoracija'] },
+      { name: 'Loptica Familijarni', price: 250, minChildren: 18, includes: ['3h najam dvorane', 'animatorice', 'tematska dekoracija', 'sokovi i slatkiši', 'kuhinja na raspolaganju'] },
+      { name: 'Loptica Veliki Slavlje', price: 380, minChildren: 30, includes: ['4h najam dvorane', '2 animatorice', 'puni catering po dogovoru', 'tematska dekoracija', 'ozvučenje', 'foto reportaža'] },
     ],
   },
 ]

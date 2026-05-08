@@ -1,5 +1,12 @@
 import { Link } from 'react-router-dom'
 
+const legalLinks = [
+  { to: '/impressum', label: 'Impressum' },
+  { to: '/uvjeti-koristenja', label: 'Uvjeti korištenja' },
+  { to: '/privatnost', label: 'Privatnost' },
+  { to: '/kolacici', label: 'Kolačići' },
+] as const
+
 export default function Footer() {
   return (
     <footer className="pb-footer" id="footer">
@@ -29,72 +36,28 @@ export default function Footer() {
           </div>
 
           <div className="pb-footer__partner-col">
-            <div className="pb-footer__label">Nepar</div>
-            <div className="pb-footer__partner">
-              <img
-                src="/nepar_logo.png"
-                alt=""
-                width={44}
-                height={44}
-                decoding="async"
-                className="pb-footer__partner-img pb-footer__partner-img--logo"
-              />
-              <img
-                src="/nepar.png"
-                alt=""
-                decoding="async"
-                className="pb-footer__partner-img pb-footer__partner-img--mark"
-              />
-            </div>
+            <div className="pb-footer__label">Izrada</div>
             <a
               className="pb-footer__link"
               href="https://nepar.hr"
               target="_blank"
               rel="noopener noreferrer"
             >
-              O nama
+              nepar.hr
             </a>
           </div>
         </div>
 
-        <section className="pb-footer__impressum" aria-labelledby="pb-footer-impressum-heading">
-          <h2 id="pb-footer-impressum-heading" className="pb-footer__impressum-title">
-            Impressum
-          </h2>
-          <nav className="pb-footer__impressum-nav" aria-label="Pravne poveznice">
-            <a href="#" className="pb-footer__impressum-link">
-              Uvjeti korištenja
-            </a>
-            <a href="#" className="pb-footer__impressum-link">
-              Privatnost
-            </a>
-            <a href="#" className="pb-footer__impressum-link">
-              Kolačići
-            </a>
-          </nav>
-          <h3 id="pb-footer-legal-heading" className="pb-footer__legal-title">
-            Poslovni podaci
-          </h3>
-          <p className="pb-footer__legal-text">
-            <a
-              href="https://nepar.hr"
-              className="pb-footer__legal-link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Nepar, obrt za digitalna rješenja i usluge
-            </a>
-          </p>
-          <ul className="pb-footer__legal-list">
-            <li>vl. Ivan Gorupić</li>
-            <li>MBO: 99267101</li>
-            <li>
-              <a href="mailto:nepar@nepar.hr" className="pb-footer__legal-link">
-                nepar@nepar.hr
-              </a>
-            </li>
-          </ul>
-        </section>
+        <nav className="pb-footer__legal-row" aria-label="Pravne informacije">
+          {legalLinks.map(({ to, label }, i) => (
+            <span key={to} className="pb-footer__legal-row-item">
+              {i > 0 ? <span className="pb-footer__legal-row-sep" aria-hidden="true">·</span> : null}
+              <Link to={to} className="pb-footer__legal-row-link">
+                {label}
+              </Link>
+            </span>
+          ))}
+        </nav>
       </div>
     </footer>
   )

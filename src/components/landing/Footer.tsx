@@ -20,6 +20,13 @@ const columns: FooterColumn[] = [
   },
 ]
 
+const legalLinks = [
+  { to: '/impressum', label: 'Impressum' },
+  { to: '/uvjeti-koristenja', label: 'Uvjeti korištenja' },
+  { to: '/privatnost', label: 'Privatnost' },
+  { to: '/kolacici', label: 'Kolačići' },
+] as const
+
 export default function Footer() {
   return (
     <footer className="ew-footer">
@@ -50,70 +57,28 @@ export default function Footer() {
             </div>
           ))}
           <div className="ew-footer__partner-col">
-            <div className="ew-footer__col-title">Nepar</div>
-            <div className="ew-footer__partner">
-              <img
-                src="/nepar_logo.png"
-                alt=""
-                width={48}
-                height={48}
-                decoding="async"
-                className="ew-footer__partner-img ew-footer__partner-img--logo"
-              />
-              <img
-                src="/nepar.png"
-                alt=""
-                decoding="async"
-                className="ew-footer__partner-img ew-footer__partner-img--mark"
-              />
-            </div>
+            <div className="ew-footer__col-title">Izrada</div>
             <a
               href="https://nepar.hr"
               className="ew-footer__link"
               target="_blank"
               rel="noopener noreferrer"
             >
-              O nama
+              nepar.hr
             </a>
           </div>
         </div>
 
-        <section className="ew-footer__impressum" aria-labelledby="footer-impressum-heading">
-          <h2 id="footer-impressum-heading" className="ew-footer__impressum-heading">
-            Impressum
-          </h2>
-          <nav className="ew-footer__impressum-nav" aria-label="Pravne poveznice">
-            <a href="#" className="ew-footer__impressum-link">
-              Uvjeti korištenja
-            </a>
-            <a href="#" className="ew-footer__impressum-link">
-              Privatnost
-            </a>
-            <a href="#" className="ew-footer__impressum-link">
-              Kolačići
-            </a>
-          </nav>
-          <h3 className="ew-footer__legal-title">Poslovni podaci</h3>
-          <p className="ew-footer__legal-line">
-            <a
-              href="https://nepar.hr"
-              className="ew-footer__legal-link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Nepar, obrt za digitalna rješenja i usluge
-            </a>
-          </p>
-          <ul className="ew-footer__legal-list">
-            <li>vl. Ivan Gorupić</li>
-            <li>MBO: 99267101</li>
-            <li>
-              <a href="mailto:nepar@nepar.hr" className="ew-footer__legal-link">
-                nepar@nepar.hr
-              </a>
-            </li>
-          </ul>
-        </section>
+        <nav className="ew-footer__legal-row" aria-label="Pravne informacije">
+          {legalLinks.map(({ to, label }, i) => (
+            <span key={to} className="ew-footer__legal-row-item">
+              {i > 0 ? <span className="ew-footer__legal-row-sep" aria-hidden="true">·</span> : null}
+              <Link to={to} className="ew-footer__legal-row-link">
+                {label}
+              </Link>
+            </span>
+          ))}
+        </nav>
 
         <div className="ew-footer__bottom">
           <span>© 2026 VidimoSe.hr · Hrvatska · EUR</span>

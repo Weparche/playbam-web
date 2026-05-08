@@ -860,31 +860,6 @@ html, body { scrollbar-gutter: stable; }
   min-width: 0;
 }
 
-.pb-footer__partner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.pb-footer__partner-img {
-  display: block;
-  height: auto;
-  width: auto;
-  object-fit: contain;
-}
-
-.pb-footer__partner-img--logo {
-  max-height: 44px;
-  max-width: 52px;
-}
-
-.pb-footer__partner-img--mark {
-  max-height: 32px;
-  max-width: min(132px, 100%);
-}
-
 @media (min-width: 900px) {
   .pb-footer__inner {
     grid-template-columns: 1fr 0.85fr minmax(0, 1fr);
@@ -892,76 +867,39 @@ html, body { scrollbar-gutter: stable; }
   }
 }
 
-.pb-footer__impressum {
-  padding-top: 22px;
+.pb-footer__legal-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  row-gap: 10px;
+  padding-top: 20px;
   border-top: 1px solid rgba(22, 24, 35, 0.1);
 }
 
-.pb-footer__impressum-title {
-  font-weight: 1000;
-  margin: 0 0 10px;
+.pb-footer__legal-row-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pb-footer__legal-row-sep {
   font-size: 13px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(16, 24, 40, 0.55);
+  color: rgba(16, 24, 40, 0.45);
+  user-select: none;
 }
 
-.pb-footer__impressum-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 18px;
-  margin-bottom: 16px;
-}
-
-.pb-footer__impressum-link {
+.pb-footer__legal-row-link {
   font-size: 14px;
   font-weight: 900;
   color: rgba(16, 24, 40, 0.68);
   text-decoration: none;
 }
 
-.pb-footer__impressum-link:hover {
+.pb-footer__legal-row-link:hover {
   color: rgba(16, 24, 40, 0.95);
   text-decoration: underline;
   text-underline-offset: 2px;
-}
-
-.pb-footer__legal-title {
-  font-weight: 1000;
-  margin: 0 0 10px;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(16, 24, 40, 0.55);
-}
-
-.pb-footer__legal-text {
-  margin: 0 0 8px;
-  font-size: 14px;
-  line-height: 1.55;
-  color: rgba(16, 24, 40, 0.72);
-}
-
-.pb-footer__legal-list {
-  margin: 0;
-  padding-left: 1.2rem;
-  font-size: 14px;
-  line-height: 1.55;
-  color: rgba(16, 24, 40, 0.72);
-}
-
-.pb-footer__legal-list li {
-  margin-bottom: 4px;
-}
-
-.pb-footer__legal-link {
-  color: rgba(16, 24, 40, 0.88);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.pb-footer__legal-link:hover {
-  color: rgba(16, 24, 40, 0.98);
 }
 
 /* Invitation page — topla pozadina, mobile-first */

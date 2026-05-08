@@ -11,6 +11,10 @@ const MojVidimosePage = lazy(() => import('./pages/MojVidimosePage'))
 const AdminPage = lazy(() => import('./pages/AdminPage'))
 const SharedInvitationPage = lazy(() => import('./pages/SharedInvitationPage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
+const ImpressumPage = lazy(() => import('./pages/ImpressumPage'))
+const TermsPage = lazy(() => import('./pages/TermsPage'))
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
+const CookiesPage = lazy(() => import('./pages/CookiesPage'))
 
 function ScrollToTop() {
   const location = useLocation()
@@ -44,6 +48,10 @@ export default function App() {
             <Route path="/igraonice" element={<VenuesPage />} />
             <Route path="/igraonice/:slug" element={<VenueDetailPage />} />
             <Route path="/kontakt" element={<ContactPage />} />
+            <Route path="/impressum" element={<ImpressumPage />} />
+            <Route path="/uvjeti-koristenja" element={<TermsPage />} />
+            <Route path="/privatnost" element={<PrivacyPage />} />
+            <Route path="/kolacici" element={<CookiesPage />} />
             <Route path="/moj-vidimose" element={<MojVidimosePage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/pozivnica-demo" element={<Navigate to="/pozivnica/luka-istrazivaci" replace />} />

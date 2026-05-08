@@ -1845,102 +1845,40 @@ button.ew-navbar__auth-btn { font-family: inherit; }
   min-width: 0;
 }
 
-.ew-footer__partner {
+.ew-footer__legal-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.ew-footer__partner-img {
-  display: block;
-  height: auto;
-  width: auto;
-  object-fit: contain;
-}
-
-.ew-footer__partner-img--logo {
-  max-height: 44px;
-  max-width: 52px;
-}
-
-.ew-footer__partner-img--mark {
-  max-height: 34px;
-  max-width: min(148px, 100%);
-}
-
-.ew-footer__impressum {
-  margin-bottom: 40px;
-  padding-top: 8px;
+  gap: 8px;
+  row-gap: 10px;
+  margin-bottom: 28px;
+  padding-top: 12px;
   border-top: 1px solid var(--color-border-subtle);
-  max-width: 52rem;
 }
 
-.ew-footer__impressum-heading {
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.ew-footer__legal-row-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ew-footer__legal-row-sep {
+  font-size: 13px;
   color: var(--color-text-tertiary);
-  margin: 0 0 12px;
+  user-select: none;
 }
 
-.ew-footer__impressum-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 20px;
-  margin-bottom: 20px;
-}
-
-.ew-footer__impressum-link {
-  font-size: 14px;
+.ew-footer__legal-row-link {
+  font-family: var(--font-work-sans);
+  font-size: 13px;
   color: var(--color-text-secondary);
   text-decoration: none;
-  transition: color 300ms ease;
 }
 
-.ew-footer__impressum-link:hover {
-  color: var(--color-text-primary);
+.ew-footer__legal-row-link:hover {
+  color: var(--color-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-.ew-footer__legal-title {
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-  margin: 0 0 12px;
-}
-
-.ew-footer__legal-line {
-  font-size: 14px;
-  line-height: 1.65;
-  color: var(--color-text-secondary);
-  margin: 0 0 8px;
-}
-
-.ew-footer__legal-list {
-  margin: 0;
-  padding: 0 0 0 1.15rem;
-  font-size: 14px;
-  line-height: 1.65;
-  color: var(--color-text-secondary);
-}
-
-.ew-footer__legal-list li {
-  margin-bottom: 4px;
-}
-
-.ew-footer__legal-link {
-  color: var(--color-accent);
-  text-decoration: none;
-}
-
-.ew-footer__legal-link:hover {
-  text-decoration: underline;
 }
 
 /* Kontakt stranica */
@@ -2030,6 +1968,105 @@ button.ew-navbar__auth-btn { font-family: inherit; }
     font-size: 20px;
     word-break: break-all;
   }
+}
+
+/* Stranice: Impressum, uvjeti korištenja, privatnost, kolačići */
+.ew-legal-main {
+  min-height: 50vh;
+}
+
+.ew-legal {
+  padding: 48px 0 80px;
+}
+
+.ew-legal__title {
+  margin-bottom: 20px;
+}
+
+.ew-legal__subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.ew-legal__subnav-link {
+  font-family: var(--font-work-sans);
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.ew-legal__subnav-link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ew-legal__body {
+  font-family: var(--font-work-sans);
+  font-size: 16px;
+  line-height: 1.72;
+  color: var(--color-text-secondary);
+  max-width: 52rem;
+}
+
+.ew-legal__body > * + * {
+  margin-top: 1rem;
+}
+
+.ew-legal__updated {
+  font-size: 13px !important;
+  color: var(--color-text-tertiary) !important;
+  margin-bottom: 1.75rem !important;
+}
+
+.ew-legal__h2 {
+  font-family: var(--font-work-sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.ew-legal__h3 {
+  font-family: var(--font-work-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-top: 1.5rem;
+  margin-bottom: 0.45rem;
+}
+
+.ew-legal__list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.ew-legal__list li {
+  margin-bottom: 0.35rem;
+}
+
+.ew-legal__a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.ew-legal__a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ew-legal__note {
+  margin-top: 2rem !important;
+  padding-top: 1.25rem !important;
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: 14px !important;
+  color: var(--color-text-tertiary) !important;
 }
 
 /* ============================================

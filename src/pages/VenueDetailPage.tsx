@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 
 import Footer from '../components/landing/Footer'
@@ -47,11 +47,41 @@ export default function VenueDetailPage() {
   const { slug } = useParams<{ slug: string }>()
   const venue = venues.find(v => v.slug === slug)
 
+  const allPhotos = useMemo(
+    () => (venue ? [venue.coverPhoto, ...venue.photos] : []),
+    [venue],
+  )
+
   const [activePhoto, setActivePhoto] = useState(0)
+
+  const { leftIndices, rightIndices } = useMemo(() => {
+    const n = allPhotos.length
+    const split = Math.ceil(n / 2)
+    return {
+      leftIndices: Array.from({ length: split }, (_, i) => i),
+      rightIndices: Array.from({ length: Math.max(0, n - split) }, (_, i) => i + split),
+    }
+  }, [allPhotos.length])
+
+  useLayoutEffect(() => {
+    if (allPhotos.length === 0) return
+    const mq = window.matchMedia('(min-width: 900px)')
+    const selector = mq.matches
+      ? `.ew-vd-viewer__rail button[data-vd-index="${activePhoto}"]`
+      : `.ew-vd-viewer__mobile-scroll button[data-vd-index="${activePhoto}"]`
+    document.querySelector<HTMLElement>(selector)?.scrollIntoView({
+      block: 'nearest',
+      inline: 'nearest',
+      behavior: 'smooth',
+    })
+  }, [activePhoto, allPhotos.length])
+
+  useEffect(() => {
+    setActivePhoto(0)
+  }, [slug])
 
   if (!venue) return <Navigate to="/igraonice" replace />
 
-  const allPhotos = [venue.coverPhoto, ...venue.photos]
   const venueRegion = regionForCity(venue.city)
   const regionMeta = REGIONS[venueRegion]
   const venuesQuery = venueRegion === 'zagreb' ? '' : `?grad=${venueRegion}`
@@ -73,31 +103,66 @@ export default function VenueDetailPage() {
           </div>
         </div>
 
-        {/* Hero photo */}
-        <div className="ew-vd-hero">
-          <img
-            src={allPhotos[activePhoto]}
-            alt={`${venue.name} — fotografija ${activePhoto + 1}`}
-            className="ew-vd-hero__img"
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-
-        {/* Photo gallery strip */}
-        <div className="ew-vd-gallery">
-          <div className="ew-container">
-            <div className="ew-vd-gallery__strip">
-              {allPhotos.map((src, i) => (
+        {/* Photo viewer: desktop — side rails + square center; mobile — horizontal strip */}
+        <div className="ew-vd-viewer">
+          <div className="ew-container ew-vd-viewer__inner">
+            <div className="ew-vd-viewer__rail ew-vd-viewer__rail--left">
+              {leftIndices.map(i => (
                 <button
                   key={i}
-                  className={`ew-vd-gallery__thumb${activePhoto === i ? ' ew-vd-gallery__thumb--active' : ''}`}
+                  type="button"
+                  data-vd-index={i}
+                  className={`ew-vd-thumb${activePhoto === i ? ' ew-vd-thumb--active' : ''}`}
                   onClick={() => setActivePhoto(i)}
                   aria-label={`Fotografija ${i + 1}`}
+                  aria-current={activePhoto === i ? 'true' : undefined}
                 >
-                  <img src={src} alt="" loading="lazy" decoding="async" />
+                  <img src={allPhotos[i]} alt="" loading="lazy" decoding="async" />
                 </button>
               ))}
+            </div>
+            <div className="ew-vd-viewer__main">
+              <img
+                src={allPhotos[activePhoto]}
+                alt={`${venue.name} — fotografija ${activePhoto + 1}`}
+                className="ew-vd-viewer__main-img"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <div className="ew-vd-viewer__rail ew-vd-viewer__rail--right">
+              {rightIndices.map(i => (
+                <button
+                  key={i}
+                  type="button"
+                  data-vd-index={i}
+                  className={`ew-vd-thumb${activePhoto === i ? ' ew-vd-thumb--active' : ''}`}
+                  onClick={() => setActivePhoto(i)}
+                  aria-label={`Fotografija ${i + 1}`}
+                  aria-current={activePhoto === i ? 'true' : undefined}
+                >
+                  <img src={allPhotos[i]} alt="" loading="lazy" decoding="async" />
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="ew-vd-viewer__mobile-strip">
+            <div className="ew-container">
+              <div className="ew-vd-viewer__mobile-scroll">
+                {allPhotos.map((src, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    data-vd-index={i}
+                    className={`ew-vd-thumb ew-vd-thumb--strip${activePhoto === i ? ' ew-vd-thumb--active' : ''}`}
+                    onClick={() => setActivePhoto(i)}
+                    aria-label={`Fotografija ${i + 1}`}
+                    aria-current={activePhoto === i ? 'true' : undefined}
+                  >
+                    <img src={src} alt="" loading="lazy" decoding="async" />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>

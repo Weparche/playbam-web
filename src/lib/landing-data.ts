@@ -139,18 +139,6 @@ export const invitationTemplates: InvitationTemplate[] = [
     address: 'Avenija Dubrovnik 12, Zagreb',
     time: '14:00 — 16:30',
   },
-  {
-    id: 'princess',
-    theme: 'Princeza',
-    image: '/princess.png',
-    fullImage: '/princess.png',
-    childName: 'Petra',
-    age: '6',
-    date: 'Subota, 28. lipnja',
-    venue: 'Arena Junior',
-    address: 'Kneza Branimira 88, Split',
-    time: '10:00 — 12:30',
-  },
 ]
 
 export const venues: Venue[] = [
@@ -561,8 +549,8 @@ export const venues: Venue[] = [
   {
     id: 'jogica',
     slug: 'jogica-zagreb',
-    lat: 45.8260,
-    lng: 16.0710,
+    lat: 45.79095,
+    lng: 15.93521,
     name: 'Jogica',
     city: 'Zagreb',
     address: 'Vojakovačka ulica 39, Gajevo, 10000 Zagreb',
@@ -574,7 +562,7 @@ export const venues: Venue[] = [
     ageMin: 1,
     ageMax: 10,
     maxChildren: 20,
-    description: 'Moderan dječji klub u Gajevu s parkingom na dvije ulice. Sport, disco, princeze ili safari — tematske proslave s DJ opremom, face paintingom i maskotama na poziv. Detaljan fotoalbum uz svaki paket.',
+    description: 'Moderan dječji klub kod Jaruna u Gajevu (Vojakovačka) — parking na dvije ulice. Sport, disco, princeze ili safari — tematske proslave s DJ opremom, face paintingom i maskotama na poziv. Detaljan fotoalbum uz svaki paket.',
     amenities: ['Parking', 'Animatori', 'Torta po narudžbi', 'DJ oprema', 'Face painting', 'Klima'],
     coverPhoto: 'https://jogica.com.hr/wp-content/uploads/2026/04/20260216_175918.jpg',
     photos: [

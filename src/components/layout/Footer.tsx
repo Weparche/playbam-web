@@ -28,21 +28,53 @@ export default function Footer() {
             </Link>
           </div>
 
-          <div className="pb-footer__col">
-            <div className="pb-footer__label">Pravno</div>
-            <a className="pb-footer__link" href="#">
-              Privatnost
-            </a>
-            <a className="pb-footer__link" href="#">
-              Uvjeti
+          <div className="pb-footer__partner-col">
+            <div className="pb-footer__label">Nepar</div>
+            <div className="pb-footer__partner">
+              <img
+                src="/nepar_logo.png"
+                alt=""
+                width={44}
+                height={44}
+                decoding="async"
+                className="pb-footer__partner-img pb-footer__partner-img--logo"
+              />
+              <img
+                src="/nepar.png"
+                alt=""
+                decoding="async"
+                className="pb-footer__partner-img pb-footer__partner-img--mark"
+              />
+            </div>
+            <a
+              className="pb-footer__link"
+              href="https://nepar.hr"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              O nama
             </a>
           </div>
         </div>
 
-        <section className="pb-footer__legal" aria-labelledby="pb-footer-legal-heading">
-          <h2 id="pb-footer-legal-heading" className="pb-footer__legal-title">
-            Poslovni podaci
+        <section className="pb-footer__impressum" aria-labelledby="pb-footer-impressum-heading">
+          <h2 id="pb-footer-impressum-heading" className="pb-footer__impressum-title">
+            Impressum
           </h2>
+          <nav className="pb-footer__impressum-nav" aria-label="Pravne poveznice">
+            <a href="#" className="pb-footer__impressum-link">
+              Uvjeti korištenja
+            </a>
+            <a href="#" className="pb-footer__impressum-link">
+              Privatnost
+            </a>
+            <a href="#" className="pb-footer__impressum-link">
+              Kolačići
+            </a>
+          </nav>
+          <h3 id="pb-footer-legal-heading" className="pb-footer__legal-title">
+            Poslovni podaci
+          </h3>
           <p className="pb-footer__legal-text">
             <a
               href="https://nepar.hr"
@@ -57,7 +89,9 @@ export default function Footer() {
             <li>vl. Ivan Gorupić</li>
             <li>MBO: 99267101</li>
             <li>
-              <a href="mailto:nepar@nepar.hr" className="pb-footer__legal-link">nepar@nepar.hr</a>
+              <a href="mailto:nepar@nepar.hr" className="pb-footer__legal-link">
+                nepar@nepar.hr
+              </a>
             </li>
           </ul>
         </section>

@@ -1841,11 +1841,69 @@ button.ew-navbar__auth-btn { font-family: inherit; }
   color: var(--color-text-primary);
 }
 
-.ew-footer__legal {
+.ew-footer__partner-col {
+  min-width: 0;
+}
+
+.ew-footer__partner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ew-footer__partner-img {
+  display: block;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+}
+
+.ew-footer__partner-img--logo {
+  max-height: 44px;
+  max-width: 52px;
+}
+
+.ew-footer__partner-img--mark {
+  max-height: 34px;
+  max-width: min(148px, 100%);
+}
+
+.ew-footer__impressum {
   margin-bottom: 40px;
   padding-top: 8px;
   border-top: 1px solid var(--color-border-subtle);
   max-width: 52rem;
+}
+
+.ew-footer__impressum-heading {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin: 0 0 12px;
+}
+
+.ew-footer__impressum-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-bottom: 20px;
+}
+
+.ew-footer__impressum-link {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 300ms ease;
+}
+
+.ew-footer__impressum-link:hover {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .ew-footer__legal-title {

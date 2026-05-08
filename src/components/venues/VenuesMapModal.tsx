@@ -14,6 +14,31 @@ import { lockScroll, unlockScroll } from '../../lib/scrollLock'
 
 import './VenuesMapModal.css'
 
+/** Varijacije smjera + offset za trajne nazive kod pinova — smanjenje preklapanja pri prvom zoomu */
+const LABEL_PLACEMENTS = [
+  { direction: 'top' as const, offset: [0, -46] as [number, number] },
+  { direction: 'top' as const, offset: [34, -40] as [number, number] },
+  { direction: 'top' as const, offset: [-34, -40] as [number, number] },
+  { direction: 'bottom' as const, offset: [0, 58] as [number, number] },
+  { direction: 'bottom' as const, offset: [30, 54] as [number, number] },
+  { direction: 'bottom' as const, offset: [-30, 54] as [number, number] },
+  { direction: 'left' as const, offset: [-12, -36] as [number, number] },
+  { direction: 'left' as const, offset: [-16, -6] as [number, number] },
+  { direction: 'right' as const, offset: [12, -36] as [number, number] },
+  { direction: 'right' as const, offset: [16, -6] as [number, number] },
+  { direction: 'top' as const, offset: [20, -48] as [number, number] },
+  { direction: 'top' as const, offset: [-20, -48] as [number, number] },
+]
+
+function tooltipPlacementForVenueId(id: string): (typeof LABEL_PLACEMENTS)[number] {
+  let h = 2166136261 >>> 0
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i)
+    h = Math.imul(h, 16777619)
+  }
+  return LABEL_PLACEMENTS[(h >>> 0) % LABEL_PLACEMENTS.length]
+}
+
 L.Icon.Default.mergeOptions({ iconUrl, iconRetinaUrl, shadowUrl })
 
 const venueIcon = L.icon({
@@ -47,11 +72,11 @@ function FitBounds({ points }: { points: LatLngExpression[] }) {
   useEffect(() => {
     if (points.length === 0) return
     if (points.length === 1) {
-      map.setView(points[0] as LatLngExpression, 13, { animate: false })
+      map.setView(points[0] as LatLngExpression, 12, { animate: false })
       return
     }
     const bounds = L.latLngBounds(points as L.LatLngExpression[])
-    map.fitBounds(bounds, { padding: [48, 48], maxZoom: 14 })
+    map.fitBounds(bounds, { padding: [56, 56], maxZoom: 13 })
   }, [map, points])
   return null
 }
@@ -236,10 +261,13 @@ export default function VenuesMapModal({ venues, userLoc, region, onClose }: Pro
                         )}
                         <Link
                           to={`/igraonice/${v.slug}`}
-                          className="ew-vp-mapmodal__card-link"
+                          className="ew-vp-mapmodal__cta"
                           onClick={() => onClose()}
                         >
-                          Više informacija na webu →
+                          <span>Više informacija na webu</span>
+                          <svg viewBox="0 0 20 20" fill="none" className="ew-vp-mapmodal__cta-arrow" aria-hidden="true">
+                            <path d="M4 10h11M12 6l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
                         </Link>
                       </div>
                     </article>
@@ -277,6 +305,7 @@ export default function VenuesMapModal({ venues, userLoc, region, onClose }: Pro
 
               {filteredVenues.map(v => {
                 const km = userLoc ? (v._km ?? haversineKm(userLoc, { lat: v.lat, lng: v.lng })) : null
+                const tp = tooltipPlacementForVenueId(v.id)
                 return (
                   <Marker
                     key={v.id}
@@ -284,7 +313,7 @@ export default function VenuesMapModal({ venues, userLoc, region, onClose }: Pro
                     icon={venueIcon}
                     eventHandlers={{ click: () => handleMarkerActivate(v) }}
                   >
-                    <Tooltip permanent direction="top" offset={[0, -36]} className="ew-vp-map-label">
+                    <Tooltip permanent direction={tp.direction} offset={tp.offset} className="ew-vp-map-label">
                       <span className="ew-vp-map-label__inner">
                         <span className="ew-vp-map-label__title">{v.name}</span>
                         <span className="ew-vp-map-label__rating">★ {v.rating.toFixed(1)}</span>
@@ -302,10 +331,13 @@ export default function VenuesMapModal({ venues, userLoc, region, onClose }: Pro
                         )}
                         <Link
                           to={`/igraonice/${v.slug}`}
-                          className="ew-vp-map-popup__cta"
+                          className="ew-vp-mapmodal__cta ew-vp-mapmodal__cta--popup"
                           onClick={onClose}
                         >
-                          Detalji na webu →
+                          <span>Detalji na webu</span>
+                          <svg viewBox="0 0 20 20" fill="none" className="ew-vp-mapmodal__cta-arrow" aria-hidden="true">
+                            <path d="M4 10h11M12 6l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
                         </Link>
                       </div>
                     </Popup>

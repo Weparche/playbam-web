@@ -1,11 +1,15 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
-import { venues } from '../lib/landing-data'
+import { REGIONS, venues, type RegionKey } from '../lib/landing-data'
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
 
 const amenityOptions = ['Parking', 'Animatori', 'Ugostiteljstvo', 'Torta po narudžbi', 'WC za bebe', 'Klima']
+
+function parseRegion(value: string | null): RegionKey {
+  return value === 'split' ? 'split' : 'zagreb'
+}
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -17,6 +21,10 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function VenuesPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const region = parseRegion(searchParams.get('grad'))
+  const regionMeta = REGIONS[region]
+
   const [query, setQuery] = useState('')
   const [ageMin, setAgeMin] = useState(0)
   const [ageMax, setAgeMax] = useState(12)
@@ -32,8 +40,13 @@ export default function VenuesPage() {
       return next
     })
 
+  const venuesInRegion = useMemo(
+    () => venues.filter(v => regionMeta.cities.includes(v.city)),
+    [regionMeta]
+  )
+
   const filtered = useMemo(() => {
-    let list = venues.filter(v => {
+    let list = venuesInRegion.filter(v => {
       if (query && !v.name.toLowerCase().includes(query.toLowerCase()) &&
           !v.address.toLowerCase().includes(query.toLowerCase())) return false
       if (v.ageMax < ageMin || v.ageMin > ageMax) return false
@@ -49,7 +62,7 @@ export default function VenuesPage() {
     else if (sortBy === 'price_desc') list = [...list].sort((a, b) => b.pricePerChild - a.pricePerChild)
 
     return list
-  }, [query, ageMin, ageMax, priceMax, selectedAmenities, sortBy])
+  }, [venuesInRegion, query, ageMin, ageMax, priceMax, selectedAmenities, sortBy])
   const activeFilterChips = [
     query ? `Pretraga: ${query}` : null,
     ageMin > 0 || ageMax < 12 ? `Dob ${ageMin}-${ageMax} god.` : null,
@@ -63,6 +76,14 @@ export default function VenuesPage() {
     setPriceMax(30)
     setSelectedAmenities(new Set())
   }
+  const handleRegionChange = (next: RegionKey) => {
+    if (next === region) return
+    const params = new URLSearchParams(searchParams)
+    if (next === 'zagreb') params.delete('grad')
+    else params.set('grad', next)
+    setSearchParams(params, { replace: false })
+    resetFilters()
+  }
 
   return (
     <div className="ew-landing">
@@ -73,13 +94,32 @@ export default function VenuesPage() {
         {/* Page hero */}
         <section className="ew-vp-hero ew-grain">
           <div className="ew-container">
-            <div className="ew-eyebrow" style={{ marginBottom: 16 }}>Igraonice · Zagreb</div>
+            <div className="ew-eyebrow" style={{ marginBottom: 16 }}>Igraonice · {regionMeta.label}</div>
             <h1 className="ew-h1 ew-vp-hero__title">
               Pronađi savršenu <em>igraonicu</em>.
             </h1>
             <p className="ew-body-lg ew-vp-hero__sub">
-              {venues.length} igraonica u Zagrebu — sortiraj po ocjeni, cijeni i sadržaju.
+              {venuesInRegion.length} {venuesInRegion.length === 1 ? 'igraonica' : venuesInRegion.length < 5 ? 'igraonice' : 'igraonica'} u {regionMeta.label.toLowerCase().startsWith('split') ? 'Splitu i okolici' : 'Zagrebu'} — sortiraj po ocjeni, cijeni i sadržaju.
             </p>
+
+            <div className="ew-vp-region-tabs" role="tablist" aria-label="Odaberi grad">
+              {(Object.keys(REGIONS) as RegionKey[]).map(key => {
+                const isActive = key === region
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`ew-vp-region-tab${isActive ? ' is-active' : ''}`}
+                    onClick={() => handleRegionChange(key)}
+                  >
+                    {REGIONS[key].label}
+                  </button>
+                )
+              })}
+            </div>
+
             <div className="ew-vp-hero__search">
               <svg className="ew-vp-hero__search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.5"/>
@@ -203,7 +243,11 @@ export default function VenuesPage() {
 
               {filtered.length === 0 ? (
                 <div className="ew-vp-empty">
-                  <p>Nema igraonica koje odgovaraju odabranim filterima.</p>
+                  <p>
+                    {venuesInRegion.length === 0
+                      ? `Trenutno nema igraonica u kategoriji ${regionMeta.label}.`
+                      : `Nema igraonica u ${regionMeta.label} koje odgovaraju odabranim filterima.`}
+                  </p>
                   <button className="ew-btn-secondary" onClick={() => {
                     resetFilters()
                   }}>Resetiraj filtere</button>

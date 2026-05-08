@@ -3,7 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
-import { venues } from '../lib/landing-data'
+import { REGIONS, regionForCity, venues } from '../lib/landing-data'
 
 const amenityIcons: Record<string, string> = {
   Parking: '🅿',
@@ -52,6 +52,9 @@ export default function VenueDetailPage() {
   if (!venue) return <Navigate to="/igraonice" replace />
 
   const allPhotos = [venue.coverPhoto, ...venue.photos]
+  const venueRegion = regionForCity(venue.city)
+  const regionMeta = REGIONS[venueRegion]
+  const venuesQuery = venueRegion === 'zagreb' ? '' : `?grad=${venueRegion}`
 
   return (
     <div className="ew-landing">
@@ -64,7 +67,7 @@ export default function VenueDetailPage() {
           <div className="ew-container">
             <Link to="/" className="ew-vd-breadcrumb__link">Početna</Link>
             <span className="ew-vd-breadcrumb__sep">›</span>
-            <Link to="/igraonice" className="ew-vd-breadcrumb__link">Igraonice</Link>
+            <Link to={`/igraonice${venuesQuery}`} className="ew-vd-breadcrumb__link">Igraonice</Link>
             <span className="ew-vd-breadcrumb__sep">›</span>
             <span className="ew-vd-breadcrumb__current">{venue.name}</span>
           </div>
@@ -265,10 +268,12 @@ export default function VenueDetailPage() {
         {/* Other venues */}
         <section className="ew-vd-more">
           <div className="ew-container">
-            <h2 className="ew-h3 ew-vd-more__title">Ostale igraonice u Zagrebu</h2>
+            <h2 className="ew-h3 ew-vd-more__title">
+              Ostale igraonice u {venueRegion === 'split' ? 'Splitu i okolici' : 'Zagrebu'}
+            </h2>
             <div className="ew-vd-more__grid">
               {venues
-                .filter(v => v.id !== venue.id)
+                .filter(v => v.id !== venue.id && regionMeta.cities.includes(v.city))
                 .slice(0, 3)
                 .map(v => (
                   <Link key={v.id} to={`/igraonice/${v.slug}`} className="ew-vd-mini-card">
@@ -280,7 +285,7 @@ export default function VenueDetailPage() {
                   </Link>
                 ))}
             </div>
-            <Link to="/igraonice" className="ew-vd-more__all">← Sve igraonice</Link>
+            <Link to={`/igraonice${venuesQuery}`} className="ew-vd-more__all">← Sve igraonice</Link>
           </div>
         </section>
       </main>

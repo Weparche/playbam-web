@@ -3756,6 +3756,27 @@ button.ew-navbar__auth-btn { font-family: inherit; }
   color: var(--color-accent);
 }
 
+.ew-vd-sidebar__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 14px;
+  margin-top: 2px;
+}
+
+.ew-vd-sidebar__link {
+  font-family: var(--font-work);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.ew-vd-sidebar__link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* ============================================
    VENUE DETAIL — BOTTOM CTA
    ============================================ */

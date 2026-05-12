@@ -270,6 +270,40 @@ export default function VenueDetailPage() {
                       {venue.phone}
                     </a>
                   </div>
+                  {venue.website && (
+                    <div className="ew-vd-contact__row">
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                        <path d="M10 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16Z" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M2 10h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M10 2c2.5 2.3 4 5 4 8s-1.5 5.7-4 8c-2.5-2.3-4-5-4-8s1.5-5.7 4-8Z" stroke="currentColor" strokeWidth="1.5"/>
+                      </svg>
+                      <a href={venue.website} target="_blank" rel="noopener noreferrer" className="ew-vd-contact__link">
+                        Web stranica
+                      </a>
+                    </div>
+                  )}
+                  {venue.facebook && (
+                    <div className="ew-vd-contact__row">
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                        <path d="M12 7h2V4h-2a3 3 0 0 0-3 3v2H7v3h2v6h3v-6h2l1-3h-3V7.5c0-.3.2-.5.5-.5H12Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                      </svg>
+                      <a href={venue.facebook} target="_blank" rel="noopener noreferrer" className="ew-vd-contact__link">
+                        Facebook
+                      </a>
+                    </div>
+                  )}
+                  {venue.instagram && (
+                    <div className="ew-vd-contact__row">
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                        <rect x="4" y="4" width="12" height="12" rx="3" stroke="currentColor" strokeWidth="1.5" />
+                        <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="1.5" />
+                        <circle cx="13.8" cy="6.2" r="0.9" fill="currentColor" />
+                      </svg>
+                      <a href={venue.instagram} target="_blank" rel="noopener noreferrer" className="ew-vd-contact__link">
+                        Instagram
+                      </a>
+                    </div>
+                  )}
                 </div>
               </section>
             </div>
@@ -308,6 +342,26 @@ export default function VenueDetailPage() {
                 <a href={`tel:${venue.phone.replace(/\s/g, '')}`} className="ew-vd-sidebar__phone">
                   {venue.phone}
                 </a>
+
+                {(venue.website || venue.facebook || venue.instagram) && (
+                  <div className="ew-vd-sidebar__links" aria-label="Poveznice">
+                    {venue.website && (
+                      <a href={venue.website} target="_blank" rel="noopener noreferrer" className="ew-vd-sidebar__link">
+                        Web
+                      </a>
+                    )}
+                    {venue.facebook && (
+                      <a href={venue.facebook} target="_blank" rel="noopener noreferrer" className="ew-vd-sidebar__link">
+                        Facebook
+                      </a>
+                    )}
+                    {venue.instagram && (
+                      <a href={venue.instagram} target="_blank" rel="noopener noreferrer" className="ew-vd-sidebar__link">
+                        Instagram
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             </aside>
 

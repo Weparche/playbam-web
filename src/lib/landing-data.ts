@@ -1938,7 +1938,7 @@ export const testimonials: Testimonial[] = [
     quote: 'Tražila sam igraonicu koja prima djecu od 3 godine i da ima parking. Našla za 5 minuta umjesto da zovem po cijelom gradu.',
     name: 'Marina P.',
     childAge: 'Noa, 3 godine',
-    city: 'Rijeka',
+    city: 'Koprivnica',
     monogram: 'MP',
   },
 ]
@@ -1966,6 +1966,6 @@ export const faqItems: FAQItem[] = [
   },
   {
     question: 'Radi li u cijeloj Hrvatskoj?',
-    answer: 'Pozivnice rade svugdje — nema ograničenja po lokaciji. Baza igraonica trenutno pokriva veće gradove (Zagreb, Split, Rijeka, Osijek, Zadar), a aktivno dodajemo nove svaki tjedan.',
+    answer: 'Pozivnice rade svugdje — nema ograničenja po lokaciji. Baza igraonica trenutno pokriva veće gradove (Zagreb, Split, Koprivnica), a aktivno dodajemo nove svaki tjedan.',
   },
 ]

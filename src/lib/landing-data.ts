@@ -508,6 +508,8 @@ export const venues: Venue[] = [
     address: 'Avenija Dubrovnik 15, paviljon 10, 10020 Zagreb',
     phone: '+385 98 190 0874',
     website: 'https://djecjiescaperoom.eu',
+    facebook: 'https://www.facebook.com/djecjiescaperoom',
+    instagram: 'https://www.instagram.com/djecjiescaperoom/',
     rating: 4.8,
     reviewCount: 140,
     pricePerChild: 22,

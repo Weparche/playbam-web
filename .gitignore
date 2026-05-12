@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Generirano: npm run scan:social -- --save
+tools/last-scan-social.json

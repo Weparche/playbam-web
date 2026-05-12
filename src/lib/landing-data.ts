@@ -56,6 +56,8 @@ export type Venue = {
   address: string
   phone: string
   website?: string
+  facebook?: string
+  instagram?: string
   rating: number
   reviewCount: number
   pricePerChild: number
@@ -697,6 +699,8 @@ export const venues: Venue[] = [
     city: 'Zagreb',
     address: 'Branimirova 29, Branimir centar, 10000 Zagreb',
     phone: '098 138 0498',
+    facebook: 'https://www.facebook.com/search/top?q=Igraonica%20Cirkus%20Zagreb',
+    instagram: 'https://www.instagram.com/explore/search/keyword/?q=igraonica%20cirkus%20zagreb',
     rating: 4.6,
     reviewCount: 95,
     pricePerChild: 17,
@@ -728,6 +732,8 @@ export const venues: Venue[] = [
     city: 'Zagreb',
     address: 'Cvijete Zuzorić 3, 10000 Zagreb (Trnje – Kruge)',
     phone: '098 138 0498',
+    facebook: 'https://www.facebook.com/search/top?q=Dvorac%20Camelot%20igraonica%20Zagreb',
+    instagram: 'https://www.instagram.com/explore/search/keyword/?q=dvorac%20camelot%20zagreb',
     rating: 4.6,
     reviewCount: 70,
     pricePerChild: 16,
@@ -759,6 +765,8 @@ export const venues: Venue[] = [
     city: 'Zagreb',
     address: 'Kučerina 74, 10000 Zagreb (Trešnjevka, kod hotela Panorama)',
     phone: '+385 1 7988 800',
+    facebook: 'https://www.facebook.com/search/top?q=Zlatni%20Dvorac%20igraonica%20Zagreb',
+    instagram: 'https://www.instagram.com/explore/search/keyword/?q=zlatni%20dvorac%20igraonica%20zagreb',
     rating: 4.6,
     reviewCount: 65,
     pricePerChild: 16,
@@ -1820,7 +1828,14 @@ export const venues: Venue[] = [
       { name: 'Loptica Veliki Slavlje', price: 380, minChildren: 30, includes: ['4h najam dvorane', '2 animatorice', 'puni catering po dogovoru', 'tematska dekoracija', 'ozvučenje', 'foto reportaža'] },
     ],
   },
-]
+].map(v => {
+  const query = encodeURIComponent(`${v.name} ${v.city}`)
+  return {
+    ...v,
+    facebook: v.facebook ?? `https://www.facebook.com/search/top?q=${query}`,
+    instagram: v.instagram ?? `https://www.instagram.com/explore/search/keyword/?q=${query}`,
+  }
+})
 
 export const testimonials: Testimonial[] = [
   {

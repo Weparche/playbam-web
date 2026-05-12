@@ -3765,16 +3765,35 @@ button.ew-navbar__auth-btn { font-family: inherit; }
 }
 
 .ew-vd-sidebar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-work);
   font-size: 13px;
   color: var(--color-text-secondary);
   text-decoration: none;
 }
 
+.ew-vd-sidebar__link-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--color-text-tertiary);
+}
+
+.ew-vd-sidebar__link-icon--tiktok {
+  width: 15px;
+  height: 15px;
+}
+
 .ew-vd-sidebar__link:hover {
   color: var(--color-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.ew-vd-sidebar__link:hover .ew-vd-sidebar__link-icon {
+  color: var(--color-accent);
 }
 
 /* ============================================

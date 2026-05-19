@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { readGoogleAuthCallbackState } from '../../lib/invitationApi'
 import OtpLoginModal from '../auth/OtpLoginModal'
@@ -9,6 +9,7 @@ type NavItem = { label: string } & ({ href: string; to?: never } | { to: string;
 const navItems: NavItem[] = [
   { label: 'Pozivnice', href: '/#pozivnice' },
   { label: 'Igraonice', to: '/igraonice' },
+  { label: 'Djecji parkovi', to: '/djecji-parkovi' },
   { label: 'Česta pitanja', href: '/#cesta-pitanja' },
 ]
 
@@ -20,6 +21,7 @@ export default function Navbar({
   onLoginClick?: () => void
 }) {
   const { session, logout } = useAuth()
+  const location = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
@@ -71,7 +73,7 @@ export default function Navbar({
           <div className="ew-navbar__menu">
             {navItems.map((item) => (
               item.to
-                ? <Link key={item.to} to={item.to} className="ew-navbar__link">{item.label}</Link>
+                ? <Link key={item.to} to={item.to} className={`ew-navbar__link${location.pathname === item.to ? ' ew-navbar__link--active' : ''}`}>{item.label}</Link>
                 : <a key={item.href} href={item.href} className="ew-navbar__link">{item.label}</a>
             ))}
             <Link to="/kreiraj-pozivnicu" className="ew-navbar__cta">
@@ -129,7 +131,7 @@ export default function Navbar({
           <nav className="ew-navbar__sheet-nav">
             {navItems.map((item) => (
               item.to
-                ? <Link key={item.to} to={item.to} className="ew-navbar__sheet-link" onClick={closeMobile}>{item.label}</Link>
+                ? <Link key={item.to} to={item.to} className={`ew-navbar__sheet-link${location.pathname === item.to ? ' ew-navbar__sheet-link--active' : ''}`} onClick={closeMobile}>{item.label}</Link>
                 : <a key={item.href} href={item.href} className="ew-navbar__sheet-link" onClick={closeMobile}>{item.label}</a>
             ))}
             {session ? (

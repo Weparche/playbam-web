@@ -540,6 +540,11 @@ button.ew-navbar__auth-btn { font-family: inherit; }
   font-variation-settings: "opsz" 144, "SOFT" 30;
 }
 
+.ew-navbar__sheet-link--active {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
 .ew-navbar__sheet-cta {
   margin-top: 48px;
 }

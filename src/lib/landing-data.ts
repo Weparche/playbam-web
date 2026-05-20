@@ -1921,6 +1921,7 @@ export const venues: Venue[] = [
     phone: '+385 98 375 569',
     website: 'https://paintball-pitagora.hr',
     facebook: 'https://www.facebook.com/paintballpitagora',
+    instagram: 'https://www.instagram.com/paintball_pitagora/',
     rating: 4.8,
     reviewCount: 35,
     pricePerChild: 22,
@@ -1944,14 +1945,12 @@ export const venues: Venue[] = [
       'Team building',
       'Školski izleti',
     ],
-    coverPhoto:
-      'https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/699469648_1549151417214366_1854096145997474161_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=0WXHlOUmq6IQ7kNvwHmhcKX&_nc_ht=scontent-lga3-1.xx&oh=00_Af7whN8-lzoAQrgcwqr8pXmJKjZ3i6n7L1RzUQqDdne4-g&oe=6A13717C',
+    coverPhoto: '/venues/paintball-pitagora-krizevci/cover.jpg',
     photos: [
-      'https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/701635989_1554552920007549_2982911751199095675_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=m1QKp56kBiIQ7kNvwE3ps4H&_nc_ht=scontent-lga3-2.xx&oh=00_Af4nl8jfzSSnzutz2Wfj2IZGaRb1dS7QmSUBR9HaG8tVHQ&oe=6A13610E',
-      'https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/704167376_1554552876674220_6152155129748364163_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=onDcOkz-anAQ7kNvwHZ_s4-&_nc_ht=scontent-lga3-2.xx&oh=00_Af6YXu_bIBPKldAlCFPMXA1Vy2S47iGlmd-u1eQrXM5N9g&oe=6A1379E2',
-      'https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/704227998_1554552846674223_6897244285220841163_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=951skix_ODQQ7kNvwE2YJnn&_nc_ht=scontent-lga3-2.xx&oh=00_Af7OJ_TcgBxGpi_y04zebbCwSLaSTg8L2P14S66Vq2Fm3Q&oe=6A135F6A',
-      'https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/686328112_1539396494856525_4977184544001239728_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=102&ccb=1-7&_nc_sid=30a509&_nc_ohc=bvpKjfJ25ogQ7kNvwHgdw9Y&_nc_ht=scontent-lga3-3.xx&oh=00_Af5s4Abrggnws2n_8nV-0fXUC6MGdKSh83ZrD0lW-PrVoA&oe=6A1394AD',
-      'https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/670477433_1521467506649424_1627371593104781609_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=106&ccb=1-7&_nc_sid=30a509&_nc_ohc=LePdM54QyVYQ7kNvwFR5n5i&_nc_ht=scontent-lga3-3.xx&oh=00_Af4VxerVqA7vdd5YS6nNkF6piQeMhfC0DL0kmSCPGJhKqA&oe=6A136C3E',
+      '/venues/paintball-pitagora-krizevci/cover.jpg',
+      'https://krizevci.hr/wp-content/uploads/2018/01/paintball-krizevci.jpg',
+      '/venues/paintball-pitagora-krizevci/gallery-team.jpg',
+      '/venues/paintball-pitagora-krizevci/gallery-outdoor.jpg',
     ],
     packages: [
       {

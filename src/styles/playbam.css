@@ -4020,17 +4020,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 @media (max-width: 760px) {
-  .pb-invitePrivateCard--liveChat {
-    width: 100dvw;
-    max-width: 100dvw;
-    margin-inline: calc(50% - 50dvw);
-    border-radius: 0;
-    border-inline: 0;
-  }
-
   .pb-invitePrivateCard--liveChat .pb-inviteChat {
-    border-radius: 0;
-    border-inline: 0;
+    width: 100%;
     padding-inline: max(0.85rem, env(safe-area-inset-left, 0px) + 0.85rem) max(0.85rem, env(safe-area-inset-right, 0px) + 0.85rem);
   }
 

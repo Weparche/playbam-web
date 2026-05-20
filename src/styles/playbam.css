@@ -4566,6 +4566,45 @@ a.pb-partyFact__link:focus-visible {
   border-radius: 4px;
 }
 
+.pb-partyFact--mapsAction .pb-partyFact__value {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+a.pb-partyFact__link--maps {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.28rem;
+  max-width: 100%;
+  padding: 0.1rem 0.15rem 0.2rem;
+  text-align: center;
+  text-decoration: none;
+}
+
+a.pb-partyFact__link--maps .pb-partyFact__mapsAddress {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1.35;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+  word-break: break-word;
+}
+
+a.pb-partyFact__link--maps .pb-partyFact__mapsHint {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  color: rgba(31, 36, 48, 0.52);
+  text-decoration: none;
+}
+
+a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
+  color: rgba(31, 36, 48, 0.68);
+}
+
 .pb-hostDetailsEditor--matchTitle .pb-partyFact__value {
   color: #111111;
   -webkit-text-fill-color: #111111;

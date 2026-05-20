@@ -165,7 +165,8 @@ function renderPartyFactValue(row: GuestPartyDetailRow) {
         target="_blank"
         rel="noopener noreferrer"
       >
-        {row.value}
+        <span className="pb-partyFact__mapsAddress">{row.value}</span>
+        <span className="pb-partyFact__mapsHint">Otvori u Google Maps</span>
       </a>
     )
   }
@@ -407,7 +408,7 @@ export default function PrivateInvitationGuest({
               {guestPartyDetailRows.map((row) => (
                 <div
                   key={row.label}
-                  className={`pb-partyFact${row.spanFull ? ' pb-partyFact--guestSpanFull pb-partyFact--note' : ''}`}
+                  className={`pb-partyFact${row.spanFull ? ' pb-partyFact--guestSpanFull pb-partyFact--note' : ''}${row.kind === 'maps' ? ' pb-partyFact--mapsAction' : ''}`}
                 >
                   <div className="pb-partyFact__label">{row.label}</div>
                   <div className="pb-partyFact__value">{renderPartyFactValue(row)}</div>

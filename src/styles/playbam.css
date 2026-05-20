@@ -2660,6 +2660,10 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   color: rgba(16, 24, 40, 0.55);
 }
 
+.pb-hostShareDialog {
+  border-radius: 1.5rem;
+}
+
 .pb-hostShareDialog__actions {
   display: flex;
   flex-wrap: wrap;

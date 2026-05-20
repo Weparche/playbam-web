@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import ShortcutButton from './ShortcutButton'
 import { SHORTCUT_ITEMS } from './createTypes'
@@ -11,6 +11,27 @@ type Props = {
 
 export default function ShortcutRail({ activeShortcut, onShortcutClick, items = SHORTCUT_ITEMS }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const railRef = useRef<HTMLElement | null>(null)
+
+  useEffect(() => {
+    if (!mobileOpen) {
+      return
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target
+      if (!(target instanceof Node)) {
+        return
+      }
+      if (railRef.current?.contains(target)) {
+        return
+      }
+      setMobileOpen(false)
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [mobileOpen])
 
   const handleShortcutClick = (id: string) => {
     onShortcutClick(id)
@@ -19,6 +40,7 @@ export default function ShortcutRail({ activeShortcut, onShortcutClick, items = 
 
   return (
     <aside
+      ref={railRef}
       className={`pb-shortcutRail ${mobileOpen ? 'is-mobile-open' : ''}`}
       aria-label="Brzi shortcuti za uredjivanje"
     >
@@ -33,16 +55,18 @@ export default function ShortcutRail({ activeShortcut, onShortcutClick, items = 
           <path d="M12.5 4.5 7 10l5.5 5.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-      {items.map((item) => (
-        <ShortcutButton
-          key={item.id}
-          id={item.id}
-          icon={item.icon}
-          label={item.label}
-          active={activeShortcut === item.id}
-          onClick={handleShortcutClick}
-        />
-      ))}
+      <div className="pb-shortcutRail__items">
+        {items.map((item) => (
+          <ShortcutButton
+            key={item.id}
+            id={item.id}
+            icon={item.icon}
+            label={item.label}
+            active={activeShortcut === item.id}
+            onClick={handleShortcutClick}
+          />
+        ))}
+      </div>
     </aside>
   )
 }

@@ -1947,7 +1947,6 @@ export const venues: Venue[] = [
     ],
     coverPhoto: '/venues/paintball-pitagora-krizevci/pita1.webp',
     photos: [
-      '/venues/paintball-pitagora-krizevci/pita1.webp',
       '/venues/paintball-pitagora-krizevci/pita2.webp',
       '/venues/paintball-pitagora-krizevci/pita3.webp',
       '/venues/paintball-pitagora-krizevci/pita4.webp',

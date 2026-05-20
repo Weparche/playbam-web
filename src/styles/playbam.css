@@ -1018,8 +1018,12 @@ html, body { scrollbar-gutter: stable; }
     box-shadow: 0 6px 18px rgba(66, 45, 24, 0.12);
   }
 
+  .pb-pwaInstall__copy strong {
+    font-size: 0.82rem;
+  }
+
   .pb-pwaInstall__copy span {
-    display: none;
+    font-size: 0.7rem;
   }
 
   .pb-mobileFooterNav {

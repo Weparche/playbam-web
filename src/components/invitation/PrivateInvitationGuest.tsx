@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
 
+// import { InvitationGuestRosterList, InvitationGuestRosterModal } from './InvitationGuestRoster'
 import InvitationLiveChatPanel, { type ChatSenderLabelHint } from './InvitationLiveChatPanel'
 import WishlistTipPaymentSection from './WishlistTipPaymentSection'
 import Button from '../ui/Button'
@@ -18,11 +19,14 @@ import type {
   InvitationChatRead,
   InvitationWishlistItem,
   InvitationWishlistPayload,
+  MembershipRequest,
   PublicInvitation,
 } from '../../lib/invitationApi'
 
 type Props = {
   invitation: PublicInvitation
+  guestRosterRequests: MembershipRequest[]
+  guestRosterError?: string
   wishlistLoading: boolean
   wishlistError: string
   wishlistItems: InvitationWishlistItem[]
@@ -124,8 +128,55 @@ function resolveWishlistImageUrl(item: InvitationWishlistItem) {
   return null
 }
 
+type GuestPartyDetailRow = {
+  label: string
+  value: string
+  spanFull?: boolean
+  kind?: 'text' | 'phone' | 'maps'
+}
+
+function phoneTelHref(value: string) {
+  const normalized = value.replace(/[^\d+]/g, '')
+  return normalized ? `tel:${normalized}` : ''
+}
+
+function googleMapsSearchUrl(address: string) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+}
+
+function renderPartyFactValue(row: GuestPartyDetailRow) {
+  if (row.kind === 'phone') {
+    const href = phoneTelHref(row.value)
+    if (!href) {
+      return row.value
+    }
+    return (
+      <a href={href} className="pb-partyFact__link pb-partyFact__link--phone">
+        {row.value}
+      </a>
+    )
+  }
+
+  if (row.kind === 'maps') {
+    return (
+      <a
+        href={googleMapsSearchUrl(row.value)}
+        className="pb-partyFact__link pb-partyFact__link--maps"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {row.value}
+      </a>
+    )
+  }
+
+  return row.value
+}
+
 export default function PrivateInvitationGuest({
   invitation,
+  guestRosterRequests: _guestRosterRequests,
+  guestRosterError: _guestRosterError = '',
   wishlistLoading,
   wishlistError,
   wishlistItems,
@@ -153,6 +204,8 @@ export default function PrivateInvitationGuest({
   isBirthInvitation = false,
 }: Props) {
   const [venueOpen, setVenueOpen] = useState(false)
+  // const [rosterOpen, setRosterOpen] = useState(false)
+  // const [selectedRosterRequest, setSelectedRosterRequest] = useState<MembershipRequest | null>(null)
   const [wishlistOpen, setWishlistOpen] = useState(false)
   const [addingGiftOpen, setAddingGiftOpen] = useState(false)
   const [giftTitle, setGiftTitle] = useState('')
@@ -308,10 +361,10 @@ export default function PrivateInvitationGuest({
   const pd = invitation.partyDetails
   const guestPartyDetailRows = useMemo(() => {
     if (!pd) return []
-    const rows: Array<{ label: string; value: string; spanFull?: boolean }> = [
+    const rows: GuestPartyDetailRow[] = [
       { label: 'Ime kontakta', value: pd.contactName?.trim() ?? '' },
-      { label: 'Kontakt mobitel', value: pd.contactMobile?.trim() ?? '' },
-      { label: 'Lokacija parkinga', value: pd.parkingLocation?.trim() ?? '' },
+      { label: 'Kontakt mobitel', value: pd.contactMobile?.trim() ?? '', kind: 'phone' },
+      { label: 'Lokacija parkinga', value: pd.parkingLocation?.trim() ?? '', kind: 'maps' },
       { label: 'Lokacija kafića', value: pd.cafeLocation?.trim() ?? '' },
       { label: 'Ostali detalji', value: pd.extraDetails?.trim() ?? '', spanFull: true },
     ]
@@ -357,12 +410,18 @@ export default function PrivateInvitationGuest({
                   className={`pb-partyFact${row.spanFull ? ' pb-partyFact--guestSpanFull pb-partyFact--note' : ''}`}
                 >
                   <div className="pb-partyFact__label">{row.label}</div>
-                  <div className="pb-partyFact__value">{row.value}</div>
+                  <div className="pb-partyFact__value">{renderPartyFactValue(row)}</div>
                 </div>
               ))}
             </div>
           </section>
         ) : null}
+
+        {/* Popis gostiju — privremeno isključeno na gost strani
+        <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-roster-toggle">
+          ...
+        </section>
+        */}
 
         <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion pb-invitePrivateCard--wishlist" aria-labelledby="private-wishlist-toggle">
           <button
@@ -795,6 +854,9 @@ export default function PrivateInvitationGuest({
           </div>
         </div>
       ) : null}
+      {/* {selectedRosterRequest ? (
+        <InvitationGuestRosterModal ... />
+      ) : null} */}
     </>
   )
 }

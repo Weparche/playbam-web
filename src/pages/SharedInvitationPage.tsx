@@ -13,6 +13,7 @@ import ShortcutRail from '../components/create/ShortcutRail'
 import InvitationCard from '../components/invitation/InvitationCard'
 import InvitationLiveChatPanel from '../components/invitation/InvitationLiveChatPanel'
 import KeksPayQrPreview from '../components/invitation/KeksPayQrPreview'
+import { InvitationGuestRosterList, InvitationGuestRosterModal } from '../components/invitation/InvitationGuestRoster'
 import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGuest'
 import { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
 import GuestInvitationModal from '../components/invitation/GuestInvitationModal'
@@ -370,6 +371,8 @@ export default function SharedInvitationPage() {
   const [familyProfile, setFamilyProfile] = useState<FamilyProfileResponse | null>(null)
   const [, setMembershipRequest] = useState<MembershipRequest | null>(null)
   const [hostRequests, setHostRequests] = useState<MembershipRequest[]>([])
+  const [guestRosterRequests, setGuestRosterRequests] = useState<MembershipRequest[]>([])
+  const [guestRosterError, setGuestRosterError] = useState('')
   const [wishlistItems, setWishlistItems] = useState<InvitationWishlistItem[]>([])
   const [rsvp, setRsvp] = useState<InvitationRsvp | null>(null)
   const [loading, setLoading] = useState(true)
@@ -1008,6 +1011,8 @@ export default function SharedInvitationPage() {
       setFamilyProfile(null)
       setMembershipRequest(null)
       setHostRequests([])
+      setGuestRosterRequests([])
+      setGuestRosterError('')
       setWishlistItems([])
       setChatMessages([])
       setChatReads([])
@@ -1126,17 +1131,32 @@ export default function SharedInvitationPage() {
           setRsvp(null)
         }
 
-        if (accessState.canViewWishlist) {
+        if (accessState.canViewWishlist || accessState.canAccessPrivateInvitation) {
           setWishlistLoading(true)
+          setGuestRosterError('')
           try {
-            const wishlist = await getInvitationWishlist(currentInvitation.id, currentUser)
+            const [wishlist, roster] = await Promise.all([
+              accessState.canViewWishlist
+                ? getInvitationWishlist(currentInvitation.id, currentUser)
+                : Promise.resolve([] as InvitationWishlistItem[]),
+              accessState.canAccessPrivateInvitation
+                ? listMembershipRequests(currentInvitation.id, currentUser)
+                : Promise.resolve([] as MembershipRequest[]),
+            ])
             if (!cancelled) {
               setWishlistItems(wishlist)
+              setGuestRosterRequests(roster.filter((request) => request.status === 'approved'))
             }
           } catch {
             if (!cancelled) {
-              setWishlistItems([])
-              setWishlistError('Lista želja trenutno nije dostupna.')
+              if (accessState.canViewWishlist) {
+                setWishlistItems([])
+                setWishlistError('Lista želja trenutno nije dostupna.')
+              }
+              if (accessState.canAccessPrivateInvitation) {
+                setGuestRosterRequests([])
+                setGuestRosterError('Popis gostiju trenutno nije dostupan.')
+              }
             }
           } finally {
             if (!cancelled) {
@@ -1145,6 +1165,7 @@ export default function SharedInvitationPage() {
           }
         } else {
           setWishlistItems([])
+          setGuestRosterRequests([])
         }
       } catch (caughtError) {
         if (cancelled) {
@@ -1213,9 +1234,13 @@ export default function SharedInvitationPage() {
     }
   }, [hasPrivateAccess, hasHostSession, invitation, isHost, loadingPrivateState, refreshChat, showHostStudio, user])
 
-  /** Gost s pristupom: lista želja u pozadini (inakse se nakon prvog učitavanja ne ažurira, pa +N ne raste). */
+  /** Gost s pristupom: lista želja i popis gostiju u pozadini. */
   useEffect(() => {
-    if (!invitation || isHost || !hasPrivateAccess || !user || !canViewWishlist || loadingPrivateState) {
+    if (!invitation || isHost || !hasPrivateAccess || !user || loadingPrivateState) {
+      return
+    }
+
+    if (!canViewWishlist && !hasPrivateAccess) {
       return
     }
 
@@ -1225,9 +1250,15 @@ export default function SharedInvitationPage() {
 
     const run = async () => {
       try {
-        const items = await getInvitationWishlist(invitationId, currentUser)
+        const [items, roster] = await Promise.all([
+          canViewWishlist ? getInvitationWishlist(invitationId, currentUser) : Promise.resolve(null),
+          listMembershipRequests(invitationId, currentUser),
+        ])
         if (!cancelled) {
-          setWishlistItems(items)
+          if (items !== null) {
+            setWishlistItems(items)
+          }
+          setGuestRosterRequests(roster.filter((request) => request.status === 'approved'))
         }
       } catch {
         // tiho — sljedeći interval
@@ -1297,6 +1328,8 @@ export default function SharedInvitationPage() {
     setProfileError('')
     setRequestError('')
     setHostError('')
+    setGuestRosterRequests([])
+    setGuestRosterError('')
     setWishlistError('')
     setChatMessages([])
     setChatReads([])
@@ -1312,6 +1345,8 @@ export default function SharedInvitationPage() {
     setHostToken("")
     setAccess(null)
     setHostRequests([])
+    setGuestRosterRequests([])
+    setGuestRosterError('')
     setWishlistItems([])
     setChatMessages([])
     setChatReads([])
@@ -1961,6 +1996,8 @@ export default function SharedInvitationPage() {
                     <PrivateInvitationGuest
                       invitation={invitation}
                       isBirthInvitation={isBirthInvitation}
+                      guestRosterRequests={guestRosterRequests}
+                      guestRosterError={guestRosterError}
                       wishlistLoading={wishlistLoading}
                       wishlistError={wishlistError}
                       wishlistItems={wishlistItems}
@@ -2250,11 +2287,12 @@ export default function SharedInvitationPage() {
                       <div className="pb-privateAccordionBody">
                         <p className="pb-flowCard__text">Pregledaj popis gostiju, RSVP odgovore i rezervacije s liste želja.</p>
                         {hostError ? <div className="pb-inlineNote pb-inlineNote--error">{hostError}</div> : null}
-                        <HostRequestListV2
+                        <InvitationGuestRosterList
                           requests={hostRequests}
                           reviewingRequestId={reviewingRequestId}
                           wishlistItems={wishlistItems}
                           isBirthInvitation={isBirthInvitation}
+                          showHostActions
                           onReview={handleReview}
                           onSelect={setSelectedHostRequest}
                         />
@@ -2579,12 +2617,13 @@ export default function SharedInvitationPage() {
               ) : null}
 
               {selectedHostRequest ? (
-                <HostGuestModal
+                <InvitationGuestRosterModal
                   request={selectedHostRequest}
                   wishlistItems={wishlistItems}
                   isBirthInvitation={isBirthInvitation}
                   busy={reviewingRequestId === selectedHostRequest.id}
                   onClose={() => setSelectedHostRequest(null)}
+                  allowRemove
                   onRemove={() => void handleReview(selectedHostRequest.id, 'reject')}
                 />
               ) : null}
@@ -2912,32 +2951,6 @@ function HostWishlistSection({
   )
 }
 
-function getRsvpToneClass(status?: InvitationRsvp['status']) {
-  if (status === 'going') return 'pb-hostRequestItem__rsvpBadge--going'
-  if (status === 'not_going') return 'pb-hostRequestItem__rsvpBadge--notGoing'
-  if (status === 'maybe') return 'pb-hostRequestItem__rsvpBadge--maybe'
-  return 'pb-hostRequestItem__rsvpBadge--pending'
-}
-
-function rsvpStatusLabelClean(status: 'going' | 'not_going' | 'maybe' | null | undefined) {
-  if (status === 'going') return 'Dolazi'
-  if (status === 'not_going') return 'Ne dolazi'
-  if (status === 'maybe') return 'Možda'
-  return 'Odgovor još nije poslan'
-}
-
-function groupHostRequestsByRsvpClean(requests: MembershipRequest[]) {
-  const pendingRequests = requests.filter((request) => request.status === 'pending')
-  const reviewedRequests = requests.filter((request) => request.status !== 'pending')
-
-  return [
-    { title: 'Čeka na odobrenje', className: 'pb-hostRequestGroup--pending', requests: pendingRequests },
-    { title: 'Dolaze', className: 'pb-hostRequestGroup--going', requests: reviewedRequests.filter((request) => request.rsvp?.status === 'going') },
-    { title: 'Možda', className: 'pb-hostRequestGroup--maybe', requests: reviewedRequests.filter((request) => request.rsvp?.status === 'maybe') },
-    { title: 'Ne dolaze', className: 'pb-hostRequestGroup--notGoing', requests: reviewedRequests.filter((request) => request.rsvp?.status === 'not_going') },
-  ].filter((group) => group.requests.length > 0)
-}
-
 function isProbablyEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
 }
@@ -2956,242 +2969,4 @@ function formatWishlistAddedBy(
   if (isProbablyEmail(raw)) return org || 'Organizator'
   return raw
 }
-
-function membershipRequestParentLabel(request: MembershipRequest) {
-  const fromProfile = request.familyProfile?.parentName?.trim()
-  if (fromProfile) {
-    return fromProfile
-  }
-  const display = request.user?.displayName?.trim()
-  if (display && !isProbablyEmail(display)) {
-    return display
-  }
-  return 'Nepoznata obitelj'
-}
-
-function getGuestGiftSummaries(request: MembershipRequest, wishlistItems: InvitationWishlistItem[]) {
-  return wishlistItems
-    .filter(
-      (item) =>
-        item.reservation.reservedByUserId === request.userId ||
-        Boolean(item.reservation.participants?.some((participant) => participant.userId === request.userId)),
-    )
-    .map((item) => ({
-      id: item.id,
-      title: item.title,
-      details:
-        item.reservation.reservedByUserId === request.userId
-          ? item.reservation.note?.trim() ||
-            (item.reservation.reservedForChildName ? `Za dijete: ${item.reservation.reservedForChildName}` : 'Kupuje poklon')
-          : 'Sudjeluje u grupnom poklonu',
-    }))
-}
-
-function HostRequestListV2({
-  requests,
-  reviewingRequestId,
-  wishlistItems,
-  isBirthInvitation,
-  onReview,
-  onSelect,
-}: {
-  requests: MembershipRequest[]
-  reviewingRequestId: string | null
-  wishlistItems: InvitationWishlistItem[]
-  isBirthInvitation: boolean
-  onReview: (requestId: string, action: 'approve' | 'reject') => void
-  onSelect: (request: MembershipRequest) => void
-}) {
-  if (requests.length === 0) {
-    return <div className="pb-inlineNote pb-inlineNote--info">Trenutačno nema gostiju na popisu.</div>
-  }
-
-  const groupedRequests = groupHostRequestsByRsvpClean(requests)
-
-  return (
-    <div className="pb-hostRequestGroups">
-      {groupedRequests.map((group) => (
-        <section key={group.title} className={`pb-hostRequestGroup ${group.className}`}>
-          <h3 className="pb-hostRequestGroup__title">
-            {group.title} ({group.requests.length})
-          </h3>
-          <div className="pb-hostRequests">
-            {group.requests.map((request) => {
-              const isBusy = reviewingRequestId === request.id
-              const parentName = membershipRequestParentLabel(request)
-              const childrenText = isBirthInvitation
-                ? ''
-                : request.children
-                    .map((child) => `${child.name || '—'}${child.age != null ? ` (${child.age})` : ''}`)
-                    .join(', ') || 'Nema odabrane djece'
-              const rsvpLabel = rsvpStatusLabelClean(request.rsvp?.status)
-              const rsvpToneClass = getRsvpToneClass(request.rsvp?.status)
-              const giftCount = getGuestGiftSummaries(request, wishlistItems).length
-              const canOpenDetails = request.status === 'approved'
-
-              return (
-                <div
-                  key={request.id}
-                  className={`pb-hostRequestItem ${canOpenDetails ? 'pb-hostRequestItem--clickable' : ''}`}
-                  onClick={canOpenDetails ? () => onSelect(request) : undefined}
-                  onKeyDown={
-                    canOpenDetails
-                      ? (event) => {
-                          if (event.key === 'Enter' || event.key === ' ') {
-                            event.preventDefault()
-                            onSelect(request)
-                          }
-                        }
-                      : undefined
-                  }
-                  role={canOpenDetails ? 'button' : undefined}
-                  tabIndex={canOpenDetails ? 0 : undefined}
-                >
-                  <div className="pb-hostRequestItem__main">
-                    <div className="pb-hostRequestItem__headRow">
-                      <div className="pb-hostRequestItem__title">{parentName}</div>
-                      {!isBirthInvitation ? (
-                        <div className="pb-hostRequestItem__children">Djeca: {childrenText}</div>
-                      ) : null}
-                    </div>
-                    {canOpenDetails ? (
-                      <div className="pb-hostRequestItem__meta">
-                        {giftCount > 0 ? `Pokloni: ${giftCount}` : 'Klikni za detalje gosta'}
-                      </div>
-                    ) : null}
-
-                    <div className="pb-hostRequestItem__footerRow">
-                      {request.status === 'pending' ? (
-                        <div className="pb-flowActions pb-flowActions--compact pb-hostRequestItem__actions">
-                          <Button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              onReview(request.id, 'approve')
-                            }}
-                            disabled={isBusy}
-                          >
-                            Odobri
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              onReview(request.id, 'reject')
-                            }}
-                            disabled={isBusy}
-                          >
-                            Odbij
-                          </Button>
-                        </div>
-                      ) : (
-                        <span />
-                      )}
-
-                      <div className={`pb-hostRequestItem__rsvpBadge ${rsvpToneClass}`}>
-                        <span className="pb-hostRequestItem__rsvpLabel">RSVP</span>
-                        <span className="pb-hostRequestItem__rsvpValue">{rsvpLabel}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </section>
-      ))}
-    </div>
-  )
-}
-
-function HostGuestModal({
-  request,
-  wishlistItems,
-  isBirthInvitation,
-  busy,
-  onClose,
-  onRemove,
-}: {
-  request: MembershipRequest
-  wishlistItems: InvitationWishlistItem[]
-  isBirthInvitation: boolean
-  busy: boolean
-  onClose: () => void
-  onRemove: () => void
-}) {
-  const giftSummaries = getGuestGiftSummaries(request, wishlistItems)
-  const parentName = membershipRequestParentLabel(request)
-  const childrenText = isBirthInvitation
-    ? ''
-    : request.children
-        .map((child) => `${child.name || '—'}${child.age != null ? ` (${child.age})` : ''}`)
-        .join(', ') || 'Nema odabrane djece'
-  const rsvpLabel = rsvpStatusLabelClean(request.rsvp?.status)
-  const rsvpToneClass = getRsvpToneClass(request.rsvp?.status)
-
-  return (
-    <div className="pb-modalOverlay" role="presentation" onClick={onClose}>
-      <div
-        className="pb-modalDialog pb-hostGuestModal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="host-guest-modal-title"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className="pb-modalDialog__head">
-          <h2 id="host-guest-modal-title" className="pb-modalDialog__title">
-            {parentName}
-          </h2>
-          <button type="button" className="pb-modalDialog__close" onClick={onClose} aria-label="Zatvori detalje gosta">
-            ×
-          </button>
-        </div>
-        <div className="pb-modalDialog__body pb-hostGuestModal__body">
-          <div className="pb-hostGuestModal__card">
-            {!isBirthInvitation ? (
-              <div className="pb-hostGuestModal__row">
-                <span className="pb-hostGuestModal__label">Djeca</span>
-                <span>{childrenText}</span>
-              </div>
-            ) : null}
-            <div className="pb-hostGuestModal__row">
-              <span className="pb-hostGuestModal__label">RSVP</span>
-              <span className={`pb-hostRequestItem__rsvpBadge ${rsvpToneClass}`}>{rsvpLabel}</span>
-            </div>
-          </div>
-
-          <div className="pb-hostGuestModal__card">
-            <div className="pb-hostGuestModal__sectionTitle">Pokloni</div>
-            {giftSummaries.length > 0 ? (
-              <div className="pb-hostGuestModal__giftList">
-                {giftSummaries.map((gift) => (
-                  <div key={gift.id} className="pb-hostGuestModal__giftItem">
-                    <div className="pb-hostGuestModal__giftTitle">{gift.title}</div>
-                    <div className="pb-hostGuestModal__giftMeta">{gift.details}</div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="pb-hostGuestModal__empty">Gost još nema zabilježen poklon.</div>
-            )}
-          </div>
-
-          <div className="pb-flowActions pb-flowActions--modal">
-            <Button
-              variant="ghost"
-              type="button"
-              className="pb-hostRequestItem__removeBtn"
-              onClick={onRemove}
-              disabled={busy}
-            >
-              {busy ? 'Spremamo...' : 'Izbaci'}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 

@@ -4549,6 +4549,23 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
   color: var(--invite-text, #1f2430);
 }
 
+a.pb-partyFact__link {
+  color: #4f46e5;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+  word-break: break-word;
+}
+
+a.pb-partyFact__link:hover {
+  color: #3730a3;
+}
+
+a.pb-partyFact__link:focus-visible {
+  outline: 2px solid rgba(79, 70, 229, 0.45);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .pb-hostDetailsEditor--matchTitle .pb-partyFact__value {
   color: #111111;
   -webkit-text-fill-color: #111111;

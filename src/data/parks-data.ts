@@ -55,15 +55,15 @@ export type Park = {
 
 export const parkFeatureLabels: Record<ParkFeature, string> = {
   shade: 'Ima hlad',
-  fenced: 'Ogradeno',
-  cafe: 'Kafic blizu',
+  fenced: 'Ograđeno',
+  cafe: 'Kafić u blizini',
   parking: 'Parking',
   stroller: 'Kolica',
   benches: 'Klupe',
   quiet: 'Mirnije',
-  large: 'Veliko igraliste',
-  walkway: 'Setnica',
-  birthday: 'Za rodendan',
+  large: 'Veliko igralište',
+  walkway: 'Šetnica',
+  birthday: 'Za rođendan',
 }
 
 export const parks: Park[] = [

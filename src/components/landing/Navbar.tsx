@@ -9,7 +9,7 @@ type NavItem = { label: string } & ({ href: string; to?: never } | { to: string;
 const navItems: NavItem[] = [
   { label: 'Pozivnice', href: '/#pozivnice' },
   { label: 'Igraonice', to: '/igraonice' },
-  { label: 'Djecji parkovi', to: '/djecji-parkovi' },
+  { label: 'Dječji parkovi', to: '/djecji-parkovi' },
   { label: 'Česta pitanja', href: '/#cesta-pitanja' },
 ]
 

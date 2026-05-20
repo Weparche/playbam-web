@@ -38,6 +38,7 @@ import {
   getFamilyProfile,
   getInvitationAccess,
   getInvitationChat,
+  markInvitationChatRead,
   getInvitationWishlist,
   getMyMembershipRequest,
   getMyRsvp,
@@ -56,6 +57,7 @@ import {
   type FamilyProfileResponse,
   type InvitationAccess,
   type InvitationChatMessage,
+  type InvitationChatRead,
   type InvitationPartyDetails,
   type InvitationRsvp,
   type InvitationWishlistItem,
@@ -396,6 +398,7 @@ export default function SharedInvitationPage() {
   const [editingWishlistItemId, setEditingWishlistItemId] = useState<string | null>(null)
   const [savingWishlistItem, setSavingWishlistItem] = useState(false)
   const [chatMessages, setChatMessages] = useState<InvitationChatMessage[]>([])
+  const [chatReads, setChatReads] = useState<InvitationChatRead[]>([])
   const [chatLoading, setChatLoading] = useState(false)
   const [chatError, setChatError] = useState('')
   const [chatDraft, setChatDraft] = useState('')
@@ -949,8 +952,9 @@ export default function SharedInvitationPage() {
     setChatError('')
 
     try {
-      const messages = await getInvitationChat(invitation.id, identity)
+      const { messages, reads } = await getInvitationChat(invitation.id, identity)
       setChatMessages(messages)
+      setChatReads(reads)
     } catch (caughtError) {
       setChatError(
         isApiError(caughtError, 403)
@@ -964,6 +968,51 @@ export default function SharedInvitationPage() {
     }
   }, [hasPrivateAccess, invitation, isHost, user])
 
+  /** Sinkronizira „pročitano” na serveru (kvačice za tuđe poruke). */
+  useEffect(() => {
+    const canSyncRead = Boolean(invitation?.id && (user || (showHostStudio && hasHostSession)))
+    const chatVisible =
+      canSyncRead &&
+      ((showHostStudio && hostAccordionOpen === 'chat') || (!isHost && hasPrivateAccess && guestChatOpen))
+
+    if (!chatVisible || !invitation) {
+      return
+    }
+
+    let cancelled = false
+    const identity = user ?? undefined
+
+    const run = async () => {
+      try {
+        const read = await markInvitationChatRead(invitation.id, identity)
+        if (cancelled) {
+          return
+        }
+        setChatReads((current) => {
+          const without = current.filter((entry) => entry.userId !== read.userId)
+          return [...without, { userId: read.userId, readAt: read.readAt, isHost: read.isHost }]
+        })
+      } catch {
+        // tiho — polling će ponoviti
+      }
+    }
+
+    void run()
+
+    return () => {
+      cancelled = true
+    }
+  }, [
+    guestChatOpen,
+    hasHostSession,
+    hasPrivateAccess,
+    hostAccordionOpen,
+    invitation,
+    isHost,
+    showHostStudio,
+    user,
+  ])
+
   useEffect(() => {
     if (!invitation || (!user && !hasHostSession)) {
       setAccess(null)
@@ -972,6 +1021,7 @@ export default function SharedInvitationPage() {
       setHostRequests([])
       setWishlistItems([])
       setChatMessages([])
+      setChatReads([])
       setChatError('')
       setChatDraft('')
       setGuestChatOpen(false)
@@ -1012,6 +1062,7 @@ export default function SharedInvitationPage() {
           setHostRequests(requests.filter((request) => request.status !== 'rejected'))
           setWishlistItems(wishlist)
           setChatMessages([])
+          setChatReads([])
           setChatError('')
           setChatDraft('')
           setGuestChatOpen(false)
@@ -1329,6 +1380,7 @@ export default function SharedInvitationPage() {
     setHostError('')
     setWishlistError('')
     setChatMessages([])
+    setChatReads([])
     setChatError('')
     setChatDraft('')
     setGuestChatOpen(false)
@@ -1343,6 +1395,7 @@ export default function SharedInvitationPage() {
     setHostRequests([])
     setWishlistItems([])
     setChatMessages([])
+    setChatReads([])
     setChatError('')
     setChatDraft('')
     setGuestChatOpen(false)
@@ -2020,6 +2073,7 @@ export default function SharedInvitationPage() {
                       onChatDraftChange={setChatDraft}
                       sendingChatMessage={sendingChatMessage}
                       onSendChatMessage={handleSendChatMessage}
+                      chatReads={chatReads}
                       chatSenderLabelHint={{
                         profileParentName: familyProfile?.profile?.parentName?.trim() || undefined,
                         sessionDisplayName: session?.displayName?.trim() || undefined,
@@ -2519,12 +2573,14 @@ export default function SharedInvitationPage() {
                       <div className="pb-privateAccordionBody">
                         <InvitationLiveChatPanel
                           messages={chatMessages}
+                          chatReads={chatReads}
                           loading={chatLoading}
                           error={chatError}
                           draft={chatDraft}
                           sending={sendingChatMessage}
                           onDraftChange={setChatDraft}
                           onSend={handleSendChatMessage}
+                          viewerRole="host"
                           canDeleteMessages
                           deletingMessageId={deletingChatId}
                           onDeleteMessage={handleDeleteChatMessage}

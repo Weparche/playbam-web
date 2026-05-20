@@ -37,11 +37,11 @@ export default function InvitationPreviewCard() {
         </div>
         <LinkButton
           variant="amber"
-          href="/pozivnica-demo"
+          href="/kreiraj-pozivnicu"
           onClick={onOpen}
           className="pb-invitePreview__btn"
         >
-          Otvori demo pozivnicu
+          Izradi pozivnicu
         </LinkButton>
       </div>
     </Card>

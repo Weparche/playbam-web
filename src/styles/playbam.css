@@ -3869,38 +3869,57 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-inviteChat {
-  display: grid;
-  gap: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   width: 100%;
   min-width: 0;
-  border-radius: 22px;
-  border: 1px solid rgba(31, 36, 48, 0.06);
-  background:
-    linear-gradient(rgba(245, 237, 224, 0.34), rgba(245, 237, 224, 0.34)),
-    radial-gradient(circle at 1px 1px, rgba(116, 133, 161, 0.09) 1px, transparent 0);
-  background-size: auto, 18px 18px;
-  padding: 1rem;
+  min-height: 18rem;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(31, 36, 48, 0.08);
+  background: #efeae2;
 }
 
 .pb-invitePrivateCard--liveChat .pb-inviteChat {
   border: 0;
-  border-radius: 0;
-  background: transparent;
-  padding: 0;
+  border-radius: 14px;
 }
 
-.pb-inviteChat__header {
-  display: grid;
-  gap: 0.32rem;
+.pb-inviteChat__thread {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  background:
+    linear-gradient(rgba(239, 234, 226, 0.92), rgba(239, 234, 226, 0.92)),
+    radial-gradient(circle at 1px 1px, rgba(17, 27, 33, 0.045) 1px, transparent 0);
+  background-size: auto, 20px 20px;
+}
+
+.pb-inviteChat__status {
+  margin: 0.75rem 0.85rem 0;
+}
+
+.pb-inviteChat__empty {
+  margin: auto;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: rgba(17, 27, 33, 0.52);
 }
 
 .pb-inviteChat__list {
-  display: grid;
-  gap: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
   max-height: 26rem;
+  min-height: 10rem;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 0 0.6rem;
+  padding: 0.65rem 0.55rem 0.75rem;
+  scroll-behavior: smooth;
 }
 
 .pb-inviteChat__row {
@@ -3908,143 +3927,300 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   width: 100%;
 }
 
-.pb-inviteChat__row--host {
+.pb-inviteChat__row--out {
   justify-content: flex-end;
 }
 
-.pb-inviteChat__row--guest {
+.pb-inviteChat__row--in {
   justify-content: flex-start;
 }
 
-.pb-inviteChat__item {
-  display: grid;
-  gap: 0.35rem;
-  width: min(100%, 23rem);
-  padding: 0.72rem 0.9rem 0.62rem;
-  border-radius: 18px;
-  border: 1px solid rgba(132, 148, 178, 0.14);
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 10px 18px rgba(24, 40, 72, 0.06);
+.pb-inviteChat__bubble {
   position: relative;
+  display: grid;
+  gap: 0.12rem;
+  width: min(82%, 20rem);
+  padding: 0.42rem 0.62rem 0.34rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
 }
 
-.pb-invitePrivateCard--liveChat .pb-inviteChat__list {
-  padding-inline: 0;
+.pb-inviteChat__bubble--out {
+  background: #d9fdd3;
+  border-bottom-right-radius: 2px;
 }
 
-.pb-invitePrivateCard--liveChat .pb-inviteChat__item {
-  width: 100%;
-}
-
-.pb-inviteChat__item--host {
-  background: linear-gradient(180deg, rgba(220, 248, 198, 0.98), rgba(206, 243, 184, 0.98));
-  border-color: rgba(124, 178, 89, 0.18);
-  border-bottom-right-radius: 6px;
-}
-
-.pb-inviteChat__item--host::after {
+.pb-inviteChat__bubble--out::after {
   content: '';
   position: absolute;
-  right: -7px;
+  right: -6px;
   bottom: 0;
-  width: 14px;
-  height: 14px;
-  background: linear-gradient(135deg, rgba(206, 243, 184, 0.98) 0%, rgba(206, 243, 184, 0.98) 50%, transparent 51%, transparent 100%);
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 100% 100%, transparent 10px, #d9fdd3 10.5px);
 }
 
-.pb-inviteChat__item--guest {
-  background: rgba(255, 255, 255, 0.98);
-  border-color: rgba(180, 188, 202, 0.26);
-  border-bottom-left-radius: 6px;
+.pb-inviteChat__bubble--in {
+  background: #fff;
+  border-bottom-left-radius: 2px;
 }
 
-.pb-inviteChat__item--guest::after {
+.pb-inviteChat__bubble--in::after {
   content: '';
   position: absolute;
-  left: -7px;
+  left: -6px;
   bottom: 0;
-  width: 14px;
-  height: 14px;
-  background: linear-gradient(225deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.98) 50%, transparent 51%, transparent 100%);
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 0% 100%, transparent 10px, #fff 10.5px);
 }
 
-.pb-inviteChat__meta {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.5rem;
-  font-size: 0.74rem;
-  color: rgba(16, 24, 40, 0.48);
+.pb-inviteChat__sender {
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #e5425c;
+  padding-bottom: 0.08rem;
 }
 
-.pb-inviteChat__metaText {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.6rem;
-  align-items: baseline;
-  min-width: 0;
-  flex: 1;
-}
-
-.pb-inviteChat__delete {
-  font-size: 0.7rem !important;
-  font-weight: 800 !important;
-  padding: 0.2rem 0.45rem !important;
-  min-height: 0 !important;
-  line-height: 1.1 !important;
-  flex-shrink: 0;
-}
-
-.pb-inviteChat__metaText strong {
-  font-size: 0.76rem;
-  font-weight: 900;
-  color: rgba(16, 24, 40, 0.72);
+.pb-inviteChat__bubble--in .pb-inviteChat__sender {
+  color: #53bdeb;
 }
 
 .pb-inviteChat__message {
   margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.5;
-  color: #203047;
+  padding-right: 0.15rem;
+  font-size: 0.9rem;
+  line-height: 1.38;
+  color: #111b21;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.pb-inviteChat__composer {
-  display: grid;
-  gap: 0.55rem;
-  padding: 0.6rem;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(180, 188, 202, 0.2);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+.pb-inviteChat__foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  margin-top: 0.05rem;
 }
 
-.pb-inviteChat__field {
+.pb-inviteChat__time {
+  font-size: 0.68rem;
+  line-height: 1;
+  color: rgba(17, 27, 33, 0.45);
+  white-space: nowrap;
+}
+
+.pb-inviteChat__ticks {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.12rem;
+  color: rgba(17, 27, 33, 0.38);
+  line-height: 0;
+}
+
+.pb-inviteChat__ticks--read {
+  color: #53bdeb;
+}
+
+.pb-inviteChat__dayGroup {
+  display: grid;
+  gap: 0.28rem;
+}
+
+.pb-inviteChat__dayDivider {
+  display: flex;
+  justify-content: center;
+  margin: 0.35rem 0 0.15rem;
+}
+
+.pb-inviteChat__dayDivider span {
+  display: inline-block;
+  padding: 0.28rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.12);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(17, 27, 33, 0.62);
+  text-transform: capitalize;
+}
+
+.pb-inviteChat__emojiPanel {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.45rem;
+  padding: 0.55rem;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid rgba(17, 27, 33, 0.08);
+  box-shadow: 0 6px 18px rgba(11, 20, 26, 0.1);
+  max-height: 11.5rem;
+  overflow-y: auto;
+}
+
+.pb-inviteChat__emojiHeading {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(17, 27, 33, 0.45);
+}
+
+.pb-inviteChat__emojiGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.2rem;
+}
+
+.pb-inviteChat__emojiGrid--smiles {
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+
+.pb-inviteChat__emojiBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+}
+
+.pb-inviteChat__emojiBtn:hover {
+  background: rgba(0, 168, 132, 0.1);
+}
+
+.pb-inviteChat__emojiBtn:active {
+  transform: scale(0.94);
+}
+
+.pb-inviteChat__composerRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.pb-inviteChat__emojiToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-bottom: 0.12rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(17, 27, 33, 0.52);
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.pb-inviteChat__emojiToggle:hover,
+.pb-inviteChat__emojiToggle.is-open {
+  background: rgba(0, 168, 132, 0.12);
+  color: #00a884;
+}
+
+.pb-inviteChat__delete {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(17, 27, 33, 0.42);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pb-inviteChat__delete:hover:not(:disabled) {
+  color: rgba(17, 27, 33, 0.72);
+}
+
+.pb-inviteChat__delete:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.pb-inviteChat__composer {
+  display: flex;
+  flex-direction: column;
+  padding: 0.45rem 0.55rem 0.5rem;
+  background: #f0f2f5;
+  border-top: 1px solid rgba(17, 27, 33, 0.06);
+}
+
+.pb-inviteChat__inputWrap {
+  flex: 1;
+  min-width: 0;
   margin: 0;
 }
 
 .pb-inviteChat__textarea {
-  min-height: 5.8rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.96);
-  border-color: rgba(180, 188, 202, 0.28);
-  resize: vertical;
+  display: block;
+  width: 100%;
+  min-height: 2.5rem;
+  max-height: 7.5rem;
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border: 0;
+  border-radius: 24px;
+  background: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: #111b21;
+  resize: none;
+  box-shadow: none;
+  outline: none;
 }
 
-.pb-inviteChat__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
+.pb-inviteChat__textarea:focus {
+  outline: 2px solid rgba(0, 168, 132, 0.35);
+  outline-offset: 0;
+}
+
+.pb-inviteChat__textarea::placeholder {
+  color: rgba(17, 27, 33, 0.42);
+}
+
+.pb-inviteChat__send {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.65rem;
+  height: 2.65rem;
+  border: 0;
+  border-radius: 50%;
+  background: #00a884;
+  color: #fff;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease, opacity 160ms ease;
 }
 
-.pb-inviteChat__counter {
-  font-size: 0.76rem;
-  font-weight: 700;
-  color: rgba(16, 24, 40, 0.48);
+.pb-inviteChat__send:hover:not(:disabled) {
+  background: #008f72;
+}
+
+.pb-inviteChat__send:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.pb-inviteChat__send:disabled {
+  background: rgba(17, 27, 33, 0.18);
+  cursor: not-allowed;
+  opacity: 0.85;
 }
 
 .pb-privateVenue__gallery {

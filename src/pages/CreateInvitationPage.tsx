@@ -40,11 +40,6 @@ import { useAuth } from '../context/AuthContext'
 
 const LOCAL_STORAGE_KEY = 'playbam.quick-create.draft'
 const CREATE_AFTER_LOGIN_KEY = 'playbam.create.after-login'
-const DEV_HOST_AUTH_TOKEN =
-  typeof import.meta.env.VITE_DEV_HOST_AUTH_TOKEN === 'string'
-    ? import.meta.env.VITE_DEV_HOST_AUTH_TOKEN.trim()
-    : ''
-
 function readStoredDraft() {
   const emptyDraft = buildEmptyCreateDraft()
 
@@ -313,7 +308,7 @@ export default function CreateInvitationPage() {
         theme: draft.theme,
       }, null)
 
-      const nextHostToken = created.hostAuthToken || readStoredHostToken() || DEV_HOST_AUTH_TOKEN
+      const nextHostToken = created.hostAuthToken?.trim() || readStoredHostToken()
       if (nextHostToken) {
         writeStoredHostToken(nextHostToken)
       }

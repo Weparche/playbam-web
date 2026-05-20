@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "scan:social": "node tools/scan-venue-social.mjs"
+    "scan:social": "node tools/scan-venue-social.mjs",
+    "impeccable:install": "impeccable skills install",
+    "impeccable:detect": "impeccable detect src/"
   },
   "dependencies": {
     "@types/leaflet": "^1.9.21",

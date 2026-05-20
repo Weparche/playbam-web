@@ -37,23 +37,6 @@ function getProtocolSafeApiBase(base: string) {
 
 const API_BASE = getProtocolSafeApiBase(RAW_API_BASE)
 
-/** Samo u `npm run dev`: šalje Bearer kao seed host (vidi backend PLAYBAM_HOST_AUTH_TOKEN). */
-const DEV_HOST_AUTH_TOKEN =
-  typeof import.meta.env.VITE_DEV_HOST_AUTH_TOKEN === 'string'
-    ? import.meta.env.VITE_DEV_HOST_AUTH_TOKEN.trim()
-    : ''
-
-/** Javni GET-evi ne smiju nositi Bearer (CORS). Kad postoji gost u sesiji, također ne — backend bi inače prihvatio host Bearer prije X-Playbam zaglavlja. */
-function shouldAttachDevHostBearer(path: string, hasGuestIdentity: boolean): boolean {
-  if (path.startsWith('/api/public/')) {
-    return false
-  }
-  if (hasGuestIdentity) {
-    return false
-  }
-  return true
-}
-
 function shouldAttachStoredHostBearer(path: string, hasGuestIdentity: boolean): boolean {
   if (path.startsWith('/api/public/')) {
     return false
@@ -322,6 +305,17 @@ export type InvitationChatMessage = {
   updatedAt: string
 }
 
+export type InvitationChatRead = {
+  userId: string
+  readAt: string
+  isHost: boolean
+}
+
+export type InvitationChatResponse = {
+  messages: InvitationChatMessage[]
+  reads: InvitationChatRead[]
+}
+
 class ApiError extends Error {
   status: number
 
@@ -367,12 +361,6 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     shouldAttachStoredHostBearer(path, Boolean(identity))
   ) {
     headers.set('Authorization', `Bearer ${storedHostToken}`)
-  } else if (
-    import.meta.env.DEV &&
-    DEV_HOST_AUTH_TOKEN &&
-    shouldAttachDevHostBearer(path, Boolean(identity))
-  ) {
-    headers.set('Authorization', `Bearer ${DEV_HOST_AUTH_TOKEN}`)
   }
 
   if (!sessionToken) {
@@ -623,11 +611,21 @@ export async function getInvitationWishlist(invitationId: string, identity?: Tem
 }
 
 export async function getInvitationChat(invitationId: string, identity?: TemporaryWebIdentity | null) {
-  const data = await request<{ messages: InvitationChatMessage[] }>(
+  const data = await request<InvitationChatResponse>(
     `/api/invitations/${encodeURIComponent(invitationId)}/chat`,
     { identity },
   )
-  return data.messages
+  return data
+}
+
+export async function markInvitationChatRead(invitationId: string, identity?: TemporaryWebIdentity | null) {
+  return request<InvitationChatRead & { readAt: string }>(
+    `/api/invitations/${encodeURIComponent(invitationId)}/chat/read`,
+    {
+      method: 'POST',
+      identity,
+    },
+  )
 }
 
 export async function createInvitationChatMessage(

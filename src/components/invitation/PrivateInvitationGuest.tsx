@@ -14,6 +14,7 @@ import {
 } from '../../lib/privateSectionUnread'
 import type {
   InvitationChatMessage,
+  InvitationChatRead,
   InvitationWishlistItem,
   InvitationWishlistPayload,
   PublicInvitation,
@@ -39,6 +40,7 @@ type Props = {
   chatLoading: boolean
   chatError: string
   chatMessages: InvitationChatMessage[]
+  chatReads: InvitationChatRead[]
   chatDraft: string
   onChatDraftChange: (value: string) => void
   sendingChatMessage: boolean
@@ -156,6 +158,7 @@ export default function PrivateInvitationGuest({
   chatLoading,
   chatError,
   chatMessages,
+  chatReads,
   chatDraft,
   onChatDraftChange,
   sendingChatMessage,
@@ -581,12 +584,14 @@ export default function PrivateInvitationGuest({
             <div className="pb-privateAccordionBody">
               <InvitationLiveChatPanel
                 messages={chatMessages}
+                chatReads={chatReads}
                 loading={chatLoading}
                 error={chatError}
                 draft={chatDraft}
                 sending={sendingChatMessage}
                 onDraftChange={onChatDraftChange}
                 onSend={onSendChatMessage}
+                viewerRole="guest"
                 senderLabelHint={chatSenderLabelHint}
               />
             </div>

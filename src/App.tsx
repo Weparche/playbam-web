@@ -58,7 +58,7 @@ export default function App() {
             <Route path="/kolacici" element={<CookiesPage />} />
             <Route path="/moj-vidimose" element={<MojVidimosePage />} />
             <Route path="/admin" element={<AdminPage />} />
-            <Route path="/pozivnica-demo" element={<Navigate to="/pozivnica/luka-istrazivaci" replace />} />
+            <Route path="/pozivnica-demo" element={<Navigate to="/kreiraj-pozivnicu" replace />} />
             <Route path="/pozivnica/:token" element={<SharedInvitationPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -25,3 +25,10 @@ dist-ssr
 
 # Generirano: npm run scan:social -- --save
 tools/last-scan-social.json
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

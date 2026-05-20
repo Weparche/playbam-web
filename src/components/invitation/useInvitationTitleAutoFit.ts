@@ -56,7 +56,7 @@ export function useInvitationTitleAutoFit(
         const isOnLiveInvitePage =
           Boolean(card) && !inCreatePreview && Boolean(frame.closest?.('.pb-invitePage'))
         const isNarrow = window.innerWidth <= 979
-        const mobileTitleBoost = isNarrow && (isBirthTab || isOnLiveInvitePage) ? 1.3 : 1
+        const mobileTitleBoost = isNarrow && (isBirthTab || isOnLiveInvitePage) ? 1.2 : 1
         maxBoxPx = Math.min(frame.clientHeight * 0.3 * mobileTitleBoost, 168 * mobileTitleBoost) * maxBoxScale
       } else if (wrap && wrap.clientHeight > 16) {
         maxBoxPx = Math.min(wrap.clientHeight * 0.42, 112) * maxBoxScale

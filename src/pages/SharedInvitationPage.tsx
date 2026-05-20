@@ -415,6 +415,7 @@ export default function SharedInvitationPage() {
   const [selectedHostRequest, setSelectedHostRequest] = useState<MembershipRequest | null>(null)
   const [hostEditorDraft, setHostEditorDraft] = useState<InvitationCreateDraft>(DEFAULT_CREATE_DRAFT)
   const [hostPartyDetailsDraft, setHostPartyDetailsDraft] = useState<PartyDetailsDraft>(createPartyDetailsDraft())
+  const [hostDraftHydratedId, setHostDraftHydratedId] = useState<string | null>(null)
   const [hostLocalSaveState, setHostLocalSaveState] = useState<'idle' | 'saving' | 'saved'>('saved')
   const hostLoadedDraftRef = useRef<InvitationCreateDraft | null>(null)
   const hostLoadedPartyDetailsRef = useRef<PartyDetailsDraft | null>(null)
@@ -499,6 +500,7 @@ export default function SharedInvitationPage() {
 
   useEffect(() => {
     if (!invitation) {
+      setHostDraftHydratedId(null)
       return
     }
 
@@ -512,12 +514,14 @@ export default function SharedInvitationPage() {
       setHostEditorDraft({ ...baseDraft, ...stored.editorDraft })
       setHostPartyDetailsDraft({ ...basePartyDetails, ...stored.partyDetailsDraft })
       setHostLocalSaveState('saved')
+      setHostDraftHydratedId(invitation.id)
       return
     }
 
     setHostEditorDraft(baseDraft)
     setHostPartyDetailsDraft(basePartyDetails)
     setHostLocalSaveState('saved')
+    setHostDraftHydratedId(invitation.id)
   }, [invitation])
 
   useEffect(() => {
@@ -562,6 +566,21 @@ export default function SharedInvitationPage() {
   const canViewWishlist = access?.canViewWishlist ?? false
   const canSubmitRsvp = Boolean(user && !isHost && access?.canRsvp)
   const showHostStudio = Boolean((user || hasHostSession) && !loadingPrivateState && isHost)
+
+  /** Dok se draft ne učita iz API-ja, preview/editor koriste stvarnu pozivnicu — ne DEFAULT_CREATE_DRAFT. */
+  const hostEditorDraftResolved = useMemo(() => {
+    if (!invitation || hostDraftHydratedId !== invitation.id) {
+      return invitation ? createDraftFromInvitation(invitation) : hostEditorDraft
+    }
+    return hostEditorDraft
+  }, [hostDraftHydratedId, hostEditorDraft, invitation])
+
+  const hostPartyDetailsResolved = useMemo(() => {
+    if (!invitation || hostDraftHydratedId !== invitation.id) {
+      return invitation ? createPartyDetailsDraft(invitation.partyDetails) : hostPartyDetailsDraft
+    }
+    return hostPartyDetailsDraft
+  }, [hostDraftHydratedId, hostPartyDetailsDraft, invitation])
 
   const hostWishlistContributorLabel = useMemo(
     () => familyProfile?.profile?.parentName?.trim() || session?.displayName?.trim() || null,
@@ -667,9 +686,17 @@ export default function SharedInvitationPage() {
 
   const openHostEditorShortcut = (shortcut: ShortcutId) => {
     if (shortcut === 'dateTime') {
-      hostDateTimeSnapshotRef.current = { date: hostEditorDraft.date, time: hostEditorDraft.time, timeEnd: hostEditorDraft.timeEnd }
+      hostDateTimeSnapshotRef.current = {
+        date: hostEditorDraftResolved.date,
+        time: hostEditorDraftResolved.time,
+        timeEnd: hostEditorDraftResolved.timeEnd,
+      }
     } else if (shortcut === 'location') {
-      hostLocationSnapshotRef.current = { locationName: hostEditorDraft.locationName, locationAddress: hostEditorDraft.locationAddress, locationType: hostEditorDraft.locationType }
+      hostLocationSnapshotRef.current = {
+        locationName: hostEditorDraftResolved.locationName,
+        locationAddress: hostEditorDraftResolved.locationAddress,
+        locationType: hostEditorDraftResolved.locationType,
+      }
     }
     setHostEditorShortcut(shortcut)
   }
@@ -1767,7 +1794,7 @@ export default function SharedInvitationPage() {
               </div>
             }
           >
-            <QuickDateTimeEditor draft={hostEditorDraft} today={today} onFieldChange={updateHostField} />
+            <QuickDateTimeEditor draft={hostEditorDraftResolved} today={today} onFieldChange={updateHostField} />
           </FloatingEditPanel>
         )
       case 'location':
@@ -1784,7 +1811,7 @@ export default function SharedInvitationPage() {
               </div>
             }
           >
-            <QuickLocationEditor draft={hostEditorDraft} onFieldChange={updateHostField} />
+            <QuickLocationEditor draft={hostEditorDraftResolved} onFieldChange={updateHostField} />
           </FloatingEditPanel>
         )
       case 'theme':
@@ -1795,7 +1822,7 @@ export default function SharedInvitationPage() {
             onClose={closeHostEditorPanel}
           >
             <QuickThemeEditor
-              draft={hostEditorDraft}
+              draft={hostEditorDraftResolved}
               onThemeChange={(value) => {
                 updateHostField('theme', value)
                 closeHostEditorPanel()
@@ -1812,7 +1839,7 @@ export default function SharedInvitationPage() {
             onClose={closeHostEditorPanel}
           >
             <QuickRSVPEditor
-              draft={hostEditorDraft}
+              draft={hostEditorDraftResolved}
               onFieldChange={(field, value) => {
                 updateHostField(field, value)
                 if (field === 'rsvpMood') {
@@ -2034,7 +2061,7 @@ export default function SharedInvitationPage() {
 
                         <div className="pb-hostUpdateEditor">
                           <InvitationMainEditor
-                            draft={hostEditorDraft}
+                            draft={hostEditorDraftResolved}
                             onFieldChange={updateHostField}
                             onOpenShortcut={openHostEditorShortcut}
                             hideWishlistCard
@@ -2085,7 +2112,7 @@ export default function SharedInvitationPage() {
                           style={
                             {
                               ['--pb-host-details-fg' as string]: getTitleColorValue(
-                                normalizeTitleColor(hostEditorDraft.titleColor),
+                                normalizeTitleColor(hostEditorDraftResolved.titleColor),
                               ),
                             } as CSSProperties
                           }
@@ -2514,9 +2541,9 @@ export default function SharedInvitationPage() {
                       <div className="pb-hostStudio__preview">
                         <div className="pb-hostScreenPrintPreview">
                           <InvitationLivePreview
-                            draft={hostEditorDraft}
+                            draft={hostEditorDraftResolved}
                             previewMode={hostPreviewMode}
-                            partyDetails={hostPartyDetailsDraft}
+                            partyDetails={hostPartyDetailsResolved}
                             inviteUrl={guestPageShareUrl || null}
                           />
                         </div>
@@ -2526,9 +2553,9 @@ export default function SharedInvitationPage() {
                             {Array.from({ length: 4 }).map((_, index) => (
                               <div key={index} className="pb-hostPrintOnlySheet__item">
                                 <InvitationLivePreview
-                                  draft={hostEditorDraft}
+                                  draft={hostEditorDraftResolved}
                                   previewMode="print"
-                                  partyDetails={hostPartyDetailsDraft}
+                                  partyDetails={hostPartyDetailsResolved}
                                   inviteUrl={guestPageShareUrl || null}
                                 />
                               </div>

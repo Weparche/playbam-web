@@ -4019,6 +4019,34 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   color: rgba(16, 24, 40, 0.48);
 }
 
+@media (max-width: 760px) {
+  .pb-invitePrivateCard--liveChat {
+    width: 100dvw;
+    max-width: 100dvw;
+    margin-inline: calc(50% - 50dvw);
+    border-radius: 0;
+    border-inline: 0;
+  }
+
+  .pb-invitePrivateCard--liveChat .pb-inviteChat {
+    border-radius: 0;
+    border-inline: 0;
+    padding-inline: max(0.85rem, env(safe-area-inset-left, 0px) + 0.85rem) max(0.85rem, env(safe-area-inset-right, 0px) + 0.85rem);
+  }
+
+  .pb-invitePrivateCard--liveChat .pb-inviteChat__list {
+    padding-inline: 0;
+  }
+
+  .pb-invitePrivateCard--liveChat .pb-inviteChat__item {
+    width: min(100%, 27rem);
+  }
+
+  .pb-invitePrivateCard--liveChat .pb-inviteChat__composer {
+    border-radius: 18px;
+  }
+}
+
 .pb-privateVenue__gallery {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -12730,8 +12758,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-inviteHero__infoRow--venue {
-  justify-self: start;
-  transform: translate(12px, -3px);
+  justify-self: center;
+  transform: translate(0, -3px);
 }
 
 .pb-inviteHero__infoIcon {
@@ -12769,6 +12797,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   display: grid;
   justify-items: center;
   gap: 0.08rem;
+  text-align: center;
 }
 
 .pb-inviteHero__infoBlock--soft-outline .pb-inviteHero__infoValue,
@@ -12898,7 +12927,8 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoRow--venue {
-  transform: translate(12px, 0);
+  justify-self: center;
+  transform: translate(0, 0);
 }
 
 /* Desktop javna pozivnica: ne diramo dodatno (stabilna pozicija) */

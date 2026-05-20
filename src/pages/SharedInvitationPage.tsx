@@ -2500,7 +2500,7 @@ export default function SharedInvitationPage() {
                     ) : null}
                   </Card>
 
-                  <Card id="host-chat-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                  <Card id="host-chat-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-invitePrivateCard--liveChat pb-inviteHostPanel">
                     <button
                       id="host-chat-toggle"
                       type="button"

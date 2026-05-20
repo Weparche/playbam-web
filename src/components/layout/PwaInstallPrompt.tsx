@@ -86,7 +86,7 @@ export default function PwaInstallPrompt() {
       </div>
       <div className="pb-pwaInstall__copy">
         <strong>Želiš da ti je VidimoSe odmah na dohvat ruke?</strong>
-        <span>Instaliraj VidimoSe na svoj mobilni uređaj.</span>
+        <span>Instaliraj VidimoSe kao aplikaciju na svoj uređaj.</span>
       </div>
       <button type="button" className="pb-pwaInstall__button" onClick={install}>
         Instaliraj

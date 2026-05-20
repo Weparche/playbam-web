@@ -553,7 +553,7 @@ export default function PrivateInvitationGuest({
           ) : null}
         </section>
 
-        <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-chat-toggle">
+        <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion pb-invitePrivateCard--liveChat" aria-labelledby="private-chat-toggle">
           <button
             id="private-chat-toggle"
             type="button"

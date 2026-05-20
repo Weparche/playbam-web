@@ -1,6 +1,6 @@
 /**
  * Za WhatsApp / društvene preglednice: vraća HTML s Open Graph meta tagovima
- * (slika = ista pozadina kao „Gost pregled”, vidi src/components/invitation/invitationHeroContent.ts).
+ * (slika = PNG s naslovom, datumom, lokacijom i RSVP: /api/public/invitations/{slug}/og.png).
  * Sinkroniziraj INVITATION_BACKGROUND_MAP s INVITATION_BACKGROUND_MAP u tom fileu.
  *
  * Radi samo na produkciji (Cloudflare Pages) uz PLAYBAM_BACKEND_ORIGIN.
@@ -204,9 +204,9 @@ export async function onRequest(context) {
 
   const title = buildInvitationHeroTitle(invitation.title, invitation.celebrantName)
   const description = buildShareDescription(invitation)
-  const imagePath = resolveInvitationBackgroundImage(invitation.coverImage, invitation.theme)
   const origin = url.origin
-  const ogImage = imagePath.startsWith('http') ? imagePath : `${origin}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`
+  const slugForOg = String(invitation.publicSlug || invitation.shareToken || slug).trim()
+  const ogImage = `${origin}/api/public/invitations/${encodeURIComponent(slugForOg)}/og.png`
 
   const slugForCanonical = String(invitation.publicSlug || invitation.shareToken || slug).trim()
   const canonical = `${origin}/pozivnica/${encodeURIComponent(slugForCanonical)}`
@@ -223,6 +223,8 @@ export async function onRequest(context) {
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:image" content="${escapeHtml(ogImage)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:locale" content="hr_HR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escapeHtml(title)}">

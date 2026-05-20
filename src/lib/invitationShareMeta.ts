@@ -2,7 +2,6 @@ import {
   buildInvitationHeroTitle,
   formatInvitationDateText,
   formatInvitationTimeText,
-  resolveInvitationBackgroundImage,
 } from '../components/invitation/invitationHeroContent'
 import type { PublicInvitation } from './invitationApi'
 
@@ -54,13 +53,20 @@ function buildInvitationPageUrl(inv: PublicInvitation) {
   return `${window.location.origin}${path}`
 }
 
+function buildInvitationOgImageUrl(inv: PublicInvitation) {
+  const slug = (inv.publicSlug || inv.shareToken || '').trim()
+  const path = `/api/public/invitations/${encodeURIComponent(slug)}/og.png`
+  if (typeof window === 'undefined') {
+    return path
+  }
+  return `${window.location.origin}${path}`
+}
+
 export function applyInvitationShareMeta(inv: PublicInvitation) {
   const pageUrl = buildInvitationPageUrl(inv)
   const title = buildInvitationHeroTitle(inv.title, inv.celebrantName)
   const description = buildInvitationShareDescription(inv)
-  const imagePath = resolveInvitationBackgroundImage(inv.coverImage, inv.theme)
-  const imageUrl =
-    typeof window !== 'undefined' ? new URL(imagePath, window.location.origin).href : imagePath
+  const imageUrl = buildInvitationOgImageUrl(inv)
 
   document.title = title
   upsertMeta('property', 'og:type', 'website')
@@ -68,6 +74,8 @@ export function applyInvitationShareMeta(inv: PublicInvitation) {
   upsertMeta('property', 'og:title', title)
   upsertMeta('property', 'og:description', description)
   upsertMeta('property', 'og:image', imageUrl)
+  upsertMeta('property', 'og:image:width', '1200')
+  upsertMeta('property', 'og:image:height', '630')
   upsertMeta('property', 'og:locale', 'hr_HR')
   upsertMeta('name', 'twitter:card', 'summary_large_image')
   upsertMeta('name', 'twitter:title', title)

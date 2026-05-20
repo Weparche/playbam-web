@@ -181,7 +181,14 @@ function ParkCard({
 
   return (
     <article className="ew-pp-card" id={`park-${park.id}`}>
-      <img className="ew-pp-card__image" src={park.coverPhoto} alt="" loading="lazy" decoding="async" />
+      <img
+        className="ew-pp-card__image"
+        src={park.coverPhoto}
+        alt={park.name}
+        title="Foto: Wikimedia Commons"
+        loading="lazy"
+        decoding="async"
+      />
       <div className="ew-pp-card__body">
         <div className="ew-pp-card__top">
           <div>

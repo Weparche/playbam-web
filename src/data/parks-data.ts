@@ -24,6 +24,8 @@ export type NearbyCafe = {
   openNow?: boolean
 }
 
+/** coverPhoto: Wikimedia Commons (CC) — vidi tools/fetch-park-photos.mjs */
+
 export type Park = {
   id: string
   slug: string
@@ -81,7 +83,8 @@ export const parks: Park[] = [
     ageMax: 6,
     features: ['shade', 'fenced', 'cafe', 'stroller', 'benches', 'quiet'],
     description: 'Mirno igraliste u zelenilu Maksimira, dobro za najmlade i kratki obiteljski izlazak uz setnju parkom.',
-    coverPhoto: 'https://images.unsplash.com/photo-1597074866923-dc0589150358?auto=format&fit=crop&w=900&q=80',
+    coverPhoto:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Zagreb_-_Maksimirski_perivoj_u_travnju.JPG/1280px-Zagreb_-_Maksimirski_perivoj_u_travnju.JPG',
     rating: 4.7,
     reviewCount: 96,
     hasShade: true,
@@ -126,7 +129,8 @@ export const parks: Park[] = [
     ageMax: 8,
     features: ['shade', 'cafe', 'parking', 'stroller', 'benches', 'large', 'walkway', 'birthday'],
     description: 'Puno hlada uz jezero, vise igralisnih zona i dovoljno prostora za igru, piknik i duze zadrzavanje.',
-    coverPhoto: 'https://images.unsplash.com/photo-1579706783491-08184d1b2f47?auto=format&fit=crop&w=900&q=80',
+    coverPhoto:
+      'https://upload.wikimedia.org/wikipedia/commons/9/99/Bundek_climbing_frame_20150307_DSC_0109%2C_crop.jpg',
     rating: 4.8,
     reviewCount: 128,
     hasShade: true,
@@ -170,7 +174,8 @@ export const parks: Park[] = [
     ageMax: 12,
     features: ['shade', 'cafe', 'parking', 'large', 'walkway', 'birthday'],
     description: 'Prostrano igraliste uz jezero i setnicu. Dobar izbor za aktivne obitelji, bicikle i dulji boravak.',
-    coverPhoto: 'https://images.unsplash.com/photo-1682687220063-4742bd7fd538?auto=format&fit=crop&w=900&q=80',
+    coverPhoto:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Zagreb_Jarun_main_way_1.jpg/1280px-Zagreb_Jarun_main_way_1.jpg',
     rating: 4.6,
     reviewCount: 88,
     hasShade: true,
@@ -214,7 +219,8 @@ export const parks: Park[] = [
     ageMax: 8,
     features: ['shade', 'fenced', 'cafe', 'stroller', 'benches', 'quiet'],
     description: 'Centralni park s puno zelenila i mirnijim igralistem, praktican za roditelje koji trebaju predah u centru.',
-    coverPhoto: 'https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&w=900&q=80',
+    coverPhoto:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/ZagrebParkRibnjak.jpg/1280px-ZagrebParkRibnjak.jpg',
     rating: 4.5,
     reviewCount: 74,
     hasShade: true,
@@ -249,7 +255,8 @@ export const parks: Park[] = [
     ageMax: 6,
     features: ['shade', 'cafe', 'stroller', 'benches', 'walkway'],
     description: 'Ureden gradski park za kratku igru i setnju, s puno klupa i kavanama u neposrednoj blizini.',
-    coverPhoto: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
+    coverPhoto:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Zrinjevac_Park_in_Zagreb%2C_Croatia.JPG/1280px-Zrinjevac_Park_in_Zagreb%2C_Croatia.JPG',
     rating: 4.4,
     reviewCount: 112,
     hasShade: true,
@@ -293,7 +300,8 @@ export const parks: Park[] = [
     ageMax: 6,
     features: ['shade', 'fenced', 'cafe', 'stroller', 'benches', 'quiet'],
     description: 'Kvartovsko igraliste s ugodnom hladovinom, klupama i dobrim pregledom prostora za roditelje.',
-    coverPhoto: 'https://images.unsplash.com/photo-1628592102751-ba83b0314276?auto=format&fit=crop&w=900&q=80',
+    coverPhoto:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Zagreb_STC_MeetUp_9_Photo_1.jpg/1280px-Zagreb_STC_MeetUp_9_Photo_1.jpg',
     rating: 4.6,
     reviewCount: 62,
     hasShade: true,
@@ -328,7 +336,8 @@ export const parks: Park[] = [
     ageMax: 10,
     features: ['shade', 'fenced', 'parking', 'stroller', 'benches', 'large', 'quiet'],
     description: 'Veliko kvartovsko igraliste s mirnijim ritmom, puno prostora i dobrim pristupom za kolica.',
-    coverPhoto: 'https://images.unsplash.com/photo-1616680214084-22670de1bc82?auto=format&fit=crop&w=900&q=80',
+    coverPhoto:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Dugave_park_20110917_3137.jpg/1280px-Dugave_park_20110917_3137.jpg',
     rating: 4.3,
     reviewCount: 49,
     hasShade: true,
@@ -351,7 +360,8 @@ export const parks: Park[] = [
     ageMax: 8,
     features: ['fenced', 'cafe', 'parking', 'stroller', 'benches', 'birthday'],
     description: 'Prakticno naseljsko igraliste blizu kave i parkinga, dobro za kracu igru nakon vrtica ili vikendom.',
-    coverPhoto: 'https://images.unsplash.com/photo-1563299796-17596ed6b017?auto=format&fit=crop&w=900&q=80',
+    coverPhoto:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Kajzerica_table%2C_Novi_Zagreb.jpg/1280px-Kajzerica_table%2C_Novi_Zagreb.jpg',
     rating: 4.4,
     reviewCount: 55,
     hasShade: false,

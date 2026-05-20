@@ -86,6 +86,7 @@ export default function InvitationCard({
           accessTitle={accessTitle}
           accessText={accessText}
           showAccessCard={!captureMode}
+          captureMode={captureMode}
         />
       </div>
     </section>

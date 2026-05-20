@@ -75,7 +75,7 @@ export function applyInvitationShareMeta(inv: PublicInvitation) {
   upsertMeta('property', 'og:description', description)
   upsertMeta('property', 'og:image', imageUrl)
   upsertMeta('property', 'og:image:width', '1200')
-  upsertMeta('property', 'og:image:height', '630')
+  upsertMeta('property', 'og:image:height', '2600')
   upsertMeta('property', 'og:locale', 'hr_HR')
   upsertMeta('name', 'twitter:card', 'summary_large_image')
   upsertMeta('name', 'twitter:title', title)

@@ -11,6 +11,7 @@ import {
   RSVP_GUEST_HEADLINE,
   type RsvpMood,
 } from '../create/createTypes'
+import { twemojiAssetUrl } from '../../lib/twemojiCodepoint'
 import { useInvitationTitleAutoFit } from './useInvitationTitleAutoFit'
 
 export type PrintPartyDetailLine = {
@@ -39,6 +40,8 @@ type Props = {
   accessTitle: string
   accessText: string
   showAccessCard?: boolean
+  /** WhatsApp OG screenshot: Twemoji umjesto sistemskih emoji (headless Linux). */
+  captureMode?: boolean
   printPartyDetails?: readonly PrintPartyDetailLine[] | null
   printQrDataUrl?: string | null
   printContactName?: string | null
@@ -77,6 +80,32 @@ function IconPin() {
   )
 }
 
+function isTwemojiSymbol(symbol: string) {
+  return /[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{200D}\u{FE0F}]/u.test(symbol)
+}
+
+function RsvpEmoji({ symbol, captureMode }: { symbol: string; captureMode: boolean }) {
+  if (captureMode && isTwemojiSymbol(symbol)) {
+    return (
+      <img
+        className="pb-rsvpBtn__emoji pb-rsvpBtn__emoji--capture"
+        src={twemojiAssetUrl(symbol, 72)}
+        alt=""
+        width={36}
+        height={36}
+        decoding="sync"
+        draggable={false}
+      />
+    )
+  }
+
+  return (
+    <span className="pb-rsvpBtn__emoji" aria-hidden>
+      {symbol}
+    </span>
+  )
+}
+
 function IconLock() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -107,6 +136,7 @@ export default function PublicInvitationHero({
   accessTitle,
   accessText,
   showAccessCard = true,
+  captureMode = false,
   printPartyDetails = null,
   printQrDataUrl = null,
   printContactName = null,
@@ -256,7 +286,7 @@ export default function PublicInvitationHero({
                   className={`pb-rsvpBtn pb-rsvpBtn--storybook pb-rsvpBtn--storybookGoing ${rsvp === 'going' ? 'is-active' : ''}`}
                   onClick={() => onRsvpClick?.('going')}
                 >
-                  <span className="pb-rsvpBtn__emoji" aria-hidden>{getRsvpSymbol(resolvedMood, 'going')}</span>
+                  <RsvpEmoji symbol={getRsvpSymbol(resolvedMood, 'going')} captureMode={captureMode} />
                   <span>Dolazimo</span>
                 </button>
                 <button
@@ -264,7 +294,7 @@ export default function PublicInvitationHero({
                   className={`pb-rsvpBtn pb-rsvpBtn--storybook pb-rsvpBtn--storybookNotGoing ${rsvp === 'not_going' ? 'is-active' : ''}`}
                   onClick={() => onRsvpClick?.('not_going')}
                 >
-                  <span className="pb-rsvpBtn__emoji" aria-hidden>{getRsvpSymbol(resolvedMood, 'not_going')}</span>
+                  <RsvpEmoji symbol={getRsvpSymbol(resolvedMood, 'not_going')} captureMode={captureMode} />
                   <span>Ne dolazimo</span>
                 </button>
                 <button
@@ -272,7 +302,7 @@ export default function PublicInvitationHero({
                   className={`pb-rsvpBtn pb-rsvpBtn--storybook pb-rsvpBtn--storybookMaybe ${rsvp === 'maybe' ? 'is-active' : ''}`}
                   onClick={() => onRsvpClick?.('maybe')}
                 >
-                  <span className="pb-rsvpBtn__emoji" aria-hidden>{getRsvpSymbol(resolvedMood, 'maybe')}</span>
+                  <RsvpEmoji symbol={getRsvpSymbol(resolvedMood, 'maybe')} captureMode={captureMode} />
                   <span>Možda</span>
                 </button>
               </div>

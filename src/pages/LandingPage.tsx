@@ -1,15 +1,16 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import CTABanner from '../components/landing/CTABanner'
 import DualFormatNotes from '../components/landing/DualFormatNotes'
-import FAQ from '../components/landing/FAQ'
 import Footer from '../components/landing/Footer'
 import Hero from '../components/landing/Hero'
 import HowItWorks from '../components/landing/HowItWorks'
-import InvitationsSection from '../components/landing/InvitationsSection'
 import Navbar from '../components/landing/Navbar'
-import Testimonials from '../components/landing/Testimonials'
-import VenuesSection from '../components/landing/VenuesSection'
+
+const InvitationsSection = lazy(() => import('../components/landing/InvitationsSection'))
+const VenuesSection = lazy(() => import('../components/landing/VenuesSection'))
+const Testimonials = lazy(() => import('../components/landing/Testimonials'))
+const FAQ = lazy(() => import('../components/landing/FAQ'))
 
 export default function LandingPage() {
   const { hash } = useLocation()
@@ -32,11 +33,15 @@ export default function LandingPage() {
       <main id="main">
         <Hero />
         <DualFormatNotes />
-        <InvitationsSection />
-        <VenuesSection />
+        <Suspense fallback={null}>
+          <InvitationsSection />
+          <VenuesSection />
+        </Suspense>
         <HowItWorks />
-        <Testimonials />
-        <FAQ />
+        <Suspense fallback={null}>
+          <Testimonials />
+          <FAQ />
+        </Suspense>
         <CTABanner />
       </main>
 

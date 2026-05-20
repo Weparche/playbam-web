@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { venues } from '../../lib/landing-data'
+import { LANDING_HERO_VENUE_AVATARS } from '../../lib/landingHeroAvatars'
 import HeroInvitationPreview from './HeroInvitationPreview'
 
 export default function Hero() {
@@ -52,11 +52,11 @@ export default function Hero() {
             </Link>
             <Link to="/igraonice" className="ew-hero__venue-pill">
               <span className="ew-hero__venue-avatars" aria-hidden="true">
-                {venues.slice(0, 3).map(v => (
+                {LANDING_HERO_VENUE_AVATARS.map((avatar) => (
                   <img
-                    key={v.id}
-                    src={v.coverPhoto}
-                    alt=""
+                    key={avatar.src}
+                    src={avatar.src}
+                    alt={avatar.alt}
                     className="ew-hero__venue-avatar"
                     loading="eager"
                     decoding="async"

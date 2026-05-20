@@ -3979,9 +3979,39 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
   background: #efeae2;
 }
 
+.pb-invitePrivateCard--liveChat .pb-privateAccordionBody {
+  width: 100%;
+  max-width: 100%;
+  margin-top: -0.5rem;
+  padding: 0.2rem 0 0.85rem;
+  gap: 0;
+}
+
 .pb-invitePrivateCard--liveChat .pb-inviteChat {
-  border: 0;
-  border-radius: 14px;
+  width: 100%;
+  max-width: 100%;
+  min-height: min(68vh, 32rem);
+  height: min(68vh, 32rem);
+  box-sizing: border-box;
+  border: 1px solid rgba(31, 36, 48, 0.08);
+  border-radius: 16px;
+}
+
+.pb-invitePrivateCard--liveChat .pb-inviteChat__thread {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pb-invitePrivateCard--liveChat .pb-inviteChat__list {
+  flex: 1 1 auto;
+  max-height: none;
+  min-height: 0;
+}
+
+.pb-invitePrivateCard--liveChat .pb-inviteChat__composer {
+  flex-shrink: 0;
 }
 
 .pb-inviteChat__thread {

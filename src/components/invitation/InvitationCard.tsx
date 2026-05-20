@@ -17,6 +17,8 @@ type Props = {
   onRsvpChange?: (response: 'going' | 'not_going' | 'maybe') => void
   onGuestRsvpIntent?: (choice: 'going' | 'not_going' | 'maybe') => void
   guestRsvpHint?: string | null
+  /** Headless OG screenshot: ista kartica, bez „prijavi se” bloka. */
+  captureMode?: boolean
 }
 
 export default function InvitationCard({
@@ -28,6 +30,7 @@ export default function InvitationCard({
   onRsvpChange,
   onGuestRsvpIntent,
   guestRsvpHint = null,
+  captureMode = false,
 }: Props) {
   const message = invitation.message?.trim() ?? ''
   const showGuestRsvp = !isHost
@@ -82,7 +85,7 @@ export default function InvitationCard({
           onRsvpClick={handleRsvpClick}
           accessTitle={accessTitle}
           accessText={accessText}
-          showAccessCard
+          showAccessCard={!captureMode}
         />
       </div>
     </section>

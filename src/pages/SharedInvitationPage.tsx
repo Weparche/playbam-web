@@ -1,8 +1,6 @@
 ﻿import { type ChangeEvent, type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { toJpeg } from 'html-to-image'
-
-import { buildGoogleFontsEmbedCss } from '../lib/buildGoogleFontsEmbedCss'
-import { Link, useParams } from 'react-router-dom'
+import { captureInvitationCardJpeg } from '../lib/captureInvitationCardImage'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 import FloatingEditPanel from '../components/create/FloatingEditPanel'
 import InvitationLivePreview, { type LivePreviewMode } from '../components/create/InvitationLivePreview'
@@ -48,6 +46,7 @@ import {
   proxyImageUrl,
   readGoogleAuthCallbackState,
   updateInvitation,
+  uploadInvitationOgImage,
   reserveInvitationWishlistItem,
   reviewMembershipRequest,
   saveRsvp,
@@ -362,6 +361,8 @@ function clearHostLocalDraft(invitationId: string) {
 
 export default function SharedInvitationPage() {
   const { token = '' } = useParams()
+  const [searchParams] = useSearchParams()
+  const ogCapture = searchParams.get('ogCapture') === '1'
   const { user, session, logout } = useAuth()
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const [hostToken, setHostToken] = useState(() => readStoredHostToken())
@@ -791,6 +792,31 @@ export default function SharedInvitationPage() {
     })
   }
 
+  const syncInvitationOgImageFromPreview = useCallback(async () => {
+    if (!invitation || (!user && !hasHostSession)) {
+      return
+    }
+
+    if (hostPreviewMode === 'print') {
+      setHostPreviewMode('live')
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      })
+    }
+
+    const root = hostPrintCardRef.current?.querySelector('.pb-inviteCard--storybook') as HTMLElement | null
+    if (!root) {
+      return
+    }
+
+    try {
+      const dataUrl = await captureInvitationCardJpeg(root)
+      await uploadInvitationOgImage(invitation.id, dataUrl, user ?? null)
+    } catch {
+      /* tiho — WhatsApp će koristiti fallback dok se ne uspije upload */
+    }
+  }, [hasHostSession, hostPreviewMode, invitation, user])
+
   const handleHostExportJpg = async () => {
     setHostJpgExportMessage(null)
 
@@ -807,33 +833,8 @@ export default function SharedInvitationPage() {
       return
     }
 
-    const rect = root.getBoundingClientRect()
-    const width = Math.ceil(Math.max(root.scrollWidth, rect.width))
-    const height = Math.ceil(Math.max(root.scrollHeight, rect.height))
-
     try {
-      let fontEmbedCSS = ''
-      try {
-        fontEmbedCSS = await buildGoogleFontsEmbedCss(document, { cacheBust: true })
-      } catch {
-        /* mreža / blokada — fallback ispod */
-      }
-
-      const dataUrl = await toJpeg(root, {
-        quality: 0.92,
-        pixelRatio: 2,
-        backgroundColor: '#ffffff',
-        cacheBust: true,
-        /* fontEmbedCSS: fetch + data URL umjesto cssRules na cross-origin linku */
-        ...(fontEmbedCSS ? { fontEmbedCSS } : { skipFonts: true }),
-        width,
-        height,
-        style: {
-          width: `${width}px`,
-          height: `${height}px`,
-          overflow: 'visible',
-        },
-      })
+      const dataUrl = await captureInvitationCardJpeg(root)
       const anchor = document.createElement('a')
       anchor.href = dataUrl
       anchor.download = 'pozivnica.jpg'
@@ -1850,6 +1851,25 @@ export default function SharedInvitationPage() {
       default:
         return null
     }
+  }
+
+  if (ogCapture) {
+    const ogStatus = loading ? 'loading' : invitation ? 'ready' : 'error'
+
+    return (
+      <main
+        id="main"
+        className="pb-ogCapture"
+        data-og-status={ogStatus}
+        data-og-slug={token}
+      >
+        {invitation ? (
+          <div className="pb-ogCapture__cardWrap">
+            <InvitationCard invitation={invitation} access="public" captureMode />
+          </div>
+        ) : null}
+      </main>
+    )
   }
 
   return (

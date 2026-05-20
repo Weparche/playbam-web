@@ -1,6 +1,6 @@
 /**
  * Za WhatsApp / društvene preglednice: vraća HTML s Open Graph meta tagovima
- * (slika = PNG s naslovom, datumom, lokacijom i RSVP: /api/public/invitations/{slug}/og.png).
+ * (slika = Playwright screenshot pozivnice: /api/public/invitations/{slug}/og.png).
  * Sinkroniziraj INVITATION_BACKGROUND_MAP s INVITATION_BACKGROUND_MAP u tom fileu.
  *
  * Radi samo na produkciji (Cloudflare Pages) uz PLAYBAM_BACKEND_ORIGIN.

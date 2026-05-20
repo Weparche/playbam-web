@@ -503,6 +503,22 @@ export async function updateInvitation(
   }
 }
 
+/** Ista slika kao „Izvezi u JPG” — za WhatsApp / Open Graph preview. */
+export async function uploadInvitationOgImage(
+  invitationId: string,
+  imageDataUrl: string,
+  identity?: TemporaryWebIdentity | null,
+) {
+  return request<{ ok: boolean; invitationId: string }>(
+    `/api/invitations/${encodeURIComponent(invitationId)}/og-image`,
+    {
+      method: 'POST',
+      body: { imageDataUrl },
+      identity,
+    },
+  )
+}
+
 export function getInvitationAccess(invitationId: string, identity?: TemporaryWebIdentity | null) {
   return request<InvitationAccess>(`/api/invitations/${encodeURIComponent(invitationId)}/access/me`, { identity })
 }

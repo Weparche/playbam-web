@@ -1637,6 +1637,27 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   color: #111111;
 }
 
+/* Headless OG / WhatsApp preview — ista kartica kao na stranici */
+.pb-ogCapture {
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 16px 12px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: #faf8f5;
+  box-sizing: border-box;
+}
+
+.pb-ogCapture__cardWrap {
+  width: min(100%, 390px);
+}
+
+.pb-ogCapture .pb-inviteCard--storybook {
+  margin: 0;
+}
+
 .pb-modalOverlay {
   position: fixed;
   inset: 0;

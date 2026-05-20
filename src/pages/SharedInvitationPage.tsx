@@ -1193,26 +1193,37 @@ export default function SharedInvitationPage() {
           return
         }
 
-        const family = await getFamilyProfile(currentUser)
-        if (cancelled) {
-          return
-        }
+        const stillPending =
+          nextAccess.membershipStatus === 'pending' || membershipRequest?.status === 'pending'
 
-        setFamilyProfile(family)
-        setProfileDraft(createDraftFromProfile(family, currentUser.parentName, isBirthInvitation))
+        if (!stillPending) {
+          const family = await getFamilyProfile(currentUser)
+          if (cancelled) {
+            return
+          }
 
-        if (isBirthInvitation || family.children.length > 0) {
+          setFamilyProfile(family)
+          setProfileDraft(createDraftFromProfile(family, currentUser.parentName, isBirthInvitation))
+
+          if (isBirthInvitation || family.children.length > 0) {
+            const request = await getMyMembershipRequest(invitationId, currentUser)
+            if (cancelled) {
+              return
+            }
+            setMembershipRequest(request)
+            setSelectedChildIds(
+              request ? request.children.map((child) => child.id) : family.children.map((child) => child.id),
+            )
+          } else {
+            setMembershipRequest(null)
+            setSelectedChildIds([])
+          }
+        } else {
           const request = await getMyMembershipRequest(invitationId, currentUser)
           if (cancelled) {
             return
           }
           setMembershipRequest(request)
-          setSelectedChildIds(
-            request ? request.children.map((child) => child.id) : family.children.map((child) => child.id),
-          )
-        } else {
-          setMembershipRequest(null)
-          setSelectedChildIds([])
         }
 
         if (nextAccess.canRsvp) {
@@ -1367,10 +1378,10 @@ export default function SharedInvitationPage() {
     }
   }, [invitation, isHost, loadingPrivateState, user, hasHostSession])
 
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
     // OTP verification is handled inside GuestInvitationModal — sessionLogin() already called
     setAuthError('')
-  }
+  }, [])
 
   const handleUserLogout = () => {
     logout()

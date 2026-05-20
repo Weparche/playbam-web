@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 import { useAuth } from '../../context/AuthContext'
 import type { FamilyProfileResponse, MembershipRequest } from '../../lib/invitationApi'
@@ -43,6 +43,8 @@ type Props = {
 
 type LoginSubStep = 'method_select' | 'email' | 'verify_code'
 
+let guestGoogleCallbackInFlight = false
+
 function GoogleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -78,6 +80,17 @@ export default function GuestInvitationModal({
 }: Props) {
   const { sessionLogin } = useAuth()
   const titleId = useId()
+  const onLoginRef = useRef(onLogin)
+  const onCloseRef = useRef(onClose)
+
+  useEffect(() => {
+    onLoginRef.current = onLogin
+  }, [onLogin])
+
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
+
   const [loginSubStep, setLoginSubStep] = useState<LoginSubStep>('method_select')
   const [otpSending, setOtpSending] = useState(false)
   const [otpVerifying, setOtpVerifying] = useState(false)
@@ -102,17 +115,17 @@ export default function GuestInvitationModal({
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose()
+        onCloseRef.current()
       }
     }
     if (open) {
       window.addEventListener('keydown', onKey)
     }
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, onClose])
+  }, [open])
 
   useEffect(() => {
-    if (!open || step !== 'login') {
+    if (!open || step !== 'login' || guestGoogleCallbackInFlight) {
       return
     }
 
@@ -120,6 +133,9 @@ export default function GuestInvitationModal({
     if (callbackState.status !== 'callback' || callbackState.modal !== 'guest') {
       return
     }
+
+    guestGoogleCallbackInFlight = true
+    clearGoogleAuthCallbackState()
 
     let cancelled = false
     setLoginSubStep('method_select')
@@ -134,16 +150,15 @@ export default function GuestInvitationModal({
         }
         writeStoredSession(session)
         sessionLogin(session)
-        clearGoogleAuthCallbackState()
-        onLogin()
+        onLoginRef.current()
       } catch (error) {
         if (cancelled) {
           return
         }
         const fallback = 'Google prijava trenutno nije uspjela. Pokušaj ponovno.'
         setOtpError(error instanceof Error && error.message.trim() ? error.message : fallback)
-        clearGoogleAuthCallbackState()
       } finally {
+        guestGoogleCallbackInFlight = false
         if (!cancelled) {
           setGoogleLoading(false)
         }
@@ -153,7 +168,7 @@ export default function GuestInvitationModal({
     return () => {
       cancelled = true
     }
-  }, [onLogin, open, sessionLogin, step])
+  }, [open, sessionLogin, step])
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identityDraft.email.trim())
 

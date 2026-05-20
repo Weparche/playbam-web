@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 
 import {
   readStoredTemporaryIdentity,
@@ -45,38 +45,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return readStoredTemporaryIdentity()
   })
 
+  const login = useCallback((identity: TemporaryWebIdentity) => {
+    const next = {
+      email: identity.email.trim().toLowerCase(),
+      parentName: identity.parentName.trim(),
+    }
+    setUser(next)
+    writeStoredTemporaryIdentity(next)
+    return next
+  }, [])
+
+  const logout = useCallback(() => {
+    setUser(null)
+    setSession(null)
+    writeStoredTemporaryIdentity(null)
+    const stored = readStoredSession()
+    writeStoredSession(null)
+    if (stored) {
+      authLogout().catch(() => {})
+    }
+  }, [])
+
+  const sessionLogin = useCallback((sess: VidimoseSession) => {
+    writeStoredSession(sess)
+    setSession(sess)
+    const identity = sessionToIdentity(sess)
+    writeStoredTemporaryIdentity(identity)
+    setUser(identity)
+  }, [])
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       session,
-      login: (identity: TemporaryWebIdentity) => {
-        const next = {
-          email: identity.email.trim().toLowerCase(),
-          parentName: identity.parentName.trim(),
-        }
-        setUser(next)
-        writeStoredTemporaryIdentity(next)
-        return next
-      },
-      logout: () => {
-        setUser(null)
-        setSession(null)
-        writeStoredTemporaryIdentity(null)
-        const stored = readStoredSession()
-        writeStoredSession(null)
-        if (stored) {
-          authLogout().catch(() => {})
-        }
-      },
-      sessionLogin: (sess: VidimoseSession) => {
-        writeStoredSession(sess)
-        setSession(sess)
-        const identity = sessionToIdentity(sess)
-        writeStoredTemporaryIdentity(identity)
-        setUser(identity)
-      },
+      login,
+      logout,
+      sessionLogin,
     }),
-    [user, session],
+    [user, session, login, logout, sessionLogin],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

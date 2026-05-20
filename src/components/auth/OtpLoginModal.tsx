@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 import { useAuth, markProfilePending, clearProfilePending } from '../../context/AuthContext'
 import {
@@ -27,6 +27,9 @@ type Step = 'method_select' | 'email' | 'verify_code' | 'complete_profile'
 
 const emptyDraft: FamilyProfileDraft = { parentName: '', children: [{ name: '', age: '' }] }
 
+/** Više mountanih modala (Navbar + footer) inače paralelno ponavljaju Google callback. */
+let otpGoogleCallbackInFlight = false
+
 function GoogleIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -41,6 +44,16 @@ function GoogleIcon() {
 export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
   const { sessionLogin } = useAuth()
   const titleId = useId()
+  const onSuccessRef = useRef(onSuccess)
+  const onCloseRef = useRef(onClose)
+
+  useEffect(() => {
+    onSuccessRef.current = onSuccess
+  }, [onSuccess])
+
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
 
   const [step, setStep] = useState<Step>('method_select')
   const [email, setEmail] = useState('')
@@ -65,14 +78,18 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
   }, [open])
 
   useEffect(() => {
-    if (!open || !onClose || step === 'complete_profile') return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    if (!open || step === 'complete_profile') return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCloseRef.current?.()
+      }
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, onClose, step])
+  }, [open, step])
 
   useEffect(() => {
-    if (!open) {
+    if (!open || otpGoogleCallbackInFlight) {
       return
     }
 
@@ -80,6 +97,9 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
     if (callbackState.status !== 'callback' || callbackState.modal !== 'otp') {
       return
     }
+
+    otpGoogleCallbackInFlight = true
+    clearGoogleAuthCallbackState()
 
     let cancelled = false
     setStep('method_select')
@@ -104,10 +124,8 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
         const hasParentName = !!profileRes.profile?.parentName?.trim()
         const hasChildren = profileRes.children.length > 0
 
-        clearGoogleAuthCallbackState()
-
         if (hasParentName && hasChildren) {
-          onSuccess()
+          onSuccessRef.current()
           return
         }
 
@@ -132,8 +150,8 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
         }
         const fallback = 'Google prijava trenutno nije uspjela. Pokušaj ponovno.'
         setError(err instanceof Error && err.message.trim() ? err.message : fallback)
-        clearGoogleAuthCallbackState()
       } finally {
+        otpGoogleCallbackInFlight = false
         if (!cancelled) {
           setGoogleLoading(false)
         }
@@ -143,7 +161,7 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
     return () => {
       cancelled = true
     }
-  }, [open, onSuccess, sessionLogin])
+  }, [open, sessionLogin])
 
   if (!open && step !== 'complete_profile') return null
 
@@ -183,7 +201,7 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
       const hasChildren = profileRes.children.length > 0
 
       if (hasParentName && hasChildren) {
-        onSuccess()
+        onSuccessRef.current()
       } else {
         setProfileHasExisting(!!profileRes.profile)
         if (profileRes.profile) {
@@ -234,7 +252,7 @@ export default function OtpLoginModal({ open, onSuccess, onClose }: Props) {
         await createFamilyProfile(payload, null)
       }
       clearProfilePending()
-      onSuccess()
+      onSuccessRef.current()
     } catch (err) {
       setError(isApiError(err) ? (err as Error).message : 'Greška pri spremanju profila.')
     } finally {

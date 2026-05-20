@@ -6493,7 +6493,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   -webkit-text-fill-color: var(--pb-create-title-color, #17243b);
   font: inherit;
   font-size: clamp(2rem, 7vw, 3.2rem);
-  line-height: 0.96;
+  line-height: 1.16;
   letter-spacing: -0.05em;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
   -webkit-appearance: none;
@@ -6561,7 +6561,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-createEditor__title--script {
   font-family: var(--invite-script-font);
-  line-height: 1.02;
+  line-height: 1.22;
 }
 
 .pb-createEditor__title--clean {
@@ -6584,12 +6584,12 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 
 .pb-createEditor__title--merienda {
   font-family: var(--invite-font-merienda);
-  line-height: 1.02;
+  line-height: 1.18;
 }
 
 .pb-createEditor__title--great-vibes {
   font-family: var(--invite-font-great-vibes);
-  line-height: 0.92;
+  line-height: 1.28;
 }
 
 .pb-createEditor__title--playfair {

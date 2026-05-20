@@ -369,7 +369,7 @@ export default function SharedInvitationPage() {
   const [invitation, setInvitation] = useState<PublicInvitation | null>(null)
   const [access, setAccess] = useState<InvitationAccess | null>(null)
   const [familyProfile, setFamilyProfile] = useState<FamilyProfileResponse | null>(null)
-  const [membershipRequest, setMembershipRequest] = useState<MembershipRequest | null>(null)
+  const [, setMembershipRequest] = useState<MembershipRequest | null>(null)
   const [hostRequests, setHostRequests] = useState<MembershipRequest[]>([])
   const [wishlistItems, setWishlistItems] = useState<InvitationWishlistItem[]>([])
   const [rsvp, setRsvp] = useState<InvitationRsvp | null>(null)
@@ -382,7 +382,7 @@ export default function SharedInvitationPage() {
     parentName: user?.parentName ?? '',
   })
   const [profileDraft, setProfileDraft] = useState<FamilyProfileDraft>(createEmptyDraft(user?.parentName ?? ''))
-  const [selectedChildIds, setSelectedChildIds] = useState<string[]>([])
+  const [, setSelectedChildIds] = useState<string[]>([])
   const [authError, setAuthError] = useState('')
   const [profileError, setProfileError] = useState('')
   const [requestError, setRequestError] = useState('')
@@ -798,7 +798,7 @@ export default function SharedInvitationPage() {
     }
 
     if (hostPreviewMode === 'print') {
-      setHostPreviewMode('live')
+      setHostPreviewMode('guest')
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
       })
@@ -872,8 +872,9 @@ export default function SharedInvitationPage() {
   useEffect(() => {
     if (hostShareDialogOpen) {
       setHostShareCopyDone(false)
+      void syncInvitationOgImageFromPreview()
     }
-  }, [hostShareDialogOpen])
+  }, [hostShareDialogOpen, syncInvitationOgImageFromPreview])
 
   useEffect(() => {
     if (!hostShareDialogOpen) {

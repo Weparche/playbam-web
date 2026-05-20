@@ -643,7 +643,7 @@ export default function ParksPage() {
                 <div className="ew-pp-mapPanel__head">
                   <h2 className="ew-pp-mapPanel__title">Karta</h2>
                   <span className="ew-pp-mapPanel__hint">
-                    {userLoc ? 'Plava točka = ti' : 'Uključi lokaciju za udaljenosti'}
+                    {userLoc ? 'Zelena točka = Tvoja lokacija' : 'Uključi lokaciju za udaljenosti'}
                   </span>
                 </div>
                 <ParksMap parks={filteredParks} userLoc={userLoc} />

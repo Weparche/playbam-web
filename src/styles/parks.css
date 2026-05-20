@@ -226,14 +226,19 @@
   font-family: var(--font-work-sans);
 }
 
+.ew-pp-userMarker {
+  background: transparent;
+  border: 0;
+}
+
 .ew-pp-userMarker span {
   display: block;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: #2b6cb0;
+  background: #1f7639;
   border: 3px solid #fff;
-  box-shadow: 0 0 0 2px rgba(43, 108, 176, 0.35);
+  box-shadow: 0 0 0 2px rgba(31, 118, 57, 0.45);
 }
 
 .ew-pp-popup,
@@ -384,8 +389,8 @@
   align-items: center;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(43, 108, 176, 0.12);
-  color: #2b4a7a;
+  background: rgba(31, 118, 57, 0.14);
+  color: #1f7639;
   font-size: 12px;
   font-weight: 700;
 }

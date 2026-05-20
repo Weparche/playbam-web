@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
 import { AuthProvider } from './context/AuthContext'
+import MobileFooterNav from './components/layout/MobileFooterNav'
 
 const LandingPage = lazy(() => import('./pages/LandingPage'))
 const CreateInvitationPage = lazy(() => import('./pages/CreateInvitationPage'))
@@ -61,6 +62,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
+        <MobileFooterNav />
       </BrowserRouter>
     </AuthProvider>
   )

@@ -902,6 +902,130 @@ html, body { scrollbar-gutter: stable; }
   text-underline-offset: 2px;
 }
 
+.pb-mobileFooterNav {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  body {
+    padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .pb-mobileFooterNav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 72;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    min-height: calc(66px + env(safe-area-inset-bottom, 0px));
+    padding: 7px max(8px, env(safe-area-inset-left, 0px)) calc(7px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-right, 0px));
+    border-top: 1px solid rgba(255, 170, 92, 0.24);
+    background:
+      linear-gradient(135deg, rgba(255, 252, 245, 0.94), rgba(247, 252, 255, 0.92)),
+      rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -18px 38px rgba(241, 126, 74, 0.13);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .pb-mobileFooterNav__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: 52px;
+    padding: 5px 3px;
+    border-radius: 0.85rem;
+    color: var(--mobile-footer-color, rgba(25, 39, 63, 0.64));
+    text-decoration: none;
+    transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+
+  .pb-mobileFooterNav__link:focus-visible {
+    outline: 3px solid rgba(91, 61, 245, 0.24);
+    outline-offset: 2px;
+  }
+
+  .pb-mobileFooterNav__link.is-active {
+    color: var(--mobile-footer-active-color, #243f6d);
+    background: var(--mobile-footer-active-bg, linear-gradient(180deg, rgba(240, 245, 255, 0.98), rgba(255, 247, 236, 0.96)));
+    box-shadow:
+      inset 0 0 0 1px var(--mobile-footer-active-border, rgba(88, 115, 183, 0.14)),
+      0 10px 22px var(--mobile-footer-active-shadow, rgba(88, 115, 183, 0.08));
+  }
+
+  .pb-mobileFooterNav__link--plus {
+    --mobile-footer-color: #b77900;
+    --mobile-footer-active-color: #855600;
+    --mobile-footer-active-bg: linear-gradient(180deg, rgba(255, 246, 214, 0.98), rgba(255, 235, 166, 0.96));
+    --mobile-footer-active-border: rgba(183, 121, 0, 0.2);
+    --mobile-footer-active-shadow: rgba(183, 121, 0, 0.13);
+  }
+
+  .pb-mobileFooterNav__link--venues {
+    --mobile-footer-color: #2c7be5;
+    --mobile-footer-active-color: #1856a5;
+    --mobile-footer-active-bg: linear-gradient(180deg, rgba(232, 244, 255, 0.98), rgba(230, 251, 255, 0.96));
+    --mobile-footer-active-border: rgba(44, 123, 229, 0.18);
+    --mobile-footer-active-shadow: rgba(44, 123, 229, 0.11);
+  }
+
+  .pb-mobileFooterNav__link--parks {
+    --mobile-footer-color: #23a26d;
+    --mobile-footer-active-color: #15724c;
+    --mobile-footer-active-bg: linear-gradient(180deg, rgba(230, 255, 241, 0.98), rgba(245, 255, 219, 0.96));
+    --mobile-footer-active-border: rgba(35, 162, 109, 0.18);
+    --mobile-footer-active-shadow: rgba(35, 162, 109, 0.11);
+  }
+
+  .pb-mobileFooterNav__link--account {
+    --mobile-footer-color: #8b5cf6;
+    --mobile-footer-active-color: #6435c9;
+    --mobile-footer-active-bg: linear-gradient(180deg, rgba(243, 236, 255, 0.98), rgba(255, 236, 249, 0.96));
+    --mobile-footer-active-border: rgba(139, 92, 246, 0.18);
+    --mobile-footer-active-shadow: rgba(139, 92, 246, 0.11);
+  }
+
+  .pb-mobileFooterNav__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    flex: 0 0 auto;
+  }
+
+  .pb-mobileFooterNav__icon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pb-mobileFooterNav__label {
+    display: -webkit-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    color: currentColor;
+    font-size: 0.64rem;
+    font-weight: 900;
+    line-height: 1.08;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+}
+
 /* Invitation page — topla pozadina, mobile-first */
 .pb-main--demo {
   position: relative;

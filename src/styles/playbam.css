@@ -13661,9 +13661,9 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
 
 /* Odobren gost: "Privatni dio…" + 24h tekst na dnu pozadine, ispod RSVP (z-index ispod RSVP) */
 .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__accessCard {
-  bottom: 1.35%;
+  bottom: 0.85%;
   left: 50%;
-  transform: translateX(-50%) scale(0.9);
+  transform: translateX(-50%) translateY(0.35rem) scale(0.9);
   transform-origin: center bottom;
   z-index: 1;
 }
@@ -13689,8 +13689,8 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
 
 @media (max-width: 520px) {
   .pb-invitePage .pb-inviteCard--guestPrivate .pb-inviteHero__accessCard {
-    /* Malo više od dna da ne dira RSVP; ostaje centrirano */
-    bottom: 3.35%;
+    bottom: 2.15%;
+    transform: translateX(-50%) translateY(0.3rem) scale(0.9);
     max-width: min(calc(100cqw / 0.9), 96%);
   }
 }

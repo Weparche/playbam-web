@@ -388,7 +388,6 @@ export default function SharedInvitationPage() {
   const [hostError, setHostError] = useState('')
   const [wishlistError, setWishlistError] = useState('')
   const [savingProfile, setSavingProfile] = useState(false)
-  const [submittingRequest, setSubmittingRequest] = useState(false)
   const [savingRsvp, setSavingRsvp] = useState(false)
   const [pendingRsvpChoice, setPendingRsvpChoice] = useState<'going' | 'not_going' | 'maybe' | null>(null)
   const [reviewingRequestId, setReviewingRequestId] = useState<string | null>(null)
@@ -633,8 +632,8 @@ export default function SharedInvitationPage() {
   )
 
   const guestModalStep = useMemo(
-    () => getGuestModalStep(invitation, isHost, hasPrivateAccess, user, hasFamilyProfile, membershipRequest),
-    [invitation, isHost, hasPrivateAccess, user, hasFamilyProfile, membershipRequest],
+    () => getGuestModalStep(invitation, isHost, hasPrivateAccess, user, hasFamilyProfile),
+    [invitation, isHost, hasPrivateAccess, user, hasFamilyProfile],
   )
 
   const guestRsvpHint = useMemo(() => {
@@ -650,16 +649,8 @@ export default function SharedInvitationPage() {
     if (!hasFamilyProfile) {
       return 'Dovrši profil obitelji u prozoru.'
     }
-    if (membershipRequest?.status === 'pending') {
-      // Hint više ne prikazujemo unutar pozivnice (prekriva "Privatni dio pozivnice").
-      // Pending stanje se prikazuje kao zasebna kartica iznad pozivnice.
-      return null
-    }
-    if (membershipRequest?.status === 'rejected') {
-      return 'Zahtjev za pristup je odbijen. Možeš poslati novi zahtjev.'
-    }
     return null
-  }, [isHost, invitation, canSubmitRsvp, user, hasFamilyProfile, membershipRequest])
+  }, [isHost, invitation, canSubmitRsvp, user, hasFamilyProfile])
 
   const openGuestFlow = () => {
     setGuestModalOpen(true)
@@ -899,10 +890,6 @@ export default function SharedInvitationPage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [hostShareDialogOpen])
 
-  const handleToggleGuestChild = (childId: string, checked: boolean) => {
-    setSelectedChildIds((current) => (checked ? [...current, childId] : current.filter((id) => id !== childId)))
-  }
-
   useEffect(() => {
     if (guestModalOpen && hasPrivateAccess && !isHost) {
       setGuestModalOpen(false)
@@ -1088,7 +1075,32 @@ export default function SharedInvitationPage() {
         setFamilyProfile(family)
         setProfileDraft(createDraftFromProfile(family, currentUser.parentName, isBirthInvitation))
 
-        if (isBirthInvitation || family.children.length > 0) {
+        let accessState = nextAccess
+
+        if (!accessState.canAccessPrivateInvitation && family.profile) {
+          const childIds = isBirthInvitation ? [] : family.children.map((child) => child.id)
+          try {
+            const request = await createMembershipRequest(currentInvitation.id, childIds, currentUser)
+            if (cancelled) {
+              return
+            }
+            setMembershipRequest(request)
+            setSelectedChildIds(
+              request.children.length > 0
+                ? request.children.map((child) => child.id)
+                : family.children.map((child) => child.id),
+            )
+            accessState = await getInvitationAccess(currentInvitation.id, currentUser)
+            if (cancelled) {
+              return
+            }
+            setAccess(accessState)
+          } catch (grantError) {
+            if (!cancelled && !isApiError(grantError, 409)) {
+              setRequestError('Trenutačno ne možemo otvoriti privatni dio pozivnice.')
+            }
+          }
+        } else if (isBirthInvitation || family.children.length > 0) {
           const request = await getMyMembershipRequest(currentInvitation.id, currentUser)
           if (cancelled) {
             return
@@ -1103,7 +1115,7 @@ export default function SharedInvitationPage() {
           setSelectedChildIds([])
         }
 
-        if (nextAccess.canRsvp) {
+        if (accessState.canRsvp) {
           const nextRsvp = await getMyRsvp(currentInvitation.id, currentUser)
           if (!cancelled) {
             setRsvp(nextRsvp)
@@ -1112,7 +1124,7 @@ export default function SharedInvitationPage() {
           setRsvp(null)
         }
 
-        if (nextAccess.canViewWishlist) {
+        if (accessState.canViewWishlist) {
           setWishlistLoading(true)
           try {
             const wishlist = await getInvitationWishlist(currentInvitation.id, currentUser)
@@ -1163,113 +1175,7 @@ export default function SharedInvitationPage() {
     return () => {
       cancelled = true
     }
-  }, [invitation, user, hasHostSession, logout, isBirthInvitation])
-
-  /** Dok gost čeka odobrenje, povremeno osvježi pristup — nakon odobrenja otključava se bez ručnog refresha. */
-  useEffect(() => {
-    if (!invitation || !user || isHost) {
-      return
-    }
-
-    const accessPending = access?.membershipStatus === 'pending'
-    const requestPending = membershipRequest?.status === 'pending'
-    if ((!accessPending && !requestPending) || loadingPrivateState) {
-      return
-    }
-
-    let cancelled = false
-    const invitationId = invitation.id
-    const currentUser = user
-
-    async function pollGuestUnlock() {
-      try {
-        const nextAccess = await getInvitationAccess(invitationId, currentUser)
-        if (cancelled) {
-          return
-        }
-        setAccess(nextAccess)
-
-        if (nextAccess.isHost) {
-          return
-        }
-
-        const stillPending =
-          nextAccess.membershipStatus === 'pending' || membershipRequest?.status === 'pending'
-
-        if (!stillPending) {
-          const family = await getFamilyProfile(currentUser)
-          if (cancelled) {
-            return
-          }
-
-          setFamilyProfile(family)
-          setProfileDraft(createDraftFromProfile(family, currentUser.parentName, isBirthInvitation))
-
-          if (isBirthInvitation || family.children.length > 0) {
-            const request = await getMyMembershipRequest(invitationId, currentUser)
-            if (cancelled) {
-              return
-            }
-            setMembershipRequest(request)
-            setSelectedChildIds(
-              request ? request.children.map((child) => child.id) : family.children.map((child) => child.id),
-            )
-          } else {
-            setMembershipRequest(null)
-            setSelectedChildIds([])
-          }
-        } else {
-          const request = await getMyMembershipRequest(invitationId, currentUser)
-          if (cancelled) {
-            return
-          }
-          setMembershipRequest(request)
-        }
-
-        if (nextAccess.canRsvp) {
-          const nextRsvp = await getMyRsvp(invitationId, currentUser)
-          if (!cancelled) {
-            setRsvp(nextRsvp)
-          }
-        } else {
-          setRsvp(null)
-        }
-
-        if (nextAccess.canViewWishlist) {
-          try {
-            const wishlist = await getInvitationWishlist(invitationId, currentUser)
-            if (!cancelled) {
-              setWishlistItems(wishlist)
-            }
-          } catch {
-            if (!cancelled) {
-              setWishlistItems([])
-            }
-          }
-        } else {
-          setWishlistItems([])
-        }
-      } catch {
-        // Tiha mrežna greška — sljedeći interval pokušava ponovno.
-      }
-    }
-
-    const intervalId = window.setInterval(() => void pollGuestUnlock(), 6000)
-    void pollGuestUnlock()
-
-    return () => {
-      cancelled = true
-      window.clearInterval(intervalId)
-    }
-  }, [
-    access?.membershipStatus,
-    invitation,
-    isBirthInvitation,
-    isHost,
-    loadingPrivateState,
-    membershipRequest?.status,
-    user,
-  ])
+  }, [invitation, user, hasHostSession, logout, isBirthInvitation, hasPrivateAccess])
 
   /** Osvježavaj poruke u pozadini (badges +N) i kad je chat zatvoren — inače se stanje nikad ne ažurira. */
   useEffect(() => {
@@ -1550,6 +1456,7 @@ export default function SharedInvitationPage() {
       setFamilyProfile(nextProfile)
       setProfileDraft(createDraftFromProfile(nextProfile, user.parentName, isBirthInvitation))
       setSelectedChildIds(nextProfile.children.map((child) => child.id))
+      setGuestModalOpen(false)
     } catch (caughtError) {
       setProfileError(
         isApiError(caughtError, 400)
@@ -1558,44 +1465,6 @@ export default function SharedInvitationPage() {
       )
     } finally {
       setSavingProfile(false)
-    }
-  }
-
-  const handleRequestSubmit = async () => {
-    if (!user || !invitation) {
-      setRequestError(
-        isBirthInvitation
-          ? 'Prijavi se i dovrši svoje podatke prije slanja zahtjeva.'
-          : 'Prijavi se prije slanja zahtjeva.',
-      )
-      return
-    }
-
-    const profileChildren = familyProfile?.children ?? []
-    if (!isBirthInvitation && profileChildren.length > 0 && selectedChildIds.length === 0) {
-      setRequestError('Odaberi barem jedno dijete prije slanja zahtjeva.')
-      return
-    }
-
-    setSubmittingRequest(true)
-    setRequestError('')
-
-    try {
-      const request = await createMembershipRequest(
-        invitation.id,
-        isBirthInvitation ? [] : selectedChildIds,
-        user,
-      )
-      setMembershipRequest(request)
-      setAccess((current) => current ? { ...current, membershipStatus: request.status } : current)
-    } catch (caughtError) {
-      setRequestError(
-        isApiError(caughtError, 409)
-          ? 'Zahtjev je već poslan organizatoru.'
-          : 'Slanje zahtjeva trenutno nije uspjelo.',
-      )
-    } finally {
-      setSubmittingRequest(false)
     }
   }
 
@@ -1642,8 +1511,26 @@ export default function SharedInvitationPage() {
       return
     }
 
-    if (!hasPrivateAccess) {
+    if (!hasFamilyProfile) {
       openGuestFlow()
+      return
+    }
+
+    if (!hasPrivateAccess && invitation && familyProfile?.profile) {
+      const currentInvitation = invitation
+      const currentUser = user
+      const childIds = isBirthInvitation ? [] : familyProfile.children.map((child) => child.id)
+
+      void (async () => {
+        try {
+          const request = await createMembershipRequest(currentInvitation.id, childIds, currentUser)
+          setMembershipRequest(request)
+          const nextAccess = await getInvitationAccess(currentInvitation.id, currentUser)
+          setAccess(nextAccess)
+        } catch {
+          setRequestError('Trenutačno ne možemo otvoriti privatni dio pozivnice.')
+        }
+      })()
     }
   }
 
@@ -2027,15 +1914,6 @@ export default function SharedInvitationPage() {
                 </div>
               ) : null}
 
-              {user && !isHost && membershipRequest?.status === 'pending' ? (
-                <Card className="pb-flowCard">
-                  <h2 className="pb-flowCard__title">Čekanje na odobrenje organizatora…</h2>
-                  <p className="pb-flowCard__text">
-                    Zahtjev za pristup privatnom dijelu je poslan. Pozivnica će se automatski otključati kad organizator odobri ili odbije zahtjev.
-                  </p>
-                </Card>
-              ) : null}
-
               {(!isHost || loadingPrivateState) && !(user && !loadingPrivateState && hasPrivateAccess && !isHost) ? (
                 <InvitationCard
                   invitation={invitation}
@@ -2052,7 +1930,7 @@ export default function SharedInvitationPage() {
               {(user || hasHostSession) && loadingPrivateState ? (
                 <Card className="pb-flowCard">
                   <h2 className="pb-flowCard__title">Pripremamo tvoj pristup</h2>
-                  <p className="pb-flowCard__text">Provjeravamo profil obitelji, zahtjev za pristup i status odgovora.</p>
+                  <p className="pb-flowCard__text">Provjeravamo tvoj profil i status odgovora.</p>
                 </Card>
               ) : null}
 
@@ -2121,13 +1999,6 @@ export default function SharedInvitationPage() {
                 profileError={profileError}
                 savingProfile={savingProfile}
                 onProfileSave={handleProfileSave}
-                familyProfile={familyProfile}
-                selectedChildIds={selectedChildIds}
-                onToggleChild={handleToggleGuestChild}
-                membershipRequest={membershipRequest}
-                requestError={requestError}
-                submittingRequest={submittingRequest}
-                onRequestSubmit={handleRequestSubmit}
               />
 
               {showHostStudio ? (

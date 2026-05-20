@@ -1,7 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 
 import { useAuth } from '../../context/AuthContext'
-import type { FamilyProfileResponse, MembershipRequest } from '../../lib/invitationApi'
 import {
   clearGoogleAuthCallbackState,
   completeGoogleAuth,
@@ -32,13 +31,6 @@ type Props = {
   profileError: string
   savingProfile: boolean
   onProfileSave: () => void
-  familyProfile: FamilyProfileResponse | null
-  selectedChildIds: string[]
-  onToggleChild: (childId: string, checked: boolean) => void
-  membershipRequest: MembershipRequest | null
-  requestError: string
-  submittingRequest: boolean
-  onRequestSubmit: () => void
 }
 
 type LoginSubStep = 'method_select' | 'email' | 'verify_code'
@@ -70,13 +62,6 @@ export default function GuestInvitationModal({
   profileError,
   savingProfile,
   onProfileSave,
-  familyProfile,
-  selectedChildIds,
-  onToggleChild,
-  membershipRequest,
-  requestError,
-  submittingRequest,
-  onRequestSubmit,
 }: Props) {
   const { sessionLogin } = useAuth()
   const titleId = useId()
@@ -170,6 +155,10 @@ export default function GuestInvitationModal({
     }
   }, [open, sessionLogin, step])
 
+  if (!open) {
+    return null
+  }
+
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identityDraft.email.trim())
 
   const handleSendOtp = async () => {
@@ -193,6 +182,7 @@ export default function GuestInvitationModal({
   }
 
   const handleVerifyOtp = async () => {
+    const email = identityDraft.email.trim().toLowerCase()
     if (!otpCode.trim()) {
       setOtpError('Upiši kod.')
       return
@@ -202,10 +192,10 @@ export default function GuestInvitationModal({
     setOtpError('')
 
     try {
-      const session = await verifyOtp(identityDraft.email.trim().toLowerCase(), otpCode.trim())
+      const session = await verifyOtp(email, otpCode.trim())
       writeStoredSession(session)
       sessionLogin(session)
-      onLogin()
+      onLoginRef.current()
     } catch (error) {
       setOtpError(isApiError(error) ? (error as Error).message : 'Netočan kod. Pokušaj ponovno.')
     } finally {
@@ -213,41 +203,27 @@ export default function GuestInvitationModal({
     }
   }
 
-  if (!open) {
-    return null
-  }
-
-  const familySummary =
-    familyProfile && familyProfile.children.length > 0
-      ? familyProfile.children
-          .map((child) => `${child.name || '—'}${child.age != null ? ` (${child.age})` : ''}`)
-          .join(', ')
-      : 'Bez prijavljene djece'
   const modalSteps: { id: GuestModalStep; label: string }[] = [
     { id: 'login', label: 'Prijava' },
     { id: 'profile', label: isBirthInvitation ? 'Podaci' : 'Obitelj' },
-    { id: 'request', label: 'Zahtjev' },
-    { id: 'waiting', label: 'Odobrenje' },
   ]
   const activeStepIndex = Math.max(modalSteps.findIndex((item) => item.id === step), 0)
 
   return (
-    <div className="pb-modalOverlay" role="presentation">
-      <div className="pb-modalDialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+    <div className="pb-modalOverlay pb-modalOverlay--guestFlow" role="presentation">
+      <div className="pb-modalDialog pb-modalDialog--guestFlow" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="pb-modalDialog__head">
           <h2 id={titleId} className="pb-modalDialog__title">
             {step === 'login' && loginSubStep === 'method_select' && 'Prijava za potvrdu dolaska'}
             {step === 'login' && loginSubStep === 'email' && 'Prijava e-mailom'}
             {step === 'login' && loginSubStep === 'verify_code' && 'Unesi kod'}
             {step === 'profile' && (isBirthInvitation ? 'Tvoji podaci' : 'Tvoja obitelj')}
-            {step === 'request' && 'Zahtjev za pristup'}
-            {step === 'waiting' && 'Zahtjev je poslan'}
           </h2>
           <button type="button" className="pb-modalDialog__close" onClick={onClose} aria-label="Zatvori">
             ×
           </button>
         </div>
-        <ol className="pb-modalSteps" aria-label="Koraci pristupa privatnom dijelu">
+        <ol className="pb-modalSteps pb-modalSteps--guestFlow" aria-label="Koraci prijave">
           {modalSteps.map((item, index) => (
             <li
               key={item.id}
@@ -268,7 +244,7 @@ export default function GuestInvitationModal({
           {step === 'login' && loginSubStep === 'method_select' ? (
             <>
               <p className="pb-modalDialog__lead">
-                Za potvrdu dolaska i pristup privatnom dijelu odaberi način prijave.
+                Prijavi se kako bi potvrdio dolazak i otvorio privatni dio pozivnice.
               </p>
               <div className="pb-flowActions pb-flowActions--modal">
                 <Button
@@ -372,8 +348,8 @@ export default function GuestInvitationModal({
             <>
               <p className="pb-modalDialog__lead">
                 {isBirthInvitation
-                  ? 'Upiši kako želiš da te domaćin prepozna u potvrdi dolaska.'
-                  : 'Dodaj djecu koja dolaze na proslavu, podaci se koriste i za zahtjev organizatoru.'}
+                  ? 'Upiši kako te domaćin prepoznaje — odmah nakon spremanja možeš potvrditi dolazak.'
+                  : 'Dodaj djecu koja dolaze. Nakon spremanja odmah ulaziš u pozivnicu.'}
               </p>
               <FamilyProfileForm
                 draft={profileDraft}
@@ -383,84 +359,6 @@ export default function GuestInvitationModal({
                 onChange={onProfileChange}
                 onSave={onProfileSave}
               />
-            </>
-          ) : null}
-
-          {step === 'request' && familyProfile ? (
-            <>
-              <p className="pb-modalDialog__lead">
-                {membershipRequest?.status === 'rejected'
-                  ? isBirthInvitation
-                    ? 'Prijašnji zahtjev je odbijen. Možeš poslati novi zahtjev za pristup privatnom dijelu pozivnice.'
-                    : 'Prijašnji zahtjev je odbijen. Možeš odabrati djecu i ponovno poslati novi zahtjev za pristup.'
-                  : isBirthInvitation
-                    ? 'Pošalji zahtjev organizatoru kako bi dobio pristup privatnom dijelu pozivnice.'
-                    : 'Odaberi koja djeca žele pristup privatnom dijelu pozivnice. Organizator mora odobriti.'}
-              </p>
-
-              <div className="pb-summaryCard pb-summaryCard--modal">
-                <div className="pb-summaryCard__title">{isBirthInvitation ? 'Tvoji podaci' : 'Obiteljski profil'}</div>
-                <div className="pb-summaryCard__line">
-                  {isBirthInvitation ? 'Ime' : 'Roditelj'}: {familyProfile.profile?.parentName}
-                </div>
-                {!isBirthInvitation ? <div className="pb-summaryCard__line">Djeca: {familySummary}</div> : null}
-              </div>
-
-              {!isBirthInvitation ? (
-                <div className="pb-checkList" role="group" aria-label="Odaberi djecu za zahtjev pristupa">
-                  {familyProfile.children.map((child) => (
-                    <label key={child.id} className="pb-checkItem">
-                      <input
-                        type="checkbox"
-                        checked={selectedChildIds.includes(child.id)}
-                        onChange={(event) => onToggleChild(child.id, event.target.checked)}
-                        disabled={membershipRequest?.status === 'pending'}
-                      />
-                      <span>
-                        {child.name || '—'}
-                        {child.age != null ? ` (${child.age})` : ''}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              ) : null}
-
-              {membershipRequest?.status === 'pending' ? (
-                <div className="pb-inlineNote pb-inlineNote--info">Zahtjev je već poslan organizatoru.</div>
-              ) : null}
-              {requestError ? <div className="pb-inlineNote pb-inlineNote--error">{requestError}</div> : null}
-              <div className="pb-flowActions pb-flowActions--modal">
-                <Button
-                  type="button"
-                  onClick={onRequestSubmit}
-                  disabled={
-                    (!isBirthInvitation &&
-                      familyProfile.children.length > 0 &&
-                      selectedChildIds.length === 0) ||
-                    membershipRequest?.status === 'pending' ||
-                    submittingRequest
-                  }
-                >
-                  {submittingRequest
-                    ? 'Šaljemo...'
-                    : membershipRequest?.status === 'rejected'
-                      ? 'Pošalji novi zahtjev'
-                      : 'Pošalji zahtjev organizatoru'}
-                </Button>
-              </div>
-            </>
-          ) : null}
-
-          {step === 'waiting' ? (
-            <>
-              <p className="pb-modalDialog__lead">
-                Organizator još nije odobrio pristup. Kad odobri, moći ćeš potvrditi dolazak i vidjeti privatni dio pozivnice.
-              </p>
-              <div className="pb-flowActions pb-flowActions--modal">
-                <Button type="button" onClick={onClose}>
-                  Razumijem
-                </Button>
-              </div>
             </>
           ) : null}
         </div>

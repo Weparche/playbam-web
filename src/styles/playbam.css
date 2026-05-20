@@ -3273,6 +3273,55 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   list-style: none;
 }
 
+.pb-modalSteps--guestFlow {
+  grid-template-columns: repeat(2, 1fr);
+  padding: 0.65rem 1.15rem 0;
+}
+
+.pb-modalOverlay--guestFlow {
+  align-items: center;
+  padding:
+    max(5.25rem, calc(env(safe-area-inset-top, 0px) + 4.75rem))
+    1rem
+    max(5.5rem, calc(env(safe-area-inset-bottom, 0px) + 4.75rem));
+}
+
+@media (min-width: 520px) {
+  .pb-modalOverlay--guestFlow {
+    padding:
+      max(6rem, calc(env(safe-area-inset-top, 0px) + 5rem))
+      1.5rem
+      max(3rem, calc(env(safe-area-inset-bottom, 0px) + 1.5rem));
+  }
+}
+
+.pb-modalDialog--guestFlow {
+  max-height: min(
+    calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 10.5rem),
+    480px
+  );
+}
+
+@media (min-width: 768px) {
+  .pb-modalDialog--guestFlow {
+    max-height: min(
+      calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 8rem),
+      520px
+    );
+  }
+}
+
+body:has(.pb-mobileFooterNav) .pb-modalOverlay--guestFlow {
+  padding-bottom: max(6.75rem, calc(env(safe-area-inset-bottom, 0px) + 6rem));
+}
+
+body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
+  max-height: min(
+    calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 13.5rem),
+    440px
+  );
+}
+
 .pb-modalSteps__item {
   display: grid;
   justify-items: center;

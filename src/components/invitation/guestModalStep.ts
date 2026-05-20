@@ -1,6 +1,4 @@
-import type { MembershipRequest } from '../../lib/invitationApi'
-
-export type GuestModalStep = 'login' | 'profile' | 'request' | 'waiting'
+export type GuestModalStep = 'login' | 'profile'
 
 export function getGuestModalStep(
   invitation: { id: string } | null,
@@ -8,7 +6,6 @@ export function getGuestModalStep(
   hasPrivateAccess: boolean,
   user: { email: string } | null,
   hasFamilyProfile: boolean,
-  membershipRequest: MembershipRequest | null,
 ): GuestModalStep | null {
   if (!invitation || isHost || hasPrivateAccess) {
     return null
@@ -19,8 +16,5 @@ export function getGuestModalStep(
   if (!hasFamilyProfile) {
     return 'profile'
   }
-  if (membershipRequest?.status === 'pending') {
-    return 'waiting'
-  }
-  return 'request'
+  return null
 }

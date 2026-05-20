@@ -9598,7 +9598,7 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
 .pb-floatingPanel__backdrop {
   position: fixed;
   inset: 0;
-  z-index: 80;
+  z-index: 120;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10852,6 +10852,29 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
       opacity: 0;
       transform: translate(calc(-50% - 12rem), -50%) scale(0.93) translateY(8px);
     }
+  }
+
+  .pb-floatingPanel__backdrop--preview {
+    align-items: flex-start;
+    overflow-y: auto;
+    padding:
+      calc(72px + 1rem)
+      1.5rem
+      1.5rem;
+  }
+
+  .pb-floatingPanel--preview {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: translateX(-12rem);
+    margin-inline: auto;
+    max-height: calc(100dvh - 72px - 2.5rem);
+    animation: pbFloatingPanelIn 180ms ease;
+  }
+
+  .pb-floatingPanel--preview.is-closing {
+    animation: pbFloatingPanelOut 220ms ease both;
   }
 
   .pb-createFooterAction {
@@ -13102,6 +13125,8 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
 
 .pb-inviteHero__infoRow--venue {
   justify-self: center;
+  align-items: flex-start;
+  gap: 0.3rem;
   transform: translate(0, -3px);
 }
 
@@ -13121,7 +13146,9 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
 .pb-inviteHero__infoIcon--venue {
   width: 1.68rem;
   height: 1.68rem;
-  transform: translateY(-0.18rem);
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  transform: translate(6px, 0);
   color: var(--pb-invite-title-color, #336fd6);
   filter: drop-shadow(0 4px 10px rgba(51, 111, 214, 0.16));
 }
@@ -13271,7 +13298,13 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
 
 .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoRow--venue {
   justify-self: center;
+  align-items: flex-start;
+  gap: 0.3rem;
   transform: translate(0, 0);
+}
+
+.pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoIcon--venue {
+  transform: translate(6px, 0);
 }
 
 /* Desktop javna pozivnica: ne diramo dodatno (stabilna pozicija) */

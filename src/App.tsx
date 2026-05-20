@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 
 import { AuthProvider } from './context/AuthContext'
 import MobileFooterNav from './components/layout/MobileFooterNav'
+import PwaInstallPrompt from './components/layout/PwaInstallPrompt'
 
 const LandingPage = lazy(() => import('./pages/LandingPage'))
 const CreateInvitationPage = lazy(() => import('./pages/CreateInvitationPage'))
@@ -62,6 +63,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
+        <PwaInstallPrompt />
         <MobileFooterNav />
       </BrowserRouter>
     </AuthProvider>

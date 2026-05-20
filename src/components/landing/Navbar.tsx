@@ -33,6 +33,12 @@ export default function Navbar({
   }, [])
 
   const closeMobile = useCallback(() => setMobileOpen(false), [])
+  const handleHomeLogoClick = useCallback(() => {
+    closeMobile()
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [closeMobile, location.pathname])
   const openLogin = useCallback(() => {
     if (onLoginClick) {
       onLoginClick()
@@ -65,7 +71,7 @@ export default function Navbar({
             >
               <span /><span /><span />
             </button>
-            <Link to="/" className="ew-navbar__logo ew-navbar__logo--mark" aria-label="VidimoSe.hr — početna">
+            <Link to="/" className="ew-navbar__logo ew-navbar__logo--mark" aria-label="VidimoSe.hr — početna" onClick={handleHomeLogoClick}>
               <img src="/logo.png" alt="" className="ew-navbar__logo-img" width={200} height={52} />
             </Link>
           </div>
@@ -121,7 +127,7 @@ export default function Navbar({
       {mobileOpen && (
         <div className="ew-navbar__sheet" role="dialog" aria-modal="true" aria-label="Navigacija">
           <div className="ew-navbar__sheet-header">
-            <Link to="/" className="ew-navbar__logo ew-navbar__logo--mark" aria-label="VidimoSe.hr — početna" onClick={closeMobile}>
+            <Link to="/" className="ew-navbar__logo ew-navbar__logo--mark" aria-label="VidimoSe.hr — početna" onClick={handleHomeLogoClick}>
               <img src="/logo.png" alt="" className="ew-navbar__logo-img" width={200} height={52} />
             </Link>
             <button className="ew-navbar__sheet-close" onClick={closeMobile} aria-label="Zatvori">

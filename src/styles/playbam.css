@@ -3682,6 +3682,26 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
   color: var(--invite-text, #1f2430);
 }
 
+/* Gost: samo naslov sekcije, centriran (bez „Organizator” / „Privatni sadržaj”) */
+.pb-guestPrivateLayout .pb-privateToggle--guestHeading {
+  position: relative;
+  justify-content: center;
+  text-align: center;
+}
+
+.pb-guestPrivateLayout .pb-privateToggle--guestHeading .pb-privateToggle__copy {
+  flex: 1;
+  text-align: center;
+  justify-items: center;
+}
+
+.pb-guestPrivateLayout .pb-privateToggle--guestHeading .pb-privateToggle__trail {
+  position: absolute;
+  right: 1.05rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .pb-privateToggle__trail {
   flex-shrink: 0;
   display: inline-flex;
@@ -6603,7 +6623,7 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
   --hero-logo-top: 1.15%;
   --hero-title-top: 9%;
   --hero-title-lg-top: 10.2%;
-  --hero-title-md-top: 10.8%;
+  --hero-title-md-top: 11.5%;
   --hero-title-sm-top: 11.8%;
   --hero-title-lg-shift-y: 2.2%;
   --hero-title-md-shift-y: 2.2%;
@@ -12526,7 +12546,7 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
   --hero-logo-top: 1.15%;
   --hero-title-top: 9%;
   --hero-title-lg-top: 10.2%;
-  --hero-title-md-top: 10.8%;
+  --hero-title-md-top: 11.5%;
   --hero-title-sm-top: 11.8%;
   --hero-title-lg-shift-y: 2.2%;
   --hero-title-md-shift-y: 2.2%;

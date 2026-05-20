@@ -156,7 +156,7 @@ export default function VenuesPage() {
               Pronađi savršenu <em>igraonicu</em>.
             </h1>
             <p className="ew-body-lg ew-vp-hero__sub">
-              {venuesInRegion.length} {venuesInRegion.length === 1 ? 'igraonica' : venuesInRegion.length < 5 ? 'igraonice' : 'igraonica'} u {region === 'split' ? 'Splitu i okolici' : region === 'koprivnica' ? 'Koprivnici' : 'Zagrebu'} — sortiraj po ocjeni, cijeni i sadržaju.
+              {venuesInRegion.length} {venuesInRegion.length === 1 ? 'igraonica' : venuesInRegion.length < 5 ? 'igraonice' : 'igraonica'} u {region === 'split' ? 'Splitu i okolici' : region === 'koprivnica' ? 'Koprivnici i okolici' : 'Zagrebu'} — sortiraj po ocjeni, cijeni i sadržaju.
             </p>
 
             <div className="ew-vp-region-tabs" role="tablist" aria-label="Odaberi grad">

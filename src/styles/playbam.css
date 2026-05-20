@@ -3682,24 +3682,27 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
   color: var(--invite-text, #1f2430);
 }
 
-/* Gost: samo naslov sekcije, centriran (bez „Organizator” / „Privatni sadržaj”) */
+/* Gost: naslov lijevo u kartici; kartica centrirana u širini stupca (bez „Organizator” / „Privatni sadržaj”) */
 .pb-guestPrivateLayout .pb-privateToggle--guestHeading {
-  position: relative;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 0.75rem;
 }
 
 .pb-guestPrivateLayout .pb-privateToggle--guestHeading .pb-privateToggle__copy {
   flex: 1;
-  text-align: center;
-  justify-items: center;
+  min-width: 0;
+  text-align: left;
+  justify-items: start;
+}
+
+.pb-guestPrivateLayout .pb-privateToggle--guestHeading .pb-privateToggle__title {
+  text-align: left;
 }
 
 .pb-guestPrivateLayout .pb-privateToggle--guestHeading .pb-privateToggle__trail {
-  position: absolute;
-  right: 1.05rem;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .pb-privateToggle__trail {

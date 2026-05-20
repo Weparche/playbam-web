@@ -12,9 +12,9 @@ export const REGIONS = {
     cities: ['Split', 'Solin', 'Kaštel Sućurac', 'Trogir'] as readonly string[],
   },
   koprivnica: {
-    label: 'Koprivnica',
+    label: 'Koprivnica i okolica',
     shortLabel: 'Koprivnica',
-    cities: ['Koprivnica'] as readonly string[],
+    cities: ['Koprivnica', 'Križevci'] as readonly string[],
   },
 } as const
 
@@ -78,7 +78,7 @@ export type Venue = {
 export const REGION_CENTERS: Record<RegionKey, { lat: number; lng: number; zoom: number }> = {
   zagreb: { lat: 45.815, lng: 15.978, zoom: 11 },
   split: { lat: 43.508, lng: 16.440, zoom: 11 },
-  koprivnica: { lat: 46.163, lng: 16.833, zoom: 13 },
+  koprivnica: { lat: 46.085, lng: 16.692, zoom: 10 },
 }
 
 export type Testimonial = {
@@ -1910,6 +1910,70 @@ export const venues: Venue[] = [
       { name: 'Loptica Veliki Slavlje', price: 380, minChildren: 30, includes: ['4h najam dvorane', '2 animatorice', 'puni catering po dogovoru', 'tematska dekoracija', 'ozvučenje', 'foto reportaža'] },
     ],
   },
+  {
+    id: 'paintball-pitagora-krizevci',
+    slug: 'paintball-pitagora-krizevci',
+    lat: 46.0048,
+    lng: 16.5502,
+    name: 'Paintball Pitagora',
+    city: 'Križevci',
+    address: 'Bjelovarska 24A, 48000 Križevci',
+    phone: '+385 98 375 569',
+    website: 'https://paintball-pitagora.hr',
+    facebook: 'https://www.facebook.com/paintballpitagora',
+    rating: 4.8,
+    reviewCount: 35,
+    pricePerChild: 22,
+    ageRange: '6–16',
+    ageMin: 6,
+    ageMax: 16,
+    maxChildren: 40,
+    description:
+      'Zabavno avanturistički park Pitagora u Križevcima — preko 6.000 m² unutarnjeg i vanjskog prostora uz livade i šumu. Više od 40 aktivnosti: paintball, dječji paintball, airsoft, go-kart, streličarstvo, quad, minsko polje, bacanje sjekire i timske igre. Organiziraju dječje i odrasle rođendane, školske izlete, team building, djevojačke i momačke večeri; uz loše vrijeme program se prebacuje u zatvoreni prostor.',
+    amenities: [
+      'Parking',
+      'Paintball',
+      'Dječji paintball',
+      'Go-kart',
+      'Airsoft',
+      'Streljaštvo',
+      'Quad',
+      'Šuma i livade',
+      'Unutarnji prostor',
+      'Rođendani',
+      'Team building',
+      'Školski izleti',
+    ],
+    coverPhoto:
+      'https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/699469648_1549151417214366_1854096145997474161_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=0WXHlOUmq6IQ7kNvwHmhcKX&_nc_ht=scontent-lga3-1.xx&oh=00_Af7whN8-lzoAQrgcwqr8pXmJKjZ3i6n7L1RzUQqDdne4-g&oe=6A13717C',
+    photos: [
+      'https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/701635989_1554552920007549_2982911751199095675_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=m1QKp56kBiIQ7kNvwE3ps4H&_nc_ht=scontent-lga3-2.xx&oh=00_Af4nl8jfzSSnzutz2Wfj2IZGaRb1dS7QmSUBR9HaG8tVHQ&oe=6A13610E',
+      'https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/704167376_1554552876674220_6152155129748364163_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=onDcOkz-anAQ7kNvwHZ_s4-&_nc_ht=scontent-lga3-2.xx&oh=00_Af6YXu_bIBPKldAlCFPMXA1Vy2S47iGlmd-u1eQrXM5N9g&oe=6A1379E2',
+      'https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/704227998_1554552846674223_6897244285220841163_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=951skix_ODQQ7kNvwE2YJnn&_nc_ht=scontent-lga3-2.xx&oh=00_Af7OJ_TcgBxGpi_y04zebbCwSLaSTg8L2P14S66Vq2Fm3Q&oe=6A135F6A',
+      'https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/686328112_1539396494856525_4977184544001239728_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=102&ccb=1-7&_nc_sid=30a509&_nc_ohc=bvpKjfJ25ogQ7kNvwHgdw9Y&_nc_ht=scontent-lga3-3.xx&oh=00_Af5s4Abrggnws2n_8nV-0fXUC6MGdKSh83ZrD0lW-PrVoA&oe=6A1394AD',
+      'https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/670477433_1521467506649424_1627371593104781609_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=106&ccb=1-7&_nc_sid=30a509&_nc_ohc=LePdM54QyVYQ7kNvwFR5n5i&_nc_ht=scontent-lga3-3.xx&oh=00_Af4VxerVqA7vdd5YS6nNkF6piQeMhfC0DL0kmSCPGJhKqA&oe=6A136C3E',
+    ],
+    packages: [
+      {
+        name: 'Dječji rođendan',
+        price: 280,
+        minChildren: 10,
+        includes: ['paintball ili dječji paintball', 'animator / instruktor', 'oprema i kuglice', 'zatvoreni prostor po potrebi', 'dogovor torte i grickalica'],
+      },
+      {
+        name: 'Paintball party',
+        price: 350,
+        minChildren: 12,
+        includes: ['2–3h programa', 'scenariji (CTF, deathmatch…)', 'oprema i instruktor', 'grupna fotografija', 'rezervacija terena'],
+      },
+      {
+        name: 'Team building / izlet',
+        price: 420,
+        minChildren: 15,
+        includes: ['timski izazovi na otvorenom', 'više aktivnosti po izboru', 'quad / streličarstvo / minsko polje', 'program za škole ili tvrtke', 'kontakt za ponudu'],
+      },
+    ],
+  },
 ].map(v => {
   const query = encodeURIComponent(`${v.name} ${v.city}`)
   return {
@@ -1966,6 +2030,6 @@ export const faqItems: FAQItem[] = [
   },
   {
     question: 'Radi li u cijeloj Hrvatskoj?',
-    answer: 'Pozivnice rade svugdje — nema ograničenja po lokaciji. Baza igraonica trenutno pokriva veće gradove (Zagreb, Split, Koprivnica), a aktivno dodajemo nove svaki tjedan.',
+    answer: 'Pozivnice rade svugdje — nema ograničenja po lokaciji. Baza igraonica trenutno pokriva veće gradove (Zagreb, Split, Koprivnica, Križevci), a aktivno dodajemo nove svaki tjedan.',
   },
 ]

@@ -419,7 +419,7 @@ export default function VenueDetailPage() {
         <section className="ew-vd-more">
           <div className="ew-container">
             <h2 className="ew-h3 ew-vd-more__title">
-              Ostale igraonice u {venueRegion === 'split' ? 'Splitu i okolici' : venueRegion === 'koprivnica' ? 'Koprivnici' : 'Zagrebu'}
+              Ostale igraonice u {venueRegion === 'split' ? 'Splitu i okolici' : venueRegion === 'koprivnica' ? 'Koprivnici i okolici' : 'Zagrebu'}
             </h2>
             <div className="ew-vd-more__grid">
               {venues

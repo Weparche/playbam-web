@@ -1945,12 +1945,14 @@ export const venues: Venue[] = [
       'Team building',
       'Školski izleti',
     ],
-    coverPhoto: '/venues/paintball-pitagora-krizevci/cover.jpg',
+    coverPhoto: '/venues/paintball-pitagora-krizevci/pita1.webp',
     photos: [
-      '/venues/paintball-pitagora-krizevci/cover.jpg',
-      'https://krizevci.hr/wp-content/uploads/2018/01/paintball-krizevci.jpg',
-      '/venues/paintball-pitagora-krizevci/gallery-team.jpg',
-      '/venues/paintball-pitagora-krizevci/gallery-outdoor.jpg',
+      '/venues/paintball-pitagora-krizevci/pita1.webp',
+      '/venues/paintball-pitagora-krizevci/pita2.webp',
+      '/venues/paintball-pitagora-krizevci/pita3.webp',
+      '/venues/paintball-pitagora-krizevci/pita4.webp',
+      '/venues/paintball-pitagora-krizevci/pita5.webp',
+      '/venues/paintball-pitagora-krizevci/pita6.webp',
     ],
     packages: [
       {

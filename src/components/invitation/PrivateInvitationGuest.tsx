@@ -344,7 +344,7 @@ export default function PrivateInvitationGuest({
           </section>
         ) : null}
 
-        <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-wishlist-toggle">
+        <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion pb-invitePrivateCard--wishlist" aria-labelledby="private-wishlist-toggle">
           <button
             id="private-wishlist-toggle"
             type="button"
@@ -370,7 +370,7 @@ export default function PrivateInvitationGuest({
 
           {wishlistOpen ? (
             <div className="pb-privateAccordionBody">
-              <section className="pb-privateWishlist" aria-labelledby="wishlist-heading">
+              <section className="pb-privateWishlist" aria-label="Lista želja">
                 {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">Učitavanje wishliste...</div> : null}
                 {wishlistError ? <div className="pb-inlineNote pb-inlineNote--error">{wishlistError}</div> : null}
                 {!wishlistLoading && wishlistItems.length === 0 ? (

@@ -119,14 +119,7 @@ export default function InvitationLiveChatPanel({
   useScrollListToBottom(listRef, messages.length, loading)
 
   return (
-    <section className="pb-inviteChat" aria-labelledby="invitation-live-chat-heading">
-      <div className="pb-inviteChat__header">
-        <h3 id="invitation-live-chat-heading" className="pb-invitePrivateCard__title">
-          Live chat
-        </h3>
-        <p className="pb-invitePrivateCard__subtitle">Brza tekstualna komunikacija između organizatora i gostiju s pristupom.</p>
-      </div>
-
+    <section className="pb-inviteChat" aria-label="Live chat">
       {loading ? <div className="pb-inlineNote pb-inlineNote--info">Učitavanje poruka...</div> : null}
       {error ? <div className="pb-inlineNote pb-inlineNote--error">{error}</div> : null}
       {!loading && messages.length === 0 ? (

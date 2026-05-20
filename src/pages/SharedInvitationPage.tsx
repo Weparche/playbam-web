@@ -2130,7 +2130,7 @@ export default function SharedInvitationPage() {
                     ) : null}
                   </Card>
 
-                  <Card id="host-details-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                  <Card id="host-details-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-invitePrivateCard--partyDetails pb-inviteHostPanel">
                     <button
                       id="host-details-toggle"
                       type="button"
@@ -2151,7 +2151,7 @@ export default function SharedInvitationPage() {
                       <div className="pb-privateAccordionBody">
                         <section
                           className="pb-privateDetails pb-hostDetailsEditor pb-hostDetailsEditor--matchTitle"
-                          aria-labelledby="host-party-details-title"
+                          aria-label="Detalji tuluma"
                           style={
                             {
                               ['--pb-host-details-fg' as string]: getTitleColorValue(
@@ -2160,15 +2160,6 @@ export default function SharedInvitationPage() {
                             } as CSSProperties
                           }
                         >
-                          <header className="pb-invitePrivateCard__header">
-                            <h3 id="host-party-details-title" className="pb-invitePrivateCard__title">
-                              Detalji tuluma
-                            </h3>
-                            <p className="pb-invitePrivateCard__subtitle">
-                              Ovo se prikazuje gostima u privatnom dijelu pozivnice.
-                            </p>
-                          </header>
-
                           <div className="pb-formGrid">
                             <label className="pb-formField">
                               <span className="pb-formLabel">Lokacija parkinga</span>
@@ -2314,7 +2305,7 @@ export default function SharedInvitationPage() {
                     ) : null}
                   </Card>
 
-                  <Card id="host-wishlist-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-inviteHostPanel">
+                  <Card id="host-wishlist-card" className="pb-flowCard pb-invitePrivateCard pb-invitePrivateCard--accordion pb-invitePrivateCard--wishlist pb-inviteHostPanel">
                     <button
                       id="host-wishlist-toggle"
                       type="button"

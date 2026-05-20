@@ -3317,6 +3317,7 @@ body:has(.pb-main--demo.pb-invitePage) #root {
 }
 
 .pb-modalDialog--guestFlow {
+  border-radius: 1.5rem;
   max-height: min(
     calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 10.5rem),
     480px

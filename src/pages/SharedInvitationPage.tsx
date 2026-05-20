@@ -46,7 +46,6 @@ import {
   proxyImageUrl,
   readGoogleAuthCallbackState,
   updateInvitation,
-  uploadInvitationOgImage,
   reserveInvitationWishlistItem,
   reviewMembershipRequest,
   saveRsvp,
@@ -792,31 +791,6 @@ export default function SharedInvitationPage() {
     })
   }
 
-  const syncInvitationOgImageFromPreview = useCallback(async () => {
-    if (!invitation || (!user && !hasHostSession)) {
-      return
-    }
-
-    if (hostPreviewMode === 'print') {
-      setHostPreviewMode('guest')
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
-      })
-    }
-
-    const root = hostPrintCardRef.current?.querySelector('.pb-inviteCard--storybook') as HTMLElement | null
-    if (!root) {
-      return
-    }
-
-    try {
-      const dataUrl = await captureInvitationCardJpeg(root)
-      await uploadInvitationOgImage(invitation.id, dataUrl, user ?? null)
-    } catch {
-      /* tiho — WhatsApp će koristiti fallback dok se ne uspije upload */
-    }
-  }, [hasHostSession, hostPreviewMode, invitation, user])
-
   const handleHostExportJpg = async () => {
     setHostJpgExportMessage(null)
 
@@ -872,9 +846,8 @@ export default function SharedInvitationPage() {
   useEffect(() => {
     if (hostShareDialogOpen) {
       setHostShareCopyDone(false)
-      void syncInvitationOgImageFromPreview()
     }
-  }, [hostShareDialogOpen, syncInvitationOgImageFromPreview])
+  }, [hostShareDialogOpen])
 
   useEffect(() => {
     if (!hostShareDialogOpen) {

@@ -6603,10 +6603,12 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
   --hero-logo-top: 1.15%;
   --hero-title-top: 9%;
   --hero-title-md-top: 7.2%;
+  --hero-title-sm-top: 11.8%;
+  --hero-title-sm-shift-y: 2.2%;
   --hero-title-lg-shift-y: -12.5%;
-  --hero-title-lg-size: clamp(1.456rem, 5.216vw, 2.624rem);
-  --hero-title-md-size: clamp(1.4rem, 5.15vw, 2.15rem);
-  --hero-title-sm-size: clamp(0.98rem, 3.85vw, 1.48rem);
+  --hero-title-lg-size: clamp(1.52rem, 5.45vw, 2.75rem);
+  --hero-title-md-size: clamp(1.28rem, 4.65vw, 2.05rem);
+  --hero-title-sm-size: clamp(0.92rem, 3.55vw, 1.32rem);
   --hero-info-top: 37.9%;
   --hero-message-margin-top: calc(0.78rem - 13px + 3.25px - 0.03rem - 2px);
   --hero-rsvp-top: calc(63.4% + 0.7rem);
@@ -6629,6 +6631,12 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
 
 /* Srednji (md) naslov: dodatnih 20% gore u odnosu na glavni pomak */
 .pb-createLivePreview .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-md {
+}
+
+/* Live preview: najmanji (sm) naslov — malo niže */
+.pb-createLivePreview .pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-sm {
+  top: var(--hero-title-sm-top);
+  transform: translate(-50%, var(--hero-title-sm-shift-y));
 }
 
 /* Live preview: najveći (lg) naslov — dodatni pomak gore */
@@ -9017,6 +9025,17 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
   color: #23406e;
 }
 
+/* „Lista želja” — uvijek do dva retka (host rail desno + mobilni shortcut) */
+.pb-shortcutButton[data-label='Lista želja'] .pb-shortcutButton__label {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  overflow: hidden;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 979px) {
   .pb-main--createV2 {
     --pb-create-rail-button-width: auto;
@@ -9151,13 +9170,6 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-
-  .pb-shortcutButton[data-label='Lista želja'] .pb-shortcutButton__label {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .pb-createShell {
@@ -9693,15 +9705,15 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
 }
 
 .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleSize--lg {
-  font-size: clamp(1.38rem, 4.84vw, 2.46rem);
+  font-size: clamp(1.52rem, 5.2vw, 2.65rem);
 }
 
 .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleSize--md {
-  font-size: clamp(1.05rem, 3.83vw, 1.71rem);
+  font-size: clamp(1.22rem, 4.2vw, 1.95rem);
 }
 
 .pb-hostUpdateEditor .pb-createEditor__titleInput.pb-createEditor__titleSize--sm {
-  font-size: clamp(0.75rem, 2.89vw, 1.14rem);
+  font-size: clamp(0.88rem, 3.2vw, 1.28rem);
 }
 
 .pb-quickEditor__rsvpGrid {
@@ -12506,10 +12518,12 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
   --hero-logo-top: 1.15%;
   --hero-title-top: 9%;
   --hero-title-md-top: 7.2%;
+  --hero-title-sm-top: 11.8%;
+  --hero-title-sm-shift-y: 2.2%;
   --hero-title-lg-shift-y: -12.5%;
-  --hero-title-lg-size: clamp(1.456rem, 5.216vw, 2.624rem);
-  --hero-title-md-size: clamp(1.4rem, 5.15vw, 2.15rem);
-  --hero-title-sm-size: clamp(0.98rem, 3.85vw, 1.48rem);
+  --hero-title-lg-size: clamp(1.52rem, 5.45vw, 2.75rem);
+  --hero-title-md-size: clamp(1.28rem, 4.65vw, 2.05rem);
+  --hero-title-sm-size: clamp(0.92rem, 3.55vw, 1.32rem);
   --hero-info-top: 37.9%;
   --hero-info-offset-x: -5px;
   --hero-info-offset-y: 0px;
@@ -12555,6 +12569,11 @@ body:has(.pb-mobileFooterNav) .pb-modalDialog--guestFlow {
 
 .pb-inviteHero__titleWrap--size-md {
   transform: translate(-50%, -2.1%);
+}
+
+.pb-inviteHero__titleWrap--storybook.pb-inviteHero__titleWrap--size-sm {
+  top: var(--hero-title-sm-top);
+  transform: translate(-50%, var(--hero-title-sm-shift-y));
 }
 
 .pb-inviteHero__title--storybook {

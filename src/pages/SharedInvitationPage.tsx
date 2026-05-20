@@ -126,7 +126,7 @@ type HostAccordionSection = 'update' | 'details' | 'requests' | 'wishlist' | 'ch
 const HOST_SHORTCUT_ITEMS = [
   { id: 'settings', label: 'Ažuriraj', icon: '⚙️' },
   { id: 'partyDetails', label: 'Detalji', icon: '📍' },
-  { id: 'requests', label: 'Zahtjevi', icon: '🧾' },
+  { id: 'requests', label: 'Gosti', icon: '🧾' },
   { id: 'wishlist', label: 'Lista želja', icon: '🎁' },
   { id: 'shareGuest', label: 'Podijeli', icon: '🔗' },
 ] as const satisfies ReadonlyArray<{ id: HostShortcutId; label: string; icon: string }>
@@ -2205,13 +2205,13 @@ export default function SharedInvitationPage() {
                     >
                       <span className="pb-privateToggle__copy">
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
-                        <span className="pb-privateToggle__title">Zahtjevi za pristup</span>
+                        <span className="pb-privateToggle__title">Popis gostiju</span>
                       </span>
                       <span className="pb-privateToggle__trail">
                         <PrivateToggleSectionCounts
                           total={hostRequests.length}
                           newCount={hostRequestsUnreadCount}
-                          segmentLabel="zahtjeva"
+                          segmentLabel="gostiju"
                         />
                         <span className="pb-privateToggle__arrow" aria-hidden>
                           <PrivateToggleChevron />
@@ -2221,7 +2221,7 @@ export default function SharedInvitationPage() {
 
                     {hostAccordionOpen === 'requests' ? (
                       <div className="pb-privateAccordionBody">
-                        <p className="pb-flowCard__text">Pregledaj tko traži pristup privatnom dijelu pozivnice i upravljaj gostima.</p>
+                        <p className="pb-flowCard__text">Pregledaj popis gostiju, RSVP odgovore i rezervacije s liste želja.</p>
                         {hostError ? <div className="pb-inlineNote pb-inlineNote--error">{hostError}</div> : null}
                         <HostRequestListV2
                           requests={hostRequests}
@@ -2976,7 +2976,7 @@ function HostRequestListV2({
   onSelect: (request: MembershipRequest) => void
 }) {
   if (requests.length === 0) {
-    return <div className="pb-inlineNote pb-inlineNote--info">Trenutačno nema novih zahtjeva.</div>
+    return <div className="pb-inlineNote pb-inlineNote--info">Trenutačno nema gostiju na popisu.</div>
   }
 
   const groupedRequests = groupHostRequestsByRsvpClean(requests)

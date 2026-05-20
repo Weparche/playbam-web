@@ -4566,6 +4566,14 @@ a.pb-partyFact__link:focus-visible {
   border-radius: 4px;
 }
 
+.pb-partyFacts--guestGrid .pb-partyFact--mapsAction {
+  grid-column: 1 / -1;
+}
+
+.pb-partyFact--mapsAction .pb-partyFact__label {
+  text-align: center;
+}
+
 .pb-partyFact--mapsAction .pb-partyFact__value {
   display: flex;
   justify-content: center;
@@ -4573,30 +4581,40 @@ a.pb-partyFact__link:focus-visible {
 }
 
 a.pb-partyFact__link--maps {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.28rem;
+  justify-content: center;
+  gap: 0.32rem;
+  width: 100%;
   max-width: 100%;
-  padding: 0.1rem 0.15rem 0.2rem;
+  padding: 0.15rem 0.5rem 0.25rem;
   text-align: center;
   text-decoration: none;
+  box-sizing: border-box;
 }
 
 a.pb-partyFact__link--maps .pb-partyFact__mapsAddress {
+  width: 100%;
+  max-width: 36rem;
   font-size: inherit;
   font-weight: inherit;
-  line-height: 1.35;
+  line-height: 1.4;
+  text-align: center;
   text-decoration: underline;
   text-underline-offset: 0.14em;
   word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 a.pb-partyFact__link--maps .pb-partyFact__mapsHint {
+  width: 100%;
+  max-width: 36rem;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   line-height: 1.25;
+  text-align: center;
   color: rgba(31, 36, 48, 0.52);
   text-decoration: none;
 }

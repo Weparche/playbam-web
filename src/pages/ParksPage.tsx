@@ -650,6 +650,43 @@ export default function ParksPage() {
                 </div>
               </div>
 
+              <div className="ew-vp-filter-group ew-pp-locationFilter">
+                <div className="ew-vp-filter-label">Moja lokacija</div>
+                {!userLoc ? (
+                  <button
+                    type="button"
+                    className="ew-pp-locationFilter__btn"
+                    onClick={requestLocation}
+                    disabled={locating}
+                  >
+                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                      <circle cx="10" cy="10" r="3" fill="currentColor" />
+                      <circle cx="10" cy="10" r="6.5" stroke="currentColor" strokeWidth="1.4" fill="none" />
+                      <path
+                        d="M10 1.5V4M10 16V18.5M1.5 10H4M16 10H18.5"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    {locating ? 'Tražim...' : 'Moja lokacija'}
+                  </button>
+                ) : (
+                  <div className="ew-pp-locationFilter__active">
+                    <span className="ew-vp-locate-dot" aria-hidden="true" />
+                    <span>do {maxKm} km</span>
+                    <button type="button" onClick={clearLocation}>
+                      Isključi
+                    </button>
+                  </div>
+                )}
+                {locError ? (
+                  <p className="ew-pp-locationFilter__error" role="status">
+                    {locError}
+                  </p>
+                ) : null}
+              </div>
+
               {activeFilterCount > 0 ? (
                 <button type="button" className="ew-vp-clear-btn" onClick={resetFilters}>
                   Poništi filtere

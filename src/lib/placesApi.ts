@@ -41,6 +41,48 @@ export type GooglePlacesCafe = NearbyCafe & {
   }>
 }
 
+export type GooglePlacePhoto = {
+  name: string | null
+  widthPx: number | null
+  heightPx: number | null
+  uri: string | null
+  attributions: Array<{
+    displayName: string | null
+    uri: string | null
+    photoUri: string | null
+  }>
+}
+
+export type GooglePlaceEnrichment = {
+  id: string
+  placeId: string
+  resourceName: string | null
+  name: string | null
+  address: string | null
+  shortAddress: string | null
+  lat: number | null
+  lng: number | null
+  rating: number | null
+  reviewCount: number | null
+  phone: string | null
+  website: string | null
+  googleMapsUri: string | null
+  businessStatus: string | null
+  types: string[]
+  primaryType: string | null
+  goodForChildren: boolean | null
+  restroom: boolean | null
+  regularOpeningHours: {
+    openNow: boolean | null
+    weekdayDescriptions: string[]
+  } | null
+  currentOpeningHours: {
+    openNow: boolean | null
+    weekdayDescriptions: string[]
+  } | null
+  photos: GooglePlacePhoto[]
+}
+
 export async function getNearbyCafesFromPlaces({
   lat,
   lng,
@@ -66,4 +108,37 @@ export async function getNearbyCafesFromPlaces({
 
   const data = (await response.json()) as { cafes?: GooglePlacesCafe[] }
   return Array.isArray(data.cafes) ? data.cafes : []
+}
+
+export async function getPlaceEnrichment({
+  query,
+  placeId,
+  lat,
+  lng,
+  radiusMeters = 2500,
+  maxPhotos = 6,
+}: {
+  query: string
+  placeId?: string | null
+  lat?: number | null
+  lng?: number | null
+  radiusMeters?: number
+  maxPhotos?: number
+}) {
+  const url = new URL(`${API_BASE}/api/places/enrich`, window.location.origin)
+  url.searchParams.set('query', query)
+  if (placeId) url.searchParams.set('placeId', placeId)
+  if (typeof lat === 'number') url.searchParams.set('lat', String(lat))
+  if (typeof lng === 'number') url.searchParams.set('lng', String(lng))
+  url.searchParams.set('radiusMeters', String(radiusMeters))
+  url.searchParams.set('maxPhotos', String(maxPhotos))
+  url.searchParams.set('languageCode', 'hr')
+
+  const response = await fetch(url.toString(), { headers: { Accept: 'application/json' } })
+  if (!response.ok) {
+    throw new Error(`GOOGLE_PLACES_ENRICH_${response.status}`)
+  }
+
+  const data = (await response.json()) as { place?: GooglePlaceEnrichment | null }
+  return data.place ?? null
 }

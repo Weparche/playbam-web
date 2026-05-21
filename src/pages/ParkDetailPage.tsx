@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css'
 import { loadParks } from '../data/load-parks'
 import { parkFeatureLabels, type NearbyCafe, type Park } from '../data/parks-data'
 import { getNearbyCafesFromPlaces, type GooglePlacesCafe } from '../lib/placesApi'
+import { googlePhotoUris, useGooglePlaceEnrichment } from '../lib/useGooglePlaceEnrichment'
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
 import '../styles/parks.css'
@@ -146,6 +147,7 @@ export default function ParkDetailPage() {
   const parks = useMemo(() => loadParks(), [])
   const park = parks.find((item) => item.slug === slug)
   const { cafes, source: cafeSource } = useParkDetailCafes(park)
+  const googlePlace = useGooglePlaceEnrichment(park, 6)
 
   const relatedParks = useMemo(() => {
     if (!park) return []
@@ -156,7 +158,12 @@ export default function ParkDetailPage() {
 
   if (!park) return <Navigate to="/djecji-parkovi" replace />
 
-  const mapsUrl = mapsUrlForPark(park)
+  const googlePhotos = googlePhotoUris(googlePlace)
+  const heroPhoto = googlePhotos[0] ?? park.coverPhoto
+  const mapsUrl = googlePlace?.googleMapsUri ?? mapsUrlForPark(park)
+  const displayedRating = googlePlace?.rating ?? park.rating
+  const displayedReviewCount = googlePlace?.reviewCount ?? park.reviewCount
+  const displayedAddress = googlePlace?.address ?? park.address
 
   return (
     <div className="ew-landing ew-pp-page ew-pd-page">
@@ -194,7 +201,7 @@ export default function ParkDetailPage() {
             </div>
             <img
               className="ew-pd-hero__image"
-              src={park.coverPhoto}
+              src={heroPhoto}
               alt={park.name}
               loading="eager"
               decoding="async"
@@ -205,6 +212,20 @@ export default function ParkDetailPage() {
         <section className="ew-pd-body">
           <div className="ew-container ew-pd-layout">
             <div className="ew-pd-main">
+              {googlePhotos.length > 1 ? (
+                <section className="ew-pd-section">
+                  <div className="ew-pd-section__head">
+                    <h2>Fotografije</h2>
+                    <p>Aktualne fotografije iz Google Places profila, uz postojeće slike kao rezervu.</p>
+                  </div>
+                  <div className="ew-pd-photoGrid">
+                    {googlePhotos.slice(0, 6).map((photo, index) => (
+                      <img key={photo} src={photo} alt={`${park.name} fotografija ${index + 1}`} loading="lazy" decoding="async" />
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
               <section className="ew-pd-section">
                 <div className="ew-pd-section__head">
                   <h2>Lokacija i kafići u blizini</h2>
@@ -253,7 +274,7 @@ export default function ParkDetailPage() {
                 <dl className="ew-pd-facts">
                   <div>
                     <dt>Ocjena</dt>
-                    <dd>★ {park.rating.toFixed(1)} ({park.reviewCount})</dd>
+                    <dd>★ {displayedRating.toFixed(1)} ({displayedReviewCount})</dd>
                   </div>
                   <div>
                     <dt>Dob</dt>
@@ -261,7 +282,7 @@ export default function ParkDetailPage() {
                   </div>
                   <div>
                     <dt>Adresa</dt>
-                    <dd>{park.address}</dd>
+                    <dd>{displayedAddress}</dd>
                   </div>
                   <div>
                     <dt>Kafić</dt>

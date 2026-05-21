@@ -1,9 +1,10 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
 import { REGIONS, regionForCity, venues } from '../lib/landing-data'
+import { googlePhotoUris, useGooglePlaceEnrichment } from '../lib/useGooglePlaceEnrichment'
 
 const amenityIcons: Record<string, string> = {
   Parking: '🅿',
@@ -46,13 +47,18 @@ const amenityIcons: Record<string, string> = {
 export default function VenueDetailPage() {
   const { slug } = useParams<{ slug: string }>()
   const venue = venues.find(v => v.slug === slug)
+  const googlePlace = useGooglePlaceEnrichment(venue, 7)
 
   const allPhotos = useMemo(
-    () => (venue ? [venue.coverPhoto, ...venue.photos] : []),
-    [venue],
+    () => {
+      const googlePhotos = googlePhotoUris(googlePlace)
+      return googlePhotos.length > 0 ? googlePhotos : venue ? [venue.coverPhoto, ...venue.photos] : []
+    },
+    [googlePlace, venue],
   )
 
   const [activePhoto, setActivePhoto] = useState(0)
+  const activePhotoIndex = allPhotos.length > 0 ? Math.min(activePhoto, allPhotos.length - 1) : 0
 
   const { leftIndices, rightIndices } = useMemo(() => {
     const n = allPhotos.length
@@ -67,24 +73,26 @@ export default function VenueDetailPage() {
     if (allPhotos.length === 0) return
     const mq = window.matchMedia('(min-width: 900px)')
     const selector = mq.matches
-      ? `.ew-vd-viewer__rail button[data-vd-index="${activePhoto}"]`
-      : `.ew-vd-viewer__mobile-scroll button[data-vd-index="${activePhoto}"]`
+      ? `.ew-vd-viewer__rail button[data-vd-index="${activePhotoIndex}"]`
+      : `.ew-vd-viewer__mobile-scroll button[data-vd-index="${activePhotoIndex}"]`
     document.querySelector<HTMLElement>(selector)?.scrollIntoView({
       block: 'nearest',
       inline: 'nearest',
       behavior: 'smooth',
     })
-  }, [activePhoto, allPhotos.length])
-
-  useEffect(() => {
-    setActivePhoto(0)
-  }, [slug])
+  }, [activePhotoIndex, allPhotos.length])
 
   if (!venue) return <Navigate to="/igraonice" replace />
 
   const venueRegion = regionForCity(venue.city)
   const regionMeta = REGIONS[venueRegion]
   const venuesQuery = venueRegion === 'zagreb' ? '' : `?grad=${venueRegion}`
+  const displayedRating = googlePlace?.rating ?? venue.rating
+  const displayedReviewCount = googlePlace?.reviewCount ?? venue.reviewCount
+  const displayedAddress = googlePlace?.address ?? venue.address
+  const displayedPhone = googlePlace?.phone ?? venue.phone
+  const displayedWebsite = googlePlace?.website ?? venue.website
+  const displayedMapsUrl = googlePlace?.googleMapsUri ?? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`
 
   return (
     <div className="ew-landing">
@@ -112,10 +120,10 @@ export default function VenueDetailPage() {
                   key={i}
                   type="button"
                   data-vd-index={i}
-                  className={`ew-vd-thumb${activePhoto === i ? ' ew-vd-thumb--active' : ''}`}
+                  className={`ew-vd-thumb${activePhotoIndex === i ? ' ew-vd-thumb--active' : ''}`}
                   onClick={() => setActivePhoto(i)}
                   aria-label={`Fotografija ${i + 1}`}
-                  aria-current={activePhoto === i ? 'true' : undefined}
+                  aria-current={activePhotoIndex === i ? 'true' : undefined}
                 >
                   <img src={allPhotos[i]} alt="" loading="lazy" decoding="async" />
                 </button>
@@ -123,8 +131,8 @@ export default function VenueDetailPage() {
             </div>
             <div className="ew-vd-viewer__main">
               <img
-                src={allPhotos[activePhoto]}
-                alt={`${venue.name} — fotografija ${activePhoto + 1}`}
+                src={allPhotos[activePhotoIndex]}
+                alt={`${venue.name} — fotografija ${activePhotoIndex + 1}`}
                 className="ew-vd-viewer__main-img"
                 loading="eager"
                 decoding="async"
@@ -136,10 +144,10 @@ export default function VenueDetailPage() {
                   key={i}
                   type="button"
                   data-vd-index={i}
-                  className={`ew-vd-thumb${activePhoto === i ? ' ew-vd-thumb--active' : ''}`}
+                  className={`ew-vd-thumb${activePhotoIndex === i ? ' ew-vd-thumb--active' : ''}`}
                   onClick={() => setActivePhoto(i)}
                   aria-label={`Fotografija ${i + 1}`}
-                  aria-current={activePhoto === i ? 'true' : undefined}
+                  aria-current={activePhotoIndex === i ? 'true' : undefined}
                 >
                   <img src={allPhotos[i]} alt="" loading="lazy" decoding="async" />
                 </button>
@@ -154,10 +162,10 @@ export default function VenueDetailPage() {
                     key={i}
                     type="button"
                     data-vd-index={i}
-                    className={`ew-vd-thumb ew-vd-thumb--strip${activePhoto === i ? ' ew-vd-thumb--active' : ''}`}
+                  className={`ew-vd-thumb ew-vd-thumb--strip${activePhotoIndex === i ? ' ew-vd-thumb--active' : ''}`}
                     onClick={() => setActivePhoto(i)}
                     aria-label={`Fotografija ${i + 1}`}
-                    aria-current={activePhoto === i ? 'true' : undefined}
+                  aria-current={activePhotoIndex === i ? 'true' : undefined}
                   >
                     <img src={src} alt="" loading="lazy" decoding="async" />
                   </button>
@@ -179,11 +187,11 @@ export default function VenueDetailPage() {
                 <div>
                   <h1 className="ew-h2 ew-vd-title">{venue.name}</h1>
                   <div className="ew-vd-meta">
-                    <span className="ew-vd-meta__stars" aria-label={`Ocjena ${venue.rating}`}>
-                      {'★'.repeat(Math.round(venue.rating))}{'☆'.repeat(5 - Math.round(venue.rating))}
+                    <span className="ew-vd-meta__stars" aria-label={`Ocjena ${displayedRating}`}>
+                      {'★'.repeat(Math.round(displayedRating))}{'☆'.repeat(5 - Math.round(displayedRating))}
                     </span>
-                    <span className="ew-vd-meta__rating">{venue.rating.toFixed(1)}</span>
-                    <span className="ew-vd-meta__reviews">({venue.reviewCount} recenzija)</span>
+                    <span className="ew-vd-meta__rating">{displayedRating.toFixed(1)}</span>
+                    <span className="ew-vd-meta__reviews">({displayedReviewCount} recenzija)</span>
                     <span className="ew-vd-meta__sep">·</span>
                     <span className="ew-vd-meta__age">Dob {venue.ageRange} god.</span>
                     <span className="ew-vd-meta__sep">·</span>
@@ -254,30 +262,30 @@ export default function VenueDetailPage() {
                       <circle cx="10" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/>
                     </svg>
                     <a
-                      href={`https://maps.google.com/?q=${encodeURIComponent(venue.address)}`}
+                      href={displayedMapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="ew-vd-contact__link"
                     >
-                      {venue.address}
+                      {displayedAddress}
                     </a>
                   </div>
                   <div className="ew-vd-contact__row">
                     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                       <path d="M3 5a2 2 0 0 1 2-2h2l2 4-2 2a12 12 0 0 0 4 4l2-2 4 2v2a2 2 0 0 1-2 2C7 17 3 13 3 7V5z" stroke="currentColor" strokeWidth="1.5"/>
                     </svg>
-                    <a href={`tel:${venue.phone.replace(/\s/g, '')}`} className="ew-vd-contact__link">
-                      {venue.phone}
+                    <a href={`tel:${displayedPhone.replace(/\s/g, '')}`} className="ew-vd-contact__link">
+                      {displayedPhone}
                     </a>
                   </div>
-                  {venue.website && (
+                  {displayedWebsite && (
                     <div className="ew-vd-contact__row">
                       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                         <path d="M10 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16Z" stroke="currentColor" strokeWidth="1.5"/>
                         <path d="M2 10h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                         <path d="M10 2c2.5 2.3 4 5 4 8s-1.5 5.7-4 8c-2.5-2.3-4-5-4-8s1.5-5.7 4-8Z" stroke="currentColor" strokeWidth="1.5"/>
                       </svg>
-                      <a href={venue.website} target="_blank" rel="noopener noreferrer" className="ew-vd-contact__link">
+                      <a href={displayedWebsite} target="_blank" rel="noopener noreferrer" className="ew-vd-contact__link">
                         Web stranica
                       </a>
                     </div>
@@ -326,8 +334,8 @@ export default function VenueDetailPage() {
                   Od <strong>{venue.pricePerChild}€</strong> po djetetu
                 </div>
                 <div className="ew-vd-sidebar__rating">
-                  <span aria-hidden="true">★</span> {venue.rating.toFixed(1)}
-                  <span className="ew-vd-sidebar__rev"> · {venue.reviewCount} recenzija</span>
+                  <span aria-hidden="true">★</span> {displayedRating.toFixed(1)}
+                  <span className="ew-vd-sidebar__rev"> · {displayedReviewCount} recenzija</span>
                 </div>
 
                 <div className="ew-vd-sidebar__divider" />
@@ -337,7 +345,7 @@ export default function VenueDetailPage() {
                 </p>
 
                 <Link
-                  to={`/kreiraj-pozivnicu?igraonica=${encodeURIComponent(venue.name)}&adresa=${encodeURIComponent(venue.address)}`}
+                  to={`/kreiraj-pozivnicu?igraonica=${encodeURIComponent(venue.name)}&adresa=${encodeURIComponent(displayedAddress)}`}
                   className="ew-btn-primary ew-vd-sidebar__cta"
                 >
                   Kreiraj pozivnicu s ovom lokacijom
@@ -349,14 +357,14 @@ export default function VenueDetailPage() {
                   <span>👥 do {venue.maxChildren} djece</span>
                 </div>
 
-                <a href={`tel:${venue.phone.replace(/\s/g, '')}`} className="ew-vd-sidebar__phone">
-                  {venue.phone}
+                <a href={`tel:${displayedPhone.replace(/\s/g, '')}`} className="ew-vd-sidebar__phone">
+                  {displayedPhone}
                 </a>
 
-                {(venue.website || venue.facebook || venue.instagram || venue.tiktok) && (
+                {(displayedWebsite || venue.facebook || venue.instagram || venue.tiktok) && (
                   <div className="ew-vd-sidebar__links" aria-label="Poveznice">
-                    {venue.website && (
-                      <a href={venue.website} target="_blank" rel="noopener noreferrer" className="ew-vd-sidebar__link">
+                    {displayedWebsite && (
+                      <a href={displayedWebsite} target="_blank" rel="noopener noreferrer" className="ew-vd-sidebar__link">
                         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="ew-vd-sidebar__link-icon">
                           <path d="M10 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16Z" stroke="currentColor" strokeWidth="1.5"/>
                           <path d="M2 10h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -407,7 +415,7 @@ export default function VenueDetailPage() {
               <p className="ew-body-lg">Napravi pozivnicu za ovaj prostor i podijeli je s gostima za manje od 2 minute.</p>
             </div>
             <Link
-              to={`/kreiraj-pozivnicu?igraonica=${encodeURIComponent(venue.name)}&adresa=${encodeURIComponent(venue.address)}`}
+              to={`/kreiraj-pozivnicu?igraonica=${encodeURIComponent(venue.name)}&adresa=${encodeURIComponent(displayedAddress)}`}
               className="ew-btn-primary"
             >
               Kreiraj pozivnicu s ovom lokacijom

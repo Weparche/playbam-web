@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
+import ImageLightbox from '../components/ui/ImageLightbox'
 import { REGIONS, regionForCity, venues } from '../lib/landing-data'
 import { googlePhotoUris, useGooglePlaceEnrichment } from '../lib/useGooglePlaceEnrichment'
 
@@ -58,6 +59,7 @@ export default function VenueDetailPage() {
   )
 
   const [activePhoto, setActivePhoto] = useState(0)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const activePhotoIndex = allPhotos.length > 0 ? Math.min(activePhoto, allPhotos.length - 1) : 0
 
   const { leftIndices, rightIndices } = useMemo(() => {
@@ -130,6 +132,12 @@ export default function VenueDetailPage() {
               ))}
             </div>
             <div className="ew-vd-viewer__main">
+              <button
+                type="button"
+                className="ew-vd-viewer__main-btn"
+                onClick={() => setLightboxIndex(activePhotoIndex)}
+                aria-label={`Otvori fotografiju ${activePhotoIndex + 1}`}
+              >
               <img
                 src={allPhotos[activePhotoIndex]}
                 alt={`${venue.name} — fotografija ${activePhotoIndex + 1}`}
@@ -137,6 +145,7 @@ export default function VenueDetailPage() {
                 loading="eager"
                 decoding="async"
               />
+              </button>
             </div>
             <div className="ew-vd-viewer__rail ew-vd-viewer__rail--right">
               {rightIndices.map(i => (
@@ -447,6 +456,15 @@ export default function VenueDetailPage() {
           </div>
         </section>
       </main>
+
+      {lightboxIndex != null ? (
+        <ImageLightbox
+          images={allPhotos}
+          initialIndex={lightboxIndex}
+          altBase={venue.name}
+          onClose={() => setLightboxIndex(null)}
+        />
+      ) : null}
 
       <Footer />
     </div>

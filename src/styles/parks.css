@@ -535,6 +535,15 @@
   box-shadow: var(--shadow-card);
 }
 
+.ew-pd-hero__imageBtn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
 .ew-pd-body {
   padding: 34px 0 48px;
 }
@@ -596,6 +605,15 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+.ew-pd-photoGrid__item {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
 }
 
 .ew-pd-photoGrid img {

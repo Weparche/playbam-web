@@ -72,7 +72,7 @@ export const parks: Park[] = [
   {
     id: 'maksimirsko-igraliste',
     slug: 'maksimirsko-igraliste',
-    name: 'Maksimirsko igraliste',
+    name: 'Maksimirsko igralište',
     city: 'Zagreb',
     neighborhood: 'Maksimir',
     address: 'Maksimirski perivoj, 10000 Zagreb',
@@ -82,7 +82,7 @@ export const parks: Park[] = [
     ageMin: 0,
     ageMax: 6,
     features: ['shade', 'fenced', 'cafe', 'stroller', 'benches', 'quiet'],
-    description: 'Mirno igraliste u zelenilu Maksimira, dobro za najmlade i kratki obiteljski izlazak uz setnju parkom.',
+    description: 'Mirno igralište u zelenilu Maksimira, dobro za najmlađe i kratki obiteljski izlazak uz šetnju parkom.',
     coverPhoto:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Zagreb_-_Maksimirski_perivoj_u_travnju.JPG/1280px-Zagreb_-_Maksimirski_perivoj_u_travnju.JPG',
     rating: 4.7,
@@ -128,7 +128,7 @@ export const parks: Park[] = [
     ageMin: 3,
     ageMax: 8,
     features: ['shade', 'cafe', 'parking', 'stroller', 'benches', 'large', 'walkway', 'birthday'],
-    description: 'Puno hlada uz jezero, vise igralisnih zona i dovoljno prostora za igru, piknik i duze zadrzavanje.',
+    description: 'Puno hlada uz jezero, više igrališnih zona i dovoljno prostora za igru, piknik i duže zadržavanje.',
     coverPhoto:
       'https://upload.wikimedia.org/wikipedia/commons/9/99/Bundek_climbing_frame_20150307_DSC_0109%2C_crop.jpg',
     rating: 4.8,
@@ -163,7 +163,7 @@ export const parks: Park[] = [
   {
     id: 'jarun-djecji-park',
     slug: 'jarun-djecji-park',
-    name: 'Jarun djecji park',
+    name: 'Jarun dječji park',
     city: 'Zagreb',
     neighborhood: 'Jarun',
     address: 'Aleja Matije Ljubeka, 10000 Zagreb',
@@ -173,7 +173,7 @@ export const parks: Park[] = [
     ageMin: 6,
     ageMax: 12,
     features: ['shade', 'cafe', 'parking', 'large', 'walkway', 'birthday'],
-    description: 'Prostrano igraliste uz jezero i setnicu. Dobar izbor za aktivne obitelji, bicikle i dulji boravak.',
+    description: 'Prostrano igralište uz jezero i šetnicu. Dobar izbor za aktivne obitelji, bicikle i dulji boravak.',
     coverPhoto:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Zagreb_Jarun_main_way_1.jpg/1280px-Zagreb_Jarun_main_way_1.jpg',
     rating: 4.6,
@@ -218,7 +218,7 @@ export const parks: Park[] = [
     ageMin: 0,
     ageMax: 8,
     features: ['shade', 'fenced', 'cafe', 'stroller', 'benches', 'quiet'],
-    description: 'Centralni park s puno zelenila i mirnijim igralistem, praktican za roditelje koji trebaju predah u centru.',
+    description: 'Centralni park s puno zelenila i mirnijim igralištem, praktičan za roditelje koji trebaju predah u centru.',
     coverPhoto:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/ZagrebParkRibnjak.jpg/1280px-ZagrebParkRibnjak.jpg',
     rating: 4.5,
@@ -247,14 +247,14 @@ export const parks: Park[] = [
     name: 'Park Zrinjevac',
     city: 'Zagreb',
     neighborhood: 'Centar',
-    address: 'Trg Nikole Subica Zrinskog, 10000 Zagreb',
+    address: 'Trg Nikole Šubića Zrinskog, 10000 Zagreb',
     lat: 45.8107,
     lng: 15.978,
     ageRange: '3-6',
     ageMin: 3,
     ageMax: 6,
     features: ['shade', 'cafe', 'stroller', 'benches', 'walkway'],
-    description: 'Ureden gradski park za kratku igru i setnju, s puno klupa i kavanama u neposrednoj blizini.',
+    description: 'Uređen gradski park za kratku igru i šetnju, s puno klupa i kavanama u neposrednoj blizini.',
     coverPhoto:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Zrinjevac_Park_in_Zagreb%2C_Croatia.JPG/1280px-Zrinjevac_Park_in_Zagreb%2C_Croatia.JPG',
     rating: 4.4,
@@ -289,17 +289,17 @@ export const parks: Park[] = [
   {
     id: 'park-stara-tresnjevka',
     slug: 'park-stara-tresnjevka',
-    name: 'Park Stara Tresnjevka',
+    name: 'Park Stara Trešnjevka',
     city: 'Zagreb',
-    neighborhood: 'Tresnjevka',
-    address: 'Park Stara Tresnjevka, 10000 Zagreb',
+    neighborhood: 'Trešnjevka',
+    address: 'Park Stara Trešnjevka, 10000 Zagreb',
     lat: 45.8017,
     lng: 15.9483,
     ageRange: '0-6',
     ageMin: 0,
     ageMax: 6,
     features: ['shade', 'fenced', 'cafe', 'stroller', 'benches', 'quiet'],
-    description: 'Kvartovsko igraliste s ugodnom hladovinom, klupama i dobrim pregledom prostora za roditelje.',
+    description: 'Kvartovsko igralište s ugodnom hladovinom, klupama i dobrim pregledom prostora za roditelje.',
     coverPhoto:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Zagreb_STC_MeetUp_9_Photo_1.jpg/1280px-Zagreb_STC_MeetUp_9_Photo_1.jpg',
     rating: 4.6,
@@ -307,11 +307,11 @@ export const parks: Park[] = [
     hasShade: true,
     isFenced: true,
     hasCafeNearby: true,
-    googleMapsUri: 'https://www.google.com/maps/search/?api=1&query=Park%20Stara%20Tresnjevka%20Zagreb',
+    googleMapsUri: 'https://www.google.com/maps/search/?api=1&query=Park%20Stara%20Tre%C5%A1njevka%20Zagreb',
     nearbyCafes: [
       {
         id: 'leggero-tresnjevka',
-        name: 'Leggiero Tresnjevka',
+        name: 'Leggiero Trešnjevka',
         lat: 45.8024,
         lng: 15.9466,
         distanceMeters: 210,
@@ -319,7 +319,7 @@ export const parks: Park[] = [
         reviewCount: 350,
       },
     ],
-    nearestCafeName: 'Leggiero Tresnjevka',
+    nearestCafeName: 'Leggiero Trešnjevka',
     nearestCafeDistanceMeters: 210,
   },
   {
@@ -335,7 +335,7 @@ export const parks: Park[] = [
     ageMin: 3,
     ageMax: 10,
     features: ['shade', 'fenced', 'parking', 'stroller', 'benches', 'large', 'quiet'],
-    description: 'Veliko kvartovsko igraliste s mirnijim ritmom, puno prostora i dobrim pristupom za kolica.',
+    description: 'Veliko kvartovsko igralište s mirnijim ritmom, puno prostora i dobrim pristupom za kolica.',
     coverPhoto:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Dugave_park_20110917_3137.jpg/1280px-Dugave_park_20110917_3137.jpg',
     rating: 4.3,
@@ -359,7 +359,7 @@ export const parks: Park[] = [
     ageMin: 3,
     ageMax: 8,
     features: ['fenced', 'cafe', 'parking', 'stroller', 'benches', 'birthday'],
-    description: 'Prakticno naseljsko igraliste blizu kave i parkinga, dobro za kracu igru nakon vrtica ili vikendom.',
+    description: 'Praktično naseljsko igralište blizu kave i parkinga, dobro za kraću igru nakon vrtića ili vikendom.',
     coverPhoto:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Kajzerica_table%2C_Novi_Zagreb.jpg/1280px-Kajzerica_table%2C_Novi_Zagreb.jpg',
     rating: 4.4,

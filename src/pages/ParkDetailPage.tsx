@@ -10,6 +10,7 @@ import { getNearbyCafesFromPlaces, type GooglePlacesCafe } from '../lib/placesAp
 import { googlePhotoUris, useGooglePlaceEnrichment } from '../lib/useGooglePlaceEnrichment'
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
+import ImageLightbox from '../components/ui/ImageLightbox'
 import '../styles/parks.css'
 
 function escapeHtml(value: string) {
@@ -148,6 +149,7 @@ export default function ParkDetailPage() {
   const park = parks.find((item) => item.slug === slug)
   const { cafes, source: cafeSource } = useParkDetailCafes(park)
   const googlePlace = useGooglePlaceEnrichment(park, 6)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   const relatedParks = useMemo(() => {
     if (!park) return []
@@ -160,6 +162,7 @@ export default function ParkDetailPage() {
 
   const googlePhotos = googlePhotoUris(googlePlace)
   const heroPhoto = googlePhotos[0] ?? park.coverPhoto
+  const lightboxPhotos = googlePhotos.length > 0 ? googlePhotos : [park.coverPhoto]
   const mapsUrl = googlePlace?.googleMapsUri ?? mapsUrlForPark(park)
   const displayedRating = googlePlace?.rating ?? park.rating
   const displayedReviewCount = googlePlace?.reviewCount ?? park.reviewCount
@@ -199,13 +202,20 @@ export default function ParkDetailPage() {
                 </a>
               </div>
             </div>
-            <img
-              className="ew-pd-hero__image"
-              src={heroPhoto}
-              alt={park.name}
-              loading="eager"
-              decoding="async"
-            />
+            <button
+              type="button"
+              className="ew-pd-hero__imageBtn"
+              onClick={() => setLightboxIndex(0)}
+              aria-label="Otvori fotografiju parka"
+            >
+              <img
+                className="ew-pd-hero__image"
+                src={heroPhoto}
+                alt={park.name}
+                loading="eager"
+                decoding="async"
+              />
+            </button>
           </div>
         </section>
 
@@ -220,7 +230,15 @@ export default function ParkDetailPage() {
                   </div>
                   <div className="ew-pd-photoGrid">
                     {googlePhotos.slice(0, 6).map((photo, index) => (
-                      <img key={photo} src={photo} alt={`${park.name} fotografija ${index + 1}`} loading="lazy" decoding="async" />
+                      <button
+                        key={photo}
+                        type="button"
+                        className="ew-pd-photoGrid__item"
+                        onClick={() => setLightboxIndex(index)}
+                        aria-label={`Otvori fotografiju ${index + 1}`}
+                      >
+                        <img src={photo} alt={`${park.name} fotografija ${index + 1}`} loading="lazy" decoding="async" />
+                      </button>
                     ))}
                   </div>
                 </section>
@@ -323,6 +341,15 @@ export default function ParkDetailPage() {
           </section>
         ) : null}
       </main>
+
+      {lightboxIndex != null ? (
+        <ImageLightbox
+          images={lightboxPhotos}
+          initialIndex={lightboxIndex}
+          altBase={park.name}
+          onClose={() => setLightboxIndex(null)}
+        />
+      ) : null}
 
       <Footer />
     </div>

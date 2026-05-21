@@ -10,6 +10,7 @@ const CreateInvitationPage = lazy(() => import('./pages/CreateInvitationPage'))
 const VenuesPage = lazy(() => import('./pages/VenuesPage'))
 const VenueDetailPage = lazy(() => import('./pages/VenueDetailPage'))
 const ParksPage = lazy(() => import('./pages/ParksPage'))
+const ParkDetailPage = lazy(() => import('./pages/ParkDetailPage'))
 const MojVidimosePage = lazy(() => import('./pages/MojVidimosePage'))
 const AdminPage = lazy(() => import('./pages/AdminPage'))
 const SharedInvitationPage = lazy(() => import('./pages/SharedInvitationPage'))
@@ -51,6 +52,7 @@ export default function App() {
             <Route path="/igraonice" element={<VenuesPage />} />
             <Route path="/igraonice/:slug" element={<VenueDetailPage />} />
             <Route path="/djecji-parkovi" element={<ParksPage />} />
+            <Route path="/djecji-parkovi/:slug" element={<ParkDetailPage />} />
             <Route path="/kontakt" element={<ContactPage />} />
             <Route path="/impressum" element={<ImpressumPage />} />
             <Route path="/uvjeti-koristenja" element={<TermsPage />} />

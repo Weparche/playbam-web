@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import L, { type LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -70,10 +71,6 @@ function matchesAge(park: Park, age: AgeFilter) {
   if (age === '0-3') return park.ageMin <= 3 && park.ageMax >= 0
   if (age === '3-6') return park.ageMin <= 6 && park.ageMax >= 3
   return park.ageMax >= 6
-}
-
-function placeholderAlert() {
-  window.alert('Detaljna stranica parka stiže uskoro.')
 }
 
 function proposalAlert() {
@@ -151,9 +148,9 @@ function ParksMap({
                   {park.neighborhood} · {park.ageRange} god.
                 </span>
                 {park.nearestCafeName ? <span>☕ {park.nearestCafeName}</span> : null}
-                <button type="button" onClick={placeholderAlert}>
+                <Link to={`/djecji-parkovi/${park.slug}`}>
                   Vidi detalje
-                </button>
+                </Link>
               </div>
             </Popup>
           </Marker>
@@ -230,9 +227,9 @@ function ParkCard({
           </p>
         ) : null}
 
-        <button type="button" className="ew-pp-card__details" onClick={placeholderAlert}>
+        <Link to={`/djecji-parkovi/${park.slug}`} className="ew-pp-card__details">
           Vidi detalje
-        </button>
+        </Link>
       </div>
     </article>
   )

@@ -178,14 +178,20 @@ function ParkCard({
 
   return (
     <article className="ew-pp-card" id={`park-${park.id}`}>
-      <img
-        className="ew-pp-card__image"
-        src={park.coverPhoto}
-        alt={park.name}
-        title="Foto: Wikimedia Commons"
-        loading="lazy"
-        decoding="async"
-      />
+      <Link
+        to={`/djecji-parkovi/${park.slug}`}
+        className="ew-pp-card__imageLink"
+        aria-label={`Otvori detalje za ${park.name}`}
+      >
+        <img
+          className="ew-pp-card__image"
+          src={park.coverPhoto}
+          alt={park.name}
+          title="Foto: Wikimedia Commons"
+          loading="lazy"
+          decoding="async"
+        />
+      </Link>
       <div className="ew-pp-card__body">
         <div className="ew-pp-card__top">
           <div>

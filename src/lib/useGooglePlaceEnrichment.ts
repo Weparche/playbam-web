@@ -50,3 +50,8 @@ export function useGooglePlaceEnrichment(source: PlaceSource | undefined, maxPho
 export function googlePhotoUris(place: GooglePlaceEnrichment | null | undefined) {
   return place?.photos.map((photo) => photo.uri).filter((uri): uri is string => Boolean(uri)) ?? []
 }
+
+export function useGoogleCoverPhoto(source: PlaceSource | undefined, fallbackPhoto: string) {
+  const googlePlace = useGooglePlaceEnrichment(source, 1)
+  return googlePhotoUris(googlePlace)[0] ?? fallbackPhoto
+}

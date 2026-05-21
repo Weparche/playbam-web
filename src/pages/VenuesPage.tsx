@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 
 import { REGIONS, venues, type RegionKey, type Venue } from '../lib/landing-data'
 import { formatKm, haversineKm, type LatLng } from '../lib/distance'
+import { useGoogleCoverPhoto } from '../lib/useGooglePlaceEnrichment'
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
 
@@ -24,6 +25,20 @@ function StarRating({ rating }: { rating: number }) {
       {'★'.repeat(Math.round(rating))}{'☆'.repeat(5 - Math.round(rating))}
       <span className="ew-star-rating__num">{rating.toFixed(1)}</span>
     </span>
+  )
+}
+
+function VenueCoverImage({ venue }: { venue: FilteredVenue }) {
+  const coverPhoto = useGoogleCoverPhoto(venue, venue.coverPhoto)
+
+  return (
+    <img
+      src={coverPhoto}
+      alt={venue.name}
+      className="ew-vp-card__img"
+      loading="lazy"
+      decoding="async"
+    />
   )
 }
 
@@ -376,13 +391,7 @@ export default function VenuesPage() {
                       aria-label={`${venue.name} — detalji`}
                     >
                       <div className="ew-vp-card__img-wrap">
-                        <img
-                          src={venue.coverPhoto}
-                          alt={venue.name}
-                          className="ew-vp-card__img"
-                          loading="lazy"
-                          decoding="async"
-                        />
+                        <VenueCoverImage venue={venue} />
                         <div className="ew-vp-card__badge">
                           {venue.ageRange} god.
                         </div>

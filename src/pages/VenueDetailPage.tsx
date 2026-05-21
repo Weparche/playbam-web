@@ -95,6 +95,11 @@ export default function VenueDetailPage() {
   const displayedPhone = googlePlace?.phone ?? venue.phone
   const displayedWebsite = googlePlace?.website ?? venue.website
   const displayedMapsUrl = googlePlace?.googleMapsUri ?? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`
+  const mapQuery =
+    typeof googlePlace?.lat === 'number' && typeof googlePlace?.lng === 'number'
+      ? `${googlePlace.lat},${googlePlace.lng}`
+      : displayedAddress
+  const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`
 
   return (
     <div className="ew-landing">
@@ -331,6 +336,17 @@ export default function VenueDetailPage() {
                       </a>
                     </div>
                   )}
+                  <div className="ew-vd-contact__map">
+                    <iframe
+                      title={`Karta lokacije za ${venue.name}`}
+                      src={mapEmbedUrl}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                    <a href={displayedMapsUrl} target="_blank" rel="noopener noreferrer">
+                      Otvori u Google Maps
+                    </a>
+                  </div>
                 </div>
               </section>
             </div>

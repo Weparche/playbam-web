@@ -11,6 +11,7 @@ import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
 import { loadParks } from '../data/load-parks'
 import { parkFeatureLabels, type Park, type ParkFeature } from '../data/parks-data'
 import { formatKm, haversineKm, type LatLng } from '../lib/distance'
+import { useGoogleCoverPhoto } from '../lib/useGooglePlaceEnrichment'
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
 import '../styles/parks.css'
@@ -169,6 +170,7 @@ function ParkCard({
   isFavorite: boolean
   onFavorite: () => void
 }) {
+  const coverPhoto = useGoogleCoverPhoto(park, park.coverPhoto)
   const cafeDistance =
     park.nearestCafeDistanceMeters != null
       ? park.nearestCafeDistanceMeters >= 1000
@@ -185,7 +187,7 @@ function ParkCard({
       >
         <img
           className="ew-pp-card__image"
-          src={park.coverPhoto}
+          src={coverPhoto}
           alt={park.name}
           title="Foto: Wikimedia Commons"
           loading="lazy"

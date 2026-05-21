@@ -11,7 +11,7 @@ import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
 import { loadParks } from '../data/load-parks'
 import { parkFeatureLabels, type Park, type ParkFeature } from '../data/parks-data'
 import { formatKm, haversineKm, type LatLng } from '../lib/distance'
-import { useGoogleCoverPhoto } from '../lib/useGooglePlaceEnrichment'
+import { useGoogleCoverPhotos } from '../lib/useGooglePlaceEnrichment'
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
 import '../styles/parks.css'
@@ -163,14 +163,15 @@ function ParksMap({
 
 function ParkCard({
   park,
+  coverPhoto,
   isFavorite,
   onFavorite,
 }: {
   park: ParkWithDistance
+  coverPhoto: string
   isFavorite: boolean
   onFavorite: () => void
 }) {
-  const coverPhoto = useGoogleCoverPhoto(park, park.coverPhoto)
   const cafeDistance =
     park.nearestCafeDistanceMeters != null
       ? park.nearestCafeDistanceMeters >= 1000
@@ -358,6 +359,12 @@ export default function ParksPage() {
     sortBy,
     userLoc,
   ])
+
+  const parkCoverSources = useMemo(
+    () => filteredParks.map((park) => ({ ...park, fallbackPhoto: park.coverPhoto })),
+    [filteredParks],
+  )
+  const parkCoverPhotos = useGoogleCoverPhotos(parkCoverSources)
 
   const recommendation = filteredParks[0] ?? null
 
@@ -715,6 +722,7 @@ export default function ParksPage() {
                       <ParkCard
                         key={park.id}
                         park={park}
+                        coverPhoto={parkCoverPhotos[park.id] ?? park.coverPhoto}
                         isFavorite={favorites.has(park.id)}
                         onFavorite={() => toggleFavorite(park.id)}
                       />

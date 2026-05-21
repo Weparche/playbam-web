@@ -142,3 +142,34 @@ export async function getPlaceEnrichment({
   const data = (await response.json()) as { place?: GooglePlaceEnrichment | null }
   return data.place ?? null
 }
+
+export type GoogleCoverPhotoRequest = {
+  id: string
+  name: string
+  city?: string
+  address?: string
+  lat?: number
+  lng?: number
+  googlePlaceId?: string
+}
+
+export async function getPlaceCoverPhotos(places: GoogleCoverPhotoRequest[]) {
+  if (places.length === 0) return {}
+
+  const url = new URL(`${API_BASE}/api/places/covers`, window.location.origin)
+  const response = await fetch(url.toString(), {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ places }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`GOOGLE_PLACES_COVERS_${response.status}`)
+  }
+
+  const data = (await response.json()) as { covers?: Record<string, string | null> }
+  return data.covers ?? {}
+}

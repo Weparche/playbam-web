@@ -78,7 +78,7 @@ function useParkDetailCafes(park: Park | undefined) {
     getNearbyCafesFromPlaces({
       lat: park.lat,
       lng: park.lng,
-      radiusMeters: 700,
+      radiusMeters: 1500,
       maxResultCount: 6,
     })
       .then((cafes) => {

@@ -44,7 +44,7 @@ export type GooglePlacesCafe = NearbyCafe & {
 export async function getNearbyCafesFromPlaces({
   lat,
   lng,
-  radiusMeters = 650,
+  radiusMeters = 1500,
   maxResultCount = 6,
 }: {
   lat: number

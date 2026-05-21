@@ -981,8 +981,8 @@
 /* Desktop: lista lijevo, karta desno sticky */
 @media (min-width: 900px) {
   .ew-pp-layout {
-    grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
-    gap: clamp(28px, 3vw, 44px);
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .ew-pp-filter-toggle {
@@ -990,11 +990,50 @@
   }
 
   .ew-pp-sidebar {
-    display: flex !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(150px, 1fr)) minmax(320px, 1.35fr) auto;
+    align-items: end;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
+    background: var(--color-bg-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .ew-pp-sidebar .ew-vp-filter-group {
+    min-width: 0;
+    margin: 0;
+  }
+
+  .ew-pp-sidebar .ew-vp-select {
+    width: 100%;
+  }
+
+  .ew-pp-sidebar .ew-vp-checkboxes {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .ew-pp-sidebar .ew-vp-checkbox {
+    min-height: 36px;
+    padding: 7px 9px;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 2px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .ew-pp-sidebar .ew-vp-clear-btn {
+    align-self: end;
+    min-height: 42px;
+    white-space: nowrap;
   }
 
   .ew-pp-mainCol {
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
     gap: clamp(24px, 2.8vw, 36px);
     align-items: start;
   }
@@ -1010,48 +1049,77 @@
   }
 
   .ew-pp-map {
-    height: 340px;
+    height: min(62vh, 520px);
+    min-height: 420px;
   }
 
   .ew-pp-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
   }
 
   .ew-pp-card {
-    grid-template-columns: minmax(150px, 190px) minmax(0, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .ew-pp-card__body {
-    gap: 10px;
-    padding: 18px;
+    gap: 8px;
+    padding: 14px;
+  }
+
+  .ew-pp-card__name {
+    font-size: 21px;
+  }
+
+  .ew-pp-card__meta span,
+  .ew-pp-card__tags span {
+    min-height: 24px;
+    padding: 0 8px;
   }
 
   .ew-pp-card__description {
     -webkit-line-clamp: 2;
   }
+
+  .ew-pp-card__details {
+    min-height: 36px;
+    padding: 0 14px;
+  }
+
+  .ew-pp-card__imageLink {
+    min-height: 0;
+  }
+
+  .ew-pp-card__image {
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1120px) {
+  .ew-pp-sidebar {
+    grid-template-columns: repeat(3, minmax(140px, 1fr)) minmax(0, 1fr);
+  }
+
+  .ew-pp-sidebar .ew-vp-clear-btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
 }
 
 @media (min-width: 1180px) {
   .ew-pp-mainCol {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
   }
 
   .ew-pp-map {
-    height: 380px;
-  }
-
-  .ew-pp-card {
-    grid-template-columns: minmax(170px, 220px) minmax(0, 1fr);
+    height: min(66vh, 560px);
   }
 }
 
 @media (min-width: 1440px) {
-  .ew-pp-layout {
-    grid-template-columns: 260px minmax(0, 1fr);
-  }
-
-  .ew-pp-card {
-    grid-template-columns: minmax(180px, 230px) minmax(0, 1fr);
+  .ew-pp-mainCol {
+    grid-template-columns: minmax(0, 1fr) minmax(400px, 460px);
   }
 }
 

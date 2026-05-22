@@ -30,6 +30,44 @@
   color: var(--color-text-tertiary);
 }
 
+.ew-vp-page .ew-vp-card__topActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ew-vp-page .ew-vp-card__mapFocus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 50%;
+  background: var(--color-bg-primary);
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+}
+
+.ew-vp-page .ew-vp-card__mapFocus svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ew-vp-page .ew-vp-card__mapFocus.is-active {
+  color: #2563eb;
+  border-color: rgba(37, 99, 235, 0.28);
+  background: #eff6ff;
+}
+
+.ew-vp-page .ew-vp-card__mapFocus:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
 @media (min-width: 900px) {
   .ew-vp-page .ew-pp-filterBar__primary {
     grid-template-columns:

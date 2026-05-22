@@ -45,6 +45,9 @@ export default function VenuesPage() {
   const [maxKm, setMaxKm] = useState<number>(25)
   const [locating, setLocating] = useState(false)
   const [locError, setLocError] = useState<string | null>(null)
+  const [mapFocus, setMapFocus] = useState<LatLng | null>(null)
+  const [mapFlyTrigger, setMapFlyTrigger] = useState(0)
+  const [focusedVenueId, setFocusedVenueId] = useState<string | null>(null)
 
   const requestLocation = () => {
     setLocError(null)
@@ -135,6 +138,12 @@ export default function VenuesPage() {
     setAgeMin(0)
     setAgeMax(12)
     setPriceMax(30)
+  }
+
+  const focusVenueOnMap = (venue: FilteredVenue) => {
+    setMapFocus({ lat: venue.lat, lng: venue.lng })
+    setMapFlyTrigger((value) => value + 1)
+    setFocusedVenueId(venue.id)
   }
 
   const handleRegionChange = (next: RegionKey) => {
@@ -347,7 +356,13 @@ export default function VenuesPage() {
                   </span>
                 </div>
                 <Suspense fallback={<div className="ew-pp-map" aria-hidden="true" />}>
-                  <VenuesMap venues={filtered} userLoc={userLoc} region={region} />
+                  <VenuesMap
+                    venues={filtered}
+                    userLoc={userLoc}
+                    region={region}
+                    focusCoords={mapFocus}
+                    flyTrigger={mapFlyTrigger}
+                  />
                 </Suspense>
               </aside>
 
@@ -426,7 +441,30 @@ export default function VenuesPage() {
                         <div className="ew-vp-card__body">
                           <div className="ew-vp-card__top">
                             <h2 className="ew-vp-card__name">{venue.name}</h2>
-                            <StarRating rating={venue.rating} />
+                            <div className="ew-vp-card__topActions">
+                              <button
+                                type="button"
+                                className={`ew-vp-card__mapFocus${focusedVenueId === venue.id ? ' is-active' : ''}`}
+                                aria-label={`Prikaži ${venue.name} na karti`}
+                                aria-pressed={focusedVenueId === venue.id}
+                                onClick={(event) => {
+                                  event.preventDefault()
+                                  event.stopPropagation()
+                                  focusVenueOnMap(venue)
+                                }}
+                              >
+                                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                                  <path
+                                    d="M10 17s-6-5.2-6-9.5A6 6 0 0 1 16 7.5C16 11.8 10 17 10 17Z"
+                                    stroke="currentColor"
+                                    strokeWidth="1.5"
+                                    strokeLinejoin="round"
+                                  />
+                                  <circle cx="10" cy="7.5" r="2" stroke="currentColor" strokeWidth="1.5" />
+                                </svg>
+                              </button>
+                              <StarRating rating={venue.rating} />
+                            </div>
                           </div>
                           <p className="ew-vp-card__address">
                             {venue.address}

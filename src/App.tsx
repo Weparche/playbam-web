@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { AuthProvider } from './context/AuthContext'
 import MobileFooterNav from './components/layout/MobileFooterNav'
 import PwaInstallPrompt from './components/layout/PwaInstallPrompt'
+import { PartnerAuthProvider } from './partner/context/PartnerAuthContext'
 
 const LandingPage = lazy(() => import('./pages/LandingPage'))
 const CreateInvitationPage = lazy(() => import('./pages/CreateInvitationPage'))
@@ -19,6 +20,20 @@ const ImpressumPage = lazy(() => import('./pages/ImpressumPage'))
 const TermsPage = lazy(() => import('./pages/TermsPage'))
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
 const CookiesPage = lazy(() => import('./pages/CookiesPage'))
+
+const PartnerLayout = lazy(() => import('./partner/components/layout/PartnerLayout'))
+const PartnerLoginPage = lazy(() => import('./partner/pages/PartnerLoginPage'))
+const PartnerDashboardPage = lazy(() => import('./partner/pages/PartnerDashboardPage'))
+const PartnerCalendarPage = lazy(() => import('./partner/pages/PartnerCalendarPage'))
+const PartnerReservationsPage = lazy(() => import('./partner/pages/PartnerReservationsPage'))
+const PartnerReservationDetailPage = lazy(() => import('./partner/pages/PartnerReservationDetailPage'))
+const PartnerPackagesPage = lazy(() => import('./partner/pages/PartnerPackagesPage'))
+const PartnerAddonsPage = lazy(() => import('./partner/pages/PartnerAddonsPage'))
+const PartnerAnimatorsPage = lazy(() => import('./partner/pages/PartnerAnimatorsPage'))
+const PartnerCustomersPage = lazy(() => import('./partner/pages/PartnerCustomersPage'))
+const PartnerCustomerDetailPage = lazy(() => import('./partner/pages/PartnerCustomerDetailPage'))
+const PartnerSettingsPage = lazy(() => import('./partner/pages/PartnerSettingsPage'))
+const PartnerOwnerGate = lazy(() => import('./partner/components/layout/PartnerOwnerGate'))
 
 function ScrollToTop() {
   const location = useLocation()
@@ -62,6 +77,35 @@ export default function App() {
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/pozivnica-demo" element={<Navigate to="/kreiraj-pozivnicu" replace />} />
             <Route path="/pozivnica/:token" element={<SharedInvitationPage />} />
+
+            <Route
+              path="/partner/login"
+              element={
+                <PartnerAuthProvider>
+                  <PartnerLoginPage />
+                </PartnerAuthProvider>
+              }
+            />
+            <Route
+              path="/partner"
+              element={
+                <PartnerAuthProvider>
+                  <PartnerLayout />
+                </PartnerAuthProvider>
+              }
+            >
+              <Route index element={<PartnerDashboardPage />} />
+              <Route path="calendar" element={<PartnerCalendarPage />} />
+              <Route path="reservations" element={<PartnerReservationsPage />} />
+              <Route path="reservations/:id" element={<PartnerReservationDetailPage />} />
+              <Route path="packages" element={<PartnerOwnerGate><PartnerPackagesPage /></PartnerOwnerGate>} />
+              <Route path="addons" element={<PartnerOwnerGate><PartnerAddonsPage /></PartnerOwnerGate>} />
+              <Route path="animators" element={<PartnerOwnerGate><PartnerAnimatorsPage /></PartnerOwnerGate>} />
+              <Route path="customers" element={<PartnerOwnerGate><PartnerCustomersPage /></PartnerOwnerGate>} />
+              <Route path="customers/:id" element={<PartnerOwnerGate><PartnerCustomerDetailPage /></PartnerOwnerGate>} />
+              <Route path="settings" element={<PartnerOwnerGate><PartnerSettingsPage /></PartnerOwnerGate>} />
+            </Route>
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

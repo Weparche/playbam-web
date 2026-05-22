@@ -86,6 +86,10 @@ export default function MobileFooterNav() {
   const { session } = useAuth()
   const [loginOpen, setLoginOpen] = useState(false)
 
+  if (pathname.startsWith('/partner')) {
+    return null
+  }
+
   return (
     <>
       <OtpLoginModal

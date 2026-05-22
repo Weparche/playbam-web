@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'vidimose-pwa-v1'
+const CACHE_VERSION = 'vidimose-pwa-v2'
 const STATIC_CACHE = `${CACHE_VERSION}-static`
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`
 
@@ -77,19 +77,15 @@ self.addEventListener('fetch', (event) => {
 
   if (isStaticAsset(url)) {
     event.respondWith(
-      caches.match(request).then((cached) => {
-        if (cached) {
-          return cached
-        }
-
-        return fetch(request).then((response) => {
+      fetch(request)
+        .then((response) => {
           if (response.ok) {
             const copy = response.clone()
             caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy))
           }
           return response
         })
-      }),
+        .catch(() => caches.match(request)),
     )
   }
 })

@@ -1,39 +1,41 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
 import { AuthProvider } from './context/AuthContext'
 import MobileFooterNav from './components/layout/MobileFooterNav'
 import PwaInstallPrompt from './components/layout/PwaInstallPrompt'
+import RouteErrorBoundary from './components/layout/RouteErrorBoundary'
+import { lazyWithRetry } from './lib/lazyWithRetry'
 import { PartnerAuthProvider } from './partner/context/PartnerAuthContext'
 
-const LandingPage = lazy(() => import('./pages/LandingPage'))
-const CreateInvitationPage = lazy(() => import('./pages/CreateInvitationPage'))
-const VenuesPage = lazy(() => import('./pages/VenuesPage'))
-const VenueDetailPage = lazy(() => import('./pages/VenueDetailPage'))
-const ParksPage = lazy(() => import('./pages/ParksPage'))
-const ParkDetailPage = lazy(() => import('./pages/ParkDetailPage'))
-const MojVidimosePage = lazy(() => import('./pages/MojVidimosePage'))
-const AdminPage = lazy(() => import('./pages/AdminPage'))
-const SharedInvitationPage = lazy(() => import('./pages/SharedInvitationPage'))
-const ContactPage = lazy(() => import('./pages/ContactPage'))
-const ImpressumPage = lazy(() => import('./pages/ImpressumPage'))
-const TermsPage = lazy(() => import('./pages/TermsPage'))
-const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
-const CookiesPage = lazy(() => import('./pages/CookiesPage'))
+const LandingPage = lazyWithRetry(() => import('./pages/LandingPage'))
+const CreateInvitationPage = lazyWithRetry(() => import('./pages/CreateInvitationPage'))
+const VenuesPage = lazyWithRetry(() => import('./pages/VenuesPage'))
+const VenueDetailPage = lazyWithRetry(() => import('./pages/VenueDetailPage'))
+const ParksPage = lazyWithRetry(() => import('./pages/ParksPage'))
+const ParkDetailPage = lazyWithRetry(() => import('./pages/ParkDetailPage'))
+const MojVidimosePage = lazyWithRetry(() => import('./pages/MojVidimosePage'))
+const AdminPage = lazyWithRetry(() => import('./pages/AdminPage'))
+const SharedInvitationPage = lazyWithRetry(() => import('./pages/SharedInvitationPage'))
+const ContactPage = lazyWithRetry(() => import('./pages/ContactPage'))
+const ImpressumPage = lazyWithRetry(() => import('./pages/ImpressumPage'))
+const TermsPage = lazyWithRetry(() => import('./pages/TermsPage'))
+const PrivacyPage = lazyWithRetry(() => import('./pages/PrivacyPage'))
+const CookiesPage = lazyWithRetry(() => import('./pages/CookiesPage'))
 
-const PartnerLayout = lazy(() => import('./partner/components/layout/PartnerLayout'))
-const PartnerLoginPage = lazy(() => import('./partner/pages/PartnerLoginPage'))
-const PartnerDashboardPage = lazy(() => import('./partner/pages/PartnerDashboardPage'))
-const PartnerCalendarPage = lazy(() => import('./partner/pages/PartnerCalendarPage'))
-const PartnerReservationsPage = lazy(() => import('./partner/pages/PartnerReservationsPage'))
-const PartnerReservationDetailPage = lazy(() => import('./partner/pages/PartnerReservationDetailPage'))
-const PartnerPackagesPage = lazy(() => import('./partner/pages/PartnerPackagesPage'))
-const PartnerAddonsPage = lazy(() => import('./partner/pages/PartnerAddonsPage'))
-const PartnerAnimatorsPage = lazy(() => import('./partner/pages/PartnerAnimatorsPage'))
-const PartnerCustomersPage = lazy(() => import('./partner/pages/PartnerCustomersPage'))
-const PartnerCustomerDetailPage = lazy(() => import('./partner/pages/PartnerCustomerDetailPage'))
-const PartnerSettingsPage = lazy(() => import('./partner/pages/PartnerSettingsPage'))
-const PartnerOwnerGate = lazy(() => import('./partner/components/layout/PartnerOwnerGate'))
+const PartnerLayout = lazyWithRetry(() => import('./partner/components/layout/PartnerLayout'))
+const PartnerLoginPage = lazyWithRetry(() => import('./partner/pages/PartnerLoginPage'))
+const PartnerDashboardPage = lazyWithRetry(() => import('./partner/pages/PartnerDashboardPage'))
+const PartnerCalendarPage = lazyWithRetry(() => import('./partner/pages/PartnerCalendarPage'))
+const PartnerReservationsPage = lazyWithRetry(() => import('./partner/pages/PartnerReservationsPage'))
+const PartnerReservationDetailPage = lazyWithRetry(() => import('./partner/pages/PartnerReservationDetailPage'))
+const PartnerPackagesPage = lazyWithRetry(() => import('./partner/pages/PartnerPackagesPage'))
+const PartnerAddonsPage = lazyWithRetry(() => import('./partner/pages/PartnerAddonsPage'))
+const PartnerAnimatorsPage = lazyWithRetry(() => import('./partner/pages/PartnerAnimatorsPage'))
+const PartnerCustomersPage = lazyWithRetry(() => import('./partner/pages/PartnerCustomersPage'))
+const PartnerCustomerDetailPage = lazyWithRetry(() => import('./partner/pages/PartnerCustomerDetailPage'))
+const PartnerSettingsPage = lazyWithRetry(() => import('./partner/pages/PartnerSettingsPage'))
+const PartnerOwnerGate = lazyWithRetry(() => import('./partner/components/layout/PartnerOwnerGate'))
 
 function ScrollToTop() {
   const location = useLocation()
@@ -60,8 +62,9 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <Suspense fallback={<RouteFallback />}>
-          <Routes>
+        <RouteErrorBoundary>
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/kreiraj-pozivnicu" element={<CreateInvitationPage />} />
             <Route path="/igraonice" element={<VenuesPage />} />
@@ -108,7 +111,8 @@ export default function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </Suspense>
+          </Suspense>
+        </RouteErrorBoundary>
         <PwaInstallPrompt />
         <MobileFooterNav />
       </BrowserRouter>

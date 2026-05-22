@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMap } from 'react-leaflet'
 import L, { type LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -34,6 +34,31 @@ const userIcon = L.divIcon({
   iconSize: [18, 18],
   iconAnchor: [9, 9],
 })
+
+/** Varijacije smjera + offset za trajne nazive kod pinova */
+const LABEL_PLACEMENTS = [
+  { direction: 'top' as const, offset: [0, -30] as [number, number] },
+  { direction: 'top' as const, offset: [14, -28] as [number, number] },
+  { direction: 'top' as const, offset: [-14, -28] as [number, number] },
+  { direction: 'top' as const, offset: [10, -32] as [number, number] },
+  { direction: 'top' as const, offset: [-10, -32] as [number, number] },
+  { direction: 'top' as const, offset: [18, -26] as [number, number] },
+  { direction: 'top' as const, offset: [-18, -26] as [number, number] },
+  { direction: 'bottom' as const, offset: [0, 36] as [number, number] },
+  { direction: 'bottom' as const, offset: [12, 34] as [number, number] },
+  { direction: 'left' as const, offset: [-8, -22] as [number, number] },
+  { direction: 'right' as const, offset: [8, -22] as [number, number] },
+  { direction: 'right' as const, offset: [10, -8] as [number, number] },
+]
+
+function tooltipPlacementForParkId(id: string): (typeof LABEL_PLACEMENTS)[number] {
+  let h = 2166136261 >>> 0
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i)
+    h = Math.imul(h, 16777619)
+  }
+  return LABEL_PLACEMENTS[(h >>> 0) % LABEL_PLACEMENTS.length]
+}
 
 type AgeFilter = 'all' | '0-3' | '3-6' | '6+'
 type ParkWithDistance = Park & { _km?: number }
@@ -139,23 +164,32 @@ function ParksMap({
             </Popup>
           </Marker>
         ) : null}
-        {parks.map((park) => (
-          <Marker key={park.id} position={[park.lat, park.lng]} icon={parkIcon}>
-            <Popup>
-              <div className="ew-pp-popup">
-                <strong>{park.name}</strong>
-                <span>
-                  {typeof park._km === 'number' ? `${formatKm(park._km)} · ` : ''}
-                  {park.neighborhood} · {park.ageRange} god.
+        {parks.map((park) => {
+          const tp = tooltipPlacementForParkId(park.id)
+          return (
+            <Marker key={park.id} position={[park.lat, park.lng]} icon={parkIcon}>
+              <Tooltip permanent direction={tp.direction} offset={tp.offset} className="ew-vp-map-label">
+                <span className="ew-vp-map-label__inner">
+                  <span className="ew-vp-map-label__title">{park.name}</span>
+                  <span className="ew-vp-map-label__rating">★ {park.rating.toFixed(1)}</span>
                 </span>
-                {park.nearestCafeName ? <span>☕ {park.nearestCafeName}</span> : null}
-                <Link to={`/djecji-parkovi/${park.slug}`}>
-                  Vidi detalje
-                </Link>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+              </Tooltip>
+              <Popup>
+                <div className="ew-pp-popup">
+                  <strong>{park.name}</strong>
+                  <span>
+                    {typeof park._km === 'number' ? `${formatKm(park._km)} · ` : ''}
+                    {park.neighborhood} · {park.ageRange} god.
+                  </span>
+                  {park.nearestCafeName ? <span>☕ {park.nearestCafeName}</span> : null}
+                  <Link to={`/djecji-parkovi/${park.slug}`}>
+                    Vidi detalje
+                  </Link>
+                </div>
+              </Popup>
+            </Marker>
+          )
+        })}
       </MapContainer>
     </div>
   )
@@ -695,32 +729,6 @@ export default function ParksPage() {
             </aside>
 
             <div className="ew-pp-mainCol">
-              <aside className="ew-pp-mapPanel" aria-label="Karta parkova">
-                <div className="ew-pp-mapPanel__head">
-                  <h2 className="ew-pp-mapPanel__title">Karta</h2>
-                  <span className="ew-pp-mapPanel__hint">
-                    {userLoc
-                      ? 'Zelena točka = tvoja lokacija · kotačić = zum'
-                      : 'Uključi lokaciju za udaljenosti · kotačić na karti = zum'}
-                  </span>
-                </div>
-                <ParksMap parks={filteredParks} userLoc={userLoc} />
-                {recommendation ? (
-                  <article className="ew-pp-spotlight">
-                    <p className="ew-pp-spotlight__eyebrow">
-                      {userLoc ? 'Najbliži odabranom' : 'Preporuka'}
-                    </p>
-                    <h3>{recommendation.name}</h3>
-                    <p>{recommendation.description}</p>
-                    {typeof recommendation._km === 'number' ? (
-                      <span className="ew-pp-spotlight__km">{formatKm(recommendation._km)} od tebe</span>
-                    ) : (
-                      <span className="ew-pp-spotlight__km">★ {recommendation.rating.toFixed(1)}</span>
-                    )}
-                  </article>
-                ) : null}
-              </aside>
-
               <div className="ew-vp-results ew-pp-results">
                 <div className="ew-vp-results-bar">
                   <span className="ew-vp-count">{parkCountLabel}</span>
@@ -767,6 +775,32 @@ export default function ParksPage() {
                   </div>
                 )}
               </div>
+
+              <aside className="ew-pp-mapPanel" aria-label="Karta parkova">
+                <div className="ew-pp-mapPanel__head">
+                  <h2 className="ew-pp-mapPanel__title">Karta</h2>
+                  <span className="ew-pp-mapPanel__hint">
+                    {userLoc
+                      ? 'Zelena točka = tvoja lokacija · kotačić = zum'
+                      : 'Uključi lokaciju za udaljenosti · kotačić na karti = zum'}
+                  </span>
+                </div>
+                <ParksMap parks={filteredParks} userLoc={userLoc} />
+                {recommendation ? (
+                  <article className="ew-pp-spotlight">
+                    <p className="ew-pp-spotlight__eyebrow">
+                      {userLoc ? 'Najbliži odabranom' : 'Preporuka'}
+                    </p>
+                    <h3>{recommendation.name}</h3>
+                    <p>{recommendation.description}</p>
+                    {typeof recommendation._km === 'number' ? (
+                      <span className="ew-pp-spotlight__km">{formatKm(recommendation._km)} od tebe</span>
+                    ) : (
+                      <span className="ew-pp-spotlight__km">★ {recommendation.rating.toFixed(1)}</span>
+                    )}
+                  </article>
+                ) : null}
+              </aside>
             </div>
           </div>
         </section>

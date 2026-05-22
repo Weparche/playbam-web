@@ -5,3 +5,8 @@ pages_build_output_dir = "dist"
 [vars]
 PLAYBAM_BACKEND_ORIGIN = "https://api.vidimose.hr"
 VITE_API_BASE_URL = "https://api.vidimose.hr"
+
+[[d1_databases]]
+binding = "PARTNER_DB"
+database_name = "vidimose-partner"
+database_id = "6e8da476-2662-4975-8679-feae3018b806"

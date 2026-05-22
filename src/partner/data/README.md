@@ -18,4 +18,20 @@ Zamjena na frontendu: `apiPartnerRepository.ts` + `VITE_PARTNER_DATA_SOURCE=api`
 
 Schema: vidi `playbam-web/functions/partner/schema.sql`.
 
-Typescript tipovi u `src/partner/types/index.ts` su API contract.
+### D1 setup (Cloudflare)
+
+1. Binding u `wrangler.toml`:
+   ```toml
+   [[d1_databases]]
+   binding = "PARTNER_DB"
+   database_name = "vidimose-partner"
+   database_id = "6e8da476-2662-4975-8679-feae3018b806"
+   ```
+2. Migracija + seed:
+   ```bash
+   npx wrangler d1 execute vidimose-partner --remote --file=functions/partner/schema.sql
+   npx wrangler d1 execute vidimose-partner --remote --file=functions/partner/seed.sql
+   ```
+3. Push + redeploy Pages da se binding aktivira.
+
+**Napomena:** Partner Console UI (`/partner/*`) i dalje koristi mock u pregledniku. API (`/api/partner/*`) je odvojen — trenutno samo `GET /api/partner/playroom`.

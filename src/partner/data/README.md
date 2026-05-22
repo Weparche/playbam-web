@@ -34,4 +34,6 @@ Schema: vidi `playbam-web/functions/partner/schema.sql`.
    ```
 3. Push + redeploy Pages da se binding aktivira.
 
-**Napomena:** Partner Console UI (`/partner/*`) i dalje koristi mock u pregledniku. API (`/api/partner/*`) je odvojen — trenutno samo `GET /api/partner/playroom`.
+**Napomena:** Partner Console UI (`/partner/*`) koristi mock u pregledniku. API je na `/api/partner/*` — ne dira SPA rute.
+
+Implementirane rute: `GET /api/partner`, `playroom`, `packages`, `addons`, `animators`, `customers`, `reservations`, `availability`, `bootstrap`; `PATCH playroom`, `PATCH reservations/:id`.

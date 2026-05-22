@@ -14,20 +14,20 @@ import { lockScroll, unlockScroll } from '../../lib/scrollLock'
 
 import './VenuesMapModal.css'
 
-/** Varijacije smjera + offset za trajne nazive kod pinova — smanjenje preklapanja pri prvom zoomu */
+/** Varijacije smjera + offset za trajne nazive kod pinova — blizu pina, blagi nudge protiv preklapanja */
 const LABEL_PLACEMENTS = [
-  { direction: 'top' as const, offset: [0, -46] as [number, number] },
-  { direction: 'top' as const, offset: [34, -40] as [number, number] },
-  { direction: 'top' as const, offset: [-34, -40] as [number, number] },
-  { direction: 'bottom' as const, offset: [0, 58] as [number, number] },
-  { direction: 'bottom' as const, offset: [30, 54] as [number, number] },
-  { direction: 'bottom' as const, offset: [-30, 54] as [number, number] },
-  { direction: 'left' as const, offset: [-12, -36] as [number, number] },
-  { direction: 'left' as const, offset: [-16, -6] as [number, number] },
-  { direction: 'right' as const, offset: [12, -36] as [number, number] },
-  { direction: 'right' as const, offset: [16, -6] as [number, number] },
-  { direction: 'top' as const, offset: [20, -48] as [number, number] },
-  { direction: 'top' as const, offset: [-20, -48] as [number, number] },
+  { direction: 'top' as const, offset: [0, -30] as [number, number] },
+  { direction: 'top' as const, offset: [14, -28] as [number, number] },
+  { direction: 'top' as const, offset: [-14, -28] as [number, number] },
+  { direction: 'top' as const, offset: [10, -32] as [number, number] },
+  { direction: 'top' as const, offset: [-10, -32] as [number, number] },
+  { direction: 'top' as const, offset: [18, -26] as [number, number] },
+  { direction: 'top' as const, offset: [-18, -26] as [number, number] },
+  { direction: 'bottom' as const, offset: [0, 36] as [number, number] },
+  { direction: 'bottom' as const, offset: [12, 34] as [number, number] },
+  { direction: 'left' as const, offset: [-8, -22] as [number, number] },
+  { direction: 'right' as const, offset: [8, -22] as [number, number] },
+  { direction: 'right' as const, offset: [10, -8] as [number, number] },
 ]
 
 function tooltipPlacementForVenueId(id: string): (typeof LABEL_PLACEMENTS)[number] {

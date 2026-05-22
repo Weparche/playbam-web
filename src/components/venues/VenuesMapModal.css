@@ -471,7 +471,7 @@
 }
 
 .leaflet-tooltip.ew-vp-map-label.leaflet-tooltip-top {
-  margin-top: -2px !important;
+  margin-top: 0 !important;
 }
 
 .leaflet-tooltip.ew-vp-map-label::before {

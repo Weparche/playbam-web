@@ -640,132 +640,157 @@ export default function ParksPage() {
             </button>
 
             <aside className={`ew-vp-sidebar ew-pp-sidebar ${filtersOpen ? 'is-open' : ''}`} aria-label="Filteri">
-              <div className="ew-vp-filter-group">
-                <div className="ew-vp-filter-label">Grad</div>
-                <select
-                  className="ew-vp-select"
-                  value={city}
-                  onChange={(event) => {
-                    setCity(event.target.value)
-                    setNeighborhood('all')
-                  }}
-                  aria-label="Grad"
-                >
-                  <option value="all">Svi gradovi</option>
-                  {cities.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <div className="ew-pp-filterBar">
+                <div className="ew-pp-filterBar__primary">
+                  <div className="ew-vp-filter-group ew-pp-filterField">
+                    <div className="ew-vp-filter-label">Grad</div>
+                    <select
+                      className="ew-vp-select"
+                      value={city}
+                      onChange={(event) => {
+                        setCity(event.target.value)
+                        setNeighborhood('all')
+                      }}
+                      aria-label="Grad"
+                    >
+                      <option value="all">Svi gradovi</option>
+                      {cities.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="ew-vp-filter-group">
-                <div className="ew-vp-filter-label">Kvart</div>
-                <select
-                  className="ew-vp-select"
-                  value={neighborhood}
-                  onChange={(event) => setNeighborhood(event.target.value)}
-                  aria-label="Kvart"
-                  disabled={neighborhoods.length === 0}
-                >
-                  <option value="all">Svi kvartovi</option>
-                  {neighborhoods.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <div className="ew-vp-filter-group ew-pp-filterField">
+                    <div className="ew-vp-filter-label">Kvart</div>
+                    <select
+                      className="ew-vp-select"
+                      value={neighborhood}
+                      onChange={(event) => setNeighborhood(event.target.value)}
+                      aria-label="Kvart"
+                      disabled={neighborhoods.length === 0}
+                    >
+                      <option value="all">Svi kvartovi</option>
+                      {neighborhoods.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="ew-vp-filter-group">
-                <div className="ew-vp-filter-label">Dob djeteta</div>
-                <select
-                  className="ew-vp-select"
-                  value={age}
-                  onChange={(event) => setAge(event.target.value as AgeFilter)}
-                  aria-label="Dob djeteta"
-                >
-                  {ageOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <div className="ew-vp-filter-group ew-pp-filterField">
+                    <div className="ew-vp-filter-label">Dob djeteta</div>
+                    <select
+                      className="ew-vp-select"
+                      value={age}
+                      onChange={(event) => setAge(event.target.value as AgeFilter)}
+                      aria-label="Dob djeteta"
+                    >
+                      {ageOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="ew-vp-filter-group">
-                <div className="ew-vp-filter-label">Dodatno</div>
-                <div className="ew-vp-checkboxes">
-                  <label className="ew-vp-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={shadeOnly}
-                      onChange={(event) => setShadeOnly(event.target.checked)}
-                    />
-                    <span>Samo s hladom</span>
-                  </label>
-                  <label className="ew-vp-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={fencedOnly}
-                      onChange={(event) => setFencedOnly(event.target.checked)}
-                    />
-                    <span>Samo ograđeno</span>
-                  </label>
-                  <label className="ew-vp-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={cafeOnly}
-                      onChange={(event) => setCafeOnly(event.target.checked)}
-                    />
-                    <span>Kafić u blizini</span>
-                  </label>
+                  <div className="ew-vp-filter-group ew-pp-filterLoc">
+                    <div className="ew-vp-filter-label">Moja lokacija</div>
+                    {!userLoc ? (
+                      <button
+                        type="button"
+                        className="ew-pp-filterLoc__btn"
+                        onClick={requestLocation}
+                        disabled={locating}
+                      >
+                        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                          <circle cx="10" cy="10" r="3" fill="currentColor" />
+                          <circle cx="10" cy="10" r="6.5" stroke="currentColor" strokeWidth="1.4" fill="none" />
+                          <path
+                            d="M10 1.5V4M10 16V18.5M1.5 10H4M16 10H18.5"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        {locating ? 'Tražim...' : 'Uključi lokaciju'}
+                      </button>
+                    ) : (
+                      <div className="ew-pp-filterLoc__panel">
+                        <div className="ew-pp-filterLoc__status">
+                          <span className="ew-vp-locate-dot" aria-hidden="true" />
+                          <span>Lokacija uključena</span>
+                          <button type="button" className="ew-pp-filterLoc__off" onClick={clearLocation}>
+                            Isključi
+                          </button>
+                        </div>
+                        <div className="ew-vp-range-row ew-pp-filterLoc__range">
+                          <input
+                            id="pp-filter-max-km"
+                            type="range"
+                            min={1}
+                            max={25}
+                            step={1}
+                            value={maxKm}
+                            onChange={(event) => setMaxKm(Number(event.target.value))}
+                            className="ew-vp-range"
+                            aria-label="Maksimalna udaljenost"
+                            aria-valuetext={`${maxKm} kilometara`}
+                          />
+                          <span className="ew-vp-range-val">do {maxKm} km</span>
+                        </div>
+                      </div>
+                    )}
+                    {locError ? (
+                      <p className="ew-pp-filterLoc__error" role="status">
+                        {locError}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  {activeFilterCount > 0 ? (
+                    <button
+                      type="button"
+                      className="ew-vp-clear-btn ew-pp-filterBar__clear"
+                      onClick={resetFilters}
+                    >
+                      Poništi filtere
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="ew-pp-filterBar__extras">
+                  <div className="ew-vp-filter-label">Dodatno</div>
+                  <div className="ew-vp-checkboxes">
+                    <label className="ew-vp-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={shadeOnly}
+                        onChange={(event) => setShadeOnly(event.target.checked)}
+                      />
+                      <span>Samo s hladom</span>
+                    </label>
+                    <label className="ew-vp-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={fencedOnly}
+                        onChange={(event) => setFencedOnly(event.target.checked)}
+                      />
+                      <span>Samo ograđeno</span>
+                    </label>
+                    <label className="ew-vp-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={cafeOnly}
+                        onChange={(event) => setCafeOnly(event.target.checked)}
+                      />
+                      <span>Kafić u blizini</span>
+                    </label>
+                  </div>
                 </div>
               </div>
-
-              <div className="ew-vp-filter-group ew-pp-locationFilter">
-                <div className="ew-vp-filter-label">Moja lokacija</div>
-                {!userLoc ? (
-                  <button
-                    type="button"
-                    className="ew-pp-locationFilter__btn"
-                    onClick={requestLocation}
-                    disabled={locating}
-                  >
-                    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                      <circle cx="10" cy="10" r="3" fill="currentColor" />
-                      <circle cx="10" cy="10" r="6.5" stroke="currentColor" strokeWidth="1.4" fill="none" />
-                      <path
-                        d="M10 1.5V4M10 16V18.5M1.5 10H4M16 10H18.5"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    {locating ? 'Tražim...' : 'Moja lokacija'}
-                  </button>
-                ) : (
-                  <div className="ew-pp-locationFilter__active">
-                    <span className="ew-vp-locate-dot" aria-hidden="true" />
-                    <span>do {maxKm} km</span>
-                    <button type="button" onClick={clearLocation}>
-                      Isključi
-                    </button>
-                  </div>
-                )}
-                {locError ? (
-                  <p className="ew-pp-locationFilter__error" role="status">
-                    {locError}
-                  </p>
-                ) : null}
-              </div>
-
-              {activeFilterCount > 0 ? (
-                <button type="button" className="ew-vp-clear-btn" onClick={resetFilters}>
-                  Poništi filtere
-                </button>
-              ) : null}
             </aside>
 
             <div className="ew-pp-mainCol">

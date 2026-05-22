@@ -193,19 +193,6 @@
   gap: 12px;
 }
 
-.ew-pp-filterBar__extras {
-  display: grid;
-  gap: 8px;
-  padding-top: 14px;
-  border-top: 1px solid var(--color-border-subtle);
-}
-
-.ew-pp-filterBar__extras .ew-vp-checkboxes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
 .ew-pp-filterLoc__btn {
   display: inline-flex;
   align-items: center;
@@ -1189,16 +1176,6 @@
   .ew-pp-sidebar .ew-vp-select {
     width: 100%;
     min-height: 42px;
-  }
-
-  .ew-pp-filterBar__extras .ew-vp-checkbox {
-    min-height: 36px;
-    padding: 7px 10px;
-    background: var(--color-bg-primary);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: 2px;
-    font-size: 13px;
-    white-space: nowrap;
   }
 
   .ew-pp-mainCol {

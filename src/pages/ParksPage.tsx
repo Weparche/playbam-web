@@ -760,36 +760,6 @@ export default function ParksPage() {
                     </button>
                   ) : null}
                 </div>
-
-                <div className="ew-pp-filterBar__extras">
-                  <div className="ew-vp-filter-label">Dodatno</div>
-                  <div className="ew-vp-checkboxes">
-                    <label className="ew-vp-checkbox">
-                      <input
-                        type="checkbox"
-                        checked={shadeOnly}
-                        onChange={(event) => setShadeOnly(event.target.checked)}
-                      />
-                      <span>Samo s hladom</span>
-                    </label>
-                    <label className="ew-vp-checkbox">
-                      <input
-                        type="checkbox"
-                        checked={fencedOnly}
-                        onChange={(event) => setFencedOnly(event.target.checked)}
-                      />
-                      <span>Samo ograđeno</span>
-                    </label>
-                    <label className="ew-vp-checkbox">
-                      <input
-                        type="checkbox"
-                        checked={cafeOnly}
-                        onChange={(event) => setCafeOnly(event.target.checked)}
-                      />
-                      <span>Kafić u blizini</span>
-                    </label>
-                  </div>
-                </div>
               </div>
             </aside>
 

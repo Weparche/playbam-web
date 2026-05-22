@@ -2,6 +2,7 @@
 
 .ew-pp-page {
   padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  overflow-x: clip;
 }
 
 @media (min-width: 901px) {
@@ -1027,17 +1028,11 @@
   }
 }
 
-/* Desktop: lista lijevo, karta desno sticky */
+/* Desktop: filteri cijelom širinom, ispod lista lijevo + karta desno sticky */
 @media (min-width: 900px) {
   .ew-pp-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
-    gap: clamp(24px, 2.8vw, 36px);
-    align-items: start;
-  }
-
-  .ew-pp-filter-toggle,
-  .ew-pp-sidebar {
-    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .ew-pp-filter-toggle {
@@ -1090,23 +1085,30 @@
   }
 
   .ew-pp-mainCol {
-    display: contents;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: clamp(24px, 2.8vw, 36px);
   }
 
   .ew-pp-results {
-    grid-column: 1;
+    flex: 1 1 auto;
     min-width: 0;
+    order: 1;
   }
 
   .ew-pp-mapPanel {
-    grid-column: 2;
+    flex: 0 0 min(380px, 34vw);
+    width: min(380px, 34vw);
+    order: 2;
     position: sticky;
     top: 88px;
-    align-self: start;
+    align-self: flex-start;
     max-height: calc(100vh - 104px);
     overflow-y: auto;
     overscroll-behavior: contain;
     padding-right: 2px;
+    z-index: 2;
   }
 
   .ew-pp-map {
@@ -1235,8 +1237,9 @@
 }
 
 @media (min-width: 1180px) {
-  .ew-pp-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
+  .ew-pp-mapPanel {
+    flex-basis: min(420px, 32vw);
+    width: min(420px, 32vw);
   }
 
   .ew-pp-map {
@@ -1245,8 +1248,9 @@
 }
 
 @media (min-width: 1440px) {
-  .ew-pp-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(400px, 460px);
+  .ew-pp-mapPanel {
+    flex-basis: min(460px, 30vw);
+    width: min(460px, 30vw);
   }
 }
 

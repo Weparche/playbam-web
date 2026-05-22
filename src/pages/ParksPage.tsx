@@ -137,12 +137,35 @@ function FitParkBounds({
   return null
 }
 
+function FlyToPark({
+  lat,
+  lng,
+  trigger,
+}: {
+  lat: number | null
+  lng: number | null
+  trigger: number
+}) {
+  const map = useMap()
+
+  useEffect(() => {
+    if (lat == null || lng == null || trigger === 0) return
+    map.flyTo([lat, lng], Math.max(map.getZoom(), 15), { duration: 0.45 })
+  }, [map, lat, lng, trigger])
+
+  return null
+}
+
 function ParksMap({
   parks,
   userLoc,
+  focusCoords,
+  flyTrigger,
 }: {
   parks: ParkWithDistance[]
   userLoc: LatLng | null
+  focusCoords: LatLng | null
+  flyTrigger: number
 }) {
   return (
     <div className="ew-pp-map" aria-label="Parkovi na karti">
@@ -157,6 +180,11 @@ function ParksMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <FitParkBounds parks={parks} userLoc={userLoc} />
+        <FlyToPark
+          lat={focusCoords?.lat ?? null}
+          lng={focusCoords?.lng ?? null}
+          trigger={flyTrigger}
+        />
         {userLoc ? (
           <Marker position={[userLoc.lat, userLoc.lng]} icon={userIcon}>
             <Popup>
@@ -296,6 +324,8 @@ export default function ParksPage() {
   const [maxKm, setMaxKm] = useState(8)
   const [locating, setLocating] = useState(false)
   const [locError, setLocError] = useState<string | null>(null)
+  const [mapFocus, setMapFocus] = useState<LatLng | null>(null)
+  const [mapFlyTrigger, setMapFlyTrigger] = useState(0)
 
   const cities = useMemo(() => Array.from(new Set(allParks.map((park) => park.city))).sort(), [allParks])
   const neighborhoods = useMemo(() => {
@@ -433,6 +463,11 @@ export default function ParksPage() {
       else next.add(id)
       return next
     })
+  }
+
+  const focusParkOnMap = (park: ParkWithDistance) => {
+    setMapFocus({ lat: park.lat, lng: park.lng })
+    setMapFlyTrigger((value) => value + 1)
   }
 
   const handleCategory = (action: (typeof quickCategories)[number]['action']) => {
@@ -729,6 +764,37 @@ export default function ParksPage() {
             </aside>
 
             <div className="ew-pp-mainCol">
+              <aside className="ew-pp-mapPanel" aria-label="Karta parkova">
+                <div className="ew-pp-mapPanel__head">
+                  <h2 className="ew-pp-mapPanel__title">Karta</h2>
+                  <span className="ew-pp-mapPanel__hint">
+                    {userLoc
+                      ? 'Zelena točka = tvoja lokacija · kotačić = zum'
+                      : 'Uključi lokaciju za udaljenosti · kotačić na karti = zum'}
+                  </span>
+                </div>
+                <ParksMap
+                  parks={filteredParks}
+                  userLoc={userLoc}
+                  focusCoords={mapFocus}
+                  flyTrigger={mapFlyTrigger}
+                />
+                {recommendation ? (
+                  <article className="ew-pp-spotlight">
+                    <p className="ew-pp-spotlight__eyebrow">
+                      {userLoc ? 'Najbliži odabranom' : 'Preporuka'}
+                    </p>
+                    <h3>{recommendation.name}</h3>
+                    <p>{recommendation.description}</p>
+                    {typeof recommendation._km === 'number' ? (
+                      <span className="ew-pp-spotlight__km">{formatKm(recommendation._km)} od tebe</span>
+                    ) : (
+                      <span className="ew-pp-spotlight__km">★ {recommendation.rating.toFixed(1)}</span>
+                    )}
+                  </article>
+                ) : null}
+              </aside>
+
               <div className="ew-vp-results ew-pp-results">
                 <div className="ew-vp-results-bar">
                   <span className="ew-vp-count">{parkCountLabel}</span>
@@ -769,38 +835,15 @@ export default function ParksPage() {
                         park={park}
                         coverPhoto={parkCoverPhotos[park.id] ?? park.coverPhoto}
                         isFavorite={favorites.has(park.id)}
-                        onFavorite={() => toggleFavorite(park.id)}
+                        onFavorite={() => {
+                          toggleFavorite(park.id)
+                          focusParkOnMap(park)
+                        }}
                       />
                     ))}
                   </div>
                 )}
               </div>
-
-              <aside className="ew-pp-mapPanel" aria-label="Karta parkova">
-                <div className="ew-pp-mapPanel__head">
-                  <h2 className="ew-pp-mapPanel__title">Karta</h2>
-                  <span className="ew-pp-mapPanel__hint">
-                    {userLoc
-                      ? 'Zelena točka = tvoja lokacija · kotačić = zum'
-                      : 'Uključi lokaciju za udaljenosti · kotačić na karti = zum'}
-                  </span>
-                </div>
-                <ParksMap parks={filteredParks} userLoc={userLoc} />
-                {recommendation ? (
-                  <article className="ew-pp-spotlight">
-                    <p className="ew-pp-spotlight__eyebrow">
-                      {userLoc ? 'Najbliži odabranom' : 'Preporuka'}
-                    </p>
-                    <h3>{recommendation.name}</h3>
-                    <p>{recommendation.description}</p>
-                    {typeof recommendation._km === 'number' ? (
-                      <span className="ew-pp-spotlight__km">{formatKm(recommendation._km)} od tebe</span>
-                    ) : (
-                      <span className="ew-pp-spotlight__km">★ {recommendation.rating.toFixed(1)}</span>
-                    )}
-                  </article>
-                ) : null}
-              </aside>
             </div>
           </div>
         </section>

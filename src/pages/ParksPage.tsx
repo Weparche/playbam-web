@@ -640,50 +640,46 @@ export default function ParksPage() {
             </button>
 
             <aside className={`ew-vp-sidebar ew-pp-sidebar ${filtersOpen ? 'is-open' : ''}`} aria-label="Filteri">
-              <div className="ew-vp-filter-group ew-pp-filterPlace">
-                <div className="ew-vp-filter-label">Područje</div>
-                <div className="ew-pp-filterPlace__row">
-                  {cities.length <= 1 ? (
-                    cities[0] ? (
-                      <span className="ew-pp-filterPlace__city">{cities[0]}</span>
-                    ) : null
-                  ) : (
-                    <select
-                      className="ew-vp-select ew-pp-filterPlace__select ew-pp-filterPlace__select--city"
-                      value={city}
-                      onChange={(event) => {
-                        setCity(event.target.value)
-                        setNeighborhood('all')
-                      }}
-                      aria-label="Grad"
-                    >
-                      <option value="all">Svi gradovi</option>
-                      {cities.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                  <select
-                    className="ew-vp-select ew-pp-filterPlace__select ew-pp-filterPlace__select--hood"
-                    value={neighborhood}
-                    onChange={(event) => setNeighborhood(event.target.value)}
-                    aria-label="Kvart"
-                    disabled={neighborhoods.length === 0}
-                  >
-                    <option value="all">Svi kvartovi</option>
-                    {neighborhoods.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <div className="ew-vp-filter-group">
+                <div className="ew-vp-filter-label">Grad</div>
+                <select
+                  className="ew-vp-select"
+                  value={city}
+                  onChange={(event) => {
+                    setCity(event.target.value)
+                    setNeighborhood('all')
+                  }}
+                  aria-label="Grad"
+                >
+                  <option value="all">Svi gradovi</option>
+                  {cities.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <div className="ew-vp-filter-group ew-pp-filterAge">
-                <div className="ew-vp-filter-label">Dob</div>
+              <div className="ew-vp-filter-group">
+                <div className="ew-vp-filter-label">Kvart</div>
+                <select
+                  className="ew-vp-select"
+                  value={neighborhood}
+                  onChange={(event) => setNeighborhood(event.target.value)}
+                  aria-label="Kvart"
+                  disabled={neighborhoods.length === 0}
+                >
+                  <option value="all">Svi kvartovi</option>
+                  {neighborhoods.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="ew-vp-filter-group">
+                <div className="ew-vp-filter-label">Dob djeteta</div>
                 <select
                   className="ew-vp-select"
                   value={age}
@@ -698,7 +694,7 @@ export default function ParksPage() {
                 </select>
               </div>
 
-              <div className="ew-vp-filter-group ew-pp-filterExtras">
+              <div className="ew-vp-filter-group">
                 <div className="ew-vp-filter-label">Dodatno</div>
                 <div className="ew-vp-checkboxes">
                   <label className="ew-vp-checkbox">

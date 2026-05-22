@@ -183,36 +183,6 @@
   width: 100%;
 }
 
-.ew-pp-filterPlace__row {
-  display: flex;
-  align-items: stretch;
-  gap: 8px;
-  min-width: 0;
-}
-
-.ew-pp-filterPlace__city {
-  display: inline-flex;
-  align-items: center;
-  min-height: 42px;
-  padding: 0 12px;
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 2px;
-  background: var(--color-bg-secondary);
-  font-family: var(--font-work-sans);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-}
-
-.ew-pp-filterPlace__select {
-  min-width: 0;
-}
-
-.ew-pp-filterPlace__select--hood {
-  flex: 1 1 auto;
-}
-
 .ew-pp-mainCol {
   display: grid;
   gap: 28px;
@@ -1075,11 +1045,11 @@
   }
 
   .ew-pp-sidebar {
-    display: flex !important;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    gap: 10px 14px;
-    padding: 10px 14px;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(140px, 1fr)) minmax(280px, 1.25fr) minmax(150px, 0.7fr) auto;
+    align-items: start;
+    gap: 12px;
+    padding: 14px 16px;
     border: 1px solid var(--color-border);
     border-radius: 2px;
     background: var(--color-bg-card);
@@ -1087,68 +1057,10 @@
   }
 
   .ew-pp-sidebar .ew-vp-filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    display: grid;
+    gap: 8px;
     min-width: 0;
     margin: 0;
-  }
-
-  .ew-pp-sidebar .ew-vp-filter-label {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-  }
-
-  .ew-pp-filterPlace {
-    flex: 0 1 auto;
-    max-width: min(100%, 248px);
-  }
-
-  .ew-pp-filterPlace__row {
-    gap: 6px;
-  }
-
-  .ew-pp-filterPlace__city {
-    min-height: 36px;
-    padding: 0 10px;
-    font-size: 12px;
-  }
-
-  .ew-pp-filterPlace__select {
-    width: auto;
-    min-height: 36px;
-    padding: 6px 28px 6px 10px;
-    font-size: 13px;
-  }
-
-  .ew-pp-filterPlace__select--city {
-    min-width: 96px;
-    max-width: 128px;
-  }
-
-  .ew-pp-filterPlace__select--hood {
-    min-width: 112px;
-    max-width: 148px;
-  }
-
-  .ew-pp-filterAge {
-    flex: 0 0 118px;
-  }
-
-  .ew-pp-filterAge .ew-vp-select {
-    min-height: 36px;
-    padding: 6px 28px 6px 10px;
-    font-size: 13px;
-  }
-
-  .ew-pp-filterExtras {
-    flex: 1 1 220px;
-    min-width: min(100%, 220px);
-  }
-
-  .ew-pp-locationFilter {
-    flex: 0 1 168px;
-    min-width: 148px;
   }
 
   .ew-pp-sidebar .ew-vp-select {
@@ -1158,32 +1070,23 @@
   .ew-pp-sidebar .ew-vp-checkboxes {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 6px;
   }
 
   .ew-pp-sidebar .ew-vp-checkbox {
-    min-height: 32px;
-    padding: 5px 8px;
+    min-height: 36px;
+    padding: 7px 9px;
     background: var(--color-bg-primary);
     border: 1px solid var(--color-border-subtle);
     border-radius: 2px;
-    font-size: 12px;
+    font-size: 13px;
     white-space: nowrap;
   }
 
   .ew-pp-sidebar .ew-vp-clear-btn {
-    flex: 0 0 auto;
-    align-self: flex-end;
-    min-height: 36px;
-    padding: 0 12px;
-    font-size: 12px;
+    align-self: end;
+    min-height: 42px;
     white-space: nowrap;
-  }
-
-  .ew-pp-locationFilter__btn,
-  .ew-pp-locationFilter__active {
-    min-height: 36px;
-    font-size: 12px;
   }
 
   .ew-pp-mainCol {
@@ -1327,15 +1230,18 @@
   color: #b42318;
 }
 
+@media (min-width: 900px) and (max-width: 1120px) {
+  .ew-pp-sidebar {
+    grid-template-columns: repeat(3, minmax(140px, 1fr)) minmax(0, 1fr) minmax(150px, 0.8fr);
+  }
+
+  .ew-pp-sidebar .ew-vp-clear-btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
 @media (min-width: 1180px) {
-  .ew-pp-filterPlace {
-    max-width: 268px;
-  }
-
-  .ew-pp-filterPlace__select--hood {
-    max-width: 168px;
-  }
-
   .ew-pp-mapPanel {
     flex-basis: min(420px, 32vw);
     width: min(420px, 32vw);

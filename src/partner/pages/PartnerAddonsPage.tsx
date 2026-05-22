@@ -32,6 +32,7 @@ export default function PartnerAddonsPage() {
         <div style={{ marginTop: '0.75rem' }}><Button type="button" onClick={save}>Spremi</Button></div>
       </section>
       <section className="partner-panel partner-tableWrap">
+        <h2 className="partner-panel__title">Postojeći dodaci</h2>
         <table className="partner-table">
           <thead><tr><th>Naziv</th><th>Kategorija</th><th>Cijena</th><th>Aktivan</th><th></th></tr></thead>
           <tbody>
@@ -49,6 +50,44 @@ export default function PartnerAddonsPage() {
             ))}
           </tbody>
         </table>
+      </section>
+
+      <section className="partner-panel partner-cardList partner-cardList--mobileOnly">
+        <h2 className="partner-panel__title">Postojeći dodaci</h2>
+        {addons.length === 0 ? (
+          <p className="partner-empty">Nema dodataka.</p>
+        ) : (
+          addons.map((addon) => (
+            <div key={addon.id} className="partner-resCard">
+              <div className="partner-eventRow__title">{addon.name}</div>
+              <div className="partner-eventRow__meta">
+                {addon.category} · {formatPrice(addon.price, playroom.currency)}
+              </div>
+              <div className="partner-eventRow__meta">{addon.isActive ? 'Aktivan' : 'Neaktivan'}</div>
+              <div className="partner-resCard__actions">
+                <Button
+                  variant="ghost"
+                  type="button"
+                  onClick={() => {
+                    setEditingId(addon.id)
+                    setForm({
+                      name: addon.name,
+                      description: addon.description,
+                      price: addon.price,
+                      category: addon.category,
+                      isActive: addon.isActive,
+                    })
+                  }}
+                >
+                  Uredi
+                </Button>
+                <Button variant="ghost" type="button" onClick={() => deleteAddon(addon.id)}>
+                  Obriši
+                </Button>
+              </div>
+            </div>
+          ))
+        )}
       </section>
     </>
   )

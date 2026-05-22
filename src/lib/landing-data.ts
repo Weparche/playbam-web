@@ -73,6 +73,8 @@ export type Venue = {
   packages: VenuePackage[]
   lat: number
   lng: number
+  /** Koristi samo lokalne slike iz public/venues — bez Google Places API. */
+  skipGooglePlaces?: boolean
 }
 
 export const REGION_CENTERS: Record<RegionKey, { lat: number; lng: number; zoom: number }> = {
@@ -607,12 +609,16 @@ export const venues: Venue[] = [
     maxChildren: 20,
     description: 'Moderan dječji klub kod Jaruna u Gajevu (Vojakovačka) — parking na dvije ulice. Sport, disco, princeze ili safari — tematske proslave s DJ opremom, face paintingom i maskotama na poziv. Detaljan fotoalbum uz svaki paket.',
     amenities: ['Parking', 'Animatori', 'Torta po narudžbi', 'DJ oprema', 'Face painting', 'Klima'],
-    coverPhoto: 'https://jogica.com.hr/wp-content/uploads/2026/04/20260216_175918.jpg',
+    skipGooglePlaces: true,
+    coverPhoto: '/venues/Jogica/20260216_175918.webp',
     photos: [
-      'https://jogica.com.hr/wp-content/uploads/2026/04/20260216_183628.jpg',
-      'https://jogica.com.hr/wp-content/uploads/2026/04/20260310_183957.jpg',
-      'https://jogica.com.hr/wp-content/uploads/2026/04/20260401_180821.jpg',
-      'https://jogica.com.hr/wp-content/uploads/2026/04/20260401_182017.jpg',
+      '/venues/Jogica/20260216_183628.webp',
+      '/venues/Jogica/20260216_183658.webp',
+      '/venues/Jogica/20260216_191601.webp',
+      '/venues/Jogica/20260310_183957.webp',
+      '/venues/Jogica/20260401_182027.webp',
+      '/venues/Jogica/img-20260207-wa0050-1.webp',
+      '/venues/Jogica/img-20260207-wa0059-1.webp',
     ],
     packages: [
       { name: 'Basic Party', price: 250, minChildren: 15, includes: ['2h igranje', '2 animatora', 'pizza', 'torta', 'snacks', 'sokovi', 'fotografije'] },

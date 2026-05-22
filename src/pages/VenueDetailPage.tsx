@@ -48,12 +48,16 @@ const amenityIcons: Record<string, string> = {
 export default function VenueDetailPage() {
   const { slug } = useParams<{ slug: string }>()
   const venue = venues.find(v => v.slug === slug)
-  const googlePlace = useGooglePlaceEnrichment(venue, 7)
+  const googlePlace = useGooglePlaceEnrichment(venue?.skipGooglePlaces ? undefined : venue, 7)
 
   const allPhotos = useMemo(
     () => {
+      if (!venue) return []
+      if (venue.skipGooglePlaces) {
+        return [...new Set([venue.coverPhoto, ...venue.photos])]
+      }
       const googlePhotos = googlePhotoUris(googlePlace)
-      return googlePhotos.length > 0 ? googlePhotos : venue ? [venue.coverPhoto, ...venue.photos] : []
+      return googlePhotos.length > 0 ? googlePhotos : [venue.coverPhoto, ...venue.photos]
     },
     [googlePlace, venue],
   )
@@ -89,16 +93,20 @@ export default function VenueDetailPage() {
   const venueRegion = regionForCity(venue.city)
   const regionMeta = REGIONS[venueRegion]
   const venuesQuery = venueRegion === 'zagreb' ? '' : `?grad=${venueRegion}`
-  const displayedRating = googlePlace?.rating ?? venue.rating
-  const displayedReviewCount = googlePlace?.reviewCount ?? venue.reviewCount
-  const displayedAddress = googlePlace?.address ?? venue.address
-  const displayedPhone = googlePlace?.phone ?? venue.phone
-  const displayedWebsite = googlePlace?.website ?? venue.website
-  const displayedMapsUrl = googlePlace?.googleMapsUri ?? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`
+  const displayedRating = venue.skipGooglePlaces ? venue.rating : (googlePlace?.rating ?? venue.rating)
+  const displayedReviewCount = venue.skipGooglePlaces ? venue.reviewCount : (googlePlace?.reviewCount ?? venue.reviewCount)
+  const displayedAddress = venue.skipGooglePlaces ? venue.address : (googlePlace?.address ?? venue.address)
+  const displayedPhone = venue.skipGooglePlaces ? venue.phone : (googlePlace?.phone ?? venue.phone)
+  const displayedWebsite = venue.skipGooglePlaces ? venue.website : (googlePlace?.website ?? venue.website)
+  const displayedMapsUrl = venue.skipGooglePlaces
+    ? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`
+    : (googlePlace?.googleMapsUri ?? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`)
   const mapQuery =
-    typeof googlePlace?.lat === 'number' && typeof googlePlace?.lng === 'number'
-      ? `${googlePlace.lat},${googlePlace.lng}`
-      : displayedAddress
+    venue.skipGooglePlaces
+      ? venue.address
+      : typeof googlePlace?.lat === 'number' && typeof googlePlace?.lng === 'number'
+        ? `${googlePlace.lat},${googlePlace.lng}`
+        : displayedAddress
   const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`
 
   return (

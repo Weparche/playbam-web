@@ -10,6 +10,7 @@ type PlaceSource = {
   lat?: number
   lng?: number
   googlePlaceId?: string
+  skipGooglePlaces?: boolean
 }
 
 type CoverPhotoCacheEntry = {
@@ -87,7 +88,7 @@ export function useGooglePlaceEnrichment(source: PlaceSource | undefined, maxPho
   }, [source])
 
   useEffect(() => {
-    if (!source || !query) return
+    if (!source || !query || source.skipGooglePlaces) return
 
     let cancelled = false
 
@@ -131,6 +132,11 @@ export function useGoogleCoverPhoto(source: PlaceSource | undefined, fallbackPho
 
   useEffect(() => {
     if (!source || !query || !cacheKey) {
+      setCoverPhoto(fallbackPhoto)
+      return
+    }
+
+    if (source.skipGooglePlaces) {
       setCoverPhoto(fallbackPhoto)
       return
     }
@@ -204,7 +210,7 @@ export function useGoogleCoverPhotos(sources: CoverPhotoSource[]) {
     for (const source of sources) {
       const cached = readCoverPhotoCache(getCoverCacheKey(source))
       next[source.id] = cached?.photo ?? source.fallbackPhoto
-      if (!cached) missing.push(source)
+      if (!source.skipGooglePlaces && !cached) missing.push(source)
     }
 
     setCoverPhotos(next)

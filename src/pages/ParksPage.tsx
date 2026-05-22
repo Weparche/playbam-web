@@ -35,26 +35,31 @@ const userIcon = L.divIcon({
   iconAnchor: [9, 9],
 })
 
-/** Varijacije smjera + offset za trajne nazive kod pinova */
+/** Varijacije smjera + offset za trajne nazive kod pinova — širi raspon protiv preklapanja */
 const LABEL_PLACEMENTS = [
-  { direction: 'top' as const, offset: [0, -30] as [number, number] },
-  { direction: 'top' as const, offset: [14, -28] as [number, number] },
-  { direction: 'top' as const, offset: [-14, -28] as [number, number] },
-  { direction: 'top' as const, offset: [10, -32] as [number, number] },
-  { direction: 'top' as const, offset: [-10, -32] as [number, number] },
-  { direction: 'top' as const, offset: [18, -26] as [number, number] },
-  { direction: 'top' as const, offset: [-18, -26] as [number, number] },
-  { direction: 'bottom' as const, offset: [0, 36] as [number, number] },
-  { direction: 'bottom' as const, offset: [12, 34] as [number, number] },
-  { direction: 'left' as const, offset: [-8, -22] as [number, number] },
-  { direction: 'right' as const, offset: [8, -22] as [number, number] },
-  { direction: 'right' as const, offset: [10, -8] as [number, number] },
+  { direction: 'top' as const, offset: [0, -34] as [number, number] },
+  { direction: 'top' as const, offset: [24, -32] as [number, number] },
+  { direction: 'top' as const, offset: [-24, -32] as [number, number] },
+  { direction: 'top' as const, offset: [40, -30] as [number, number] },
+  { direction: 'top' as const, offset: [-40, -30] as [number, number] },
+  { direction: 'top' as const, offset: [16, -40] as [number, number] },
+  { direction: 'top' as const, offset: [-16, -40] as [number, number] },
+  { direction: 'bottom' as const, offset: [0, 38] as [number, number] },
+  { direction: 'bottom' as const, offset: [22, 36] as [number, number] },
+  { direction: 'bottom' as const, offset: [-22, 36] as [number, number] },
+  { direction: 'left' as const, offset: [-12, -30] as [number, number] },
+  { direction: 'left' as const, offset: [-12, -14] as [number, number] },
+  { direction: 'right' as const, offset: [12, -30] as [number, number] },
+  { direction: 'right' as const, offset: [12, -14] as [number, number] },
+  { direction: 'right' as const, offset: [18, 4] as [number, number] },
+  { direction: 'left' as const, offset: [-18, 4] as [number, number] },
 ]
 
-function tooltipPlacementForParkId(id: string): (typeof LABEL_PLACEMENTS)[number] {
+function tooltipPlacementForPark(park: Pick<Park, 'id' | 'lat' | 'lng'>): (typeof LABEL_PLACEMENTS)[number] {
+  const seed = `${park.id}:${park.lat.toFixed(4)}:${park.lng.toFixed(4)}`
   let h = 2166136261 >>> 0
-  for (let i = 0; i < id.length; i++) {
-    h ^= id.charCodeAt(i)
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i)
     h = Math.imul(h, 16777619)
   }
   return LABEL_PLACEMENTS[(h >>> 0) % LABEL_PLACEMENTS.length]
@@ -193,13 +198,13 @@ function ParksMap({
           </Marker>
         ) : null}
         {parks.map((park) => {
-          const tp = tooltipPlacementForParkId(park.id)
+          const tp = tooltipPlacementForPark(park)
           return (
             <Marker key={park.id} position={[park.lat, park.lng]} icon={parkIcon}>
-              <Tooltip permanent direction={tp.direction} offset={tp.offset} className="ew-vp-map-label">
-                <span className="ew-vp-map-label__inner">
-                  <span className="ew-vp-map-label__title">{park.name}</span>
-                  <span className="ew-vp-map-label__rating">★ {park.rating.toFixed(1)}</span>
+              <Tooltip permanent direction={tp.direction} offset={tp.offset} className="ew-pp-map-label">
+                <span className="ew-pp-map-label__inner">
+                  <span className="ew-pp-map-label__title">{park.name}</span>
+                  <span className="ew-pp-map-label__rating">★ {park.rating.toFixed(1)}</span>
                 </span>
               </Tooltip>
               <Popup>
@@ -635,46 +640,50 @@ export default function ParksPage() {
             </button>
 
             <aside className={`ew-vp-sidebar ew-pp-sidebar ${filtersOpen ? 'is-open' : ''}`} aria-label="Filteri">
-              <div className="ew-vp-filter-group">
-                <div className="ew-vp-filter-label">Grad</div>
-                <select
-                  className="ew-vp-select"
-                  value={city}
-                  onChange={(event) => {
-                    setCity(event.target.value)
-                    setNeighborhood('all')
-                  }}
-                  aria-label="Grad"
-                >
-                  <option value="all">Svi gradovi</option>
-                  {cities.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
-                  ))}
-                </select>
+              <div className="ew-vp-filter-group ew-pp-filterPlace">
+                <div className="ew-vp-filter-label">Područje</div>
+                <div className="ew-pp-filterPlace__row">
+                  {cities.length <= 1 ? (
+                    cities[0] ? (
+                      <span className="ew-pp-filterPlace__city">{cities[0]}</span>
+                    ) : null
+                  ) : (
+                    <select
+                      className="ew-vp-select ew-pp-filterPlace__select ew-pp-filterPlace__select--city"
+                      value={city}
+                      onChange={(event) => {
+                        setCity(event.target.value)
+                        setNeighborhood('all')
+                      }}
+                      aria-label="Grad"
+                    >
+                      <option value="all">Svi gradovi</option>
+                      {cities.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  <select
+                    className="ew-vp-select ew-pp-filterPlace__select ew-pp-filterPlace__select--hood"
+                    value={neighborhood}
+                    onChange={(event) => setNeighborhood(event.target.value)}
+                    aria-label="Kvart"
+                    disabled={neighborhoods.length === 0}
+                  >
+                    <option value="all">Svi kvartovi</option>
+                    {neighborhoods.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
-              <div className="ew-vp-filter-group">
-                <div className="ew-vp-filter-label">Kvart</div>
-                <select
-                  className="ew-vp-select"
-                  value={neighborhood}
-                  onChange={(event) => setNeighborhood(event.target.value)}
-                  aria-label="Kvart"
-                  disabled={neighborhoods.length === 0}
-                >
-                  <option value="all">Svi kvartovi</option>
-                  {neighborhoods.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="ew-vp-filter-group">
-                <div className="ew-vp-filter-label">Dob djeteta</div>
+              <div className="ew-vp-filter-group ew-pp-filterAge">
+                <div className="ew-vp-filter-label">Dob</div>
                 <select
                   className="ew-vp-select"
                   value={age}
@@ -689,7 +698,7 @@ export default function ParksPage() {
                 </select>
               </div>
 
-              <div className="ew-vp-filter-group">
+              <div className="ew-vp-filter-group ew-pp-filterExtras">
                 <div className="ew-vp-filter-label">Dodatno</div>
                 <div className="ew-vp-checkboxes">
                   <label className="ew-vp-checkbox">

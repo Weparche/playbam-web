@@ -1,6 +1,7 @@
 /* Dječji parkovi — usklađeno s landing tokenima, mobile-first, fokus na lokaciju */
 
 .ew-pp-page {
+  --ew-pp-map-sticky-top: 104px;
   padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   overflow-x: clip;
 }
@@ -182,6 +183,36 @@
   width: 100%;
 }
 
+.ew-pp-filterPlace__row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ew-pp-filterPlace__city {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 2px;
+  background: var(--color-bg-secondary);
+  font-family: var(--font-work-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.ew-pp-filterPlace__select {
+  min-width: 0;
+}
+
+.ew-pp-filterPlace__select--hood {
+  flex: 1 1 auto;
+}
+
 .ew-pp-mainCol {
   display: grid;
   gap: 28px;
@@ -227,52 +258,56 @@
   font-family: var(--font-work-sans);
 }
 
-/* Trajni nazivi uz pinove (usklađeno s igraonicama) */
-.leaflet-tooltip.ew-vp-map-label {
+/* Trajni nazivi uz pinove — kompaktno, 2 reda */
+.ew-pp-map .leaflet-tooltip.ew-pp-map-label {
   padding: 0;
   border: none !important;
-  border-radius: 8px !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.16) !important;
   background: transparent !important;
   margin: 0 !important;
+  pointer-events: none;
 }
 
-.leaflet-tooltip.ew-vp-map-label.leaflet-tooltip-top {
+.ew-pp-map .leaflet-tooltip.ew-pp-map-label.leaflet-tooltip-top {
   margin-top: 0 !important;
 }
 
-.leaflet-tooltip.ew-vp-map-label::before {
+.ew-pp-map .leaflet-tooltip.ew-pp-map-label::before {
   display: none;
 }
 
-.ew-vp-map-label__inner {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  max-width: min(260px, 72vw);
-  padding: 6px 10px;
-  border-radius: 8px;
+.ew-pp-map-label__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  max-width: min(152px, 50vw);
+  padding: 4px 7px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.97);
   border: 1px solid rgba(0, 0, 0, 0.1);
   font-family: var(--font-work-sans);
-  font-size: 12px;
-  line-height: 1.25;
+  font-size: 10px;
+  line-height: 1.2;
   color: var(--color-text-primary);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.ew-vp-map-label__title {
+.ew-pp-map-label__title {
+  display: block;
+  width: 100%;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-width: 0;
-  flex: 1 1 auto;
 }
 
-.ew-vp-map-label__rating {
-  flex-shrink: 0;
+.ew-pp-map-label__rating {
+  display: block;
+  font-size: 9px;
   font-weight: 700;
+  line-height: 1.15;
   color: #c45a28;
 }
 
@@ -1040,11 +1075,11 @@
   }
 
   .ew-pp-sidebar {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(140px, 1fr)) minmax(280px, 1.25fr) minmax(150px, 0.7fr) auto;
-    align-items: start;
-    gap: 12px;
-    padding: 14px 16px;
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px 14px;
+    padding: 10px 14px;
     border: 1px solid var(--color-border);
     border-radius: 2px;
     background: var(--color-bg-card);
@@ -1052,10 +1087,68 @@
   }
 
   .ew-pp-sidebar .ew-vp-filter-group {
-    display: grid;
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     min-width: 0;
     margin: 0;
+  }
+
+  .ew-pp-sidebar .ew-vp-filter-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .ew-pp-filterPlace {
+    flex: 0 1 auto;
+    max-width: min(100%, 248px);
+  }
+
+  .ew-pp-filterPlace__row {
+    gap: 6px;
+  }
+
+  .ew-pp-filterPlace__city {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .ew-pp-filterPlace__select {
+    width: auto;
+    min-height: 36px;
+    padding: 6px 28px 6px 10px;
+    font-size: 13px;
+  }
+
+  .ew-pp-filterPlace__select--city {
+    min-width: 96px;
+    max-width: 128px;
+  }
+
+  .ew-pp-filterPlace__select--hood {
+    min-width: 112px;
+    max-width: 148px;
+  }
+
+  .ew-pp-filterAge {
+    flex: 0 0 118px;
+  }
+
+  .ew-pp-filterAge .ew-vp-select {
+    min-height: 36px;
+    padding: 6px 28px 6px 10px;
+    font-size: 13px;
+  }
+
+  .ew-pp-filterExtras {
+    flex: 1 1 220px;
+    min-width: min(100%, 220px);
+  }
+
+  .ew-pp-locationFilter {
+    flex: 0 1 168px;
+    min-width: 148px;
   }
 
   .ew-pp-sidebar .ew-vp-select {
@@ -1065,23 +1158,32 @@
   .ew-pp-sidebar .ew-vp-checkboxes {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 5px;
   }
 
   .ew-pp-sidebar .ew-vp-checkbox {
-    min-height: 36px;
-    padding: 7px 9px;
+    min-height: 32px;
+    padding: 5px 8px;
     background: var(--color-bg-primary);
     border: 1px solid var(--color-border-subtle);
     border-radius: 2px;
-    font-size: 13px;
+    font-size: 12px;
     white-space: nowrap;
   }
 
   .ew-pp-sidebar .ew-vp-clear-btn {
-    align-self: end;
-    min-height: 42px;
+    flex: 0 0 auto;
+    align-self: flex-end;
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 12px;
     white-space: nowrap;
+  }
+
+  .ew-pp-locationFilter__btn,
+  .ew-pp-locationFilter__active {
+    min-height: 36px;
+    font-size: 12px;
   }
 
   .ew-pp-mainCol {
@@ -1102,9 +1204,9 @@
     width: min(380px, 34vw);
     order: 2;
     position: sticky;
-    top: 88px;
+    top: var(--ew-pp-map-sticky-top);
     align-self: flex-start;
-    max-height: calc(100vh - 104px);
+    max-height: calc(100vh - var(--ew-pp-map-sticky-top) - 16px);
     overflow-y: auto;
     overscroll-behavior: contain;
     padding-right: 2px;
@@ -1225,18 +1327,15 @@
   color: #b42318;
 }
 
-@media (min-width: 900px) and (max-width: 1120px) {
-  .ew-pp-sidebar {
-    grid-template-columns: repeat(3, minmax(140px, 1fr)) minmax(0, 1fr) minmax(150px, 0.8fr);
-  }
-
-  .ew-pp-sidebar .ew-vp-clear-btn {
-    grid-column: 1 / -1;
-    justify-self: start;
-  }
-}
-
 @media (min-width: 1180px) {
+  .ew-pp-filterPlace {
+    max-width: 268px;
+  }
+
+  .ew-pp-filterPlace__select--hood {
+    max-width: 168px;
+  }
+
   .ew-pp-mapPanel {
     flex-basis: min(420px, 32vw);
     width: min(420px, 32vw);

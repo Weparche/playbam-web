@@ -79,7 +79,7 @@ function PartnerChrome() {
       </div>
 
       <nav className="partner-mobileNav" aria-label="Partner mobilna navigacija">
-        {links.slice(0, 4).map((link) => (
+        {links.map((link) => (
           <NavLink
             key={link.to}
             to={link.to}
@@ -89,11 +89,6 @@ function PartnerChrome() {
             {link.label}
           </NavLink>
         ))}
-        {!isAnimator ? (
-          <Link to="/partner/settings" className="partner-mobileNav__link">
-            Više
-          </Link>
-        ) : null}
       </nav>
     </div>
   )

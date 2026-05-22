@@ -32,6 +32,13 @@ export function formatDateHr(dateKey: string): string {
   return d.toLocaleDateString('hr-HR', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
+export function formatMonthYearHr(year: number, month: number): string {
+  const d = new Date(year, month - 1, 1)
+  const monthName = d.toLocaleDateString('hr-HR', { month: 'long' })
+  const capitalized = monthName.charAt(0).toUpperCase() + monthName.slice(1)
+  return `${capitalized} ${year}.`
+}
+
 export function formatTimeRange(start: string, end: string): string {
   return `${start} – ${end}`
 }

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import Button from '../../components/ui/Button'
 import { usePartnerData } from '../context/PartnerDataContext'
-import { monthGridDays } from '../lib/dates'
+import { monthGridDays, formatMonthYearHr } from '../lib/dates'
 
 const WEEKDAYS = ['Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned']
 
@@ -35,14 +35,14 @@ export default function PartnerCalendarPage() {
     })
   }
 
+  const monthLabel = formatMonthYearHr(cursor.year, cursor.month)
+
   return (
     <>
       <header className="partner-topbar">
         <div>
           <h1 className="partner-topbar__title">Kalendar rođendana</h1>
-          <p className="partner-topbar__meta">
-            {cursor.month}.{cursor.year}
-          </p>
+          <p className="partner-topbar__meta">{monthLabel}</p>
         </div>
         <Link to="/partner/reservations?new=1" className="pb-btn pb-btn-primary">
           Nova rezervacija
@@ -54,9 +54,7 @@ export default function PartnerCalendarPage() {
           <Button variant="ghost" type="button" onClick={() => shiftMonth(-1)}>
             ←
           </Button>
-          <strong>
-            {cursor.month}.{cursor.year}
-          </strong>
+          <strong className="partner-calendar__monthLabel">{monthLabel}</strong>
           <Button variant="ghost" type="button" onClick={() => shiftMonth(1)}>
             →
           </Button>

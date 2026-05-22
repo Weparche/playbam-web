@@ -69,6 +69,7 @@ export default function PartnerPackagesPage() {
       </section>
 
       <section className="partner-panel partner-tableWrap">
+        <h2 className="partner-panel__title">Postojeći paketi</h2>
         <table className="partner-table">
           <thead>
             <tr><th>Naziv</th><th>Trajanje</th><th>Cijena</th><th>Djeca</th><th>Aktivan</th><th></th></tr>
@@ -89,6 +90,38 @@ export default function PartnerPackagesPage() {
             ))}
           </tbody>
         </table>
+      </section>
+
+      <section className="partner-panel partner-cardList partner-cardList--mobileOnly">
+        <h2 className="partner-panel__title">Postojeći paketi</h2>
+        {packages.length === 0 ? (
+          <p className="partner-empty">Nema paketa.</p>
+        ) : (
+          packages.map((pkg) => (
+            <div key={pkg.id} className="partner-resCard">
+              <div className="partner-eventRow__title">{pkg.name}</div>
+              <div className="partner-eventRow__meta">
+                {pkg.durationMinutes} min · {formatPrice(pkg.basePrice, playroom.currency)} · {pkg.includedChildren} djece
+              </div>
+              <div className="partner-eventRow__meta">{pkg.isActive ? 'Aktivan' : 'Neaktivan'}</div>
+              <div className="partner-resCard__actions">
+                <Button
+                  variant="ghost"
+                  type="button"
+                  onClick={() => {
+                    setEditingId(pkg.id)
+                    setForm({ ...pkg })
+                  }}
+                >
+                  Uredi
+                </Button>
+                <Button variant="ghost" type="button" onClick={() => deletePackage(pkg.id)}>
+                  Obriši
+                </Button>
+              </div>
+            </div>
+          ))
+        )}
       </section>
     </>
   )

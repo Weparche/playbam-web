@@ -1,0 +1,48 @@
+/* Igraonice — isti listing layout kao parkovi (filter bar + sticky karta) */
+
+.ew-vp-page {
+  --ew-pp-map-sticky-top: 104px;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  overflow-x: clip;
+}
+
+@media (min-width: 901px) {
+  .ew-vp-page {
+    padding-bottom: 0;
+  }
+}
+
+.ew-vp-page .ew-vp-age-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ew-vp-page .ew-vp-age-field {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ew-vp-page .ew-vp-age-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+}
+
+@media (min-width: 900px) {
+  .ew-vp-page .ew-pp-filterBar__primary {
+    grid-template-columns:
+      minmax(148px, 1fr)
+      minmax(168px, 1.05fr)
+      minmax(210px, 1.4fr)
+      auto;
+    gap: 10px 12px;
+    align-items: end;
+  }
+
+  .ew-vp-page .ew-vp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+}

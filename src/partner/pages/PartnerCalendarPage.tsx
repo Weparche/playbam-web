@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import Button from '../../components/ui/Button'
 import { usePartnerData } from '../context/PartnerDataContext'
 import { monthGridDays } from '../lib/dates'
-import { statusColor } from '../lib/status'
 
 const WEEKDAYS = ['Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned']
 
@@ -79,7 +78,7 @@ export default function PartnerCalendarPage() {
                     key={event.id}
                     to={`/partner/reservations/${event.id}`}
                     className="partner-calendarEvent"
-                    style={{ backgroundColor: statusColor(event.status) }}
+                    data-status={event.status}
                   >
                     {event.startTime} {event.childName}
                   </Link>

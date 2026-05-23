@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import CTABanner from '../components/landing/CTABanner'
-import DualFormatNotes from '../components/landing/DualFormatNotes'
 import Footer from '../components/landing/Footer'
 import Hero from '../components/landing/Hero'
+import InvitationFeaturesSection from '../components/landing/InvitationFeaturesSection'
 import HowItWorks from '../components/landing/HowItWorks'
 import Navbar from '../components/landing/Navbar'
 
@@ -32,7 +32,7 @@ export default function LandingPage() {
 
       <main id="main">
         <Hero />
-        <DualFormatNotes />
+        <InvitationFeaturesSection />
         <Suspense fallback={null}>
           <InvitationsSection />
           <VenuesSection />

@@ -13,7 +13,7 @@ export default function HowItWorks() {
   const stepsRef = useScrollReveal()
 
   return (
-    <section id="kako-radi" className="ew-section">
+    <section id="kako-radi" className="ew-section ew-section--surface-primary">
       <div className="ew-container">
         <div ref={headerRef} className="ew-reveal">
           <div className="ew-eyebrow" style={{ marginBottom: 24 }}>Kako radi</div>

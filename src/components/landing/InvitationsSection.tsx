@@ -134,7 +134,7 @@ export default function InvitationsSection() {
   const gridRef = useScrollReveal()
 
   return (
-    <section id="pozivnice" className="ew-section ew-grain">
+    <section id="pozivnice" className="ew-section ew-section--surface-primary ew-grain">
       <div className="ew-container">
         <div ref={headerRef} className="ew-invitations__header ew-reveal">
           <div>

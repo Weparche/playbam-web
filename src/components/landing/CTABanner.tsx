@@ -6,7 +6,7 @@ export default function CTABanner() {
   const ref = useScrollReveal()
 
   return (
-    <section className="ew-cta-banner ew-grain">
+    <section className="ew-cta-banner ew-section--surface-secondary ew-grain">
       <div ref={ref} className="ew-cta-banner__inner ew-reveal">
         <h2 className="ew-h2 ew-cta-banner__title">
           Sljedeći rođendan ne mora biti <em>projekt</em>.

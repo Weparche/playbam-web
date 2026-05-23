@@ -8,7 +8,7 @@ export default function VenuesSection() {
   const gridRef = useScrollReveal()
 
   return (
-    <section id="igraonice" className="ew-section" style={{ background: 'var(--color-bg-secondary)' }}>
+    <section id="igraonice" className="ew-section ew-section--surface-secondary">
       <div className="ew-container">
         <div ref={headerRef} className="ew-venues__header ew-reveal">
           <div className="ew-eyebrow" style={{ marginBottom: 24 }}>Igraonice</div>

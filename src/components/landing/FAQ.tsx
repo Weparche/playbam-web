@@ -63,7 +63,7 @@ export default function FAQ() {
   const listRef = useScrollReveal()
 
   return (
-    <section id="cesta-pitanja" className="ew-section">
+    <section id="cesta-pitanja" className="ew-section ew-section--surface-primary">
       <div className="ew-container">
         <div ref={headerRef} className="ew-reveal">
           <div className="ew-eyebrow" style={{ marginBottom: 24 }}>Pitanja</div>

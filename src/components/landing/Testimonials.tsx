@@ -6,7 +6,7 @@ export default function Testimonials() {
   const gridRef = useScrollReveal()
 
   return (
-    <section className="ew-section" style={{ background: 'var(--color-bg-secondary)' }}>
+    <section className="ew-section ew-section--surface-secondary">
       <div className="ew-container">
         <div ref={headerRef} className="ew-reveal">
           <div className="ew-eyebrow" style={{ marginBottom: 24 }}>Roditelji</div>

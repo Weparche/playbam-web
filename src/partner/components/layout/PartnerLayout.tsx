@@ -19,6 +19,7 @@ const OWNER_LINKS = [
 const ANIMATOR_LINKS = [
   { to: '/partner', label: 'Moji eventi', end: true },
   { to: '/partner/calendar', label: 'Kalendar' },
+  { to: '/partner/settings', label: 'Postavke' },
 ]
 
 function PartnerChrome() {

@@ -818,6 +818,108 @@
   }
 }
 
+@media (min-width: 901px) {
+  .partner-cardList--mobileOnly {
+    display: none;
+  }
+}
+
+.partner-settingsAccount {
+  display: grid;
+  gap: 1rem;
+}
+
+.partner-settingsAccount__kicker {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--partner-soft);
+}
+
+.partner-settingsAccount__playroom {
+  margin: 0;
+  font-family: var(--font-fraunces, Georgia, serif);
+  font-size: 1.35rem;
+  font-weight: 350;
+  letter-spacing: -0.02em;
+  color: var(--partner-text);
+}
+
+.partner-settingsAccount__facts {
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.partner-settingsAccount__fact {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.partner-settingsAccount__fact dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--partner-soft);
+}
+
+.partner-settingsAccount__fact dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--partner-text);
+}
+
+.partner-settingsAccount__links {
+  padding-top: 0.35rem;
+}
+
+.partner-settingsAccount__link {
+  color: var(--partner-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.partner-settingsAccount__link:hover {
+  text-decoration: underline;
+}
+
+.partner-settingsAccountFooter {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .partner-settingsAccountFooter {
+    display: grid;
+    gap: 0.85rem;
+    margin-top: 1.25rem;
+    padding: 1rem 0 0.25rem;
+    border-top: 1px solid var(--partner-border-strong);
+  }
+
+  .partner-settingsAccountFooter__meta {
+    display: grid;
+    gap: 0.45rem;
+    justify-items: start;
+  }
+
+  .partner-settingsAccountFooter__name {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--partner-text);
+  }
+
+  .partner-settingsAccountFooter__logout {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .partner-nav__link,
   .partner-calendarEvent,

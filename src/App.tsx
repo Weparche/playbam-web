@@ -106,7 +106,7 @@ export default function App() {
               <Route path="animators" element={<PartnerOwnerGate><PartnerAnimatorsPage /></PartnerOwnerGate>} />
               <Route path="customers" element={<PartnerOwnerGate><PartnerCustomersPage /></PartnerOwnerGate>} />
               <Route path="customers/:id" element={<PartnerOwnerGate><PartnerCustomerDetailPage /></PartnerOwnerGate>} />
-              <Route path="settings" element={<PartnerOwnerGate><PartnerSettingsPage /></PartnerOwnerGate>} />
+              <Route path="settings" element={<PartnerSettingsPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

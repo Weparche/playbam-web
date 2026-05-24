@@ -32,16 +32,24 @@ const FEATURES = [
 function InvitationPreview() {
   return (
     <div className="ew-featuresPreview" aria-hidden="true">
+      <span className="ew-featuresPreview__confetti ew-featuresPreview__confetti--one" />
+      <span className="ew-featuresPreview__confetti ew-featuresPreview__confetti--two" />
+      <span className="ew-featuresPreview__confetti ew-featuresPreview__confetti--three" />
       <div className="ew-featuresPreview__chrome">
-        <span className="ew-featuresPreview__dot" />
-        <span className="ew-featuresPreview__dot" />
-        <span className="ew-featuresPreview__dot" />
-        <span className="ew-featuresPreview__url">vidimose.hr/p/luka-7</span>
+        <div className="ew-featuresPreview__avatar">L</div>
+        <div className="ew-featuresPreview__pass">
+          <span className="ew-featuresPreview__passLabel">Party pass</span>
+          <span className="ew-featuresPreview__url">vidimose.hr/p/luka-7</span>
+        </div>
+        <span className="ew-featuresPreview__sticker">7</span>
       </div>
 
       <div className="ew-featuresPreview__body">
         <div className="ew-featuresPreview__block" data-feature="rsvp">
-          <p className="ew-featuresPreview__label">Potvrda dolaska</p>
+          <p className="ew-featuresPreview__label">
+            <span className="ew-featuresPreview__labelIcon">🎈</span>
+            Potvrda dolaska
+          </p>
           <div className="ew-featuresPreview__rsvpRow">
             <span className="ew-featuresPreview__rsvpPill is-going">🎈 Dolazimo</span>
             <span className="ew-featuresPreview__rsvpPill is-maybe">🤷 Možda</span>
@@ -53,17 +61,23 @@ function InvitationPreview() {
         </div>
 
         <div className="ew-featuresPreview__block" data-feature="wishlist">
-          <p className="ew-featuresPreview__label">Lista želja</p>
+          <p className="ew-featuresPreview__label">
+            <span className="ew-featuresPreview__labelIcon">🎁</span>
+            Lista želja
+          </p>
           <ul className="ew-featuresPreview__wishlist">
             <li>
+              <span className="ew-featuresPreview__wishIcon">🚀</span>
               <span>Lego raketa</span>
               <span className="ew-featuresPreview__tag is-free">Dostupno</span>
             </li>
             <li>
+              <span className="ew-featuresPreview__wishIcon">📚</span>
               <span>Knjiga o svemiru</span>
               <span className="ew-featuresPreview__tag is-reserved">Rezervirano</span>
             </li>
             <li>
+              <span className="ew-featuresPreview__wishIcon">⭐</span>
               <span>Grupni poklon</span>
               <span className="ew-featuresPreview__tag is-group">Sudjeluj</span>
             </li>
@@ -71,7 +85,10 @@ function InvitationPreview() {
         </div>
 
         <div className="ew-featuresPreview__block" data-feature="chat">
-          <p className="ew-featuresPreview__label">Poruke</p>
+          <p className="ew-featuresPreview__label">
+            <span className="ew-featuresPreview__labelIcon">💬</span>
+            Poruke
+          </p>
           <div className="ew-featuresPreview__chat">
             <div className="ew-featuresPreview__chatBubble is-guest">
               <span className="ew-featuresPreview__chatWho">Ana M.</span>
@@ -85,18 +102,21 @@ function InvitationPreview() {
         </div>
 
         <div className="ew-featuresPreview__block" data-feature="details">
-          <p className="ew-featuresPreview__label">Za dan tuluma</p>
+          <p className="ew-featuresPreview__label">
+            <span className="ew-featuresPreview__labelIcon">📍</span>
+            Za dan tuluma
+          </p>
           <dl className="ew-featuresPreview__details">
             <div>
-              <dt>Kontakt</dt>
+              <dt><span>👋</span> Kontakt</dt>
               <dd>Mama Luka</dd>
             </div>
             <div>
-              <dt>Mobitel</dt>
+              <dt><span>📱</span> Mobitel</dt>
               <dd>091 234 5678</dd>
             </div>
             <div>
-              <dt>Parking</dt>
+              <dt><span>🅿️</span> Parking</dt>
               <dd>Iza zgrade, ulaz B</dd>
             </div>
           </dl>

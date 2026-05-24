@@ -148,7 +148,7 @@ export default function ParkDetailPage() {
   const parks = useMemo(() => loadParks(), [])
   const park = parks.find((item) => item.slug === slug)
   const { cafes, source: cafeSource } = useParkDetailCafes(park)
-  const googlePlace = useGooglePlaceEnrichment(park, 6)
+  const googlePlace = useGooglePlaceEnrichment(park?.skipGooglePlaces ? undefined : park, 6)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   const relatedParks = useMemo(() => {
@@ -160,9 +160,10 @@ export default function ParkDetailPage() {
 
   if (!park) return <Navigate to="/djecji-parkovi" replace />
 
-  const googlePhotos = googlePhotoUris(googlePlace)
-  const heroPhoto = googlePhotos[0] ?? park.coverPhoto
-  const lightboxPhotos = googlePhotos.length > 0 ? googlePhotos : [park.coverPhoto]
+  const localPhotos = park.photos && park.photos.length > 0 ? park.photos : [park.coverPhoto]
+  const googlePhotos = park.skipGooglePlaces ? [] : googlePhotoUris(googlePlace)
+  const lightboxPhotos = googlePhotos.length > 0 ? googlePhotos : localPhotos
+  const heroPhoto = lightboxPhotos[0] ?? park.coverPhoto
   const mapsUrl = googlePlace?.googleMapsUri ?? mapsUrlForPark(park)
   const displayedRating = googlePlace?.rating ?? park.rating
   const displayedReviewCount = googlePlace?.reviewCount ?? park.reviewCount

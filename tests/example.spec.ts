@@ -76,7 +76,8 @@ test.describe('venue booking inquiry flow', () => {
     await page.getByLabel(/Telefon roditelja/).fill('091 111 2222')
     await page.getByLabel(/Ime slavljenika/).fill('Luka')
     await page.getByLabel(/Željeni datum/).fill('2026-06-12')
-    await page.getByLabel(/Okvirno vrijeme/).selectOption('Popodne')
+    await page.getByLabel('Od', { exact: true }).fill('15:00')
+    await page.getByLabel('Do', { exact: true }).fill('18:00')
     await page.getByLabel(/Broj djece/).fill('14')
     await page.getByLabel(/Tema rođendana/).fill('Svemir')
     await page.getByRole('button', { name: 'Otvori WhatsApp upit' }).click()
@@ -87,6 +88,7 @@ test.describe('venue booking inquiry flow', () => {
 
     const message = new URL(whatsappUrl ?? '').searchParams.get('text') ?? ''
     expect(message).toContain('Roditelj: Ana Horvat')
+    expect(message).toContain('Vrijeme: Od 15:00 do 18:00')
     expect(message).toContain('Tema: Svemir')
     expect(message).not.toContain('Email:')
     expect(message).toContain('https://vidimose.hr/igraonice/habyland-zagreb')

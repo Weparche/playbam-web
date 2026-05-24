@@ -9,7 +9,11 @@ import {
   type BookingInquiryMessageInput,
 } from './bookingInquiryUtils'
 
-type BookingInquiryForm = Omit<BookingInquiryMessageInput, 'venueUrl'>
+type BookingInquiryForm = Omit<BookingInquiryMessageInput, 'venueUrl' | 'desiredTime'> & {
+  desiredTimeFrom: string
+  desiredTimeTo: string
+  desiredTimeAny: boolean
+}
 
 type BookingInquiryErrors = Partial<Record<keyof BookingInquiryForm, string>>
 
@@ -26,7 +30,9 @@ const EMPTY_FORM: BookingInquiryForm = {
   parentPhone: '',
   childName: '',
   desiredDate: '',
-  desiredTime: '',
+  desiredTimeFrom: '',
+  desiredTimeTo: '',
+  desiredTimeAny: false,
   childrenCount: '',
   packageName: '',
   childAge: '',
@@ -36,14 +42,11 @@ const EMPTY_FORM: BookingInquiryForm = {
   allergies: '',
 }
 
-const TIME_OPTIONS = ['', 'Jutro', 'Prijepodne', 'Popodne', 'Večer', 'Dogovor', 'Ručno upisujem okvirno vrijeme']
-
 const REQUIRED_FIELDS = [
   'parentName',
   'parentPhone',
   'childName',
   'desiredDate',
-  'desiredTime',
   'childrenCount',
 ] as const
 
@@ -52,7 +55,6 @@ const REQUIRED_LABELS: Record<(typeof REQUIRED_FIELDS)[number], string> = {
   parentPhone: 'Upišite telefon roditelja.',
   childName: 'Upišite ime slavljenika.',
   desiredDate: 'Odaberite željeni datum.',
-  desiredTime: 'Odaberite okvirno vrijeme ili dio dana.',
   childrenCount: 'Upišite broj djece.',
 }
 
@@ -91,6 +93,24 @@ export default function BookingInquiryModal({
     }
   }
 
+  const updateAnyTime = (value: boolean) => {
+    setForm((current) => ({
+      ...current,
+      desiredTimeAny: value,
+      desiredTimeFrom: value ? '' : current.desiredTimeFrom,
+      desiredTimeTo: value ? '' : current.desiredTimeTo,
+    }))
+    if (errors.desiredTimeFrom || errors.desiredTimeTo) {
+      setErrors((current) => ({ ...current, desiredTimeFrom: undefined, desiredTimeTo: undefined }))
+    }
+  }
+
+  const buildDesiredTime = () => {
+    if (form.desiredTimeAny) return 'Bilo kad u danu'
+    if (form.desiredTimeFrom && form.desiredTimeTo) return `Od ${form.desiredTimeFrom} do ${form.desiredTimeTo}`
+    return ''
+  }
+
   const validate = () => {
     const nextErrors: BookingInquiryErrors = {}
     for (const field of REQUIRED_FIELDS) {
@@ -101,6 +121,9 @@ export default function BookingInquiryModal({
     if (form.childrenCount.trim() && Number(form.childrenCount) < 1) {
       nextErrors.childrenCount = 'Broj djece mora biti barem 1.'
     }
+    if (!form.desiredTimeAny && (!form.desiredTimeFrom || !form.desiredTimeTo)) {
+      nextErrors.desiredTimeFrom = 'Odaberite okvirno vrijeme od-do ili označite bilo kad u danu.'
+    }
     setErrors(nextErrors)
     return Object.keys(nextErrors).length === 0
   }
@@ -109,7 +132,7 @@ export default function BookingInquiryModal({
     event.preventDefault()
     if (!whatsappPhone || !validate()) return
 
-    const message = buildBookingInquiryMessage({ ...form, venueUrl })
+    const message = buildBookingInquiryMessage({ ...form, desiredTime: buildDesiredTime(), venueUrl })
     const whatsappUrl = buildWhatsappUrl(venue.phone, message)
     if (!whatsappUrl) return
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
@@ -197,21 +220,40 @@ export default function BookingInquiryModal({
                 {errors.desiredDate ? <small>{errors.desiredDate}</small> : null}
               </label>
 
-              <label className="ew-bookingInquiry__field">
-                <span>Okvirno vrijeme {requiredBadge()}</span>
-                <select
-                  value={form.desiredTime}
-                  onChange={(event) => updateField('desiredTime', event.target.value)}
-                  aria-invalid={Boolean(errors.desiredTime)}
-                >
-                  {TIME_OPTIONS.map((option) => (
-                    <option key={option || 'empty'} value={option}>
-                      {option || 'Odaberite dio dana'}
-                    </option>
-                  ))}
-                </select>
-                {errors.desiredTime ? <small>{errors.desiredTime}</small> : null}
-              </label>
+              <fieldset className="ew-bookingInquiry__field ew-bookingInquiry__timeField">
+                <legend>Okvirno vrijeme {requiredBadge()}</legend>
+                <label className="ew-bookingInquiry__check">
+                  <input
+                    type="checkbox"
+                    checked={form.desiredTimeAny}
+                    onChange={(event) => updateAnyTime(event.target.checked)}
+                  />
+                  <span>Bilo kad u danu</span>
+                </label>
+                <div className="ew-bookingInquiry__timeRange" aria-disabled={form.desiredTimeAny}>
+                  <label>
+                    <span>Od</span>
+                    <input
+                      type="time"
+                      value={form.desiredTimeFrom}
+                      onChange={(event) => updateField('desiredTimeFrom', event.target.value)}
+                      disabled={form.desiredTimeAny}
+                      aria-invalid={Boolean(errors.desiredTimeFrom)}
+                    />
+                  </label>
+                  <label>
+                    <span>Do</span>
+                    <input
+                      type="time"
+                      value={form.desiredTimeTo}
+                      onChange={(event) => updateField('desiredTimeTo', event.target.value)}
+                      disabled={form.desiredTimeAny}
+                      aria-invalid={Boolean(errors.desiredTimeFrom)}
+                    />
+                  </label>
+                </div>
+                {errors.desiredTimeFrom ? <small>{errors.desiredTimeFrom}</small> : null}
+              </fieldset>
 
               <label className="ew-bookingInquiry__field">
                 <span>Broj djece {requiredBadge()}</span>

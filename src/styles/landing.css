@@ -4642,6 +4642,59 @@ button.ew-navbar__auth-btn { font-family: inherit; }
   font: 500 15px/1.35 var(--font-work);
 }
 
+.ew-bookingInquiry__timeField {
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.ew-bookingInquiry__timeField legend {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0;
+}
+
+.ew-bookingInquiry__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  width: fit-content;
+  min-height: 34px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ew-bookingInquiry__check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-accent);
+}
+
+.ew-bookingInquiry__timeRange {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ew-bookingInquiry__timeRange[aria-disabled='true'] {
+  opacity: 0.55;
+}
+
+.ew-bookingInquiry__timeRange label {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
 .ew-bookingInquiry__field textarea {
   min-height: 86px;
   resize: vertical;

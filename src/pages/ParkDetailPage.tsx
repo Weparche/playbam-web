@@ -37,6 +37,22 @@ function pinIcon(kind: 'park' | 'cafe', label: string) {
 
 type DetailCafe = NearbyCafe | GooglePlacesCafe
 
+function isRelevantCafe(cafe: DetailCafe) {
+  const name = cafe.name.trim().toLowerCase()
+  if (!name) return false
+  if (name.includes('mivak keramika')) return false
+  return true
+}
+
+function mergeCafes(localCafes: DetailCafe[], googleCafes: GooglePlacesCafe[] | null) {
+  const cafesByName = new Set(localCafes.map((cafe) => cafe.name.trim().toLowerCase()))
+  const filteredGoogle = (googleCafes ?? []).filter((cafe) => {
+    const key = cafe.name.trim().toLowerCase()
+    return isRelevantCafe(cafe) && !cafesByName.has(key)
+  })
+  return [...localCafes.filter(isRelevantCafe), ...filteredGoogle]
+}
+
 function cafeDistanceLabel(cafe: DetailCafe) {
   if (cafe.distanceMeters >= 1000) {
     return `${(cafe.distanceMeters / 1000).toFixed(1)} km`
@@ -94,9 +110,10 @@ function useParkDetailCafes(park: Park | undefined) {
   }, [park])
 
   const googleCafes = googleResult && googleResult.parkId === park?.id ? googleResult.cafes : null
+  const cafes = mergeCafes(fallbackCafes, googleCafes)
 
   return {
-    cafes: googleCafes && googleCafes.length > 0 ? googleCafes : fallbackCafes,
+    cafes,
     source: googleCafes && googleCafes.length > 0 ? 'google' : 'local',
   }
 }

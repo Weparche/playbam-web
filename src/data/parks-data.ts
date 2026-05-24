@@ -268,6 +268,7 @@ export const parks: Park[] = [
         lat: 45.790839,
         lng: 15.9340417,
         distanceMeters: 260,
+        googleMapsUri: 'https://maps.app.goo.gl/Lhr51ApKRTR9R9896',
       },
     ],
     nearestCafeName: 'Sidro',

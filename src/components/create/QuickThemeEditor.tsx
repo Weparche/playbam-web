@@ -44,6 +44,7 @@ export default function QuickThemeEditor({ draft, onThemeChange }: Props) {
         <div className="pb-quickEditor__themeGrid">
           {filteredThemes.map((option) => {
             const isActive = activeTheme === option.id
+            const themeVideo = 'video' in option ? option.video : undefined
             return (
               <button
                 key={option.id}
@@ -52,7 +53,21 @@ export default function QuickThemeEditor({ draft, onThemeChange }: Props) {
                 onClick={() => onThemeChange(option.id)}
               >
                 <div className="pb-quickEditor__themeImageWrap">
-                  <img className="pb-quickEditor__themeImage" src={option.image} alt="" aria-hidden="true" />
+                  {themeVideo ? (
+                    <video
+                      className="pb-quickEditor__themeImage pb-quickEditor__themeVideo"
+                      src={themeVideo}
+                      poster={option.image}
+                      aria-hidden="true"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                    />
+                  ) : (
+                    <img className="pb-quickEditor__themeImage" src={option.image} alt="" aria-hidden="true" />
+                  )}
                   {isActive ? (
                     <span className="pb-quickEditor__themeCheck" aria-hidden="true">
                       <svg viewBox="0 0 20 20" width="20" height="20" fill="none">

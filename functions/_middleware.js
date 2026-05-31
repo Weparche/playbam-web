@@ -16,6 +16,7 @@ const INVITATION_BACKGROUND_MAP = Object.freeze({
   'pozivnica-boys': '/pozivnica-boys.png',
   'pozivnica-boys1': '/pozivnica-girls.png',
   'pozivnica-girl': '/cura.webp',
+  'pozivnica-girl-animated': '/cura.webp',
   'pozivnica-boy': '/decko.webp',
   'pozivnica-girls': '/pozivnica-girls.png',
   'pozivnica-mix': '/pozivnica-mix.png',

@@ -519,6 +519,36 @@ export async function uploadInvitationOgImage(
   )
 }
 
+export async function downloadInvitationShareVideo(invitationId: string): Promise<Blob> {
+  const headers = new Headers({ Accept: 'video/mp4' })
+  const sessionToken = readStoredSession()?.token
+  const storedHostToken = readStoredHostToken()
+
+  if (sessionToken) {
+    headers.set('Authorization', `Bearer ${sessionToken}`)
+  } else if (storedHostToken) {
+    headers.set('Authorization', `Bearer ${storedHostToken}`)
+  }
+
+  const response = await fetch(`${API_BASE}/api/invitations/${encodeURIComponent(invitationId)}/video-export.mp4`, {
+    method: 'GET',
+    headers,
+  })
+
+  if (!response.ok) {
+    let message = `HTTP_${response.status}`
+    try {
+      const data = parseJsonResponse(await response.text()) as ApiErrorPayload | null
+      message = data?.error || message
+    } catch {
+      // Binary/text fallback.
+    }
+    throw new ApiError(response.status, message)
+  }
+
+  return response.blob()
+}
+
 export function getInvitationAccess(invitationId: string, identity?: TemporaryWebIdentity | null) {
   return request<InvitationAccess>(`/api/invitations/${encodeURIComponent(invitationId)}/access/me`, { identity })
 }

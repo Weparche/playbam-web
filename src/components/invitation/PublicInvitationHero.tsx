@@ -13,6 +13,7 @@ import {
 } from '../create/createTypes'
 import { twemojiAssetUrl } from '../../lib/twemojiCodepoint'
 import { useInvitationTitleAutoFit } from './useInvitationTitleAutoFit'
+import { resolveInvitationHeroMedia } from './invitationHeroContent'
 
 export type PrintPartyDetailLine = {
   label: string
@@ -146,6 +147,7 @@ export default function PublicInvitationHero({
   const resolvedImage = backgroundImage || fallbackImage
   const [failedImage, setFailedImage] = useState<string | null>(null)
   const heroImage = failedImage === resolvedImage ? fallbackImage : resolvedImage
+  const heroMedia = resolveInvitationHeroMedia(heroImage, heroImage)
   const normalizedTitleFont = normalizeTitleFont(titleFont)
   const normalizedTitleColor = normalizeTitleColor(titleColor)
   const normalizedTitleOutline = normalizeTitleOutline(titleOutline)
@@ -179,17 +181,32 @@ export default function PublicInvitationHero({
       aria-label="Hero dio javne rođendanske pozivnice"
     >
       <div ref={frameRef} className="pb-inviteHero__frame pb-inviteHero__frame--storybook">
-        <img
-          className="pb-inviteHero__image pb-inviteHero__image--storybook"
-          src={heroImage}
-          alt=""
-          aria-hidden="true"
-          onError={() => {
-            if (heroImage !== fallbackImage) {
-              setFailedImage(resolvedImage)
-            }
-          }}
-        />
+        {heroMedia.type === 'video' ? (
+          <video
+            className="pb-inviteHero__image pb-inviteHero__image--storybook pb-inviteHero__video"
+            src={heroMedia.src}
+            poster={heroMedia.poster}
+            aria-hidden="true"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            onError={() => setFailedImage(resolvedImage)}
+          />
+        ) : (
+          <img
+            className="pb-inviteHero__image pb-inviteHero__image--storybook"
+            src={heroMedia.src}
+            alt=""
+            aria-hidden="true"
+            onError={() => {
+              if (heroImage !== fallbackImage) {
+                setFailedImage(resolvedImage)
+              }
+            }}
+          />
+        )}
 
         {printQrDataUrl ? (
           <div className="pb-inviteHero__printQr" aria-label="QR kod pozivnice">

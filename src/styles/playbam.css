@@ -8624,6 +8624,12 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
   z-index: 0;
 }
 
+.pb-previewCard__heroVideo,
+.pb-inviteHero__video,
+.pb-quickEditor__themeVideo {
+  display: block;
+}
+
 .pb-previewCard__hero--konfeti::before {
   background:
     radial-gradient(circle at 14% 18%, rgba(255, 227, 93, 0.92) 0 0.4rem, transparent 0.42rem),
@@ -10069,6 +10075,14 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
   object-fit: cover;
   object-position: center 30%;
   background: rgba(240, 244, 255, 0.9);
+}
+
+.pb-hostShareDialog__status {
+  margin: 0.85rem 0 0;
+  color: rgba(16, 24, 40, 0.68);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.5;
 }
 
 .pb-quickEditor__themeCopy {

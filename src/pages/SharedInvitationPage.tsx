@@ -1493,7 +1493,27 @@ export default function SharedInvitationPage() {
       setFamilyProfile(nextProfile)
       setProfileDraft(createDraftFromProfile(nextProfile, user.parentName, isBirthInvitation))
       setSelectedChildIds(nextProfile.children.map((child) => child.id))
+
+      if (invitation) {
+        const childIds = isBirthInvitation ? [] : nextProfile.children.map((child) => child.id)
+        const request = await createMembershipRequest(invitation.id, childIds, user)
+        setMembershipRequest(request)
+
+        const nextAccess = await getInvitationAccess(invitation.id, user)
+        setAccess(nextAccess)
+
+        if (pendingRsvpChoice) {
+          const nextRsvp = await saveRsvp(invitation.id, { status: pendingRsvpChoice }, user)
+          setRsvp(nextRsvp)
+          setPendingRsvpChoice(null)
+        } else if (nextAccess.canRsvp) {
+          const nextRsvp = await getMyRsvp(invitation.id, user)
+          setRsvp(nextRsvp)
+        }
+      }
+
       setGuestModalOpen(false)
+      setRequestError('')
     } catch (caughtError) {
       setProfileError(
         isApiError(caughtError, 400)

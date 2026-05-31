@@ -331,7 +331,7 @@ export default function CreateInvitationPage() {
     }
 
     if (draft.wishlistEnabled && hasIncompleteQuickWishlistItem(draft.wishlistItems)) {
-      setFormError('U Listi želja upiši obavezni naziv poklona ili makni praznu stavku.')
+      setFormError('U Poklonima upiši obavezni naziv poklona ili makni praznu stavku.')
       return
     }
 
@@ -403,8 +403,8 @@ export default function CreateInvitationPage() {
         return (
           <FloatingEditPanel
             open
-            title="Lista želja"
-            description="Uključi listu želja i dodaj prijedloge poklona."
+            title="Pokloni"
+            description="Uključi poklone i dodaj prijedloge."
             onClose={() => setActiveShortcut(null)}
             footer={(
               <div className="pb-floatingPanel__footerWishlist">
@@ -483,7 +483,7 @@ export default function CreateInvitationPage() {
             <div className="pb-quickEditor">
               <label className="pb-quickEditor__toggle">
                 <input type="checkbox" checked={draft.wishlistEnabled} onChange={(event) => updateField('wishlistEnabled', event.target.checked)} />
-                <span>Lista želja uključena</span>
+                <span>Pokloni uključeni</span>
               </label>
               <p className="pb-quickEditor__hint">
                 RSVP ostaje uključen, a ovdje kasnije možemo spojiti privatnost, share settings i pravi autosave draft endpoint.

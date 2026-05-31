@@ -261,7 +261,7 @@ export default function AdminPage() {
             </div>
             <div className="pb-modalDialog__body">
               <p className="pb-modalDialog__lead">
-                Obrisat će se {selectedIds.size} pozivnica i svi povezani podaci: RSVP, lista želja i chat. Ova radnja je nepovratna.
+                Obrisat će se {selectedIds.size} pozivnica i svi povezani podaci: RSVP, pokloni i chat. Ova radnja je nepovratna.
               </p>
               <div className="pb-flowActions pb-flowActions--modal">
                 <Button type="button" variant="amber" onClick={() => void handleBulkDelete()} disabled={deleting}>

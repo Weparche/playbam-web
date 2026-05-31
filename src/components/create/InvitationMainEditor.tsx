@@ -206,7 +206,7 @@ export default function InvitationMainEditor({
     : { label: 'Nedostaje detalj', tone: 'pending' as const }
   const themeStatus = { label: 'Odabrana tema', tone: 'accent' as const }
   const wishlistStatus = draft.wishlistEnabled
-    ? { label: draft.wishlistItems.length > 0 ? `${draft.wishlistItems.length} želje` : 'Lista želja uključena', tone: 'accent' as const }
+    ? { label: draft.wishlistItems.length > 0 ? `${draft.wishlistItems.length} poklona` : 'Pokloni uključeni', tone: 'accent' as const }
     : { label: 'Isključeno', tone: 'muted' as const }
 
   const selectedTitleColor = TITLE_COLOR_OPTIONS.find((o) => o.id === draft.titleColor) ?? TITLE_COLOR_OPTIONS[0]
@@ -216,7 +216,7 @@ export default function InvitationMainEditor({
   const normalizedWishlistStatus = {
     ...wishlistStatus,
     label: draft.wishlistEnabled
-      ? draft.wishlistItems.length > 0 ? `${draft.wishlistItems.length} želje` : 'Lista želja uključena'
+      ? draft.wishlistItems.length > 0 ? `${draft.wishlistItems.length} poklona` : 'Pokloni uključeni'
       : 'Isključeno',
   }
 
@@ -685,14 +685,14 @@ export default function InvitationMainEditor({
             className="pb-createEditor__infoCard pb-createEditor__panelCard pb-createEditor__infoCard--wishlist"
             role="button"
             tabIndex={0}
-            aria-label="Uredi listu želja"
+            aria-label="Uredi poklone"
             onClick={() => onOpenShortcut('wishlist')}
             onKeyDown={(event) => handleActionKeyDown(event, () => onOpenShortcut('wishlist'))}
           >
             <div className="pb-createEditor__cardHeader">
               <div>
-                <span className="pb-createEditor__eyebrow"><GiftIcon /> Lista želja</span>
-                <h3 className="pb-createEditor__sectionTitle">Lista želja</h3>
+                <span className="pb-createEditor__eyebrow"><GiftIcon /> Pokloni</span>
+                <h3 className="pb-createEditor__sectionTitle">Pokloni</h3>
               </div>
               <div className="pb-createEditor__cardMeta">
                 <span className={getStatusChipClass(normalizedWishlistStatus.tone)}>{normalizedWishlistStatus.label}</span>
@@ -702,7 +702,7 @@ export default function InvitationMainEditor({
             <p className="pb-createEditor__bodyText">
               {draft.wishlistEnabled
                 ? `${draft.wishlistItems.length} prijedloga poklona`
-                : 'Lista želja je trenutno isključena.'}
+                : 'Pokloni su trenutno isključeni.'}
             </p>
           </Card>
         ) : null}

@@ -9160,8 +9160,8 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
   color: #23406e;
 }
 
-/* „Lista želja” — uvijek do dva retka (host rail desno + mobilni shortcut) */
-.pb-shortcutButton[data-label='Lista želja'] .pb-shortcutButton__label {
+/* „Pokloni” — uvijek do dva retka (host rail desno + mobilni shortcut) */
+.pb-shortcutButton[data-label='Pokloni'] .pb-shortcutButton__label {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -10705,7 +10705,7 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
     grid-column: 1 / -1;
   }
 
-  /* Tema + lista želja u jednom redu; kad je samo tema (npr. host), zauzmi cijelu širinu. */
+  /* Tema + pokloni u jednom redu; kad je samo tema (npr. host), zauzmi cijelu širinu. */
   .pb-createEditor__grid > .pb-card:only-child {
     grid-column: 1 / -1;
   }

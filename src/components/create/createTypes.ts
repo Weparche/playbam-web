@@ -297,7 +297,7 @@ export const STYLE_PRESETS = [
 }>
 
 export const SHORTCUT_ITEMS = [
-  { id: 'wishlist', label: 'Lista želja', icon: '🎁' },
+  { id: 'wishlist', label: 'Pokloni', icon: '🎁' },
   { id: 'settings', label: 'Postavke', icon: '⚙️' },
   { id: 'rsvp', label: 'RSVP', icon: '✅' },
   { id: 'theme', label: 'Tema', icon: '🎨' },

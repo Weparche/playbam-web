@@ -433,13 +433,13 @@ export default function PrivateInvitationGuest({
             aria-expanded={wishlistOpen}
           >
             <span className="pb-privateToggle__copy">
-              <span className="pb-privateToggle__title">Lista želja</span>
+              <span className="pb-privateToggle__title">Pokloni</span>
             </span>
             <span className="pb-privateToggle__trail">
               <PrivateToggleSectionCounts
                 total={guestWishlistTotalCount}
                 newCount={guestWishlistUnreadCount}
-                segmentLabel="želja"
+                segmentLabel="poklon"
               />
               <span className="pb-privateToggle__arrow" aria-hidden>
                 <PrivateToggleChevron />
@@ -449,11 +449,11 @@ export default function PrivateInvitationGuest({
 
           {wishlistOpen ? (
             <div className="pb-privateAccordionBody">
-              <section className="pb-privateWishlist" aria-label="Lista želja">
-                {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">Učitavanje wishliste...</div> : null}
+              <section className="pb-privateWishlist" aria-label="Pokloni">
+                {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">Učitavanje poklona...</div> : null}
                 {wishlistError ? <div className="pb-inlineNote pb-inlineNote--error">{wishlistError}</div> : null}
                 {!wishlistLoading && wishlistItems.length === 0 ? (
-                  <div className="pb-inlineNote pb-inlineNote--info">Još nema dodanih želja.</div>
+                  <div className="pb-inlineNote pb-inlineNote--info">Još nema dodanih poklona.</div>
                 ) : null}
 
                 {wishlistItems.length > 0 ? (

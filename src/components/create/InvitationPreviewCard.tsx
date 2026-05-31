@@ -104,7 +104,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
       {draft.wishlistEnabled ? (
         <div className="pb-previewCard__section">
           <div className="pb-previewCard__sectionHeader">
-            <strong>Lista želja</strong>
+            <strong>Pokloni</strong>
             <span>{draft.wishlistItems.length} prijedloga</span>
           </div>
           <div className="pb-previewCard__wishlist">

@@ -231,7 +231,7 @@ const QuickWishlistEditor = forwardRef<QuickWishlistEditorRef, Props>(function Q
     <div className="pb-quickEditor">
       <label className="pb-quickEditor__toggle">
         <input type="checkbox" checked={draft.wishlistEnabled} onChange={(event) => onFieldChange('wishlistEnabled', event.target.checked)} />
-        <span>Uključi listu želja</span>
+        <span>Uključi poklone</span>
       </label>
 
       {draft.wishlistEnabled ? (

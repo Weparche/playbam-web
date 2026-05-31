@@ -1,7 +1,7 @@
 type Props = {
   total: number
   newCount: number
-  /** Pojedinačna imenica u aria-labelu, npr. "želja" → "5 želja" (pojednostavljeno) */
+  /** Pojedinačna imenica u aria-labelu, npr. "poklon" → "5 poklon" (pojednostavljeno) */
   segmentLabel: string
 }
 

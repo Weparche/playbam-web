@@ -128,7 +128,7 @@ const HOST_SHORTCUT_ITEMS = [
   { id: 'settings', label: 'Ažuriraj', icon: '⚙️' },
   { id: 'partyDetails', label: 'Detalji', icon: '📍' },
   { id: 'requests', label: 'Gosti', icon: '🧾' },
-  { id: 'wishlist', label: 'Lista želja', icon: '🎁' },
+  { id: 'wishlist', label: 'Pokloni', icon: '🎁' },
   { id: 'shareGuest', label: 'Podijeli', icon: '🔗' },
 ] as const satisfies ReadonlyArray<{ id: HostShortcutId; label: string; icon: string }>
 
@@ -972,7 +972,7 @@ export default function SharedInvitationPage() {
       const items = await getInvitationWishlist(invitation.id, identity)
       setWishlistItems(items)
     } catch {
-      setWishlistError('Lista želja trenutno nije dostupna.')
+      setWishlistError('Pokloni trenutno nisu dostupni.')
     } finally {
       setWishlistLoading(false)
     }
@@ -1199,7 +1199,7 @@ export default function SharedInvitationPage() {
             if (!cancelled) {
               if (accessState.canViewWishlist) {
                 setWishlistItems([])
-                setWishlistError('Lista želja trenutno nije dostupna.')
+                setWishlistError('Pokloni trenutno nisu dostupni.')
               }
               if (accessState.canAccessPrivateInvitation) {
                 setGuestRosterRequests([])
@@ -1282,7 +1282,7 @@ export default function SharedInvitationPage() {
     }
   }, [hasPrivateAccess, hasHostSession, invitation, isHost, loadingPrivateState, refreshChat, showHostStudio, user])
 
-  /** Gost s pristupom: lista želja i popis gostiju u pozadini. */
+  /** Gost s pristupom: pokloni i popis gostiju u pozadini. */
   useEffect(() => {
     if (!invitation || isHost || !hasPrivateAccess || !user || loadingPrivateState) {
       return
@@ -1808,7 +1808,7 @@ export default function SharedInvitationPage() {
       resetWishlistForm()
       await refreshWishlist(identity)
     } catch {
-      setWishlistFormError('Spremanje želje trenutno nije uspjelo.')
+      setWishlistFormError('Spremanje poklona trenutno nije uspjelo.')
     } finally {
       setSavingWishlistItem(false)
     }
@@ -2357,7 +2357,7 @@ export default function SharedInvitationPage() {
 
                     {hostAccordionOpen === 'requests' ? (
                       <div className="pb-privateAccordionBody">
-                        <p className="pb-flowCard__text">Pregledaj popis gostiju, RSVP odgovore i rezervacije s liste želja.</p>
+                        <p className="pb-flowCard__text">Pregledaj popis gostiju, RSVP odgovore i rezervacije poklona.</p>
                         {hostError ? <div className="pb-inlineNote pb-inlineNote--error">{hostError}</div> : null}
                         <InvitationGuestRosterList
                           requests={hostRequests}
@@ -2382,13 +2382,13 @@ export default function SharedInvitationPage() {
                     >
                       <span className="pb-privateToggle__copy">
                         <span className="pb-privateToggle__eyebrow">Organizator</span>
-                        <span className="pb-privateToggle__title">Lista želja</span>
+                        <span className="pb-privateToggle__title">Pokloni</span>
                       </span>
                       <span className="pb-privateToggle__trail">
                         <PrivateToggleSectionCounts
                           total={wishlistItems.length}
                           newCount={hostWishlistUnreadCount}
-                          segmentLabel="želja"
+                          segmentLabel="poklon"
                         />
                         <span className="pb-privateToggle__arrow" aria-hidden>
                           <PrivateToggleChevron />
@@ -2400,7 +2400,7 @@ export default function SharedInvitationPage() {
                       <div className="pb-privateAccordionBody">
                         <div className="pb-privateWishlist pb-privateWishlist--hostPanel">
                         <p className="pb-flowCard__text pb-flowCard__text--hostWishlist">
-                          Dodaj, uredi i organiziraj želje za poklone. Ovdje vidiš i tko je što rezervirao.
+                          Dodaj, uredi i organiziraj poklone. Ovdje vidiš i tko je što rezervirao.
                         </p>
 
                         <div className="pb-inviteHostAddWrap">
@@ -2441,8 +2441,8 @@ export default function SharedInvitationPage() {
                         </div>
 
                         {wishlistError ? <div className="pb-inlineNote pb-inlineNote--error">{wishlistError}</div> : null}
-                        {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">Učitavanje liste želja...</div> : null}
-                        {!wishlistLoading && wishlistItems.length === 0 ? <div className="pb-inlineNote pb-inlineNote--info">Još nema dodanih želja.</div> : null}
+                        {wishlistLoading ? <div className="pb-inlineNote pb-inlineNote--info">Učitavanje poklona...</div> : null}
+                        {!wishlistLoading && wishlistItems.length === 0 ? <div className="pb-inlineNote pb-inlineNote--info">Još nema dodanih poklona.</div> : null}
                         {wishlistItems.length > 0 ? (
                           <HostWishlistSection
                             items={wishlistItems}
@@ -2930,7 +2930,7 @@ function WishlistForm({ draft, error, saving, isEditing, onChange, onSave, onCan
         </div>
       </div>
       <div className="pb-flowActions">
-        <Button type="button" onClick={onSave} disabled={saving}>{saving ? 'Spremamo...' : isEditing ? 'Spremi' : 'Dodaj želju'}</Button>
+        <Button type="button" onClick={onSave} disabled={saving}>{saving ? 'Spremamo...' : isEditing ? 'Spremi' : 'Dodaj poklon'}</Button>
         {isEditing ? <Button variant="ghost" type="button" onClick={onCancel}>Odustani</Button> : null}
       </div>
       {error ? <div className="pb-inlineNote pb-inlineNote--error">{error}</div> : null}

@@ -2023,8 +2023,8 @@ export const faqItems: FAQItem[] = [
     answer: 'Na digitalnoj pozivnici klikom na gumb "Dolazimo" ili "Ne možemo". Na printanoj pozivnici skeniraju QR kod koji ih vodi na istu stranicu za potvrdu. Sve potvrde vidiš na jednom mjestu u svom dashboardu.',
   },
   {
-    question: 'Tko vidi listu želja, chat i kontakt broj?',
-    answer: 'Javni dio pozivnice (naslovnica, datum, lokacija, RSVP) vidljiv je odmah. Lista želja, live chat, kontakt i mobitel otvaraju se gostima nakon prijave i tvog odobrenja pristupa. Tako ostaju privatni, a ti i dalje imaš sve na jednom linku.',
+    question: 'Tko vidi poklone, chat i kontakt broj?',
+    answer: 'Javni dio pozivnice (naslovnica, datum, lokacija, RSVP) vidljiv je odmah. Pokloni, live chat, kontakt i mobitel otvaraju se gostima nakon prijave i tvog odobrenja pristupa. Tako ostaju privatni, a ti i dalje imaš sve na jednom linku.',
   },
   {
     question: 'Mogu li printati pozivnicu?',

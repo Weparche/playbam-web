@@ -46,7 +46,7 @@ export default function InvitationCard({
   const accessText =
     access === 'private'
       ? 'Odluku možeš promijeniti do 24h prije rođendana.'
-      : 'Prijavi se za listu želja, potvrdu dolaska i privatne detalje.'
+      : 'Prijavi se za poklone, potvrdu dolaska i privatne detalje.'
 
   const handleRsvpClick = (choice: 'going' | 'not_going' | 'maybe') => {
     if (rsvpActive) {

@@ -12,7 +12,7 @@ const FEATURES = [
   {
     id: 'wishlist',
     number: '02',
-    title: 'Lista želja',
+    title: 'Pokloni',
     text: 'Gosti rezerviraju poklon ili se prijave na grupni dar. Manje duplih igračaka, manje stresa.',
   },
   {
@@ -63,7 +63,7 @@ function InvitationPreview() {
         <div className="ew-featuresPreview__block" data-feature="wishlist">
           <p className="ew-featuresPreview__label">
             <span className="ew-featuresPreview__labelIcon">🎁</span>
-            Lista želja
+            Pokloni
           </p>
           <ul className="ew-featuresPreview__wishlist">
             <li>
@@ -140,7 +140,7 @@ export default function InvitationFeaturesSection() {
           </h2>
           <p className="ew-features__lead">
             Pozivnica je prvi dojam. Ispod nje ide ono što roditelji stvarno trebaju: potvrde dolaska,
-            lista želja, chat i praktični detalji za dan tuluma.
+            pokloni, chat i praktični detalji za dan tuluma.
           </p>
         </div>
 
@@ -169,7 +169,7 @@ export default function InvitationFeaturesSection() {
 
         <div className="ew-features__footer ew-reveal">
           <p className="ew-features__privacy">
-            Gosti odmah vide javni dio pozivnice. RSVP, lista želja, chat i kontakt otvaraju se nakon
+            Gosti odmah vide javni dio pozivnice. RSVP, pokloni, chat i kontakt otvaraju se nakon
             tvoje prijave i odobrenja.
           </p>
           <Link to="/kreiraj-pozivnicu" className="ew-btn-primary">

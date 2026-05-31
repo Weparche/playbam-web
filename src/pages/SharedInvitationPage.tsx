@@ -952,8 +952,12 @@ export default function SharedInvitationPage() {
         setHostVideoShareMessage('MP4 je spremljen u preuzimanja. Kopiraj link ispod i pošalji ga nakon videa.')
       }
       setHostVideoShareState('fallback')
-    } catch {
+    } catch (error) {
       setHostVideoShareState('idle')
+      if (isApiError(error, 404)) {
+        setHostVideoShareMessage('Video export još nije dostupan na serveru. Backend treba deploy/restart, a do tada možeš podijeliti obični link ispod.')
+        return
+      }
       setHostVideoShareMessage('Video trenutno nije moguće generirati. Možeš podijeliti obični link ispod.')
     }
   }

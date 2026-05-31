@@ -10,7 +10,8 @@ const INVITATION_BACKGROUND_MAP: Record<string, string> = {
   'pozivnica-boys': '/pozivnica-boys.png',
   'pozivnica-boys1': '/pozivnica-girls.png',
   'pozivnica-girl': '/cura.webp',
-  'pozivnica-girl-animated': '/cura.webm',
+  // Animirane pozivnice su privremeno pauzirane.
+  // 'pozivnica-girl-animated': '/cura.webm',
   'pozivnica-boy': '/decko.webp',
   'pozivnica-girls': '/pozivnica-girls.png',
   'pozivnica-mix': '/pozivnica-mix.png',
@@ -29,7 +30,7 @@ const INVITATION_BACKGROUND_MAP: Record<string, string> = {
 
 export type InvitationHeroMedia = {
   src: string
-  type: 'image' | 'video'
+  type: 'image'
   poster?: string
 }
 
@@ -102,13 +103,7 @@ export function resolveInvitationBackgroundImage(coverImage?: MaybeString, theme
 
 export function resolveInvitationHeroMedia(coverImage?: MaybeString, theme?: MaybeString): InvitationHeroMedia {
   const src = resolveInvitationBackgroundImage(coverImage, theme)
-  if (src.toLowerCase().endsWith('.webm')) {
-    return {
-      src,
-      type: 'video',
-      poster: '/cura.webp',
-    }
-  }
+  // Animirane pozivnice su privremeno pauzirane. Za nastavak vrati `.webm` video branch.
 
   return {
     src,

@@ -37,7 +37,6 @@ import {
   getFamilyProfile,
   getInvitationAccess,
   getInvitationChat,
-  downloadInvitationShareVideo,
   markInvitationChatRead,
   getInvitationWishlist,
   getMyMembershipRequest,
@@ -433,9 +432,7 @@ export default function SharedInvitationPage() {
   const [hostUpdateNotice, setHostUpdateNotice] = useState('')
   const [hostShareDialogOpen, setHostShareDialogOpen] = useState(false)
   const [hostShareCopyDone, setHostShareCopyDone] = useState(false)
-  const [hostVideoShareState, setHostVideoShareState] = useState<'idle' | 'generating' | 'sharing' | 'fallback'>('idle')
-  const [hostVideoShareMessage, setHostVideoShareMessage] = useState<string | null>(null)
-  const [hostVideoShareBlob, setHostVideoShareBlob] = useState<Blob | null>(null)
+  // Animirane pozivnice su privremeno pauzirane. Za nastavak vrati hostVideoShare state + MP4 share flow.
   const [hostJpgExportMessage, setHostJpgExportMessage] = useState<string | null>(null)
   const hostPrintCardRef = useRef<HTMLDivElement>(null)
 
@@ -855,7 +852,7 @@ export default function SharedInvitationPage() {
   }
 
   const guestPageShareUrl = invitation ? buildGuestInvitePageUrl(invitation) : ''
-  const animatedShareText = guestPageShareUrl
+  const guestShareText = guestPageShareUrl
     ? `Pozivnica za rođendan 🎉 Potvrdi dolazak ovdje: ${guestPageShareUrl}`
     : 'Pozivnica za rođendan 🎉'
   const guestWhatsAppShareHref = guestPageShareUrl
@@ -865,22 +862,6 @@ export default function SharedInvitationPage() {
   const closeHostShareDialog = () => {
     setHostShareDialogOpen(false)
     setHostShortcutActive(null)
-  }
-
-  const downloadVideoBlob = (blob: Blob) => {
-    const objectUrl = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = objectUrl
-    anchor.download = 'pozivnica.mp4'
-    anchor.click()
-    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 2000)
-  }
-
-  const handleDownloadGeneratedVideo = () => {
-    if (!hostVideoShareBlob) {
-      return
-    }
-    downloadVideoBlob(hostVideoShareBlob)
   }
 
   const handleCopyGuestInviteLink = async () => {
@@ -905,7 +886,7 @@ export default function SharedInvitationPage() {
       try {
         await navigator.share({
           title: 'Pozivnica za rođendan',
-          text: animatedShareText,
+          text: guestShareText,
           url: guestPageShareUrl,
         })
         return
@@ -919,83 +900,10 @@ export default function SharedInvitationPage() {
     await handleCopyGuestInviteLink()
   }
 
-  const handleShareAnimatedInvitation = async () => {
-    if (!invitation || !guestPageShareUrl) {
-      return
-    }
-
-    setHostVideoShareMessage(null)
-    setHostVideoShareBlob(null)
-    setHostVideoShareState('generating')
-
-    try {
-      const blob = await downloadInvitationShareVideo(invitation.id)
-      const file = new File([blob], 'pozivnica.mp4', { type: 'video/mp4' })
-      const sharePayload = {
-        title: 'Pozivnica za rođendan',
-        text: animatedShareText,
-        files: [file],
-      }
-      const fileOnlySharePayload = {
-        title: 'Pozivnica za rođendan',
-        files: [file],
-      }
-
-      if (navigator.share && (!navigator.canShare || navigator.canShare(sharePayload))) {
-        setHostVideoShareState('sharing')
-        try {
-          await navigator.share(sharePayload)
-          setHostVideoShareState('idle')
-          setHostVideoShareMessage('Video je poslan u odabranu aplikaciju. Ako link nije ostao uz video, pošalji ga gumbom ispod.')
-          return
-        } catch (error) {
-          if (error instanceof DOMException && error.name === 'AbortError') {
-            setHostVideoShareState('idle')
-            return
-          }
-        }
-      }
-
-      if (navigator.share && navigator.canShare?.(fileOnlySharePayload)) {
-        setHostVideoShareState('sharing')
-        try {
-          await navigator.share(fileOnlySharePayload)
-          setHostVideoShareState('idle')
-          try {
-            await navigator.clipboard.writeText(guestPageShareUrl)
-            setHostShareCopyDone(true)
-            setHostVideoShareMessage('Video je poslan. Link je kopiran, pošalji ga odmah nakon videa ako nije ostao u captionu.')
-          } catch {
-            setHostVideoShareMessage('Video je poslan. Kopiraj link ispod i pošalji ga odmah nakon videa.')
-          }
-          return
-        } catch (error) {
-          if (error instanceof DOMException && error.name === 'AbortError') {
-            setHostVideoShareState('idle')
-            return
-          }
-        }
-      }
-
-      setHostVideoShareBlob(blob)
-      setHostVideoShareState('fallback')
-      setHostVideoShareMessage('Ovaj preglednik ne podržava direktno dijeljenje MP4 datoteke. Preuzmi video pa pošalji link posebno.')
-    } catch (error) {
-      setHostVideoShareState('idle')
-      if (isApiError(error, 404)) {
-        setHostVideoShareMessage('Video export još nije dostupan na serveru. Backend treba deploy/restart, a do tada možeš podijeliti obični link ispod.')
-        return
-      }
-      setHostVideoShareMessage('Video trenutno nije moguće generirati. Možeš podijeliti obični link ispod.')
-    }
-  }
-
   useEffect(() => {
     if (hostShareDialogOpen) {
       setHostShareCopyDone(false)
-      setHostVideoShareState('idle')
-      setHostVideoShareMessage(null)
-      setHostVideoShareBlob(null)
+      // Animirane pozivnice su privremeno pauzirane. Ovdje se resetirao MP4 share state.
     }
   }, [hostShareDialogOpen])
 
@@ -2011,21 +1919,18 @@ export default function SharedInvitationPage() {
 
   if (ogCapture) {
     const ogStatus = loading ? 'loading' : invitation ? 'ready' : 'error'
-    const videoCapture = searchParams.get('videoCapture') === '1'
-    const captureInvitation = invitation && videoCapture
-      ? { ...invitation, coverImage: 'pozivnica-girl-animated', theme: 'pozivnica-girl-animated' }
-      : invitation
+    // Animirane pozivnice su privremeno pauzirane. `videoCapture=1` i force tema ostaju isključeni.
 
     return (
       <main
         id="main"
-        className={`pb-ogCapture${videoCapture ? ' pb-videoCapture' : ''}`}
+        className="pb-ogCapture"
         data-og-status={ogStatus}
         data-og-slug={token}
       >
-        {captureInvitation ? (
+        {invitation ? (
           <div className="pb-ogCapture__cardWrap">
-            <InvitationCard invitation={captureInvitation} access="public" captureMode />
+            <InvitationCard invitation={invitation} access="public" captureMode />
           </div>
         ) : null}
       </main>
@@ -2778,40 +2683,9 @@ export default function SharedInvitationPage() {
             </div>
             <div className="pb-modalDialog__body">
               <p className="pb-modalDialog__lead">
-                Podijeli animiranu pozivnicu kao MP4 video. Link ide uz video kao tekst, a ako aplikacija to ne prihvati, pošalji link posebno.
+                Poveznica za gost prikaz (web pozivnica).
               </p>
-              <div className="pb-flowActions pb-hostShareDialog__actions">
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={() => void handleShareAnimatedInvitation()}
-                  disabled={hostVideoShareState === 'generating' || hostVideoShareState === 'sharing'}
-                >
-                  {hostVideoShareState === 'generating'
-                    ? 'Generiram video...'
-                    : hostVideoShareState === 'sharing'
-                      ? 'Otvaram dijeljenje...'
-                      : 'Podijeli animiranu pozivnicu'}
-                </Button>
-                <Button type="button" variant="ghost" onClick={() => void handleShareGuestInviteLink()}>
-                  Podijeli samo link
-                </Button>
-              </div>
-              {hostVideoShareMessage ? (
-                <p className="pb-hostShareDialog__status" role="status">
-                  {hostVideoShareMessage}
-                </p>
-              ) : null}
-              {hostVideoShareBlob ? (
-                <div className="pb-flowActions pb-hostShareDialog__actions">
-                  <Button type="button" variant="primary" onClick={handleDownloadGeneratedVideo}>
-                    Preuzmi MP4
-                  </Button>
-                  <Button type="button" variant="ghost" onClick={() => void handleCopyGuestInviteLink()}>
-                    {hostShareCopyDone ? 'Link kopiran' : 'Kopiraj link'}
-                  </Button>
-                </div>
-              ) : null}
+              {/* Animirane pozivnice su privremeno pauzirane. Ovdje je bio MP4 share/download blok. */}
               <label className="pb-formField">
                 <span className="pb-formLabel">Link</span>
                 <input
@@ -2824,6 +2698,9 @@ export default function SharedInvitationPage() {
               <div className="pb-flowActions pb-hostShareDialog__actions">
                 <Button type="button" variant="primary" onClick={() => void handleCopyGuestInviteLink()}>
                   {hostShareCopyDone ? 'Kopirano' : 'Kopiraj link'}
+                </Button>
+                <Button type="button" variant="ghost" onClick={() => void handleShareGuestInviteLink()}>
+                  Podijeli link
                 </Button>
                 {guestWhatsAppShareHref ? (
                   <a className="pb-btn pb-btn-ghost" href={guestWhatsAppShareHref} target="_blank" rel="noreferrer">

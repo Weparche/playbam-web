@@ -72,21 +72,8 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
   return (
     <Card className={cardClass}>
       <div className="pb-previewCard__hero">
-        {backgroundMedia.type === 'video' ? (
-          <video
-            className="pb-previewCard__heroImage pb-previewCard__heroVideo"
-            src={backgroundMedia.src}
-            poster={backgroundMedia.poster}
-            aria-hidden="true"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-        ) : (
-          <img className="pb-previewCard__heroImage" src={backgroundMedia.src} alt="" aria-hidden="true" />
-        )}
+        {/* Animirane pozivnice su privremeno pauzirane. Za nastavak vrati <video> preview branch. */}
+        <img className="pb-previewCard__heroImage" src={backgroundMedia.src} alt="" aria-hidden="true" />
         <img className="pb-previewCard__logo" src="/logo.png" alt="VidimoSe.hr" />
         <div ref={previewHeroTextRef} className={`pb-previewCard__heroText pb-previewCard__heroText--size-${titleSize}`}>
           <span className="pb-previewCard__eyebrow">Pozivnica</span>

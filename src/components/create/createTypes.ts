@@ -1,6 +1,5 @@
 export type CoverTheme =
   | 'pozivnica-girl'
-  | 'pozivnica-girl-animated'
   | 'pozivnica-boy'
   | 'safari'
   | 'space'
@@ -114,7 +113,8 @@ export const LEGACY_COVER_THEME_TABS = [
 ] as const satisfies ReadonlyArray<{ id: CoverThemeTab; label: string }>
 
 const LEGACY_COVER_THEME_OPTIONS = [
-  { id: 'pozivnica-girl-animated', label: 'Cura animirana', description: 'Animirana VidimoSe.hr pozivnica s personaliziranim tekstom.', image: '/cura.webp', video: '/cura.webm' },
+  // Animirane pozivnice su privremeno pauzirane. Za nastavak vrati `pozivnica-girl-animated` + `/cura.webm`.
+  // { id: 'pozivnica-girl-animated', label: 'Cura animirana', description: 'Animirana VidimoSe.hr pozivnica s personaliziranim tekstom.', image: '/cura.webp', video: '/cura.webm' },
   { id: 'pozivnica-girl', label: 'Cura', description: 'VidimoSe.hr službena pozivnica za cure', image: '/cura.webp' },
   { id: 'pozivnica-boy', label: 'Dečko', description: 'VidimoSe.hr službena pozivnica za dečke', image: '/decko.webp' },
   { id: 'safari', label: 'Safari', description: 'Afričke životinje i safari avantura.', image: '/safari.png' },
@@ -124,7 +124,7 @@ const LEGACY_COVER_THEME_OPTIONS = [
   { id: 'princess', label: 'Princeza', description: 'Kraljevski i princeza mood.', image: '/princess.png' },
   { id: 'unicorns', label: 'Jednorozi', description: 'Šareni jednorozi i čarolija.', image: '/unicorns.png' },
   { id: 'pirates', label: 'Pirati', description: 'Piratska avantura i more.', image: '/pirates.png' },
-] as const satisfies ReadonlyArray<{ id: Exclude<CoverTheme, 'frozen' | 'sirena' | 'beba_cura' | 'beba_decko'>; label: string; description: string; image: string; video?: string }>
+] as const satisfies ReadonlyArray<{ id: Exclude<CoverTheme, 'frozen' | 'sirena' | 'beba_cura' | 'beba_decko'>; label: string; description: string; image: string }>
 
 export const COVER_THEME_MODAL_TABS = [
   { id: 'birthday', label: 'Dje\u010dji ro\u0111endan' },
@@ -137,7 +137,7 @@ export const COVER_THEME_OPTIONS = [
   { id: 'sirena', tab: 'birthday', label: 'Sirena', description: 'Podvodna bajka s morskim detaljima.', image: '/sirena.png' },
   { id: 'beba_cura', tab: 'birth', label: 'Beba cura', description: 'Nje\u017ena naslovnica za dolazak djevoj\u010dice.', image: '/curica.webp' },
   { id: 'beba_decko', tab: 'birth', label: 'Beba de\u010dko', description: 'Nje\u017ena naslovnica za dolazak dje\u010daka.', image: '/beba_decko.png' },
-] as const satisfies ReadonlyArray<{ id: CoverTheme; tab: CoverThemeTab; label: string; description: string; image: string; video?: string }>
+] as const satisfies ReadonlyArray<{ id: CoverTheme; tab: CoverThemeTab; label: string; description: string; image: string }>
 
 export const EFFECT_OPTIONS = [
   { id: 'confetti', label: 'Konfeti', description: 'Sitni party detalji preko postera.' },
@@ -559,7 +559,6 @@ export function normalizeCreateTheme(themeValue: string | null | undefined): Cov
 
   switch (normalized) {
     case 'pozivnica-girl':
-    case 'pozivnica-girl-animated':
     case 'pozivnica-boy':
     case 'safari':
     case 'space':

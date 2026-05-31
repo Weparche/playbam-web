@@ -567,21 +567,8 @@ export default function InvitationMainEditor({
               </div>
             </div>
             <div className="pb-createEditor__themePreviewRow">
-              {heroThemeMedia.type === 'video' ? (
-                <video
-                  className="pb-createEditor__themeThumbnail"
-                  src={heroThemeMedia.src}
-                  poster={heroThemeMedia.poster}
-                  aria-hidden="true"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
-              ) : (
-                <img className="pb-createEditor__themeThumbnail" src={heroThemeMedia.src} alt="" aria-hidden="true" />
-              )}
+              {/* Animirane pozivnice su privremeno pauzirane. Za nastavak vrati <video> thumbnail branch. */}
+              <img className="pb-createEditor__themeThumbnail" src={heroThemeMedia.src} alt="" aria-hidden="true" />
               <p className="pb-createEditor__bodyText">{getThemeLabel(draft.theme)}</p>
             </div>
           </Card>
@@ -667,21 +654,8 @@ export default function InvitationMainEditor({
             </div>
           </div>
           <div className="pb-createEditor__themePreviewRow">
-            {heroThemeMedia.type === 'video' ? (
-              <video
-                className="pb-createEditor__themeThumbnail"
-                src={heroThemeMedia.src}
-                poster={heroThemeMedia.poster}
-                aria-hidden="true"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-              />
-            ) : (
-              <img className="pb-createEditor__themeThumbnail" src={heroThemeMedia.src} alt="" aria-hidden="true" />
-            )}
+            {/* Animirane pozivnice su privremeno pauzirane. Za nastavak vrati <video> thumbnail branch. */}
+            <img className="pb-createEditor__themeThumbnail" src={heroThemeMedia.src} alt="" aria-hidden="true" />
             <p className="pb-createEditor__bodyText">{getThemeLabel(draft.theme)}</p>
           </div>
         </Card>

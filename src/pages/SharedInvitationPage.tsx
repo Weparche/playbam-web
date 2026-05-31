@@ -432,7 +432,6 @@ export default function SharedInvitationPage() {
   const [hostUpdateNotice, setHostUpdateNotice] = useState('')
   const [hostShareDialogOpen, setHostShareDialogOpen] = useState(false)
   const [hostShareCopyDone, setHostShareCopyDone] = useState(false)
-  // Animirane pozivnice su privremeno pauzirane. Za nastavak vrati hostVideoShare state + MP4 share flow.
   const [hostJpgExportMessage, setHostJpgExportMessage] = useState<string | null>(null)
   const hostPrintCardRef = useRef<HTMLDivElement>(null)
 
@@ -852,9 +851,6 @@ export default function SharedInvitationPage() {
   }
 
   const guestPageShareUrl = invitation ? buildGuestInvitePageUrl(invitation) : ''
-  const guestShareText = guestPageShareUrl
-    ? `Pozivnica za rođendan 🎉 Potvrdi dolazak ovdje: ${guestPageShareUrl}`
-    : 'Pozivnica za rođendan 🎉'
   const guestWhatsAppShareHref = guestPageShareUrl
     ? `https://wa.me/?text=${encodeURIComponent(`Pozivnica: ${guestPageShareUrl}`)}`
     : ''
@@ -877,33 +873,9 @@ export default function SharedInvitationPage() {
     }
   }
 
-  const handleShareGuestInviteLink = async () => {
-    if (!guestPageShareUrl) {
-      return
-    }
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Pozivnica za rođendan',
-          text: guestShareText,
-          url: guestPageShareUrl,
-        })
-        return
-      } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') {
-          return
-        }
-      }
-    }
-
-    await handleCopyGuestInviteLink()
-  }
-
   useEffect(() => {
     if (hostShareDialogOpen) {
       setHostShareCopyDone(false)
-      // Animirane pozivnice su privremeno pauzirane. Ovdje se resetirao MP4 share state.
     }
   }, [hostShareDialogOpen])
 
@@ -1919,7 +1891,6 @@ export default function SharedInvitationPage() {
 
   if (ogCapture) {
     const ogStatus = loading ? 'loading' : invitation ? 'ready' : 'error'
-    // Animirane pozivnice su privremeno pauzirane. `videoCapture=1` i force tema ostaju isključeni.
 
     return (
       <main
@@ -2682,10 +2653,7 @@ export default function SharedInvitationPage() {
               </button>
             </div>
             <div className="pb-modalDialog__body">
-              <p className="pb-modalDialog__lead">
-                Poveznica za gost prikaz (web pozivnica).
-              </p>
-              {/* Animirane pozivnice su privremeno pauzirane. Ovdje je bio MP4 share/download blok. */}
+              <p className="pb-modalDialog__lead">Poveznica za gost prikaz (web pozivnica).</p>
               <label className="pb-formField">
                 <span className="pb-formLabel">Link</span>
                 <input
@@ -2698,9 +2666,6 @@ export default function SharedInvitationPage() {
               <div className="pb-flowActions pb-hostShareDialog__actions">
                 <Button type="button" variant="primary" onClick={() => void handleCopyGuestInviteLink()}>
                   {hostShareCopyDone ? 'Kopirano' : 'Kopiraj link'}
-                </Button>
-                <Button type="button" variant="ghost" onClick={() => void handleShareGuestInviteLink()}>
-                  Podijeli link
                 </Button>
                 {guestWhatsAppShareHref ? (
                   <a className="pb-btn pb-btn-ghost" href={guestWhatsAppShareHref} target="_blank" rel="noreferrer">

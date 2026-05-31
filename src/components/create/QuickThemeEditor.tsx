@@ -52,7 +52,6 @@ export default function QuickThemeEditor({ draft, onThemeChange }: Props) {
                 onClick={() => onThemeChange(option.id)}
               >
                 <div className="pb-quickEditor__themeImageWrap">
-                  {/* Animirane pozivnice su privremeno pauzirane. Za nastavak vrati video thumbnail branch. */}
                   <img className="pb-quickEditor__themeImage" src={option.image} alt="" aria-hidden="true" />
                   {isActive ? (
                     <span className="pb-quickEditor__themeCheck" aria-hidden="true">

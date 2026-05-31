@@ -37,22 +37,6 @@ function pinIcon(kind: 'park' | 'cafe', label: string) {
 
 type DetailCafe = NearbyCafe | GooglePlacesCafe
 
-function isRelevantCafe(cafe: DetailCafe) {
-  const name = cafe.name.trim().toLowerCase()
-  if (!name) return false
-  if (name.includes('mivak keramika')) return false
-  return true
-}
-
-function mergeCafes(localCafes: DetailCafe[], googleCafes: GooglePlacesCafe[] | null) {
-  const cafesByName = new Set(localCafes.map((cafe) => cafe.name.trim().toLowerCase()))
-  const filteredGoogle = (googleCafes ?? []).filter((cafe) => {
-    const key = cafe.name.trim().toLowerCase()
-    return isRelevantCafe(cafe) && !cafesByName.has(key)
-  })
-  return [...localCafes.filter(isRelevantCafe), ...filteredGoogle]
-}
-
 function cafeDistanceLabel(cafe: DetailCafe) {
   if (cafe.distanceMeters >= 1000) {
     return `${(cafe.distanceMeters / 1000).toFixed(1)} km`
@@ -110,10 +94,9 @@ function useParkDetailCafes(park: Park | undefined) {
   }, [park])
 
   const googleCafes = googleResult && googleResult.parkId === park?.id ? googleResult.cafes : null
-  const cafes = mergeCafes(fallbackCafes, googleCafes)
 
   return {
-    cafes,
+    cafes: googleCafes && googleCafes.length > 0 ? googleCafes : fallbackCafes,
     source: googleCafes && googleCafes.length > 0 ? 'google' : 'local',
   }
 }
@@ -165,7 +148,7 @@ export default function ParkDetailPage() {
   const parks = useMemo(() => loadParks(), [])
   const park = parks.find((item) => item.slug === slug)
   const { cafes, source: cafeSource } = useParkDetailCafes(park)
-  const googlePlace = useGooglePlaceEnrichment(park?.skipGooglePlaces ? undefined : park, 6)
+  const googlePlace = useGooglePlaceEnrichment(park, 6)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   const relatedParks = useMemo(() => {
@@ -177,10 +160,9 @@ export default function ParkDetailPage() {
 
   if (!park) return <Navigate to="/djecji-parkovi" replace />
 
-  const localPhotos = park.photos && park.photos.length > 0 ? park.photos : [park.coverPhoto]
-  const googlePhotos = park.skipGooglePlaces ? [] : googlePhotoUris(googlePlace)
-  const lightboxPhotos = googlePhotos.length > 0 ? googlePhotos : localPhotos
-  const heroPhoto = lightboxPhotos[0] ?? park.coverPhoto
+  const googlePhotos = googlePhotoUris(googlePlace)
+  const heroPhoto = googlePhotos[0] ?? park.coverPhoto
+  const lightboxPhotos = googlePhotos.length > 0 ? googlePhotos : [park.coverPhoto]
   const mapsUrl = googlePlace?.googleMapsUri ?? mapsUrlForPark(park)
   const displayedRating = googlePlace?.rating ?? park.rating
   const displayedReviewCount = googlePlace?.reviewCount ?? park.reviewCount

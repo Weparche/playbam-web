@@ -41,7 +41,6 @@ export type Park = {
   features: ParkFeature[]
   description: string
   coverPhoto: string
-  photos?: string[]
   rating: number
   reviewCount: number
   hasShade: boolean
@@ -51,7 +50,6 @@ export type Park = {
   googleMapsUri?: string
   googleRating?: number
   googleReviewCount?: number
-  skipGooglePlaces?: boolean
   nearbyCafes?: NearbyCafe[]
   nearestCafeName?: string
   nearestCafeDistanceMeters?: number
@@ -206,73 +204,6 @@ export const parks: Park[] = [
     ],
     nearestCafeName: 'Lake Bar Jarun',
     nearestCafeDistanceMeters: 280,
-  },
-  {
-    id: 'park-gajevo-kod-hotela-jarun',
-    slug: 'park-gajevo-kod-hotela-jarun',
-    name: 'Park Gajevo - kod Hotela Jarun',
-    city: 'Zagreb',
-    neighborhood: 'Gajevo',
-    address: 'Hrgovići 7, 10000 Zagreb',
-    lat: 45.7914424,
-    lng: 15.9299765,
-    ageRange: '3-10',
-    ageMin: 3,
-    ageMax: 10,
-    features: ['shade', 'fenced', 'parking', 'stroller', 'benches', 'large', 'quiet'],
-    description: 'Kvartovski dječji park u Gajevu, blizu Hotela Jarun, s više sprava i dovoljno prostora za mirniju igru u zapadnom dijelu Zagreba.',
-    coverPhoto: '/parks/Park%20Gajevo%20-%20kod%20Hotela%20Jarun/air.png',
-    photos: [
-      '/parks/Park%20Gajevo%20-%20kod%20Hotela%20Jarun/air.png',
-      '/parks/Park%20Gajevo%20-%20kod%20Hotela%20Jarun/sve_sprave.png',
-    ],
-    rating: 4.6,
-    reviewCount: 0,
-    hasShade: true,
-    isFenced: true,
-    hasCafeNearby: false,
-    googleMapsUri:
-      'https://www.google.com/maps/place/Park+%22kod+Hotela%22/@45.7915825,15.9302124,20z/data=!4m15!1m8!3m7!1s0x4765d7d42f19ba6d:0xe334713d1fe71783!2sPark+%22kod+Hotela%22!8m2!3d45.7914424!4d15.9299765!10e5!16s%2Fg%2F11r9fb1csc!3m5!1s0x4765d7d42f19ba6d:0xe334713d1fe71783!8m2!3d45.7914424!4d15.9299765!16s%2Fg%2F11r9fb1csc?authuser=0&entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D',
-    skipGooglePlaces: true,
-    nearbyCafes: [],
-  },
-  {
-    id: 'park-gajevo-kod-pbz',
-    slug: 'park-gajevo-kod-pbz',
-    name: 'Park Gajevo - Kod PBZ',
-    city: 'Zagreb',
-    neighborhood: 'Gajevo',
-    address: 'Gajevo, 10000 Zagreb',
-    lat: 45.7888565,
-    lng: 15.9317713,
-    ageRange: '3-12',
-    ageMin: 3,
-    ageMax: 12,
-    features: ['cafe', 'parking', 'stroller', 'benches', 'large', 'walkway', 'birthday'],
-    description:
-      'Jedan od najboljih i najvećih dječjih parkova u Gajevu, s puno prostora za igru i više zona za djecu. Veliki plus je kafić Sidro koji je doslovno u sklopu parka, pa roditelji mogu predahnuti dok su djeca na igralištu.',
-    coverPhoto: '/parks/Park%20Gajevo%20-%20Kod%20PBZ-a/air.png',
-    photos: ['/parks/Park%20Gajevo%20-%20Kod%20PBZ-a/air.png'],
-    rating: 4.7,
-    reviewCount: 0,
-    hasShade: false,
-    isFenced: false,
-    hasCafeNearby: true,
-    googleMapsUri:
-      'https://www.google.com/maps/dir/45.790839,15.9340417/45.7888565,15.9317713/@45.7890116,15.9312322,157m/data=!3m1!1e3!4m5!4m4!1m1!4e1!1m0!3e3?authuser=0&entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D',
-    skipGooglePlaces: true,
-    nearbyCafes: [
-      {
-        id: 'sidro-gajevo',
-        name: 'Sidro',
-        lat: 45.790839,
-        lng: 15.9340417,
-        distanceMeters: 260,
-        googleMapsUri: 'https://maps.app.goo.gl/Lhr51ApKRTR9R9896',
-      },
-    ],
-    nearestCafeName: 'Sidro',
-    nearestCafeDistanceMeters: 260,
   },
   {
     id: 'park-ribnjak',

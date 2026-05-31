@@ -197,10 +197,6 @@ export function useGoogleCoverPhotos(sources: CoverPhotoSource[]) {
   const [coverPhotos, setCoverPhotos] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {}
     for (const source of sources) {
-      if (source.skipGooglePlaces) {
-        initial[source.id] = source.fallbackPhoto
-        continue
-      }
       const cached = readCoverPhotoCache(getCoverCacheKey(source))
       initial[source.id] = cached?.photo ?? source.fallbackPhoto
     }
@@ -212,13 +208,9 @@ export function useGoogleCoverPhotos(sources: CoverPhotoSource[]) {
     const missing: CoverPhotoSource[] = []
 
     for (const source of sources) {
-      if (source.skipGooglePlaces) {
-        next[source.id] = source.fallbackPhoto
-        continue
-      }
       const cached = readCoverPhotoCache(getCoverCacheKey(source))
       next[source.id] = cached?.photo ?? source.fallbackPhoto
-      if (!cached) missing.push(source)
+      if (!source.skipGooglePlaces && !cached) missing.push(source)
     }
 
     setCoverPhotos(next)

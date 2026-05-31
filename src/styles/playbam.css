@@ -1658,38 +1658,6 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   margin: 0;
 }
 
-/* Animirane pozivnice su privremeno pauzirane. Za nastavak vrati video capture CSS.
-.pb-videoCapture {
-  width: 760px;
-  height: 1296px;
-  min-height: 1296px;
-  overflow: hidden;
-  background: #fffaf5;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
-.pb-videoCapture .pb-ogCapture__cardWrap {
-  width: 380px;
-  max-width: 380px;
-  transform: scale(2);
-  transform-origin: top left;
-}
-
-.pb-videoCapture .pb-inviteCard--storybook {
-  width: 380px;
-  max-width: 380px;
-}
-
-.pb-videoCapture .pb-inviteHero__frame--storybook {
-  margin: 0 auto;
-}
-
-html:has(.pb-ogCapture) .pb-mobileFooterNav {
-  display: none;
-}
-*/
-
 .pb-modalOverlay {
   position: fixed;
   inset: 0;
@@ -8656,14 +8624,6 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
   z-index: 0;
 }
 
-/* Animirane pozivnice su privremeno pauzirane. Za nastavak vrati video media utility.
-.pb-previewCard__heroVideo,
-.pb-inviteHero__video,
-.pb-quickEditor__themeVideo {
-  display: block;
-}
-*/
-
 .pb-previewCard__hero--konfeti::before {
   background:
     radial-gradient(circle at 14% 18%, rgba(255, 227, 93, 0.92) 0 0.4rem, transparent 0.42rem),
@@ -10109,14 +10069,6 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
   object-fit: cover;
   object-position: center 30%;
   background: rgba(240, 244, 255, 0.9);
-}
-
-.pb-hostShareDialog__status {
-  margin: 0.85rem 0 0;
-  color: rgba(16, 24, 40, 0.68);
-  font-size: 0.9rem;
-  font-weight: 800;
-  line-height: 1.5;
 }
 
 .pb-quickEditor__themeCopy {

@@ -12,7 +12,7 @@ import {
 
 import { lockScroll, unlockScroll } from '../../lib/scrollLock'
 import Card from '../ui/Card'
-import { resolveInvitationHeroMedia } from '../invitation/invitationHeroContent'
+import { resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
 import {
   buildCreateProgress,
   buildPreviewLocation,
@@ -389,8 +389,7 @@ export default function InvitationMainEditor({
     onFieldChange('titleFont', fontId)
   }
 
-  const heroThemeMedia = resolveInvitationHeroMedia(draft.theme, draft.theme)
-  const heroThemeImage = heroThemeMedia.poster ?? heroThemeMedia.src
+  const heroThemeImage = resolveInvitationBackgroundImage(draft.theme, draft.theme)
   const titleStyleSampleText =
     draft.title.trim().length > 0 ? draft.title.trim().slice(0, 56) : 'Luka slavi 6. rođendan'
 
@@ -567,8 +566,7 @@ export default function InvitationMainEditor({
               </div>
             </div>
             <div className="pb-createEditor__themePreviewRow">
-              {/* Animirane pozivnice su privremeno pauzirane. Za nastavak vrati <video> thumbnail branch. */}
-              <img className="pb-createEditor__themeThumbnail" src={heroThemeMedia.src} alt="" aria-hidden="true" />
+              <img className="pb-createEditor__themeThumbnail" src={heroThemeImage} alt="" aria-hidden="true" />
               <p className="pb-createEditor__bodyText">{getThemeLabel(draft.theme)}</p>
             </div>
           </Card>
@@ -654,8 +652,7 @@ export default function InvitationMainEditor({
             </div>
           </div>
           <div className="pb-createEditor__themePreviewRow">
-            {/* Animirane pozivnice su privremeno pauzirane. Za nastavak vrati <video> thumbnail branch. */}
-            <img className="pb-createEditor__themeThumbnail" src={heroThemeMedia.src} alt="" aria-hidden="true" />
+            <img className="pb-createEditor__themeThumbnail" src={heroThemeImage} alt="" aria-hidden="true" />
             <p className="pb-createEditor__bodyText">{getThemeLabel(draft.theme)}</p>
           </div>
         </Card>

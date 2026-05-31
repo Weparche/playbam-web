@@ -113,8 +113,6 @@ export const LEGACY_COVER_THEME_TABS = [
 ] as const satisfies ReadonlyArray<{ id: CoverThemeTab; label: string }>
 
 const LEGACY_COVER_THEME_OPTIONS = [
-  // Animirane pozivnice su privremeno pauzirane. Za nastavak vrati `pozivnica-girl-animated` + `/cura.webm`.
-  // { id: 'pozivnica-girl-animated', label: 'Cura animirana', description: 'Animirana VidimoSe.hr pozivnica s personaliziranim tekstom.', image: '/cura.webp', video: '/cura.webm' },
   { id: 'pozivnica-girl', label: 'Cura', description: 'VidimoSe.hr službena pozivnica za cure', image: '/cura.webp' },
   { id: 'pozivnica-boy', label: 'Dečko', description: 'VidimoSe.hr službena pozivnica za dečke', image: '/decko.webp' },
   { id: 'safari', label: 'Safari', description: 'Afričke životinje i safari avantura.', image: '/safari.png' },

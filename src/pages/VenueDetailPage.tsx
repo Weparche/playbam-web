@@ -4,7 +4,6 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import Footer from '../components/landing/Footer'
 import Navbar from '../components/landing/Navbar'
 import ImageLightbox from '../components/ui/ImageLightbox'
-import BookingInquiryModal from '../components/venues/BookingInquiryModal'
 import { REGIONS, regionForCity, venues } from '../lib/landing-data'
 import { googlePhotoUris, useGooglePlaceEnrichment } from '../lib/useGooglePlaceEnrichment'
 
@@ -65,8 +64,6 @@ export default function VenueDetailPage() {
 
   const [activePhoto, setActivePhoto] = useState(0)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
-  const [bookingInquiryOpen, setBookingInquiryOpen] = useState(false)
-  const [preselectedPackageName, setPreselectedPackageName] = useState<string | undefined>()
   const activePhotoIndex = allPhotos.length > 0 ? Math.min(activePhoto, allPhotos.length - 1) : 0
 
   const { leftIndices, rightIndices } = useMemo(() => {
@@ -101,12 +98,6 @@ export default function VenueDetailPage() {
   const displayedAddress = venue.skipGooglePlaces ? venue.address : (googlePlace?.address ?? venue.address)
   const displayedPhone = venue.skipGooglePlaces ? venue.phone : (googlePlace?.phone ?? venue.phone)
   const displayedWebsite = venue.skipGooglePlaces ? venue.website : (googlePlace?.website ?? venue.website)
-  const bookingVenue = { ...venue, phone: displayedPhone }
-  const venueUrl = `https://vidimose.hr/igraonice/${venue.slug}`
-  const openBookingInquiry = (packageName?: string) => {
-    setPreselectedPackageName(packageName)
-    setBookingInquiryOpen(true)
-  }
   const displayedMapsUrl = venue.skipGooglePlaces
     ? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`
     : (googlePlace?.googleMapsUri ?? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`)
@@ -233,12 +224,6 @@ export default function VenueDetailPage() {
 
               {/* Description */}
               <p className="ew-vd-desc">{venue.description}</p>
-              <div className="ew-vd-actions">
-                <button type="button" className="ew-btn-primary" onClick={() => openBookingInquiry()}>
-                  Pošalji upit za rođendan
-                </button>
-                <span>Direktno igraonici preko WhatsAppa, bez automatske potvrde termina.</span>
-              </div>
 
               {/* Amenities */}
               <section className="ew-vd-section">
@@ -284,13 +269,6 @@ export default function VenueDetailPage() {
                       >
                         Kreiraj pozivnicu s ovim paketom
                       </Link>
-                      <button
-                        type="button"
-                        className="ew-btn-secondary ew-vd-package__inquiry"
-                        onClick={() => openBookingInquiry(pkg.name)}
-                      >
-                        Pošalji upit za ovaj paket
-                      </button>
                     </div>
                   ))}
                 </div>
@@ -405,9 +383,6 @@ export default function VenueDetailPage() {
                 >
                   Kreiraj pozivnicu s ovom lokacijom
                 </Link>
-                <button type="button" className="ew-btn-secondary ew-vd-sidebar__cta" onClick={() => openBookingInquiry()}>
-                  Pošalji upit za rođendan
-                </button>
 
                 <div className="ew-vd-sidebar__meta-row">
                   <span>📍 {venue.city}</span>
@@ -512,17 +487,6 @@ export default function VenueDetailPage() {
           initialIndex={lightboxIndex}
           altBase={venue.name}
           onClose={() => setLightboxIndex(null)}
-        />
-      ) : null}
-
-      {bookingInquiryOpen ? (
-        <BookingInquiryModal
-          key={preselectedPackageName ?? 'general-inquiry'}
-          venue={bookingVenue}
-          isOpen={bookingInquiryOpen}
-          onClose={() => setBookingInquiryOpen(false)}
-          preselectedPackageName={preselectedPackageName}
-          venueUrl={venueUrl}
         />
       ) : null}
 

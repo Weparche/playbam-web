@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Card from '../ui/Card'
-import { buildInvitationHeroTitle, resolveInvitationHeroMedia } from '../invitation/invitationHeroContent'
+import { buildInvitationHeroTitle, resolveInvitationBackgroundImage } from '../invitation/invitationHeroContent'
 import { useInvitationTitleAutoFit } from '../invitation/useInvitationTitleAutoFit'
 import { proxyImageUrl } from '../../lib/invitationApi'
 import {
@@ -26,7 +26,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
   const displayTitle =
     buildInvitationHeroTitle(draft.title.trim() || '', draft.celebrantName).trim() || 'Upiši naslov pozivnice'
   const location = buildPreviewLocation(draft.locationName, draft.locationAddress, draft.locationType)
-  const backgroundMedia = resolveInvitationHeroMedia(draft.theme, draft.theme)
+  const backgroundImage = resolveInvitationBackgroundImage(draft.theme, draft.theme)
   const titleFont = normalizeTitleFont(draft.titleFont)
   const titleColor = normalizeTitleColor(draft.titleColor)
   const titleOutline = normalizeTitleOutline(draft.titleOutline)
@@ -72,8 +72,7 @@ export default function InvitationPreviewCard({ draft, compact }: Props) {
   return (
     <Card className={cardClass}>
       <div className="pb-previewCard__hero">
-        {/* Animirane pozivnice su privremeno pauzirane. Za nastavak vrati <video> preview branch. */}
-        <img className="pb-previewCard__heroImage" src={backgroundMedia.src} alt="" aria-hidden="true" />
+        <img className="pb-previewCard__heroImage" src={backgroundImage} alt="" aria-hidden="true" />
         <img className="pb-previewCard__logo" src="/logo.png" alt="VidimoSe.hr" />
         <div ref={previewHeroTextRef} className={`pb-previewCard__heroText pb-previewCard__heroText--size-${titleSize}`}>
           <span className="pb-previewCard__eyebrow">Pozivnica</span>

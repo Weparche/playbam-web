@@ -1658,6 +1658,36 @@ body:has(.pb-main--demo.pb-invitePage) #root {
   margin: 0;
 }
 
+.pb-videoCapture {
+  width: 760px;
+  height: 1296px;
+  min-height: 1296px;
+  overflow: hidden;
+  background: #fffaf5;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.pb-videoCapture .pb-ogCapture__cardWrap {
+  width: 380px;
+  max-width: 380px;
+  transform: scale(2);
+  transform-origin: top left;
+}
+
+.pb-videoCapture .pb-inviteCard--storybook {
+  width: 380px;
+  max-width: 380px;
+}
+
+.pb-videoCapture .pb-inviteHero__frame--storybook {
+  margin: 0 auto;
+}
+
+html:has(.pb-ogCapture) .pb-mobileFooterNav {
+  display: none;
+}
+
 .pb-modalOverlay {
   position: fixed;
   inset: 0;

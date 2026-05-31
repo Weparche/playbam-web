@@ -329,8 +329,45 @@ type HostLocalDraft = {
   partyDetailsDraft: PartyDetailsDraft
 }
 
+type RsvpChoice = 'going' | 'not_going' | 'maybe'
+
 function buildHostLocalDraftKey(invitationId: string) {
   return `playbam.host-update.draft.${invitationId}`
+}
+
+function buildPendingRsvpKey(token: string, invitationId?: string | null) {
+  return `playbam.pending-rsvp.${invitationId || token}`
+}
+
+function isRsvpChoice(value: unknown): value is RsvpChoice {
+  return value === 'going' || value === 'not_going' || value === 'maybe'
+}
+
+function readPendingRsvpChoice(token: string, invitationId?: string | null): RsvpChoice | null {
+  if (typeof window === 'undefined') return null
+  const keys = [
+    buildPendingRsvpKey(token, invitationId),
+    invitationId ? buildPendingRsvpKey(token, null) : '',
+  ].filter(Boolean)
+
+  for (const key of keys) {
+    const value = window.sessionStorage.getItem(key)
+    if (isRsvpChoice(value)) return value
+  }
+  return null
+}
+
+function writePendingRsvpChoice(token: string, invitationId: string | null | undefined, choice: RsvpChoice) {
+  if (typeof window === 'undefined') return
+  window.sessionStorage.setItem(buildPendingRsvpKey(token, invitationId), choice)
+}
+
+function clearPendingRsvpChoice(token: string, invitationId?: string | null) {
+  if (typeof window === 'undefined') return
+  window.sessionStorage.removeItem(buildPendingRsvpKey(token, invitationId))
+  if (invitationId) {
+    window.sessionStorage.removeItem(buildPendingRsvpKey(token, null))
+  }
 }
 
 function readHostLocalDraft(invitationId: string): HostLocalDraft | null {
@@ -392,7 +429,7 @@ export default function SharedInvitationPage() {
   const [wishlistError, setWishlistError] = useState('')
   const [savingProfile, setSavingProfile] = useState(false)
   const [savingRsvp, setSavingRsvp] = useState(false)
-  const [pendingRsvpChoice, setPendingRsvpChoice] = useState<'going' | 'not_going' | 'maybe' | null>(null)
+  const [pendingRsvpChoice, setPendingRsvpChoice] = useState<RsvpChoice | null>(null)
   const [reviewingRequestId, setReviewingRequestId] = useState<string | null>(null)
   const [wishlistActionId, setWishlistActionId] = useState<string | null>(null)
   const [wishlistDraft, setWishlistDraft] = useState<WishlistDraft>(createWishlistDraft())
@@ -500,6 +537,17 @@ export default function SharedInvitationPage() {
       clearInvitationShareMeta()
     }
   }, [invitation])
+
+  useEffect(() => {
+    if (!invitation || pendingRsvpChoice) {
+      return
+    }
+
+    const storedChoice = readPendingRsvpChoice(token, invitation.id)
+    if (storedChoice) {
+      setPendingRsvpChoice(storedChoice)
+    }
+  }, [invitation, pendingRsvpChoice, token])
 
   useEffect(() => {
     if (!invitation) {
@@ -1506,6 +1554,7 @@ export default function SharedInvitationPage() {
           const nextRsvp = await saveRsvp(invitation.id, { status: pendingRsvpChoice }, user)
           setRsvp(nextRsvp)
           setPendingRsvpChoice(null)
+          clearPendingRsvpChoice(token, invitation.id)
         } else if (nextAccess.canRsvp) {
           const nextRsvp = await getMyRsvp(invitation.id, user)
           setRsvp(nextRsvp)
@@ -1544,7 +1593,7 @@ export default function SharedInvitationPage() {
     }
   }
 
-  const handleRsvpChange = async (status: 'going' | 'not_going' | 'maybe') => {
+  const handleRsvpChange = async (status: RsvpChoice) => {
     if (!user || !invitation) {
       return
     }
@@ -1561,8 +1610,9 @@ export default function SharedInvitationPage() {
     }
   }
 
-  const handleGuestRsvpIntent = (status: 'going' | 'not_going' | 'maybe') => {
+  const handleGuestRsvpIntent = (status: RsvpChoice) => {
     setPendingRsvpChoice(status)
+    writePendingRsvpChoice(token, invitation?.id, status)
     if (!user) {
       openGuestFlow()
       return
@@ -1598,6 +1648,7 @@ export default function SharedInvitationPage() {
 
     if (rsvp?.status === pendingRsvpChoice) {
       setPendingRsvpChoice(null)
+      clearPendingRsvpChoice(token, invitation.id)
       return
     }
 
@@ -1613,6 +1664,7 @@ export default function SharedInvitationPage() {
         setRsvp(nextRsvp)
         setRequestError('')
         setPendingRsvpChoice(null)
+        clearPendingRsvpChoice(token, invitation.id)
       } catch {
         if (cancelled) {
           return
@@ -1630,7 +1682,7 @@ export default function SharedInvitationPage() {
     return () => {
       cancelled = true
     }
-  }, [pendingRsvpChoice, user, invitation, rsvp])
+  }, [pendingRsvpChoice, user, invitation, rsvp, token])
 
   const handleReserveWishlistItem = async (item: InvitationWishlistItem) => {
     if (!user || !invitation) {

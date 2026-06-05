@@ -2065,6 +2065,85 @@
   outline-offset: 2px;
 }
 
+/* ===== Help page ===== */
+.partner-help__lead {
+  margin: 0 0 1.25rem;
+  max-width: 60ch;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--partner-muted);
+}
+
+.partner-help {
+  display: grid;
+  gap: 1rem;
+}
+
+.partner-helpCard__head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+}
+
+.partner-helpCard__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
+  border-radius: var(--partner-radius-sm);
+  background: var(--partner-accent-soft);
+  color: var(--partner-accent-strong);
+}
+
+.partner-helpCard__title {
+  margin: 0;
+  font-family: var(--font-fraunces, Georgia, serif);
+  font-size: 1.2rem;
+  font-weight: 350;
+  letter-spacing: -0.01em;
+  color: var(--partner-text);
+}
+
+.partner-helpSteps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: help;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.partner-helpStep {
+  counter-increment: help;
+  position: relative;
+  padding-left: 2.1rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--partner-muted);
+}
+
+.partner-helpStep::before {
+  content: counter(help);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--partner-bg) 50%, var(--partner-surface));
+  border: 1px solid var(--partner-border-strong);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--partner-text);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ===== Toast ===== */
 .partner-toast {
   position: fixed;

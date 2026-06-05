@@ -33,6 +33,7 @@ const OWNER_NAV: NavConfig = {
     { to: '/partner/addons', label: 'Dodaci', icon: 'addons' },
     { to: '/partner/animators', label: 'Animatori', icon: 'animators' },
     { to: '/partner/settings', label: 'Postavke', icon: 'settings' },
+    { to: '/partner/pomoc', label: 'Pomoć', icon: 'help' },
   ],
   mobilePrimary: [
     { to: '/partner', label: 'Danas', icon: 'today', end: true },
@@ -47,7 +48,10 @@ const ANIMATOR_NAV: NavConfig = {
     { to: '/partner', label: 'Moji eventi', icon: 'today', end: true },
     { to: '/partner/calendar', label: 'Kalendar', icon: 'calendar' },
   ],
-  setup: [{ to: '/partner/settings', label: 'Postavke', icon: 'settings' }],
+  setup: [
+    { to: '/partner/settings', label: 'Postavke', icon: 'settings' },
+    { to: '/partner/pomoc', label: 'Pomoć', icon: 'help' },
+  ],
   mobilePrimary: [
     { to: '/partner', label: 'Eventi', icon: 'today', end: true },
     { to: '/partner/calendar', label: 'Kalendar', icon: 'calendar' },

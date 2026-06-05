@@ -77,6 +77,9 @@ function PartnerAnimatorSettings() {
         </dl>
 
         <div className="partner-settingsAccount__links">
+          <Link to="/partner/pomoc" className="partner-settingsAccount__link">
+            Upute za rad
+          </Link>
           <Link to="/" className="partner-settingsAccount__link">
             Natrag na VidimoSe.hr
           </Link>

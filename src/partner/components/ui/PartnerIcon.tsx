@@ -20,6 +20,7 @@ type IconName =
   | 'clock'
   | 'home'
   | 'logout'
+  | 'help'
 
 const PATHS: Record<IconName, ReactNode> = {
   today: (
@@ -115,6 +116,13 @@ const PATHS: Record<IconName, ReactNode> = {
     <>
       <path d="M14 4.5h4.5a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5H14" />
       <path d="M3.5 12h11M11 8l4 4-4 4" />
+    </>
+  ),
+  help: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M9.6 9.4a2.5 2.5 0 0 1 4.9.6c0 1.7-2.5 2.1-2.5 3.6" />
+      <path d="M12 17h.01" />
     </>
   ),
 }

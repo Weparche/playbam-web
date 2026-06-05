@@ -35,6 +35,7 @@ const PartnerAnimatorsPage = lazyWithRetry(() => import('./partner/pages/Partner
 const PartnerCustomersPage = lazyWithRetry(() => import('./partner/pages/PartnerCustomersPage'))
 const PartnerCustomerDetailPage = lazyWithRetry(() => import('./partner/pages/PartnerCustomerDetailPage'))
 const PartnerSettingsPage = lazyWithRetry(() => import('./partner/pages/PartnerSettingsPage'))
+const PartnerHelpPage = lazyWithRetry(() => import('./partner/pages/PartnerHelpPage'))
 const PartnerOwnerGate = lazyWithRetry(() => import('./partner/components/layout/PartnerOwnerGate'))
 
 function ScrollToTop() {
@@ -107,6 +108,7 @@ export default function App() {
               <Route path="customers" element={<PartnerOwnerGate><PartnerCustomersPage /></PartnerOwnerGate>} />
               <Route path="customers/:id" element={<PartnerOwnerGate><PartnerCustomerDetailPage /></PartnerOwnerGate>} />
               <Route path="settings" element={<PartnerSettingsPage />} />
+              <Route path="pomoc" element={<PartnerHelpPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -67,7 +67,7 @@ type PartnerDataContextValue = {
   createAnimator: (input: Omit<Animator, 'id' | 'playroomId'>) => void
   updateAnimator: (id: string, patch: Partial<Animator>) => void
   deleteAnimator: (id: string) => void
-  createCustomer: (input: Omit<Customer, 'id'>) => void
+  createCustomer: (input: Omit<Customer, 'id'>) => Customer
   updateCustomer: (id: string, patch: Partial<Customer>) => void
   calculatePrice: (packageId: string, childrenCount: number, addonIds: string[]) => number
   reservationsForAnimator: (animatorId: string, dateKey?: string) => BirthdayReservation[]
@@ -222,8 +222,9 @@ export function PartnerDataProvider({ children }: { children: ReactNode }) {
         refresh()
       },
       createCustomer: (input) => {
-        repo.createCustomer(input)
+        const created = repo.createCustomer(input)
         refresh()
+        return created
       },
       updateCustomer: (id, patch) => {
         repo.updateCustomer(id, patch)

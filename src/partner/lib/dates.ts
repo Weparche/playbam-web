@@ -32,6 +32,12 @@ export function formatDateHr(dateKey: string): string {
   return d.toLocaleDateString('hr-HR', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
+export function formatDayHeadingHr(dateKey: string): string {
+  const d = new Date(`${dateKey}T12:00:00`)
+  const text = d.toLocaleDateString('hr-HR', { weekday: 'long', day: 'numeric', month: 'long' })
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
 export function formatMonthYearHr(year: number, month: number): string {
   const d = new Date(year, month - 1, 1)
   const monthName = d.toLocaleDateString('hr-HR', { month: 'long' })
@@ -62,6 +68,34 @@ export function weekdayFromDateKey(dateKey: string): import('../types').Weekday 
 
 export function isSameMonth(a: string, b: string): boolean {
   return a.slice(0, 7) === b.slice(0, 7)
+}
+
+export function startOfWeekKey(dateKey: string): string {
+  const d = new Date(`${dateKey}T12:00:00`)
+  const offset = (d.getDay() + 6) % 7
+  d.setDate(d.getDate() - offset)
+  return toDateKey(d)
+}
+
+export function weekDayKeys(dateKey: string): string[] {
+  const start = startOfWeekKey(dateKey)
+  return Array.from({ length: 7 }, (_, i) => addDays(start, i))
+}
+
+export const WEEKDAY_LABELS_HR: Record<string, string> = {
+  mon: 'Pon',
+  tue: 'Uto',
+  wed: 'Sri',
+  thu: 'Čet',
+  fri: 'Pet',
+  sat: 'Sub',
+  sun: 'Ned',
+}
+
+export function formatDayShortHr(dateKey: string): string {
+  const d = new Date(`${dateKey}T12:00:00`)
+  const text = d.toLocaleDateString('hr-HR', { weekday: 'short', day: 'numeric', month: 'numeric' })
+  return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
 export function monthGridDays(year: number, month: number): Array<{ dateKey: string; inMonth: boolean }> {

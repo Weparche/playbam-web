@@ -6,6 +6,7 @@ import {
   useState,
   type ChangeEvent,
   type DragEvent,
+  type PointerEvent as ReactPointerEvent,
 } from 'react'
 
 import Button from '../ui/Button'
@@ -155,9 +156,15 @@ export default function InvitationPartyGallery({
   const [showAll, setShowAll] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedPhoto, setSelectedPhoto] = useState<InvitationGalleryPhoto | null>(null)
+  const [zoom, setZoom] = useState(1)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [isGesturing, setIsGesturing] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const confirmResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const swipeStartX = useRef<number | null>(null)
+  const pointers = useRef<Map<number, { x: number; y: number }>>(new Map())
+  const pinchStart = useRef<{ dist: number; zoom: number } | null>(null)
+  const panStart = useRef<{ x: number; y: number; px: number; py: number } | null>(null)
 
   const uploading = uploadTotal > 0
   const resolvedToken = token.trim()
@@ -411,17 +418,81 @@ export default function InvitationPartyGallery({
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [selectedPhoto, showPreviousPhoto, showNextPhoto])
 
-  const onImagePointerDown = (event: { clientX: number }) => {
-    swipeStartX.current = event.clientX
+  const resetZoom = useCallback(() => {
+    setZoom(1)
+    setPan({ x: 0, y: 0 })
+  }, [])
+
+  useEffect(() => {
+    resetZoom()
+  }, [resetZoom, selectedPhoto?.id])
+
+  const onImagePointerDown = (event: ReactPointerEvent<HTMLImageElement>) => {
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY })
+    setIsGesturing(true)
+
+    if (pointers.current.size === 2) {
+      const [a, b] = [...pointers.current.values()]
+      pinchStart.current = { dist: Math.hypot(a.x - b.x, a.y - b.y), zoom }
+      swipeStartX.current = null
+    } else if (zoom > 1) {
+      panStart.current = { x: event.clientX, y: event.clientY, px: pan.x, py: pan.y }
+    } else {
+      swipeStartX.current = event.clientX
+    }
   }
 
-  const onImagePointerUp = (event: { clientX: number }) => {
-    if (swipeStartX.current === null) return
-    const delta = event.clientX - swipeStartX.current
-    swipeStartX.current = null
-    if (Math.abs(delta) < SWIPE_THRESHOLD_PX) return
-    if (delta > 0) showPreviousPhoto()
-    else showNextPhoto()
+  const onImagePointerMove = (event: ReactPointerEvent<HTMLImageElement>) => {
+    if (!pointers.current.has(event.pointerId)) return
+    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY })
+
+    if (pointers.current.size >= 2 && pinchStart.current) {
+      const [a, b] = [...pointers.current.values()]
+      const dist = Math.hypot(a.x - b.x, a.y - b.y)
+      const nextZoom = Math.min(4, Math.max(1, (pinchStart.current.zoom * dist) / pinchStart.current.dist))
+      setZoom(nextZoom)
+      if (nextZoom === 1) {
+        setPan({ x: 0, y: 0 })
+      }
+    } else if (pointers.current.size === 1 && zoom > 1 && panStart.current) {
+      setPan({
+        x: panStart.current.px + (event.clientX - panStart.current.x),
+        y: panStart.current.py + (event.clientY - panStart.current.y),
+      })
+    }
+  }
+
+  const onImagePointerUp = (event: ReactPointerEvent<HTMLImageElement>) => {
+    const swipeOrigin = swipeStartX.current
+    pointers.current.delete(event.pointerId)
+
+    if (pointers.current.size < 2) {
+      pinchStart.current = null
+    }
+
+    if (pointers.current.size === 0) {
+      panStart.current = null
+      setIsGesturing(false)
+      if (zoom === 1 && swipeOrigin !== null) {
+        const delta = event.clientX - swipeOrigin
+        if (Math.abs(delta) >= SWIPE_THRESHOLD_PX) {
+          if (delta > 0) showPreviousPhoto()
+          else showNextPhoto()
+        }
+      }
+      swipeStartX.current = null
+    }
+  }
+
+  const toggleZoom = () => {
+    setZoom((current) => {
+      if (current > 1) {
+        setPan({ x: 0, y: 0 })
+        return 1
+      }
+      return 2.5
+    })
   }
 
   const uploadProgressPct = uploadTotal > 0 ? Math.round((uploadDone / uploadTotal) * 100) : 0
@@ -631,8 +702,8 @@ export default function InvitationPartyGallery({
               </button>
             </div>
             <div className="pb-modalDialog__body pb-partyGalleryModal__body">
-              <div className="pb-partyGalleryModal__stage">
-                {photos.length > 1 ? (
+              <div className={`pb-partyGalleryModal__stage ${zoom > 1 ? 'is-zoomed' : ''}`}>
+                {photos.length > 1 && zoom === 1 ? (
                   <button
                     type="button"
                     className="pb-partyGalleryModal__edge pb-partyGalleryModal__edge--prev"
@@ -646,11 +717,19 @@ export default function InvitationPartyGallery({
                   className="pb-partyGalleryModal__image"
                   src={selectedPhoto.imageUrl}
                   alt="Fotka iz galerije tuluma"
+                  style={{
+                    transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+                    transition: isGesturing ? 'none' : undefined,
+                    cursor: zoom > 1 ? 'grab' : 'zoom-in',
+                  }}
                   onPointerDown={onImagePointerDown}
+                  onPointerMove={onImagePointerMove}
                   onPointerUp={onImagePointerUp}
+                  onPointerCancel={onImagePointerUp}
+                  onDoubleClick={toggleZoom}
                   draggable={false}
                 />
-                {photos.length > 1 ? (
+                {photos.length > 1 && zoom === 1 ? (
                   <button
                     type="button"
                     className="pb-partyGalleryModal__edge pb-partyGalleryModal__edge--next"
@@ -658,6 +737,16 @@ export default function InvitationPartyGallery({
                     aria-label="Sljedeća fotka"
                   >
                     <GalleryChevronIcon direction="right" />
+                  </button>
+                ) : null}
+                {zoom > 1 ? (
+                  <button
+                    type="button"
+                    className="pb-partyGalleryModal__zoomReset"
+                    onClick={resetZoom}
+                    aria-label="Poništi zoom"
+                  >
+                    Smanji
                   </button>
                 ) : null}
               </div>

@@ -2056,16 +2056,6 @@ export default function SharedInvitationPage() {
                 />
               ) : null}
 
-              {(!isHost || loadingPrivateState) && !(user && !loadingPrivateState && hasPrivateAccess && !isHost) ? (
-                <div className="pb-publicPartyGalleryWrap">
-                  <InvitationPartyGallery
-                    token={invitation.publicSlug || invitation.shareToken || token}
-                    uploaderName={user?.parentName || session?.displayName || null}
-                    isHost={isHost}
-                  />
-                </div>
-              ) : null}
-
               {(user || hasHostSession) && loadingPrivateState ? (
                 <Card className="pb-flowCard">
                   <h2 className="pb-flowCard__title">Pripremamo tvoj pristup</h2>

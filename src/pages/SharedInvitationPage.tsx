@@ -2061,6 +2061,7 @@ export default function SharedInvitationPage() {
                   <InvitationPartyGallery
                     token={invitation.publicSlug || invitation.shareToken || token}
                     uploaderName={user?.parentName || session?.displayName || null}
+                    isHost={isHost}
                   />
                 </div>
               ) : null}
@@ -2618,6 +2619,12 @@ export default function SharedInvitationPage() {
                       </div>
                     ) : null}
                   </Card>
+
+                  <InvitationPartyGallery
+                    token={invitation.publicSlug || invitation.shareToken || token}
+                    uploaderName={user?.parentName || session?.displayName || null}
+                    isHost
+                  />
                   </div>
 
                   <div className="pb-hostStudio__previewRail">

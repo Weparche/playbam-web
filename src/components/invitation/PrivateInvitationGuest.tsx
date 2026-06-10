@@ -428,6 +428,7 @@ export default function PrivateInvitationGuest({
         <InvitationPartyGallery
           token={invitation.publicSlug || invitation.shareToken}
           uploaderName={currentGuestName}
+          isHost={false}
         />
 
         <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion pb-invitePrivateCard--wishlist" aria-labelledby="private-wishlist-toggle">

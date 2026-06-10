@@ -37,6 +37,10 @@ function getProtocolSafeApiBase(base: string) {
 
 const API_BASE = getProtocolSafeApiBase(RAW_API_BASE)
 
+function isInvitationPublicGalleryPath(path: string) {
+  return /^\/api\/public\/invitations\/[^/]+\/gallery(?:\/|$)/.test(path)
+}
+
 function shouldAttachStoredHostBearer(path: string, hasGuestIdentity: boolean): boolean {
   if (path.startsWith('/api/public/')) {
     return false
@@ -51,6 +55,8 @@ type RequestOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
   body?: unknown
   identity?: TemporaryWebIdentity | null
+  attachHostBearer?: boolean
+  galleryClientId?: string
 }
 
 type ApiErrorPayload = {
@@ -322,6 +328,7 @@ export type InvitationGalleryPhoto = {
   imageUrl: string
   uploaderName: string | null
   createdAt: string
+  canDelete?: boolean
 }
 
 class ApiError extends Error {
@@ -362,13 +369,19 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     headers.set('Content-Type', 'application/json')
   }
 
-  if (sessionToken && !path.startsWith('/api/public/')) {
+  const attachGalleryAuth = isInvitationPublicGalleryPath(path)
+
+  if (sessionToken && (!path.startsWith('/api/public/') || attachGalleryAuth)) {
     headers.set('Authorization', `Bearer ${sessionToken}`)
   } else if (
     storedHostToken &&
-    shouldAttachStoredHostBearer(path, Boolean(identity))
+    (shouldAttachStoredHostBearer(path, Boolean(identity)) || (attachGalleryAuth && options.attachHostBearer))
   ) {
     headers.set('Authorization', `Bearer ${storedHostToken}`)
+  }
+
+  if (options.galleryClientId) {
+    headers.set('X-Playbam-Gallery-Client-Id', options.galleryClientId)
   }
 
   if (!sessionToken) {
@@ -460,27 +473,56 @@ export async function getPublicInvitation(token: string) {
   return normalizePublicInvitationResponse(data)
 }
 
-export async function getInvitationGallery(token: string) {
+type InvitationGalleryRequestOptions = {
+  identity?: TemporaryWebIdentity | null
+  attachHostBearer?: boolean
+  galleryClientId?: string
+}
+
+function invitationGalleryRequestOptions(options: InvitationGalleryRequestOptions = {}) {
+  return {
+    identity: options.identity,
+    attachHostBearer: options.attachHostBearer,
+    galleryClientId: options.galleryClientId,
+  }
+}
+
+export async function getInvitationGallery(token: string, options: InvitationGalleryRequestOptions = {}) {
   const data = await request<{ photos: InvitationGalleryPhoto[] }>(
     `/api/public/invitations/${encodeURIComponent(token)}/gallery`,
-    { identity: null },
+    invitationGalleryRequestOptions(options),
   )
   return data.photos
 }
 
 export async function uploadInvitationGalleryPhoto(
   token: string,
-  payload: { imageDataUrl: string; uploaderName?: string | null },
+  payload: { imageDataUrl: string; uploaderName?: string | null; uploaderClientId?: string | null },
+  options: InvitationGalleryRequestOptions = {},
 ) {
   const data = await request<{ photo: InvitationGalleryPhoto }>(
     `/api/public/invitations/${encodeURIComponent(token)}/gallery`,
     {
       method: 'POST',
       body: payload,
-      identity: null,
+      ...invitationGalleryRequestOptions(options),
     },
   )
   return data.photo
+}
+
+export async function deleteInvitationGalleryPhoto(
+  token: string,
+  photoId: string,
+  options: InvitationGalleryRequestOptions = {},
+) {
+  return request<{ ok: boolean }>(
+    `/api/public/invitations/${encodeURIComponent(token)}/gallery/${encodeURIComponent(photoId)}`,
+    {
+      method: 'DELETE',
+      ...invitationGalleryRequestOptions(options),
+    },
+  )
 }
 
 export function createInvitation(payload: CreateInvitationPayload, identity?: TemporaryWebIdentity | null) {

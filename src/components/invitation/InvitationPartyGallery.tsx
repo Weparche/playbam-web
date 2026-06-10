@@ -3,20 +3,26 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
 import Button from '../ui/Button'
 import PrivateToggleChevron from '../ui/PrivateToggleChevron'
 import PrivateToggleSectionCounts from '../ui/PrivateToggleSectionCounts'
+import { getGalleryUploaderClientId } from '../../lib/galleryUploaderClientId'
 import {
+  deleteInvitationGalleryPhoto,
   getInvitationGallery,
   uploadInvitationGalleryPhoto,
   type InvitationGalleryPhoto,
 } from '../../lib/invitationApi'
+import type { TemporaryWebIdentity } from '../../lib/tempWebIdentity'
 
 type Props = {
   token: string
   uploaderName?: string | null
+  isHost?: boolean
+  identity?: TemporaryWebIdentity | null
   className?: string
 }
 
 const MAX_GALLERY_IMAGE_SIDE = 1600
 const GALLERY_JPEG_QUALITY = 0.82
+const MAX_UPLOAD_BATCH = 20
 
 function loadImageFromDataUrl(dataUrl: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
@@ -56,11 +62,18 @@ async function compressGalleryImage(file: File) {
   return canvas.toDataURL('image/jpeg', GALLERY_JPEG_QUALITY)
 }
 
-export default function InvitationPartyGallery({ token, uploaderName, className = '' }: Props) {
+export default function InvitationPartyGallery({
+  token,
+  uploaderName,
+  isHost = false,
+  identity,
+  className = '',
+}: Props) {
   const [open, setOpen] = useState(false)
   const [photos, setPhotos] = useState<InvitationGalleryPhoto[]>([])
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [deletingPhotoId, setDeletingPhotoId] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [selectedPhoto, setSelectedPhoto] = useState<InvitationGalleryPhoto | null>(null)
@@ -68,6 +81,18 @@ export default function InvitationPartyGallery({ token, uploaderName, className 
 
   const resolvedToken = token.trim()
   const totalPhotos = photos.length
+  const uploaderClientId = useMemo(
+    () => (resolvedToken ? getGalleryUploaderClientId(resolvedToken) : ''),
+    [resolvedToken],
+  )
+  const galleryRequestOptions = useMemo(
+    () => ({
+      identity,
+      attachHostBearer: isHost,
+      galleryClientId: uploaderClientId || undefined,
+    }),
+    [identity, isHost, uploaderClientId],
+  )
   const rootClassName = ['pb-invitePrivateCard pb-invitePrivateCard--accordion pb-partyGalleryCard', className.trim()]
     .filter(Boolean)
     .join(' ')
@@ -86,7 +111,7 @@ export default function InvitationPartyGallery({ token, uploaderName, className 
     setLoading(true)
     setError('')
 
-    getInvitationGallery(resolvedToken)
+    getInvitationGallery(resolvedToken, galleryRequestOptions)
       .then((nextPhotos) => {
         if (!cancelled) {
           setPhotos(nextPhotos)
@@ -106,18 +131,25 @@ export default function InvitationPartyGallery({ token, uploaderName, className 
     return () => {
       cancelled = true
     }
-  }, [resolvedToken])
+  }, [galleryRequestOptions, resolvedToken])
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const files = Array.from(event.target.files ?? [])
     event.target.value = ''
 
-    if (!file || !resolvedToken) {
+    if (!files.length || !resolvedToken) {
       return
     }
 
-    if (!file.type.startsWith('image/')) {
-      setError('Odaberi fotku iz kamere ili galerije.')
+    const imageFiles = files.filter((file) => file.type.startsWith('image/'))
+    if (!imageFiles.length) {
+      setError('Odaberi fotke iz kamere ili galerije.')
+      setNotice('')
+      return
+    }
+
+    if (imageFiles.length > MAX_UPLOAD_BATCH) {
+      setError(`Možeš odjednom dodati najviše ${MAX_UPLOAD_BATCH} fotki.`)
       setNotice('')
       return
     }
@@ -126,19 +158,73 @@ export default function InvitationPartyGallery({ token, uploaderName, className 
     setError('')
     setNotice('')
 
-    try {
-      const imageDataUrl = await compressGalleryImage(file)
-      const photo = await uploadInvitationGalleryPhoto(resolvedToken, {
-        imageDataUrl,
-        uploaderName: uploaderName?.trim() || null,
-      })
-      setPhotos((current) => [photo, ...current.filter((item) => item.id !== photo.id)])
-      setNotice('Fotka je dodana.')
+    const uploadedPhotos: InvitationGalleryPhoto[] = []
+    let failedCount = 0
+
+    for (const file of imageFiles) {
+      try {
+        const imageDataUrl = await compressGalleryImage(file)
+        const photo = await uploadInvitationGalleryPhoto(
+          resolvedToken,
+          {
+            imageDataUrl,
+            uploaderName: uploaderName?.trim() || null,
+            uploaderClientId: uploaderClientId || null,
+          },
+          galleryRequestOptions,
+        )
+        uploadedPhotos.push(photo)
+      } catch {
+        failedCount += 1
+      }
+    }
+
+    if (uploadedPhotos.length) {
+      const uploadedIds = new Set(uploadedPhotos.map((photo) => photo.id))
+      setPhotos((current) => [...uploadedPhotos, ...current.filter((item) => !uploadedIds.has(item.id))])
+      setNotice(
+        uploadedPhotos.length === 1
+          ? 'Fotka je dodana.'
+          : `${uploadedPhotos.length} fotki je dodano.`,
+      )
       setOpen(true)
-    } catch {
+    }
+
+    if (failedCount) {
+      setError(
+        failedCount === 1
+          ? 'Jedna fotka nije uspjela. Pokušaj ponovno.'
+          : `${failedCount} fotki nije uspjelo. Pokušaj ponovno.`,
+      )
+    } else if (!uploadedPhotos.length) {
       setError('Upload nije uspio. Pokušaj ponovno.')
+    }
+
+    setUploading(false)
+  }
+
+  const handleDeletePhoto = async (photo: InvitationGalleryPhoto) => {
+    if (!photo.canDelete || !resolvedToken || deletingPhotoId) {
+      return
+    }
+
+    if (!window.confirm('Obrisati ovu fotku iz galerije?')) {
+      return
+    }
+
+    setDeletingPhotoId(photo.id)
+    setError('')
+    setNotice('')
+
+    try {
+      await deleteInvitationGalleryPhoto(resolvedToken, photo.id, galleryRequestOptions)
+      setPhotos((current) => current.filter((item) => item.id !== photo.id))
+      setSelectedPhoto((current) => (current?.id === photo.id ? null : current))
+      setNotice('Fotka je obrisana.')
+    } catch {
+      setError('Brisanje nije uspjelo. Pokušaj ponovno.')
     } finally {
-      setUploading(false)
+      setDeletingPhotoId(null)
     }
   }
 
@@ -186,13 +272,14 @@ export default function InvitationPartyGallery({ token, uploaderName, className 
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
                 >
-                  {uploading ? 'Fotka se sprema...' : 'Dodaj fotku'}
+                  {uploading ? 'Fotke se spremaju...' : 'Dodaj fotke'}
                 </Button>
                 <input
                   ref={fileInputRef}
                   className="pb-partyGallery__fileInput"
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleFileChange}
                 />
               </div>
@@ -208,15 +295,27 @@ export default function InvitationPartyGallery({ token, uploaderName, className 
               {photos.length > 0 ? (
                 <div className="pb-partyGallery__grid">
                   {photos.map((photo, index) => (
-                    <button
-                      key={photo.id}
-                      type="button"
-                      className="pb-partyGallery__photoButton"
-                      onClick={() => setSelectedPhoto(photo)}
-                      aria-label={`Otvori fotku tuluma ${index + 1}`}
-                    >
-                      <img className="pb-partyGallery__photo" src={photo.imageUrl} alt="" loading="lazy" />
-                    </button>
+                    <div key={photo.id} className="pb-partyGallery__photoCell">
+                      <button
+                        type="button"
+                        className="pb-partyGallery__photoButton"
+                        onClick={() => setSelectedPhoto(photo)}
+                        aria-label={`Otvori fotku tuluma ${index + 1}`}
+                      >
+                        <img className="pb-partyGallery__photo" src={photo.imageUrl} alt="" loading="lazy" />
+                      </button>
+                      {photo.canDelete ? (
+                        <button
+                          type="button"
+                          className="pb-partyGallery__deleteButton"
+                          onClick={() => void handleDeletePhoto(photo)}
+                          disabled={deletingPhotoId === photo.id}
+                          aria-label={`Obriši fotku ${index + 1}`}
+                        >
+                          {deletingPhotoId === photo.id ? '...' : '×'}
+                        </button>
+                      ) : null}
+                    </div>
                   ))}
                 </div>
               ) : null}
@@ -249,6 +348,9 @@ export default function InvitationPartyGallery({ token, uploaderName, className 
             </div>
             <div className="pb-modalDialog__body pb-partyGalleryModal__body">
               <img className="pb-partyGalleryModal__image" src={selectedPhoto.imageUrl} alt="Fotka iz galerije tuluma" />
+              {selectedPhoto.uploaderName ? (
+                <p className="pb-partyGalleryModal__meta">Dodao/la: {selectedPhoto.uploaderName}</p>
+              ) : null}
               <div className="pb-partyGalleryModal__footer">
                 <button type="button" className="pb-partyGalleryModal__nav" onClick={showPreviousPhoto}>
                   Lijevo
@@ -260,6 +362,19 @@ export default function InvitationPartyGallery({ token, uploaderName, className 
                   Desno
                 </button>
               </div>
+              {selectedPhoto.canDelete ? (
+                <div className="pb-partyGalleryModal__actions">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="pb-partyGalleryModal__delete"
+                    onClick={() => void handleDeletePhoto(selectedPhoto)}
+                    disabled={deletingPhotoId === selectedPhoto.id}
+                  >
+                    {deletingPhotoId === selectedPhoto.id ? 'Brišemo...' : 'Obriši fotku'}
+                  </Button>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

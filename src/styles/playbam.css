@@ -4696,6 +4696,40 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
   gap: 0.55rem;
 }
 
+.pb-partyGallery__photoCell {
+  position: relative;
+}
+
+.pb-partyGallery__deleteButton {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: rgba(31, 36, 48, 0.72);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(31, 36, 48, 0.18);
+}
+
+.pb-partyGallery__deleteButton:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.pb-partyGallery__deleteButton:focus-visible {
+  outline: 3px solid rgba(79, 70, 216, 0.24);
+  outline-offset: 2px;
+}
+
 .pb-partyGallery__photoButton {
   position: relative;
   display: block;
@@ -4776,6 +4810,23 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
   font-size: 0.86rem;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
+}
+
+.pb-partyGalleryModal__meta {
+  margin: 0;
+  color: rgba(31, 36, 48, 0.62);
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.pb-partyGalleryModal__actions {
+  display: flex;
+  justify-content: center;
+}
+
+.pb-partyGalleryModal__delete {
+  color: #b42318;
 }
 
 @media (min-width: 560px) {

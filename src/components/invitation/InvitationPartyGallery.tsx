@@ -8,6 +8,7 @@ import {
   type DragEvent,
   type PointerEvent as ReactPointerEvent,
 } from 'react'
+import { createPortal } from 'react-dom'
 
 import Button from '../ui/Button'
 import PrivateToggleChevron from '../ui/PrivateToggleChevron'
@@ -19,6 +20,7 @@ import {
   uploadInvitationGalleryPhoto,
   type InvitationGalleryPhoto,
 } from '../../lib/invitationApi'
+import { lockScroll, unlockScroll } from '../../lib/scrollLock'
 import type { TemporaryWebIdentity } from '../../lib/tempWebIdentity'
 
 type Props = {
@@ -27,6 +29,11 @@ type Props = {
   isHost?: boolean
   identity?: TemporaryWebIdentity | null
   className?: string
+}
+
+type PendingUpload = {
+  localId: string
+  previewUrl: string
 }
 
 const MAX_GALLERY_IMAGE_SIDE = 1600
@@ -95,6 +102,41 @@ function formatRelativeTime(iso: string) {
   return new Date(then).toLocaleDateString('hr-HR', { day: 'numeric', month: 'short' })
 }
 
+function getDayGroupLabel(iso: string) {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) {
+    return ''
+  }
+
+  const startOfDay = (input: Date) => new Date(input.getFullYear(), input.getMonth(), input.getDate()).getTime()
+  const today = startOfDay(new Date())
+  const photoDay = startOfDay(date)
+  const dayDiff = Math.round((today - photoDay) / 86400000)
+
+  if (dayDiff <= 0) return 'Danas'
+  if (dayDiff === 1) return 'Jučer'
+  return date.toLocaleDateString('hr-HR', { day: 'numeric', month: 'short' })
+}
+
+type PhotoGroup = {
+  label: string
+  items: { photo: InvitationGalleryPhoto; globalIndex: number }[]
+}
+
+function groupPhotosByDay(photos: InvitationGalleryPhoto[]): PhotoGroup[] {
+  const groups: PhotoGroup[] = []
+  photos.forEach((photo, globalIndex) => {
+    const label = getDayGroupLabel(photo.createdAt)
+    const last = groups[groups.length - 1]
+    if (last && last.label === label) {
+      last.items.push({ photo, globalIndex })
+    } else {
+      groups.push({ label, items: [{ photo, globalIndex }] })
+    }
+  })
+  return groups
+}
+
 function GalleryCameraIcon() {
   return (
     <svg viewBox="0 0 24 24" width={28} height={28} fill="none" aria-hidden>
@@ -123,6 +165,20 @@ function GalleryTrashIcon() {
   )
 }
 
+function GalleryDownloadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width={18} height={18} fill="none" aria-hidden>
+      <path
+        d="M12 4v10m0 0 4-4m-4 4-4-4M5 19h14"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 function GalleryChevronIcon({ direction }: { direction: 'left' | 'right' }) {
   return (
     <svg viewBox="0 0 24 24" width={24} height={24} fill="none" aria-hidden>
@@ -137,6 +193,20 @@ function GalleryChevronIcon({ direction }: { direction: 'left' | 'right' }) {
   )
 }
 
+/** Blur-up fade: slika starta mutna/prozirna i izoštri se kad se učita. */
+function GalleryThumbImage({ src, className = '' }: { src: string; className?: string }) {
+  const [loaded, setLoaded] = useState(false)
+  return (
+    <img
+      className={`${className} pb-partyGallery__photo ${loaded ? 'is-loaded' : ''}`.trim()}
+      src={src}
+      alt=""
+      loading="lazy"
+      onLoad={() => setLoaded(true)}
+    />
+  )
+}
+
 export default function InvitationPartyGallery({
   token,
   uploaderName,
@@ -146,16 +216,19 @@ export default function InvitationPartyGallery({
 }: Props) {
   const [open, setOpen] = useState(false)
   const [photos, setPhotos] = useState<InvitationGalleryPhoto[]>([])
+  const [pendingUploads, setPendingUploads] = useState<PendingUpload[]>([])
   const [loading, setLoading] = useState(false)
   const [uploadTotal, setUploadTotal] = useState(0)
   const [uploadDone, setUploadDone] = useState(0)
   const [deletingPhotoId, setDeletingPhotoId] = useState<string | null>(null)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [downloading, setDownloading] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [showAll, setShowAll] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedPhoto, setSelectedPhoto] = useState<InvitationGalleryPhoto | null>(null)
+  const [slideDir, setSlideDir] = useState<'next' | 'prev' | null>(null)
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const [isGesturing, setIsGesturing] = useState(false)
@@ -165,6 +238,7 @@ export default function InvitationPartyGallery({
   const pointers = useRef<Map<number, { x: number; y: number }>>(new Map())
   const pinchStart = useRef<{ dist: number; zoom: number } | null>(null)
   const panStart = useRef<{ x: number; y: number; px: number; py: number } | null>(null)
+  const filmstripRef = useRef<HTMLDivElement>(null)
 
   const uploading = uploadTotal > 0
   const resolvedToken = token.trim()
@@ -187,6 +261,9 @@ export default function InvitationPartyGallery({
 
   const visiblePhotos = showAll ? photos : photos.slice(0, GRID_PREVIEW_COUNT)
   const hiddenCount = Math.max(0, photos.length - GRID_PREVIEW_COUNT)
+  const visibleGroups = useMemo(() => groupPhotosByDay(visiblePhotos), [visiblePhotos])
+  const showGroupLabels = visibleGroups.length > 1
+  const lastVisibleIndex = visiblePhotos.length - 1
 
   const selectedPhotoIndex = useMemo(
     () => (selectedPhoto ? photos.findIndex((photo) => photo.id === selectedPhoto.id) : -1),
@@ -268,16 +345,29 @@ export default function InvitationPartyGallery({
       setUploadTotal(imageFiles.length)
       setUploadDone(0)
 
+      const queue = imageFiles.map((file, index) => ({
+        file,
+        localId: `local-${Date.now()}-${index}`,
+        previewUrl: URL.createObjectURL(file),
+      }))
+
+      setPendingUploads(queue.map(({ localId, previewUrl }) => ({ localId, previewUrl })))
+
       let failedCount = 0
       let successCount = 0
       let cursor = 0
 
+      const finishPending = (localId: string, previewUrl: string) => {
+        setPendingUploads((current) => current.filter((item) => item.localId !== localId))
+        URL.revokeObjectURL(previewUrl)
+      }
+
       const worker = async () => {
-        while (cursor < imageFiles.length) {
-          const current = imageFiles[cursor]
+        while (cursor < queue.length) {
+          const current = queue[cursor]
           cursor += 1
           try {
-            const imageDataUrl = await compressGalleryImage(current)
+            const imageDataUrl = await compressGalleryImage(current.file)
             const photo = await uploadInvitationGalleryPhoto(
               resolvedToken,
               {
@@ -292,12 +382,13 @@ export default function InvitationPartyGallery({
           } catch {
             failedCount += 1
           } finally {
+            finishPending(current.localId, current.previewUrl)
             setUploadDone((prev) => prev + 1)
           }
         }
       }
 
-      const workers = Array.from({ length: Math.min(UPLOAD_CONCURRENCY, imageFiles.length) }, () => worker())
+      const workers = Array.from({ length: Math.min(UPLOAD_CONCURRENCY, queue.length) }, () => worker())
       await Promise.all(workers)
 
       if (successCount) {
@@ -314,6 +405,7 @@ export default function InvitationPartyGallery({
         setError('Upload nije uspio. Pokušaj ponovno.')
       }
 
+      setPendingUploads([])
       setUploadTotal(0)
       setUploadDone(0)
     },
@@ -385,7 +477,32 @@ export default function InvitationPartyGallery({
     }
   }
 
+  const handleDownload = async (photo: InvitationGalleryPhoto, index: number) => {
+    if (downloading) return
+    setDownloading(true)
+    try {
+      const response = await fetch(photo.imageUrl)
+      if (!response.ok) {
+        throw new Error('DOWNLOAD_FAILED')
+      }
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = `tulum-fotka-${index + 1}.jpg`
+      document.body.appendChild(anchor)
+      anchor.click()
+      anchor.remove()
+      URL.revokeObjectURL(url)
+    } catch {
+      setError('Preuzimanje nije uspjelo. Pokušaj ponovno.')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
   const showPreviousPhoto = useCallback(() => {
+    setSlideDir('prev')
     setSelectedPhoto((current) => {
       if (!current) return current
       const index = photos.findIndex((photo) => photo.id === current.id)
@@ -396,6 +513,7 @@ export default function InvitationPartyGallery({
   }, [photos])
 
   const showNextPhoto = useCallback(() => {
+    setSlideDir('next')
     setSelectedPhoto((current) => {
       if (!current) return current
       const index = photos.findIndex((photo) => photo.id === current.id)
@@ -405,18 +523,40 @@ export default function InvitationPartyGallery({
     })
   }, [photos])
 
+  const openLightbox = (photo: InvitationGalleryPhoto) => {
+    setSlideDir(null)
+    setSelectedPhoto(photo)
+  }
+
+  const jumpToPhoto = (photo: InvitationGalleryPhoto, index: number) => {
+    setSlideDir(index > selectedPhotoIndex ? 'next' : 'prev')
+    setSelectedPhoto(photo)
+  }
+
   useEffect(() => {
     if (!selectedPhoto) {
       return
     }
+    lockScroll()
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setSelectedPhoto(null)
       else if (event.key === 'ArrowLeft') showPreviousPhoto()
       else if (event.key === 'ArrowRight') showNextPhoto()
     }
     window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      unlockScroll()
+    }
   }, [selectedPhoto, showPreviousPhoto, showNextPhoto])
+
+  useEffect(() => {
+    if (!selectedPhoto || !filmstripRef.current) {
+      return
+    }
+    const active = filmstripRef.current.querySelector<HTMLElement>('[data-active="true"]')
+    active?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+  }, [selectedPhoto])
 
   const resetZoom = useCallback(() => {
     setZoom(1)
@@ -497,6 +637,58 @@ export default function InvitationPartyGallery({
 
   const uploadProgressPct = uploadTotal > 0 ? Math.round((uploadDone / uploadTotal) * 100) : 0
 
+  const renderPhotoCell = (photo: InvitationGalleryPhoto, globalIndex: number) => {
+    const isLastPreview = !showAll && hiddenCount > 0 && globalIndex === lastVisibleIndex
+    return (
+      <div key={photo.id} className="pb-partyGallery__photoCell">
+        <button
+          type="button"
+          className="pb-partyGallery__photoButton"
+          onClick={() => (isLastPreview ? setShowAll(true) : openLightbox(photo))}
+          aria-label={
+            isLastPreview ? `Prikaži još ${hiddenCount} fotki` : `Otvori fotku tuluma ${globalIndex + 1}`
+          }
+        >
+          <GalleryThumbImage src={photo.imageUrl} />
+          {isLastPreview ? (
+            <span className="pb-partyGallery__moreOverlay" aria-hidden>
+              +{hiddenCount}
+            </span>
+          ) : null}
+          {!isLastPreview && photo.uploaderName ? (
+            <span className="pb-partyGallery__uploaderChip">{photo.uploaderName}</span>
+          ) : null}
+        </button>
+        {photo.canDelete && !isLastPreview ? (
+          confirmDeleteId === photo.id ? (
+            <div className="pb-partyGallery__confirm" role="group" aria-label="Potvrda brisanja">
+              <button
+                type="button"
+                className="pb-partyGallery__confirmYes"
+                onClick={() => void handleDeletePhoto(photo)}
+                disabled={deletingPhotoId === photo.id}
+              >
+                {deletingPhotoId === photo.id ? '...' : 'Obriši'}
+              </button>
+              <button type="button" className="pb-partyGallery__confirmNo" onClick={cancelDelete}>
+                Ne
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="pb-partyGallery__deleteButton"
+              onClick={() => requestDelete(photo.id)}
+              aria-label={`Obriši fotku ${globalIndex + 1}`}
+            >
+              <GalleryTrashIcon />
+            </button>
+          )
+        ) : null}
+      </div>
+    )
+  }
+
   return (
     <>
       <section className={rootClassName} aria-labelledby="party-gallery-toggle">
@@ -526,7 +718,7 @@ export default function InvitationPartyGallery({
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
             >
-              {photos.length > 0 || loading ? (
+              {photos.length > 0 || loading || uploading ? (
                 <div className="pb-partyGallery__toolbar">
                   <Button
                     type="button"
@@ -560,10 +752,7 @@ export default function InvitationPartyGallery({
               {uploading ? (
                 <div className="pb-partyGallery__progress" role="status" aria-live="polite">
                   <div className="pb-partyGallery__progressTrack">
-                    <div
-                      className="pb-partyGallery__progressFill"
-                      style={{ width: `${uploadProgressPct}%` }}
-                    />
+                    <div className="pb-partyGallery__progressFill" style={{ width: `${uploadProgressPct}%` }} />
                   </div>
                   <span className="pb-partyGallery__progressLabel">
                     Spremamo {uploadDone} / {uploadTotal} fotki
@@ -577,9 +766,13 @@ export default function InvitationPartyGallery({
               </div>
 
               {loading ? (
-                <div className="pb-partyGallery__grid" aria-hidden>
+                <div className="pb-partyGallery__masonry" aria-hidden>
                   {Array.from({ length: 6 }).map((_, index) => (
-                    <div key={index} className="pb-partyGallery__skeleton" />
+                    <div
+                      key={index}
+                      className="pb-partyGallery__skeleton"
+                      style={{ height: `${[9, 6.5, 7.5, 6, 8.5, 7][index % 6]}rem` }}
+                    />
                   ))}
                 </div>
               ) : null}
@@ -600,68 +793,31 @@ export default function InvitationPartyGallery({
                 </button>
               ) : null}
 
+              {pendingUploads.length > 0 ? (
+                <div className="pb-partyGallery__masonry pb-partyGallery__masonry--pending">
+                  {pendingUploads.map((item) => (
+                    <div key={item.localId} className="pb-partyGallery__photoCell pb-partyGallery__photoCell--pending">
+                      <img className="pb-partyGallery__photo is-loaded" src={item.previewUrl} alt="" />
+                      <span className="pb-partyGallery__pendingOverlay" aria-hidden>
+                        <span className="pb-partyGallery__spinner" />
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
               {!loading && photos.length > 0 ? (
                 <>
-                  <div className="pb-partyGallery__grid">
-                    {visiblePhotos.map((photo, index) => {
-                      const isLastPreview =
-                        !showAll && hiddenCount > 0 && index === GRID_PREVIEW_COUNT - 1
-                      return (
-                        <div key={photo.id} className="pb-partyGallery__photoCell">
-                          <button
-                            type="button"
-                            className="pb-partyGallery__photoButton"
-                            onClick={() => (isLastPreview ? setShowAll(true) : setSelectedPhoto(photo))}
-                            aria-label={
-                              isLastPreview
-                                ? `Prikaži još ${hiddenCount} fotki`
-                                : `Otvori fotku tuluma ${index + 1}`
-                            }
-                          >
-                            <img className="pb-partyGallery__photo" src={photo.imageUrl} alt="" loading="lazy" />
-                            {isLastPreview ? (
-                              <span className="pb-partyGallery__moreOverlay" aria-hidden>
-                                +{hiddenCount}
-                              </span>
-                            ) : null}
-                            {!isLastPreview && photo.uploaderName ? (
-                              <span className="pb-partyGallery__uploaderChip">{photo.uploaderName}</span>
-                            ) : null}
-                          </button>
-                          {photo.canDelete && !isLastPreview ? (
-                            confirmDeleteId === photo.id ? (
-                              <div className="pb-partyGallery__confirm" role="group" aria-label="Potvrda brisanja">
-                                <button
-                                  type="button"
-                                  className="pb-partyGallery__confirmYes"
-                                  onClick={() => void handleDeletePhoto(photo)}
-                                  disabled={deletingPhotoId === photo.id}
-                                >
-                                  {deletingPhotoId === photo.id ? '...' : 'Obriši'}
-                                </button>
-                                <button
-                                  type="button"
-                                  className="pb-partyGallery__confirmNo"
-                                  onClick={cancelDelete}
-                                >
-                                  Ne
-                                </button>
-                              </div>
-                            ) : (
-                              <button
-                                type="button"
-                                className="pb-partyGallery__deleteButton"
-                                onClick={() => requestDelete(photo.id)}
-                                aria-label={`Obriši fotku ${index + 1}`}
-                              >
-                                <GalleryTrashIcon />
-                              </button>
-                            )
-                          ) : null}
-                        </div>
-                      )
-                    })}
-                  </div>
+                  {visibleGroups.map((group) => (
+                    <div key={group.label} className="pb-partyGallery__group">
+                      {showGroupLabels ? (
+                        <h3 className="pb-partyGallery__groupTitle">{group.label}</h3>
+                      ) : null}
+                      <div className="pb-partyGallery__masonry">
+                        {group.items.map(({ photo, globalIndex }) => renderPhotoCell(photo, globalIndex))}
+                      </div>
+                    </div>
+                  ))}
 
                   {hiddenCount > 0 ? (
                     <button
@@ -679,121 +835,148 @@ export default function InvitationPartyGallery({
         ) : null}
       </section>
 
-      {selectedPhoto ? (
-        <div className="pb-modalOverlay" role="presentation" onClick={() => setSelectedPhoto(null)}>
+      {selectedPhoto
+        ? createPortal(
+        <div className="pb-lightbox" role="dialog" aria-modal="true" aria-label="Galerija tuluma">
+          <div className="pb-lightbox__top">
+            <span className="pb-lightbox__counter">
+              {selectedPhotoIndex + 1} / {photos.length}
+            </span>
+            <button
+              type="button"
+              className="pb-lightbox__iconBtn"
+              onClick={() => setSelectedPhoto(null)}
+              aria-label="Zatvori galeriju"
+            >
+              ×
+            </button>
+          </div>
+
           <div
-            className="pb-modalDialog pb-partyGalleryModal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="party-gallery-modal-title"
-            onClick={(event) => event.stopPropagation()}
+            className={`pb-lightbox__stage ${zoom > 1 ? 'is-zoomed' : ''}`}
+            onClick={(event) => {
+              if (event.target === event.currentTarget) {
+                setSelectedPhoto(null)
+              }
+            }}
           >
-            <div className="pb-modalDialog__head">
-              <h2 id="party-gallery-modal-title" className="pb-modalDialog__title">
-                Galerija tuluma
-              </h2>
+            {photos.length > 1 && zoom === 1 ? (
               <button
                 type="button"
-                className="pb-modalDialog__close"
-                onClick={() => setSelectedPhoto(null)}
-                aria-label="Zatvori fotku"
+                className="pb-lightbox__edge pb-lightbox__edge--prev"
+                onClick={showPreviousPhoto}
+                aria-label="Prethodna fotka"
               >
-                ×
+                <GalleryChevronIcon direction="left" />
               </button>
-            </div>
-            <div className="pb-modalDialog__body pb-partyGalleryModal__body">
-              <div className={`pb-partyGalleryModal__stage ${zoom > 1 ? 'is-zoomed' : ''}`}>
-                {photos.length > 1 && zoom === 1 ? (
-                  <button
-                    type="button"
-                    className="pb-partyGalleryModal__edge pb-partyGalleryModal__edge--prev"
-                    onClick={showPreviousPhoto}
-                    aria-label="Prethodna fotka"
-                  >
-                    <GalleryChevronIcon direction="left" />
-                  </button>
-                ) : null}
-                <img
-                  className="pb-partyGalleryModal__image"
-                  src={selectedPhoto.imageUrl}
-                  alt="Fotka iz galerije tuluma"
-                  style={{
-                    transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-                    transition: isGesturing ? 'none' : undefined,
-                    cursor: zoom > 1 ? 'grab' : 'zoom-in',
-                  }}
-                  onPointerDown={onImagePointerDown}
-                  onPointerMove={onImagePointerMove}
-                  onPointerUp={onImagePointerUp}
-                  onPointerCancel={onImagePointerUp}
-                  onDoubleClick={toggleZoom}
-                  draggable={false}
-                />
-                {photos.length > 1 && zoom === 1 ? (
-                  <button
-                    type="button"
-                    className="pb-partyGalleryModal__edge pb-partyGalleryModal__edge--next"
-                    onClick={showNextPhoto}
-                    aria-label="Sljedeća fotka"
-                  >
-                    <GalleryChevronIcon direction="right" />
-                  </button>
-                ) : null}
-                {zoom > 1 ? (
-                  <button
-                    type="button"
-                    className="pb-partyGalleryModal__zoomReset"
-                    onClick={resetZoom}
-                    aria-label="Poništi zoom"
-                  >
-                    Smanji
-                  </button>
-                ) : null}
-              </div>
+            ) : null}
+            <img
+              key={selectedPhoto.id}
+              className={`pb-lightbox__image ${
+                slideDir === 'next'
+                  ? 'pb-lightbox__image--fromRight'
+                  : slideDir === 'prev'
+                    ? 'pb-lightbox__image--fromLeft'
+                    : ''
+              }`}
+              src={selectedPhoto.imageUrl}
+              alt="Fotka iz galerije tuluma"
+              style={{
+                transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+                transition: isGesturing ? 'none' : undefined,
+                cursor: zoom > 1 ? 'grab' : 'zoom-in',
+              }}
+              onPointerDown={onImagePointerDown}
+              onPointerMove={onImagePointerMove}
+              onPointerUp={onImagePointerUp}
+              onPointerCancel={onImagePointerUp}
+              onDoubleClick={toggleZoom}
+              draggable={false}
+            />
+            {photos.length > 1 && zoom === 1 ? (
+              <button
+                type="button"
+                className="pb-lightbox__edge pb-lightbox__edge--next"
+                onClick={showNextPhoto}
+                aria-label="Sljedeća fotka"
+              >
+                <GalleryChevronIcon direction="right" />
+              </button>
+            ) : null}
+            {zoom > 1 ? (
+              <button type="button" className="pb-lightbox__zoomReset" onClick={resetZoom} aria-label="Poništi zoom">
+                Smanji
+              </button>
+            ) : null}
+          </div>
 
-              <div className="pb-partyGalleryModal__footer">
-                <span className="pb-partyGalleryModal__meta">
-                  {selectedPhoto.uploaderName ? `${selectedPhoto.uploaderName} · ` : ''}
-                  {formatRelativeTime(selectedPhoto.createdAt)}
-                </span>
-                <span className="pb-partyGalleryModal__counter">
-                  {selectedPhotoIndex + 1} / {photos.length}
-                </span>
-              </div>
-
-              {selectedPhoto.canDelete ? (
-                <div className="pb-partyGalleryModal__actions">
-                  {confirmDeleteId === selectedPhoto.id ? (
+          <div className="pb-lightbox__bottom">
+            <div className="pb-lightbox__metaRow">
+              <span className="pb-lightbox__meta">
+                {selectedPhoto.uploaderName ? `${selectedPhoto.uploaderName} · ` : ''}
+                {formatRelativeTime(selectedPhoto.createdAt)}
+              </span>
+              <div className="pb-lightbox__actions">
+                <button
+                  type="button"
+                  className="pb-lightbox__action"
+                  onClick={() => void handleDownload(selectedPhoto, selectedPhotoIndex)}
+                  disabled={downloading}
+                >
+                  <GalleryDownloadIcon />
+                  {downloading ? 'Preuzimamo...' : 'Preuzmi'}
+                </button>
+                {selectedPhoto.canDelete ? (
+                  confirmDeleteId === selectedPhoto.id ? (
                     <>
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        className="pb-partyGalleryModal__delete"
+                        className="pb-lightbox__action pb-lightbox__action--danger"
                         onClick={() => void handleDeletePhoto(selectedPhoto)}
                         disabled={deletingPhotoId === selectedPhoto.id}
                       >
                         {deletingPhotoId === selectedPhoto.id ? 'Brišemo...' : 'Sigurno obriši'}
-                      </Button>
-                      <Button type="button" variant="ghost" onClick={cancelDelete}>
+                      </button>
+                      <button type="button" className="pb-lightbox__action" onClick={cancelDelete}>
                         Odustani
-                      </Button>
+                      </button>
                     </>
                   ) : (
-                    <Button
+                    <button
                       type="button"
-                      variant="ghost"
-                      className="pb-partyGalleryModal__delete"
+                      className="pb-lightbox__action pb-lightbox__action--danger"
                       onClick={() => requestDelete(selectedPhoto.id)}
                     >
-                      Obriši fotku
-                    </Button>
-                  )}
-                </div>
-              ) : null}
+                      <GalleryTrashIcon />
+                      Obriši
+                    </button>
+                  )
+                ) : null}
+              </div>
             </div>
+
+            {photos.length > 1 ? (
+              <div className="pb-lightbox__filmstrip" ref={filmstripRef}>
+                {photos.map((photo, index) => (
+                  <button
+                    key={photo.id}
+                    type="button"
+                    className={`pb-lightbox__thumb ${photo.id === selectedPhoto.id ? 'is-active' : ''}`}
+                    data-active={photo.id === selectedPhoto.id ? 'true' : undefined}
+                    onClick={() => jumpToPhoto(photo, index)}
+                    aria-label={`Prikaži fotku ${index + 1}`}
+                    aria-current={photo.id === selectedPhoto.id}
+                  >
+                    <img src={photo.imageUrl} alt="" loading="lazy" draggable={false} />
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
-        </div>
-      ) : null}
+        </div>,
+        document.body,
+      )
+        : null}
     </>
   )
 }

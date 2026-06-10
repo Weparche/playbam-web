@@ -22,7 +22,7 @@ type Props = {
 
 const MAX_GALLERY_IMAGE_SIDE = 1600
 const GALLERY_JPEG_QUALITY = 0.82
-const MAX_UPLOAD_BATCH = 20
+const MAX_UPLOAD_BATCH = 100
 
 function loadImageFromDataUrl(dataUrl: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {

@@ -18,6 +18,7 @@ import PrivateInvitationGuest from '../components/invitation/PrivateInvitationGu
 import { type FamilyProfileDraft } from '../components/invitation/FamilyProfileForm'
 import GuestInvitationModal from '../components/invitation/GuestInvitationModal'
 import { getGuestModalStep } from '../components/invitation/guestModalStep'
+import InvitationPartyGallery from '../components/invitation/InvitationPartyGallery'
 import Navbar from '../components/landing/Navbar'
 import Footer from '../components/layout/Footer'
 import Button from '../components/ui/Button'
@@ -2053,6 +2054,15 @@ export default function SharedInvitationPage() {
                   onGuestRsvpIntent={isHost ? undefined : handleGuestRsvpIntent}
                   guestRsvpHint={guestRsvpHint}
                 />
+              ) : null}
+
+              {(!isHost || loadingPrivateState) && !(user && !loadingPrivateState && hasPrivateAccess && !isHost) ? (
+                <div className="pb-publicPartyGalleryWrap">
+                  <InvitationPartyGallery
+                    token={invitation.publicSlug || invitation.shareToken || token}
+                    uploaderName={user?.parentName || session?.displayName || null}
+                  />
+                </div>
               ) : null}
 
               {(user || hasHostSession) && loadingPrivateState ? (

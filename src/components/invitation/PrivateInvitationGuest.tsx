@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
 
 // import { InvitationGuestRosterList, InvitationGuestRosterModal } from './InvitationGuestRoster'
 import InvitationLiveChatPanel, { type ChatSenderLabelHint } from './InvitationLiveChatPanel'
+import InvitationPartyGallery from './InvitationPartyGallery'
 import WishlistTipPaymentSection from './WishlistTipPaymentSection'
 import Button from '../ui/Button'
 import PrivateToggleChevron from '../ui/PrivateToggleChevron'
@@ -423,6 +424,11 @@ export default function PrivateInvitationGuest({
           ...
         </section>
         */}
+
+        <InvitationPartyGallery
+          token={invitation.publicSlug || invitation.shareToken}
+          uploaderName={currentGuestName}
+        />
 
         <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion pb-invitePrivateCard--wishlist" aria-labelledby="private-wishlist-toggle">
           <button

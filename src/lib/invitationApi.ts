@@ -316,6 +316,14 @@ export type InvitationChatResponse = {
   reads: InvitationChatRead[]
 }
 
+export type InvitationGalleryPhoto = {
+  id: string
+  invitationId: string
+  imageUrl: string
+  uploaderName: string | null
+  createdAt: string
+}
+
 class ApiError extends Error {
   status: number
 
@@ -450,6 +458,29 @@ export async function getPublicInvitation(token: string) {
     identity: null,
   })
   return normalizePublicInvitationResponse(data)
+}
+
+export async function getInvitationGallery(token: string) {
+  const data = await request<{ photos: InvitationGalleryPhoto[] }>(
+    `/api/public/invitations/${encodeURIComponent(token)}/gallery`,
+    { identity: null },
+  )
+  return data.photos
+}
+
+export async function uploadInvitationGalleryPhoto(
+  token: string,
+  payload: { imageDataUrl: string; uploaderName?: string | null },
+) {
+  const data = await request<{ photo: InvitationGalleryPhoto }>(
+    `/api/public/invitations/${encodeURIComponent(token)}/gallery`,
+    {
+      method: 'POST',
+      body: payload,
+      identity: null,
+    },
+  )
+  return data.photo
 }
 
 export function createInvitation(payload: CreateInvitationPayload, identity?: TemporaryWebIdentity | null) {

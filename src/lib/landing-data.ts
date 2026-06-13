@@ -45,6 +45,7 @@ export type VenuePackage = {
   name: string
   price: number
   minChildren: number
+  partySizeLabel?: string
   includes: string[]
 }
 
@@ -59,6 +60,7 @@ export type Venue = {
   facebook?: string
   instagram?: string
   tiktok?: string
+  googleMapsUri?: string
   rating: number
   reviewCount: number
   pricePerChild: number
@@ -1309,6 +1311,65 @@ export const venues: Venue[] = [
       { name: 'Winner Kids Basic', price: 280, minChildren: 20, includes: ['2h igranje', 'kineziolog/animator', 'napuhanci i košarkaški koševi', 'sokovi i grickalice', 'pozivnice'] },
       { name: 'Winner Kids Sport', price: 340, minChildren: 20, includes: ['2.5h igranje', 'kineziolozi', 'sportski poligon i mini-tobogan', 'pizza', 'torta', 'foto'] },
       { name: 'Winner Kids All-inclusive', price: 400, minChildren: 22, includes: ['2.5h igranje', 'kineziolog + animator', 'puni sportski program', 'puni catering', 'tematska dekoracija', 'foto'] },
+    ],
+  },
+  {
+    id: 'hop-n-play',
+    slug: 'hop-n-play-zagreb',
+    lat: 45.7445269,
+    lng: 15.9585426,
+    name: 'Hop-n-play',
+    city: 'Zagreb',
+    address: 'Ulica Slavka Čora 34, 10020 Novi Zagreb (Čehi)',
+    phone: '+385 91 225 6405',
+    facebook: 'https://www.facebook.com/p/Hop-n-play-100086606055719/',
+    googleMapsUri: 'https://maps.app.goo.gl/VJjB7vc1rZG63ySc7',
+    rating: 4.7,
+    reviewCount: 35,
+    pricePerChild: 7,
+    ageRange: '1–12',
+    ageMin: 1,
+    ageMax: 12,
+    maxChildren: 20,
+    description:
+      'Rođendaonica u Novom Zagrebu (Čehi) s unutarnjim i vanjskim prostorom, sjenicom i roštiljem. Ispred rođendaonice i kuće ima parking za 10 automobila, a dodatni uređeni parking nalazi se oko 150 m dalje na adresi Ulica Stari dvor 13. Prostor je klimatiziran i grijan, ima mini kuhinju i WC, a djeci su dostupni dvorac na napuhavanje s toboganom, stijena za penjanje, golovi za nogomet, disco i druge igračke.',
+    amenities: ['Parking', 'Parking u blizini', 'Roštilj terasa', 'Klima', 'Dvorac na napuhavanje', 'Stijena za penjanje', 'Nogometni golovi', 'Mini kuhinja', 'Disco'],
+    coverPhoto: 'https://picsum.photos/seed/hop-n-play-cover/1200/750',
+    photos: [
+      'https://picsum.photos/seed/hop-n-play-1/1200/750',
+      'https://picsum.photos/seed/hop-n-play-2/1200/750',
+      'https://picsum.photos/seed/hop-n-play-3/1200/750',
+      'https://picsum.photos/seed/hop-n-play-4/1200/750',
+    ],
+    packages: [
+      {
+        name: 'Najam rođendaonice 3 sata',
+        price: 140,
+        minChildren: 1,
+        partySizeLabel: 'do 30 odraslih i 20 djece',
+        includes: ['3 sata najma prostora', 'unutarnji prostor', 'stolovi, stolnjaci i stolice', 'igračke i dječji sadržaji', 'dodatni sat 30€'],
+      },
+      {
+        name: 'Cijelodnevni najam',
+        price: 220,
+        minChildren: 1,
+        partySizeLabel: 'unutarnji + vanjski prostor',
+        includes: ['cijeli dan najma', 'vanjski prostor sa sjenicom i roštiljem', 'mini kuhinja i WC', '2 frižidera i kuhalo', 'švedski stol uređujete sami'],
+      },
+      {
+        name: 'Basic paket',
+        price: 200,
+        minChildren: 1,
+        partySizeLabel: 'do 20 djece',
+        includes: ['2 sata s animatoricom', 'torta i svjećice', 'pozivnice i fotografiranje', 'slatke i slane grickalice', 'sokovi u neograničenim količinama'],
+      },
+      {
+        name: 'Double paket',
+        price: 240,
+        minChildren: 1,
+        partySizeLabel: '2 slavljenika',
+        includes: ['2 sata s uključenim animatorima', '2 torte i svjećice', 'pozivnice i fotografiranje', 'slatke i slane grickalice', 'sokovi u neograničenim količinama'],
+      },
     ],
   },
   {

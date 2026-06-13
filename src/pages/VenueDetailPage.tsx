@@ -99,8 +99,8 @@ export default function VenueDetailPage() {
   const displayedPhone = venue.skipGooglePlaces ? venue.phone : (googlePlace?.phone ?? venue.phone)
   const displayedWebsite = venue.skipGooglePlaces ? venue.website : (googlePlace?.website ?? venue.website)
   const displayedMapsUrl = venue.skipGooglePlaces
-    ? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`
-    : (googlePlace?.googleMapsUri ?? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`)
+    ? (venue.googleMapsUri ?? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`)
+    : (venue.googleMapsUri ?? googlePlace?.googleMapsUri ?? `https://maps.google.com/?q=${encodeURIComponent(venue.address)}`)
   const mapQuery =
     venue.skipGooglePlaces
       ? venue.address
@@ -250,7 +250,7 @@ export default function VenueDetailPage() {
                       <div className="ew-vd-package__name">{pkg.name}</div>
                       <div className="ew-vd-package__price">
                         od <strong>{pkg.price}€</strong>
-                        <span> / min. {pkg.minChildren} djece</span>
+                        <span> / {pkg.partySizeLabel ?? `min. ${pkg.minChildren} djece`}</span>
                       </div>
                       <ul className="ew-vd-package__list">
                         {pkg.includes.map(item => (

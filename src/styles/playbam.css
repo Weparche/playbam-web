@@ -14126,11 +14126,11 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
 
 @media (max-width: 640px) {
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoRow--venue {
-    transform: translate(0, -10%);
+    transform: translate(0, -5%);
   }
 
   .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoBlock--birth .pb-inviteHero__infoRow--venue {
-    transform: translate(0, -10%);
+    transform: translate(0, -5%);
   }
 }
 

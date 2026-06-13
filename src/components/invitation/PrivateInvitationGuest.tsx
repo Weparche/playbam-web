@@ -8,6 +8,7 @@ import Button from '../ui/Button'
 import PrivateToggleChevron from '../ui/PrivateToggleChevron'
 import PrivateToggleSectionCounts from '../ui/PrivateToggleSectionCounts'
 import { findVenueByInvitationLocation } from '../../lib/findVenueByInvitationLocation'
+import { googlePhotoUris, useGooglePlaceEnrichment } from '../../lib/useGooglePlaceEnrichment'
 import {
   countUnreadChatForGuest,
   countUnreadWishlistForGuest,
@@ -330,13 +331,16 @@ export default function PrivateInvitationGuest({
     () => findVenueByInvitationLocation(invitation.location),
     [invitation.location],
   )
+  const googleVenueSource = matchedVenue && !matchedVenue.skipGooglePlaces ? matchedVenue : undefined
+  const googlePlace = useGooglePlaceEnrichment(googleVenueSource, 7)
 
   const venueGallery = useMemo(() => {
     if (!matchedVenue) {
       return []
     }
-    return [matchedVenue.coverPhoto, ...matchedVenue.photos].filter(Boolean)
-  }, [matchedVenue])
+    const googlePhotos = googlePhotoUris(googlePlace)
+    return googlePhotos.length > 0 ? googlePhotos : [matchedVenue.coverPhoto, ...matchedVenue.photos].filter(Boolean)
+  }, [googlePlace, matchedVenue])
 
   const venueDetailRows = useMemo(() => {
     if (!matchedVenue) {

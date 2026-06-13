@@ -12930,7 +12930,7 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
 
 .pb-inviteHero__venueHint {
   font-family: var(--invite-font);
-  font-size: 0.75rem;
+  font-size: 0.975rem;
   font-weight: 600;
   color: #6366f1;
   letter-spacing: -0.01em;
@@ -14009,7 +14009,7 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
 
 .pb-inviteHero--storybook .pb-inviteHero__venueHint {
   font-family: var(--invite-font-meta);
-  font-size: 0.62rem;
+  font-size: 0.806rem;
   font-weight: 800;
   color: var(--pb-invite-title-color, #336fd6);
   line-height: 1;
@@ -14123,6 +14123,12 @@ a.pb-partyFact__link--maps:hover .pb-partyFact__mapsHint {
 }
 
 /* Desktop javna pozivnica: ne diramo dodatno (stabilna pozicija) */
+
+@media (max-width: 640px) {
+  .pb-invitePage .pb-inviteCard--storybook .pb-inviteHero__infoRow--venue {
+    transform: translate(0, 7px);
+  }
+}
 
 .pb-inviteHero__printPartyDetails {
   margin: 1.05rem auto 0;

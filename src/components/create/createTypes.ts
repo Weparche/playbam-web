@@ -434,6 +434,7 @@ export function getUpcomingDateOptions(referenceDate: string) {
 export function formatInvitationDisplayLocation(value: string) {
   return value
     .replace(/\b10000\s+(?=Zagreb\b)/gi, '')
+    .replace(/(?:,\s*)?\b10000\b(?=\s*(?:,|$|\(|Zagreb\b))/gi, '')
     .replace(/(?:,\s*)?\bHrvatska\b\.?/gi, '')
     .replace(/\s+,/g, ',')
     .replace(/,\s*,+/g, ',')

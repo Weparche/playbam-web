@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
 
-// import { InvitationGuestRosterList, InvitationGuestRosterModal } from './InvitationGuestRoster'
+import { InvitationGuestRosterList, InvitationGuestRosterModal } from './InvitationGuestRoster'
 import InvitationLiveChatPanel, { type ChatSenderLabelHint } from './InvitationLiveChatPanel'
 import InvitationPartyGallery from './InvitationPartyGallery'
 import WishlistTipPaymentSection from './WishlistTipPaymentSection'
@@ -177,8 +177,8 @@ function renderPartyFactValue(row: GuestPartyDetailRow) {
 
 export default function PrivateInvitationGuest({
   invitation,
-  guestRosterRequests: _guestRosterRequests,
-  guestRosterError: _guestRosterError = '',
+  guestRosterRequests,
+  guestRosterError = '',
   wishlistLoading,
   wishlistError,
   wishlistItems,
@@ -206,8 +206,8 @@ export default function PrivateInvitationGuest({
   isBirthInvitation = false,
 }: Props) {
   const [venueOpen, setVenueOpen] = useState(false)
-  // const [rosterOpen, setRosterOpen] = useState(false)
-  // const [selectedRosterRequest, setSelectedRosterRequest] = useState<MembershipRequest | null>(null)
+  const [rosterOpen, setRosterOpen] = useState(false)
+  const [selectedRosterRequest, setSelectedRosterRequest] = useState<MembershipRequest | null>(null)
   const [wishlistOpen, setWishlistOpen] = useState(false)
   const [addingGiftOpen, setAddingGiftOpen] = useState(false)
   const [giftTitle, setGiftTitle] = useState('')
@@ -324,6 +324,7 @@ export default function PrivateInvitationGuest({
 
   const guestWishlistTotalCount = wishlistItems.length
   const guestChatTotalCount = chatMessages.length
+  const guestRosterTotalCount = guestRosterRequests.length
 
   const matchedVenue = useMemo(
     () => findVenueByInvitationLocation(invitation.location),
@@ -419,11 +420,39 @@ export default function PrivateInvitationGuest({
           </section>
         ) : null}
 
-        {/* Popis gostiju — privremeno isključeno na gost strani
         <section className="pb-invitePrivateCard pb-invitePrivateCard--accordion" aria-labelledby="private-roster-toggle">
-          ...
+          <button
+            id="private-roster-toggle"
+            type="button"
+            className={`pb-privateToggle pb-privateToggle--guestHeading ${rosterOpen ? 'is-open' : ''}`}
+            onClick={() => setRosterOpen((current) => !current)}
+            aria-expanded={rosterOpen}
+          >
+            <span className="pb-privateToggle__copy">
+              <span className="pb-privateToggle__title">Popis gostiju</span>
+            </span>
+            <span className="pb-privateToggle__trail">
+              <PrivateToggleSectionCounts total={guestRosterTotalCount} newCount={0} segmentLabel="gostiju" />
+              <span className="pb-privateToggle__arrow" aria-hidden>
+                <PrivateToggleChevron />
+              </span>
+            </span>
+          </button>
+
+          {rosterOpen ? (
+            <div className="pb-privateAccordionBody">
+              <p className="pb-flowCard__text">Popis gostiju i RSVP odgovori dostupni su samo za pregled.</p>
+              {guestRosterError ? <div className="pb-inlineNote pb-inlineNote--error">{guestRosterError}</div> : null}
+              <InvitationGuestRosterList
+                requests={guestRosterRequests}
+                reviewingRequestId={null}
+                wishlistItems={wishlistItems}
+                isBirthInvitation={isBirthInvitation}
+                onSelect={setSelectedRosterRequest}
+              />
+            </div>
+          ) : null}
         </section>
-        */}
 
         <InvitationPartyGallery
           token={invitation.publicSlug || invitation.shareToken}
@@ -862,9 +891,15 @@ export default function PrivateInvitationGuest({
           </div>
         </div>
       ) : null}
-      {/* {selectedRosterRequest ? (
-        <InvitationGuestRosterModal ... />
-      ) : null} */}
+      {selectedRosterRequest ? (
+        <InvitationGuestRosterModal
+          request={selectedRosterRequest}
+          wishlistItems={wishlistItems}
+          isBirthInvitation={isBirthInvitation}
+          busy={false}
+          onClose={() => setSelectedRosterRequest(null)}
+        />
+      ) : null}
     </>
   )
 }

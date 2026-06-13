@@ -3,6 +3,7 @@ import {
   formatInvitationDateText,
   formatInvitationTimeText,
 } from '../components/invitation/invitationHeroContent'
+import { formatInvitationDisplayLocation } from '../components/create/createTypes'
 import type { PublicInvitation } from './invitationApi'
 
 const META_KEYS = [
@@ -22,7 +23,7 @@ export function buildInvitationShareDescription(inv: PublicInvitation): string {
   const parts = [
     formatInvitationDateText(inv.date),
     formatInvitationTimeText(inv.time),
-    inv.location?.trim(),
+    formatInvitationDisplayLocation(inv.location?.trim() ?? ''),
   ].filter(Boolean)
   const line = parts.join(' · ')
   const msg = inv.message?.trim()

@@ -431,8 +431,21 @@ export function getUpcomingDateOptions(referenceDate: string) {
   return options
 }
 
+export function formatInvitationDisplayLocation(value: string) {
+  return value
+    .replace(/\b10000\s+(?=Zagreb\b)/gi, '')
+    .replace(/(?:,\s*)?\bHrvatska\b\.?/gi, '')
+    .replace(/\s+,/g, ',')
+    .replace(/,\s*,+/g, ',')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/^[,\s]+|[,\s]+$/g, '')
+}
+
 export function buildPreviewLocation(locationName: string, locationAddress: string, locationType: string) {
-  const details = [locationName.trim(), locationAddress.trim()].filter(Boolean)
+  const details = [
+    formatInvitationDisplayLocation(locationName.trim()),
+    formatInvitationDisplayLocation(locationAddress.trim()),
+  ].filter(Boolean)
   if (details.length > 0) {
     return details.join(' • ')
   }

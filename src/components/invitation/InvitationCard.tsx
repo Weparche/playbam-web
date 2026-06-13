@@ -6,7 +6,7 @@ import {
   formatInvitationTimeText,
   resolveInvitationBackgroundImage,
 } from './invitationHeroContent'
-import { isBirthTheme, normalizeCreateTheme } from '../create/createTypes'
+import { formatInvitationDisplayLocation, isBirthTheme, normalizeCreateTheme } from '../create/createTypes'
 
 type Props = {
   invitation: PublicInvitation
@@ -39,7 +39,7 @@ export default function InvitationCard({
   const celebrantTitle = buildInvitationHeroTitle(invitation.title, invitation.celebrantName)
   const dateText = formatInvitationDateText(invitation.date.trim())
   const timeText = formatInvitationTimeText(invitation.time.trim())
-  const venueText = invitation.location.trim() || 'Lokacija uskoro'
+  const venueText = formatInvitationDisplayLocation(invitation.location.trim()) || 'Lokacija uskoro'
   const backgroundImage = resolveInvitationBackgroundImage(invitation.coverImage, invitation.theme)
   const birthInvitation = isBirthTheme(normalizeCreateTheme(invitation.theme || invitation.coverImage || 'pozivnica-girl'))
   const accessTitle = access === 'private' ? 'Privatni dio pozivnice' : 'Javni dio pozivnice'

@@ -3141,6 +3141,57 @@
   border-radius: 6px;
 }
 
+.partner-section__head > div {
+  min-width: 0;
+}
+
+.partner-section__meta {
+  margin: 0.2rem 0 0;
+  color: var(--partner-muted);
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.partner-section__link {
+  white-space: nowrap;
+}
+
+.partner-timelineRow__time {
+  gap: 0.18rem;
+  min-width: 6.8rem;
+}
+
+.partner-timelineRow {
+  grid-template-columns: 7.4rem minmax(0, 1fr) auto;
+}
+
+.partner-timelineRow__date,
+.partner-timelineRow__range {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.partner-timelineRow__date {
+  color: var(--partner-soft);
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: lowercase;
+}
+
+.partner-timelineRow__range {
+  color: var(--partner-text);
+  font-size: 0.92rem;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.partner-triageRow__meta {
+  line-height: 1.4;
+}
+
 .partner-chip[data-variant='ok'],
 .partner-statusBadge[data-status='confirmed'] {
   color: var(--partner-ok);
@@ -3197,6 +3248,23 @@
   .partner-detailHero__head,
   .partner-clientHero {
     flex-direction: column;
+  }
+
+  .partner-timelineRow {
+    grid-template-columns: 5.7rem minmax(0, 1fr) auto;
+    gap: 0.65rem;
+  }
+
+  .partner-timelineRow__time {
+    min-width: 0;
+  }
+
+  .partner-timelineRow__date {
+    font-size: 0.68rem;
+  }
+
+  .partner-timelineRow__range {
+    font-size: 0.82rem;
   }
 
   .partner-clientHero .partner-contactActions {

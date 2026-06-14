@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import Button from '../../components/ui/Button'
 import { usePartnerAuth } from '../context/PartnerAuthContext'
 import { usePartnerData } from '../context/PartnerDataContext'
-import { formatDayHeadingHr, formatTimeRange, todayKey } from '../lib/dates'
+import { addDays, formatDateHr, formatDayHeadingHr, formatTimeRange, todayKey } from '../lib/dates'
 import { formatPrice } from '../lib/pricing'
 import type { BirthdayReservation, Customer } from '../types'
 import PartnerIcon from '../components/ui/PartnerIcon'
@@ -13,6 +13,14 @@ import PartnerSkeleton, { PartnerSkeletonRows } from '../components/ui/PartnerSk
 
 function bySchedule(a: BirthdayReservation, b: BirthdayReservation) {
   return `${a.date}${a.startTime}`.localeCompare(`${b.date}${b.startTime}`)
+}
+
+function formatSectionDate(dateKey: string): string {
+  return formatDateHr(dateKey)
+}
+
+function formatWeekRange(startDateKey: string): string {
+  return `${formatDateHr(startDateKey)} - ${formatDateHr(addDays(startDateKey, 6))}`
 }
 
 function childAllergies(customer: Customer | null, res: BirthdayReservation): string {
@@ -65,8 +73,8 @@ function TimelineRow({ res }: { res: BirthdayReservation }) {
   return (
     <Link to={`/partner/reservations/${res.id}`} className="partner-timelineRow">
       <div className="partner-timelineRow__time">
-        <span className="partner-timelineRow__start">{res.startTime}</span>
-        <span className="partner-timelineRow__end">{res.endTime}</span>
+        <span className="partner-timelineRow__date">{formatDateHr(res.date)}</span>
+        <span className="partner-timelineRow__range">{formatTimeRange(res.startTime, res.endTime)}</span>
       </div>
       <div className="partner-timelineRow__body">
         <div className="partner-timelineRow__head">
@@ -195,10 +203,11 @@ export default function PartnerDashboardPage() {
     return items
   }, [alerts])
 
-  const today = useMemo(() => [...todayReservations].sort(bySchedule), [todayReservations])
+  const todayReservationsList = useMemo(() => [...todayReservations].sort(bySchedule), [todayReservations])
+  const todayDateKey = todayKey()
   const weekUpcoming = useMemo(
-    () => [...weekReservations].filter((res) => res.date !== todayKey()).sort(bySchedule),
-    [weekReservations],
+    () => [...weekReservations].filter((res) => res.date !== todayDateKey).sort(bySchedule),
+    [weekReservations, todayDateKey],
   )
   const allReservationsPreview = useMemo(() => {
     const today = todayKey()
@@ -234,11 +243,12 @@ export default function PartnerDashboardPage() {
   ].filter((c) => c.count > 0)
 
   const allClear = triage.length === 0
+  const weekRange = formatWeekRange(todayDateKey)
 
   const header = (
     <header className="partner-dayhead">
       <p className="partner-dayhead__kicker">{playroom.name}</p>
-      <h1 className="partner-dayhead__date">{formatDayHeadingHr(todayKey())}</h1>
+      <h1 className="partner-dayhead__date">{formatDayHeadingHr(todayDateKey)}</h1>
       <p className="partner-dayhead__meta">Pregled dana, otvorenih zadataka i nadolazećih rođendana.</p>
     </header>
   )
@@ -310,7 +320,7 @@ export default function PartnerDashboardPage() {
                         {res.childName}
                       </Link>
                       <span className="partner-triageRow__meta">
-                        {formatTimeRange(res.startTime, res.endTime)} · {customer?.fullName ?? '—'}
+                        {formatDateHr(res.date)} · {formatTimeRange(res.startTime, res.endTime)} · {customer?.fullName ?? '—'}
                       </span>
                     </div>
                     <span className="partner-chip" data-variant={meta.variant}>
@@ -366,12 +376,15 @@ export default function PartnerDashboardPage() {
 
       <section className="partner-section">
         <div className="partner-section__head">
-          <h2 className="partner-section__title">Danas</h2>
+          <div>
+            <h2 className="partner-section__title">Danas</h2>
+            <p className="partner-section__meta">{formatSectionDate(todayDateKey)}</p>
+          </div>
           <Link to="/partner/calendar" className="partner-section__link">
             Otvori kalendar
           </Link>
         </div>
-        {today.length === 0 ? (
+        {todayReservationsList.length === 0 ? (
           <div className="partner-emptyState">
             <PartnerIcon name="today" size={28} />
             <p className="partner-emptyState__title">Danas nema rođendana</p>
@@ -379,7 +392,7 @@ export default function PartnerDashboardPage() {
           </div>
         ) : (
           <div className="partner-timeline">
-            {today.map((res) => (
+            {todayReservationsList.map((res) => (
               <TimelineRow key={res.id} res={res} />
             ))}
           </div>
@@ -388,8 +401,13 @@ export default function PartnerDashboardPage() {
 
       <section className="partner-section">
         <div className="partner-section__head">
-          <h2 className="partner-section__title">Ovaj tjedan</h2>
-          <span className="partner-section__count">{weekUpcoming.length}</span>
+          <div>
+            <h2 className="partner-section__title">Ovaj tjedan</h2>
+            <p className="partner-section__meta">{weekRange}</p>
+          </div>
+          <Link to="/partner/calendar" className="partner-section__link">
+            Otvori kalendar
+          </Link>
         </div>
         {weekUpcoming.length === 0 ? (
           <div className="partner-emptyState">
@@ -408,7 +426,10 @@ export default function PartnerDashboardPage() {
 
       <section className="partner-section">
         <div className="partner-section__head">
-          <h2 className="partner-section__title">Sve rezervacije</h2>
+          <div>
+            <h2 className="partner-section__title">Sve rezervacije</h2>
+            <p className="partner-section__meta">Nadolazeći i zadnji termini</p>
+          </div>
           <Link to="/partner/reservations" className="partner-section__link">
             Otvori sve
           </Link>

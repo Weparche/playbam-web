@@ -169,8 +169,9 @@ export default function PartnerDashboardPage() {
     packages,
     addons,
     stats,
+    reservations,
     todayReservations,
-    tomorrowReservations,
+    weekReservations,
     alerts,
     getCustomer,
     confirmReservation,
@@ -195,7 +196,21 @@ export default function PartnerDashboardPage() {
   }, [alerts])
 
   const today = useMemo(() => [...todayReservations].sort(bySchedule), [todayReservations])
-  const tomorrow = useMemo(() => [...tomorrowReservations].sort(bySchedule), [tomorrowReservations])
+  const weekUpcoming = useMemo(
+    () => [...weekReservations].filter((res) => res.date !== todayKey()).sort(bySchedule),
+    [weekReservations],
+  )
+  const allReservationsPreview = useMemo(() => {
+    const today = todayKey()
+    return [...reservations]
+      .sort((a, b) => {
+        const aUpcoming = a.date >= today
+        const bUpcoming = b.date >= today
+        if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1
+        return aUpcoming ? bySchedule(a, b) : bySchedule(b, a)
+      })
+      .slice(0, 5)
+  }, [reservations])
   const readiness = useMemo(() => {
     const checks = [
       { key: 'contact', label: 'Kontakt podaci', done: Boolean(playroom.phone && playroom.email && playroom.address) },
@@ -254,12 +269,7 @@ export default function PartnerDashboardPage() {
       <div className="partner-gridStats">
         <StatCard label="Danas" value={stats.todayCount} helper="rođendana u rasporedu" />
         <StatCard label="Ovaj tjedan" value={stats.weekCount} helper="aktivnih termina" />
-        <StatCard
-          label="Čeka potvrdu"
-          value={stats.pendingConfirmationCount}
-          helper="novi upiti"
-          tone={stats.pendingConfirmationCount > 0 ? 'warning' : 'success'}
-        />
+        <StatCard label="Sve rezervacije" value={reservations.length} helper="ukupno u sustavu" />
         <StatCard label="Prihod ovaj mjesec" value={formatPrice(stats.monthRevenue, playroom.currency)} helper="završeni eventi" />
       </div>
 
@@ -267,7 +277,7 @@ export default function PartnerDashboardPage() {
         <section className={`partner-triage${allClear ? ' is-clear' : ''}`} aria-labelledby="triage-title">
           <div className="partner-triage__head">
             <div>
-              <p className="partner-kicker">Operativni inbox</p>
+              <p className="partner-kicker">Nadzorna ploča</p>
               <h2 className="partner-triage__title" id="triage-title">
                 {allClear ? 'Sve je pod kontrolom' : 'Treba riješiti'}
               </h2>
@@ -376,19 +386,47 @@ export default function PartnerDashboardPage() {
         )}
       </section>
 
-      {tomorrow.length > 0 ? (
-        <section className="partner-section">
-          <div className="partner-section__head">
-            <h2 className="partner-section__title">Sutra</h2>
-            <span className="partner-section__count">{tomorrow.length}</span>
+      <section className="partner-section">
+        <div className="partner-section__head">
+          <h2 className="partner-section__title">Ovaj tjedan</h2>
+          <span className="partner-section__count">{weekUpcoming.length}</span>
+        </div>
+        {weekUpcoming.length === 0 ? (
+          <div className="partner-emptyState">
+            <PartnerIcon name="calendar" size={28} />
+            <p className="partner-emptyState__title">Nema dodatnih termina ovaj tjedan</p>
+            <p className="partner-emptyState__text">Današnji rođendani su iznad, a novi termini će se ovdje pojaviti automatski.</p>
           </div>
+        ) : (
           <div className="partner-timeline">
-            {tomorrow.map((res) => (
+            {weekUpcoming.map((res) => (
               <TimelineRow key={res.id} res={res} />
             ))}
           </div>
-        </section>
-      ) : null}
+        )}
+      </section>
+
+      <section className="partner-section">
+        <div className="partner-section__head">
+          <h2 className="partner-section__title">Sve rezervacije</h2>
+          <Link to="/partner/reservations" className="partner-section__link">
+            Otvori sve
+          </Link>
+        </div>
+        {allReservationsPreview.length === 0 ? (
+          <div className="partner-emptyState">
+            <PartnerIcon name="reservations" size={28} />
+            <p className="partner-emptyState__title">Još nema rezervacija</p>
+            <p className="partner-emptyState__text">Nova rezervacija će se ovdje pojaviti čim je upišeš.</p>
+          </div>
+        ) : (
+          <div className="partner-timeline">
+            {allReservationsPreview.map((res) => (
+              <TimelineRow key={res.id} res={res} />
+            ))}
+          </div>
+        )}
+      </section>
     </>
   )
 }

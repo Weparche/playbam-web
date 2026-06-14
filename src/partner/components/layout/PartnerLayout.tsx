@@ -24,7 +24,7 @@ type NavConfig = {
 
 const OWNER_NAV: NavConfig = {
   daily: [
-    { to: '/partner', label: 'Danas', icon: 'today', end: true },
+    { to: '/partner', label: 'Nadzorna ploča', icon: 'today', end: true },
     { to: '/partner/calendar', label: 'Kalendar', icon: 'calendar' },
     { to: '/partner/reservations', label: 'Rezervacije', icon: 'reservations' },
   ],
@@ -37,7 +37,7 @@ const OWNER_NAV: NavConfig = {
     { to: '/partner/pomoc', label: 'Pomoć', icon: 'help' },
   ],
   mobilePrimary: [
-    { to: '/partner', label: 'Danas', icon: 'today', end: true },
+    { to: '/partner', label: 'Nadzorna ploča', icon: 'today', end: true },
     { to: '/partner/calendar', label: 'Kalendar', icon: 'calendar' },
     { to: '/partner/reservations', label: 'Rezervacije', icon: 'reservations' },
   ],

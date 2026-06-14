@@ -296,6 +296,31 @@ img {
   pointer-events: none;
 }
 
+.pb-btn-loading {
+  cursor: progress;
+}
+
+.pb-btn__spinner {
+  width: 1.05em;
+  height: 1.05em;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: pb-btn-spin 600ms linear infinite;
+}
+
+@keyframes pb-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-btn__spinner {
+    animation-duration: 1400ms;
+  }
+}
+
 .pb-divider {
   height: 1px;
   background: rgba(22, 24, 35, 0.1);

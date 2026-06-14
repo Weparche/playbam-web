@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, Navigate, useLocation } from 'react-router-dom'
 
 import { usePartnerAuth } from '../../context/PartnerAuthContext'
 import { PartnerDataProvider, usePartnerData } from '../../context/PartnerDataContext'
 import PartnerIcon, { type IconName } from '../ui/PartnerIcon'
 import PartnerSheet from '../ui/PartnerSheet'
+import PartnerCommandPalette from '../PartnerCommandPalette'
 import '../../styles/partner.css'
 
 type NavItem = {
@@ -73,8 +74,30 @@ function PartnerChrome() {
   const { playroom } = usePartnerData()
   const location = useLocation()
   const [moreOpen, setMoreOpen] = useState(false)
+  const [paletteOpen, setPaletteOpen] = useState(false)
 
   const nav = isAnimator ? ANIMATOR_NAV : OWNER_NAV
+  const paletteNav = [...nav.daily, ...nav.setup]
+
+  // Global ⌘K / Ctrl+K (and "/" when not typing) opens the command palette.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setPaletteOpen((v) => !v)
+        return
+      }
+      if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const el = e.target as HTMLElement | null
+        const tag = el?.tagName
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+        e.preventDefault()
+        setPaletteOpen(true)
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
 
   if (!user) {
     return <Navigate to="/partner/login" replace />
@@ -106,6 +129,15 @@ function PartnerChrome() {
               <span>Nova rezervacija</span>
             </Link>
           ) : null}
+
+          <button type="button" className="partner-kbdHint" onClick={() => setPaletteOpen(true)}>
+            <PartnerIcon name="reservations" size={16} />
+            <span>Brza naredba</span>
+            <span className="partner-kbdHint__keys">
+              <kbd className="partner-kbd">⌘</kbd>
+              <kbd className="partner-kbd">K</kbd>
+            </span>
+          </button>
 
           <nav className="partner-nav" aria-label="Partner navigacija">
             <p className="partner-nav__groupLabel">Svakodnevno</p>
@@ -226,6 +258,8 @@ function PartnerChrome() {
           <span>Odjava</span>
         </button>
       </PartnerSheet>
+
+      <PartnerCommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} navItems={paletteNav} />
     </div>
   )
 }

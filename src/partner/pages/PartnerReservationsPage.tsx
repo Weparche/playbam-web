@@ -6,10 +6,13 @@ import { usePartnerData } from '../context/PartnerDataContext'
 import { generateAvailableSlots } from '../lib/availability'
 import { formatDateHr, formatTimeRange, todayKey } from '../lib/dates'
 import { formatPrice } from '../lib/pricing'
+import { useDebouncedValue } from '../lib/useDebouncedValue'
 import type { BirthdayReservation, ReservationStatus } from '../types'
 import StatusBadge from '../components/ui/StatusBadge'
 import PartnerSheet from '../components/ui/PartnerSheet'
 import PartnerIcon from '../components/ui/PartnerIcon'
+import ConfirmDialog from '../components/ui/ConfirmDialog'
+import { PartnerSkeletonRows } from '../components/ui/PartnerSkeleton'
 
 const STATUS_OPTIONS: Array<{ value: ReservationStatus | 'all'; label: string }> = [
   { value: 'all', label: 'Sve' },
@@ -67,6 +70,7 @@ export default function PartnerReservationsPage() {
   const [params, setParams] = useSearchParams()
   const navigate = useNavigate()
   const {
+    isReady,
     listReservations,
     packages,
     addons,
@@ -76,6 +80,9 @@ export default function PartnerReservationsPage() {
     createCustomer,
     calculatePrice,
     reservations,
+    confirmMany,
+    markDepositPaidMany,
+    cancelMany,
   } = usePartnerData()
 
   const today = todayKey()
@@ -84,8 +91,12 @@ export default function PartnerReservationsPage() {
   const showNew = params.get('new') === '1'
 
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebouncedValue(search, 250)
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [confirmCancel, setConfirmCancel] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [form, setForm] = useState(() =>
     emptyForm(
       customers[0]?.id ?? '',
@@ -102,12 +113,39 @@ export default function PartnerReservationsPage() {
   const filtered = useMemo(() => {
     const base = listReservations({
       status: status === 'all' ? undefined : status,
-      search,
+      search: debouncedSearch,
       dateFrom: dateFrom || undefined,
       dateTo: dateTo || undefined,
     })
     return need ? base.filter((r) => matchesNeed(r, need, today)) : base
-  }, [listReservations, status, search, dateFrom, dateTo, need, today, reservations])
+  }, [listReservations, status, debouncedSearch, dateFrom, dateTo, need, today, reservations])
+
+  const statusLabelFor = (s: ReservationStatus | 'all') =>
+    STATUS_OPTIONS.find((o) => o.value === s)?.label ?? s
+  const hasActiveFilters = status !== 'all' || !!need || !!debouncedSearch || !!dateFrom || !!dateTo
+
+  // ----- Selection / bulk actions -----
+  const filteredIds = useMemo(() => filtered.map((r) => r.id), [filtered])
+  const selectedList = useMemo(() => filtered.filter((r) => selectedIds.has(r.id)), [filtered, selectedIds])
+  const allSelected = filteredIds.length > 0 && filteredIds.every((id) => selectedIds.has(id))
+
+  const toggleRow = (id: string) =>
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+
+  const toggleAll = () =>
+    setSelectedIds((prev) => (filteredIds.every((id) => prev.has(id)) ? new Set() : new Set(filteredIds)))
+
+  const clearSelection = () => setSelectedIds(new Set())
+
+  const runBulk = (fn: (ids: string[]) => void) => {
+    fn(Array.from(selectedIds))
+    clearSelection()
+  }
 
   const slots = useMemo(
     () =>
@@ -135,6 +173,20 @@ export default function PartnerReservationsPage() {
   const clearNeed = () => {
     setParams((prev) => {
       const p = new URLSearchParams(prev)
+      p.delete('need')
+      return p
+    })
+  }
+
+  const clearStatus = () => setStatus('all')
+
+  const clearAllFilters = () => {
+    setSearch('')
+    setDateFrom('')
+    setDateTo('')
+    setParams((prev) => {
+      const p = new URLSearchParams(prev)
+      p.delete('status')
       p.delete('need')
       return p
     })
@@ -188,27 +240,33 @@ export default function PartnerReservationsPage() {
       return
     }
 
-    const created = createReservation({
-      customerId,
-      packageId: form.packageId,
-      date: form.date,
-      startTime: form.startTime,
-      endTime: form.endTime,
-      status: 'pending_confirmation',
-      childName: form.childName.trim(),
-      childAge: form.childAge,
-      childrenCount: form.childrenCount,
-      theme: form.theme,
-      notes: form.notes,
-      internalNotes: '',
-      totalPrice,
-      depositAmount: playroom.defaultDepositAmount,
-      depositPaid: false,
-      assignedAnimatorIds: [],
-      addonIds: form.addonIds,
-    })
-    closeSheet()
-    navigate(`/partner/reservations/${created.id}`)
+    setSaving(true)
+    const customerForCreate = customerId
+    // Short delay so the "Spremam…" state is perceptible before navigating away.
+    window.setTimeout(() => {
+      const created = createReservation({
+        customerId: customerForCreate,
+        packageId: form.packageId,
+        date: form.date,
+        startTime: form.startTime,
+        endTime: form.endTime,
+        status: 'pending_confirmation',
+        childName: form.childName.trim(),
+        childAge: form.childAge,
+        childrenCount: form.childrenCount,
+        theme: form.theme,
+        notes: form.notes,
+        internalNotes: '',
+        totalPrice,
+        depositAmount: playroom.defaultDepositAmount,
+        depositPaid: false,
+        assignedAnimatorIds: [],
+        addonIds: form.addonIds,
+      })
+      setSaving(false)
+      closeSheet()
+      navigate(`/partner/reservations/${created.id}`)
+    }, 400)
   }
 
   const toggleAddon = (id: string) => {
@@ -223,7 +281,7 @@ export default function PartnerReservationsPage() {
       <header className="partner-topbar">
         <div>
           <h1 className="partner-topbar__title">Rezervacije</h1>
-          <p className="partner-topbar__meta">{filtered.length} rezultata</p>
+          <p className="partner-topbar__meta">Pretraži, filtriraj i obradi rođendane.</p>
         </div>
         <Button type="button" leftIcon={<PartnerIcon name="plus" size={18} />} onClick={openSheet}>
           Nova rezervacija
@@ -245,35 +303,102 @@ export default function PartnerReservationsPage() {
         ))}
       </div>
 
-      {need ? (
-        <div className="partner-filterBanner">
-          <span>
-            Filtrirano: <strong>{NEED_LABELS[need] ?? need}</strong>
+      <div className="partner-toolbar">
+        <div className="partner-toolbar__row">
+          <div className="partner-toolbar__search">
+            <PartnerIcon name="reservations" size={17} />
+            <input
+              className="pb-input"
+              type="search"
+              placeholder="Pretraži roditelja ili dijete"
+              aria-label="Pretraži rezervacije"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <label className="partner-filters__date">
+            <span>Od</span>
+            <input className="pb-input" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+          </label>
+          <label className="partner-filters__date">
+            <span>Do</span>
+            <input className="pb-input" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+          </label>
+          <span className="partner-toolbar__count" aria-live="polite">
+            {filtered.length} {filtered.length === 1 ? 'rezultat' : 'rezultata'}
           </span>
-          <button type="button" onClick={clearNeed} aria-label="Ukloni filter">
-            Očisti ✕
+        </div>
+
+        {hasActiveFilters ? (
+          <div className="partner-activeFilters" aria-label="Aktivni filteri">
+            {status !== 'all' && !need ? (
+              <span className="partner-filterChip">
+                {statusLabelFor(status)}
+                <button type="button" onClick={clearStatus} aria-label={`Ukloni filter ${statusLabelFor(status)}`}>✕</button>
+              </span>
+            ) : null}
+            {need ? (
+              <span className="partner-filterChip">
+                {NEED_LABELS[need] ?? need}
+                <button type="button" onClick={clearNeed} aria-label="Ukloni filter potrebe">✕</button>
+              </span>
+            ) : null}
+            {debouncedSearch ? (
+              <span className="partner-filterChip">
+                „{debouncedSearch}”
+                <button type="button" onClick={() => setSearch('')} aria-label="Ukloni pretragu">✕</button>
+              </span>
+            ) : null}
+            {dateFrom ? (
+              <span className="partner-filterChip">
+                Od {formatDateHr(dateFrom)}
+                <button type="button" onClick={() => setDateFrom('')} aria-label="Ukloni datum od">✕</button>
+              </span>
+            ) : null}
+            {dateTo ? (
+              <span className="partner-filterChip">
+                Do {formatDateHr(dateTo)}
+                <button type="button" onClick={() => setDateTo('')} aria-label="Ukloni datum do">✕</button>
+              </span>
+            ) : null}
+            <button type="button" className="partner-toolbar__clear" onClick={clearAllFilters}>
+              Očisti sve
+            </button>
+          </div>
+        ) : null}
+      </div>
+
+      {selectedIds.size > 0 ? (
+        <div className="partner-bulkBar" role="region" aria-label="Skupne akcije">
+          <span className="partner-bulkBar__count" aria-live="polite">
+            <span>{selectedIds.size}</span> odabrano
+          </span>
+          <div className="partner-bulkBar__actions">
+            <button type="button" className="partner-bulkBar__btn" onClick={() => runBulk(confirmMany)}>
+              <PartnerIcon name="check" size={15} /> Potvrdi
+            </button>
+            <button type="button" className="partner-bulkBar__btn" onClick={() => runBulk(markDepositPaidMany)}>
+              <PartnerIcon name="check" size={15} /> Akontacija plaćena
+            </button>
+            <button
+              type="button"
+              className="partner-bulkBar__btn partner-bulkBar__btn--danger"
+              onClick={() => setConfirmCancel(true)}
+            >
+              Otkaži
+            </button>
+          </div>
+          <button type="button" className="partner-bulkBar__close" onClick={clearSelection} aria-label="Poništi odabir">
+            ✕
           </button>
         </div>
       ) : null}
 
-      <div className="partner-filters">
-        <input
-          className="pb-input"
-          placeholder="Pretraži roditelja ili dijete"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <label className="partner-filters__date">
-          <span>Od</span>
-          <input className="pb-input" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
-        </label>
-        <label className="partner-filters__date">
-          <span>Do</span>
-          <input className="pb-input" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
-        </label>
-      </div>
-
-      {filtered.length === 0 ? (
+      {!isReady ? (
+        <section className="partner-panel" aria-busy="true">
+          <PartnerSkeletonRows rows={6} />
+        </section>
+      ) : filtered.length === 0 ? (
         <div className="partner-emptyState">
           <PartnerIcon name="reservations" size={28} />
           <p className="partner-emptyState__title">Nema rezervacija</p>
@@ -285,6 +410,15 @@ export default function PartnerReservationsPage() {
             <table className="partner-table">
               <thead>
                 <tr>
+                  <th className="partner-selectCell">
+                    <input
+                      type="checkbox"
+                      className="partner-checkbox"
+                      checked={allSelected}
+                      onChange={toggleAll}
+                      aria-label="Odaberi sve rezervacije"
+                    />
+                  </th>
                   <th>Datum</th>
                   <th>Vrijeme</th>
                   <th>Dijete</th>
@@ -299,8 +433,18 @@ export default function PartnerReservationsPage() {
                 {filtered.map((res) => {
                   const customer = customers.find((c) => c.id === res.customerId)
                   const pkg = packages.find((p) => p.id === res.packageId)
+                  const selected = selectedIds.has(res.id)
                   return (
-                    <tr key={res.id}>
+                    <tr key={res.id} className={selected ? 'is-selected' : undefined}>
+                      <td className="partner-selectCell">
+                        <input
+                          type="checkbox"
+                          className="partner-checkbox"
+                          checked={selected}
+                          onChange={() => toggleRow(res.id)}
+                          aria-label={`Odaberi rezervaciju — ${res.childName}`}
+                        />
+                      </td>
                       <td>{formatDateHr(res.date)}</td>
                       <td>{formatTimeRange(res.startTime, res.endTime)}</td>
                       <td>{res.childName}</td>
@@ -324,22 +468,32 @@ export default function PartnerReservationsPage() {
             {filtered.map((res) => {
               const customer = customers.find((c) => c.id === res.customerId)
               const pkg = packages.find((p) => p.id === res.packageId)
+              const selected = selectedIds.has(res.id)
               return (
-                <Link key={res.id} to={`/partner/reservations/${res.id}`} className="partner-resCard partner-resCard--link">
-                  <div className="partner-resCard__top">
-                    <div>
-                      <div className="partner-resCard__title">{res.childName}</div>
-                      <div className="partner-resCard__meta">
-                        {formatDateHr(res.date)} · {formatTimeRange(res.startTime, res.endTime)}
+                <div key={res.id} className={`partner-resCard partner-resCard--selectable${selected ? ' is-selected' : ''}`}>
+                  <input
+                    type="checkbox"
+                    className="partner-checkbox"
+                    checked={selected}
+                    onChange={() => toggleRow(res.id)}
+                    aria-label={`Odaberi rezervaciju — ${res.childName}`}
+                  />
+                  <Link to={`/partner/reservations/${res.id}`} className="partner-resCard__link">
+                    <div className="partner-resCard__top">
+                      <div>
+                        <div className="partner-resCard__title">{res.childName}</div>
+                        <div className="partner-resCard__meta">
+                          {formatDateHr(res.date)} · {formatTimeRange(res.startTime, res.endTime)}
+                        </div>
                       </div>
+                      <StatusBadge status={res.status} />
                     </div>
-                    <StatusBadge status={res.status} />
-                  </div>
-                  <div className="partner-resCard__meta">
-                    {customer?.fullName ?? '—'}
-                    {pkg ? ` · ${pkg.name}` : ''} · {formatPrice(res.totalPrice, playroom.currency)}
-                  </div>
-                </Link>
+                    <div className="partner-resCard__meta">
+                      {customer?.fullName ?? '—'}
+                      {pkg ? ` · ${pkg.name}` : ''} · {formatPrice(res.totalPrice, playroom.currency)}
+                    </div>
+                  </Link>
+                </div>
               )
             })}
           </div>
@@ -353,10 +507,10 @@ export default function PartnerReservationsPage() {
         description="Upiši rođendan dok si na telefonu s roditeljem."
         footer={
           <>
-            <Button type="button" onClick={handleCreate}>
-              Spremi rezervaciju
+            <Button type="button" onClick={handleCreate} loading={saving}>
+              {saving ? 'Spremam…' : 'Spremi rezervaciju'}
             </Button>
-            <Button variant="ghost" type="button" onClick={closeSheet}>
+            <Button variant="ghost" type="button" onClick={closeSheet} disabled={saving}>
               Odustani
             </Button>
           </>
@@ -553,6 +707,19 @@ export default function PartnerReservationsPage() {
           {error ? <p className="partner-formError" role="alert">{error}</p> : null}
         </div>
       </PartnerSheet>
+
+      <ConfirmDialog
+        open={confirmCancel}
+        title="Otkazati odabrane rezervacije?"
+        message={`${selectedList.length} ${selectedList.length === 1 ? 'rezervacija bit će označena' : 'rezervacija bit će označeno'} kao otkazano. Ovu radnju nije moguće poništiti skupno.`}
+        confirmLabel="Otkaži rezervacije"
+        cancelLabel="Odustani"
+        onConfirm={() => {
+          runBulk(cancelMany)
+          setConfirmCancel(false)
+        }}
+        onCancel={() => setConfirmCancel(false)}
+      />
     </>
   )
 }

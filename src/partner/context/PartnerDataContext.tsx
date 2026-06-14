@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import { createMockPartnerRepository } from '../data/mockPartnerRepository'
 import type { PartnerRepository } from '../data/partnerRepository'
@@ -19,6 +19,8 @@ import type {
 } from '../types'
 
 type PartnerDataContextValue = {
+  /** False for one tick after mount so pages can show skeletons on first paint. */
+  isReady: boolean
   store: PartnerDataStore
   playroom: Playroom
   packages: BirthdayPackage[]
@@ -58,6 +60,9 @@ type PartnerDataContextValue = {
   confirmReservation: (id: string) => void
   completeReservation: (id: string) => void
   cancelReservation: (id: string) => void
+  confirmMany: (ids: string[]) => void
+  markDepositPaidMany: (ids: string[]) => void
+  cancelMany: (ids: string[]) => void
   createPackage: (input: Omit<BirthdayPackage, 'id' | 'playroomId'>) => void
   updatePackage: (id: string, patch: Partial<BirthdayPackage>) => void
   deletePackage: (id: string) => void
@@ -82,8 +87,15 @@ function createRepository(): PartnerRepository {
 export function PartnerDataProvider({ children }: { children: ReactNode }) {
   const [repo] = useState(() => createRepository())
   const [store, setStore] = useState<PartnerDataStore>(() => repo.getStore())
+  const [isReady, setIsReady] = useState(false)
 
   const refresh = useCallback(() => setStore(repo.getStore()), [repo])
+
+  // Brief initial "loading" tick so pages render skeletons on first paint.
+  useEffect(() => {
+    const id = window.setTimeout(() => setIsReady(true), 350)
+    return () => window.clearTimeout(id)
+  }, [])
 
   const value = useMemo<PartnerDataContextValue>(() => {
     const today = todayKey()
@@ -112,6 +124,7 @@ export function PartnerDataProvider({ children }: { children: ReactNode }) {
       .reduce((sum, r) => sum + r.totalPrice, 0)
 
     return {
+      isReady,
       store,
       playroom: store.playroom,
       packages: repo.listPackages(),
@@ -185,6 +198,18 @@ export function PartnerDataProvider({ children }: { children: ReactNode }) {
         repo.updateReservationStatus(id, 'cancelled')
         refresh()
       },
+      confirmMany: (ids) => {
+        for (const id of ids) repo.updateReservationStatus(id, 'confirmed')
+        refresh()
+      },
+      markDepositPaidMany: (ids) => {
+        for (const id of ids) repo.updateReservation(id, { depositPaid: true, status: 'deposit_paid' })
+        refresh()
+      },
+      cancelMany: (ids) => {
+        for (const id of ids) repo.updateReservationStatus(id, 'cancelled')
+        refresh()
+      },
       createPackage: (input) => {
         repo.createPackage(input)
         refresh()
@@ -244,7 +269,7 @@ export function PartnerDataProvider({ children }: { children: ReactNode }) {
             r.status !== 'cancelled',
         ),
     }
-  }, [store, repo, refresh])
+  }, [store, repo, refresh, isReady])
 
   return <PartnerDataContext.Provider value={value}>{children}</PartnerDataContext.Provider>
 }

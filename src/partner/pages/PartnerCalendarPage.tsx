@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { usePartnerData } from '../context/PartnerDataContext'
+import PartnerSkeleton from '../components/ui/PartnerSkeleton'
 import { generateAvailableSlots } from '../lib/availability'
 import {
   addDays,
@@ -28,6 +29,14 @@ const VIEW_OPTIONS: Array<{ id: View; label: string }> = [
 
 const WEEKDAY_LABELS = ['Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned']
 
+const LEGEND_STATUSES: BirthdayReservation['status'][] = [
+  'pending_confirmation',
+  'waiting_deposit',
+  'confirmed',
+  'animator_assigned',
+  'completed',
+]
+
 function EventChip({ res }: { res: BirthdayReservation }) {
   return (
     <Link
@@ -36,6 +45,7 @@ function EventChip({ res }: { res: BirthdayReservation }) {
       data-status={res.status}
       title={`${res.startTime} ${res.childName} — ${statusLabel(res.status)}`}
     >
+      <span className="partner-calEvent__dot" aria-hidden="true" />
       <span className="partner-calEvent__time">{res.startTime}</span>
       <span className="partner-calEvent__name">{res.childName}</span>
     </Link>
@@ -43,7 +53,7 @@ function EventChip({ res }: { res: BirthdayReservation }) {
 }
 
 export default function PartnerCalendarPage() {
-  const { reservations, playroom } = usePartnerData()
+  const { isReady, reservations, playroom } = usePartnerData()
   const [view, setView] = useState<View>('month')
   const [cursor, setCursor] = useState(todayKey())
   const today = todayKey()
@@ -95,6 +105,26 @@ export default function PartnerCalendarPage() {
   )
   const dayEvents = byDate.get(cursor) ?? []
 
+  // Keyboard navigation: ←/→ shift period, t = today. Ignored while typing.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      const el = e.target as HTMLElement | null
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      if (e.key === 'ArrowLeft') {
+        shift(-1)
+      } else if (e.key === 'ArrowRight') {
+        shift(1)
+      } else if (e.key === 't' || e.key === 'T') {
+        setCursor(today)
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, cursor])
+
   return (
     <>
       <header className="partner-topbar">
@@ -124,20 +154,40 @@ export default function PartnerCalendarPage() {
           ))}
         </div>
         <div className="partner-calNav">
-          <button type="button" className="partner-calNav__btn" onClick={() => shift(-1)} aria-label="Prethodno">
+          <button type="button" className="partner-calNav__btn" onClick={() => shift(-1)} aria-label="Prethodno (strelica lijevo)">
             ‹
           </button>
           <button type="button" className="partner-calNav__today" onClick={() => setCursor(today)}>
             Danas
           </button>
-          <button type="button" className="partner-calNav__btn" onClick={() => shift(1)} aria-label="Sljedeće">
+          <button type="button" className="partner-calNav__btn" onClick={() => shift(1)} aria-label="Sljedeće (strelica desno)">
             ›
           </button>
         </div>
       </div>
 
+      <div className="partner-calLegend" aria-label="Legenda statusa">
+        {LEGEND_STATUSES.map((s) => (
+          <span key={s} className="partner-calLegend__item" data-status={s}>
+            <span className="partner-calLegend__dot" aria-hidden="true" />
+            {statusLabel(s)}
+          </span>
+        ))}
+      </div>
+
+      {!isReady ? (
+        <section className="partner-panel" aria-busy="true">
+          <PartnerSkeleton width="40%" height="1.1rem" />
+          <div className="partner-calGrid partner-calGrid--skeleton" aria-hidden="true">
+            {Array.from({ length: 35 }).map((_, i) => (
+              <PartnerSkeleton key={i} height="5.5rem" />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {/* MONTH — desktop grid */}
-      {view === 'month' ? (
+      {isReady && view === 'month' ? (
         <>
           <section className="partner-panel partner-calMonth">
             <div className="partner-calWeekHead">
@@ -211,7 +261,7 @@ export default function PartnerCalendarPage() {
       ) : null}
 
       {/* WEEK */}
-      {view === 'week' ? (
+      {isReady && view === 'week' ? (
         <div className="partner-weekGrid">
           {weekDays.map((dateKey) => {
             const events = byDate.get(dateKey) ?? []
@@ -239,7 +289,7 @@ export default function PartnerCalendarPage() {
       ) : null}
 
       {/* DAY */}
-      {view === 'day' ? (
+      {isReady && view === 'day' ? (
         <div className="partner-dayView">
           <section className="partner-panel">
             <h2 className="partner-panel__title">Raspored</h2>

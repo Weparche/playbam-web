@@ -8,6 +8,8 @@ import { formatDayHeadingHr, formatTimeRange, todayKey } from '../lib/dates'
 import { formatPrice } from '../lib/pricing'
 import type { BirthdayReservation, Customer } from '../types'
 import PartnerIcon from '../components/ui/PartnerIcon'
+import StatCard from '../components/ui/StatCard'
+import PartnerSkeleton, { PartnerSkeletonRows } from '../components/ui/PartnerSkeleton'
 
 function bySchedule(a: BirthdayReservation, b: BirthdayReservation) {
   return `${a.date}${a.startTime}`.localeCompare(`${b.date}${b.startTime}`)
@@ -153,6 +155,7 @@ const TRIAGE_META = {
 export default function PartnerDashboardPage() {
   const { isAnimator } = usePartnerAuth()
   const {
+    isReady,
     playroom,
     stats,
     todayReservations,
@@ -195,16 +198,43 @@ export default function PartnerDashboardPage() {
 
   const allClear = triage.length === 0
 
+  const header = (
+    <header className="partner-dayhead">
+      <p className="partner-dayhead__kicker">{playroom.name}</p>
+      <h1 className="partner-dayhead__date">{formatDayHeadingHr(todayKey())}</h1>
+      <p className="partner-dayhead__meta">Pregled dana, otvorenih zadataka i nadolazećih rođendana.</p>
+    </header>
+  )
+
+  if (!isReady) {
+    return (
+      <>
+        {header}
+        <div className="partner-gridStats" aria-hidden="true">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="partner-statCard">
+              <PartnerSkeleton variant="text" width="55%" height="0.7rem" />
+              <PartnerSkeleton width="3.5rem" height="1.7rem" />
+            </div>
+          ))}
+        </div>
+        <section className="partner-section" aria-busy="true">
+          <PartnerSkeletonRows rows={4} />
+        </section>
+      </>
+    )
+  }
+
   return (
     <>
-      <header className="partner-dayhead">
-        <p className="partner-dayhead__kicker">{playroom.name}</p>
-        <h1 className="partner-dayhead__date">{formatDayHeadingHr(todayKey())}</h1>
-        <p className="partner-dayhead__meta">
-          {stats.todayCount} {stats.todayCount === 1 ? 'rođendan danas' : 'rođendana danas'} · {stats.weekCount} ovaj tjedan
-          · Prihod ovaj mjesec {formatPrice(stats.monthRevenue, playroom.currency)}
-        </p>
-      </header>
+      {header}
+
+      <div className="partner-gridStats">
+        <StatCard label="Danas" value={stats.todayCount} />
+        <StatCard label="Ovaj tjedan" value={stats.weekCount} />
+        <StatCard label="Čeka potvrdu" value={stats.pendingConfirmationCount} />
+        <StatCard label="Prihod ovaj mjesec" value={formatPrice(stats.monthRevenue, playroom.currency)} />
+      </div>
 
       <section className={`partner-triage${allClear ? ' is-clear' : ''}`} aria-labelledby="triage-title">
         <div className="partner-triage__head">

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import Button from '../../components/ui/Button'
@@ -33,7 +33,6 @@ function smsHref(phone: string) {
 
 export default function PartnerReservationDetailPage() {
   const { id = '' } = useParams()
-  const animatorsRef = useRef<HTMLElement>(null)
   const {
     getReservation,
     getCustomer,
@@ -51,6 +50,15 @@ export default function PartnerReservationDetailPage() {
     updateReservationStatus,
     updateReservation,
   } = usePartnerData()
+
+  const [busy, setBusy] = useState(false)
+  const runAction = (fn: () => void) => {
+    setBusy(true)
+    window.setTimeout(() => {
+      fn()
+      setBusy(false)
+    }, 300)
+  }
 
   const reservation = getReservation(id)
   if (!reservation) {
@@ -99,7 +107,8 @@ export default function PartnerReservationDetailPage() {
     } else if (!hasAnimator) {
       nextAction = {
         label: 'Dodijeli animatora',
-        run: () => animatorsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
+        run: () =>
+          document.getElementById('partner-animators')?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
       }
     } else {
       nextAction = { label: 'Označi završeno', run: () => completeReservation(reservation.id) }
@@ -109,17 +118,28 @@ export default function PartnerReservationDetailPage() {
   const actionButtons = () => (
     <>
       {nextAction ? (
-        <Button type="button" onClick={nextAction.run}>
-          {nextAction.label}
+        <Button type="button" onClick={() => runAction(nextAction!.run)} loading={busy}>
+          {busy ? 'Spremam…' : nextAction.label}
         </Button>
       ) : null}
       {reservation.status === 'cancelled' ? (
-        <Button variant="ghost" type="button" onClick={() => updateReservationStatus(reservation.id, 'pending_confirmation')}>
+        <Button
+          variant="ghost"
+          type="button"
+          disabled={busy}
+          onClick={() => runAction(() => updateReservationStatus(reservation.id, 'pending_confirmation'))}
+        >
           Vrati u obradu
         </Button>
       ) : null}
       {!isClosed ? (
-        <Button variant="ghost" type="button" className="partner-btnDanger" onClick={() => cancelReservation(reservation.id)}>
+        <Button
+          variant="ghost"
+          type="button"
+          className="partner-btnDanger"
+          disabled={busy}
+          onClick={() => runAction(() => cancelReservation(reservation.id))}
+        >
           Otkaži
         </Button>
       ) : null}
@@ -161,7 +181,7 @@ export default function PartnerReservationDetailPage() {
             <div className="partner-detailActions partner-detailActions--inline">{actionButtons()}</div>
           </section>
 
-          <section className="partner-panel" ref={animatorsRef}>
+          <section className="partner-panel" id="partner-animators">
             <h2 className="partner-panel__title">Animatori</h2>
             {activeAnimators.length === 0 ? (
               <p className="partner-empty">Nema aktivnih animatora. Dodaj ih u postavkama.</p>
@@ -279,7 +299,7 @@ export default function PartnerReservationDetailPage() {
                 onChange={(e) => updateReservation(reservation.id, { notes: e.target.value })}
               />
             </label>
-            <label className="partner-field" style={{ marginTop: '0.75rem' }}>
+            <label className="partner-field partner-field--spaced">
               <span className="partner-field__label">Interna napomena</span>
               <textarea
                 className="pb-input"

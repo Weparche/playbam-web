@@ -123,6 +123,13 @@ export default function PartnerReservationsPage() {
   const statusLabelFor = (s: ReservationStatus | 'all') =>
     STATUS_OPTIONS.find((o) => o.value === s)?.label ?? s
   const hasActiveFilters = status !== 'all' || !!need || !!debouncedSearch || !!dateFrom || !!dateTo
+  const statusCounts = useMemo(() => {
+    const counts = new Map<ReservationStatus, number>()
+    for (const res of reservations) {
+      counts.set(res.status, (counts.get(res.status) ?? 0) + 1)
+    }
+    return counts
+  }, [reservations])
 
   // ----- Selection / bulk actions -----
   const filteredIds = useMemo(() => filtered.map((r) => r.id), [filtered])
@@ -287,6 +294,20 @@ export default function PartnerReservationsPage() {
           Nova rezervacija
         </Button>
       </header>
+
+      <div className="partner-pipelineSummary" aria-label="Sažetak pipelinea rezervacija">
+        {STATUS_OPTIONS.filter((opt) => opt.value !== 'all').map((opt) => (
+          <button
+            key={opt.value}
+            type="button"
+            className={`partner-pipelineSummary__item${status === opt.value && !need ? ' is-active' : ''}`}
+            onClick={() => setStatus(opt.value)}
+          >
+            <span>{opt.label}</span>
+            <strong>{statusCounts.get(opt.value as ReservationStatus) ?? 0}</strong>
+          </button>
+        ))}
+      </div>
 
       <div className="partner-segments" role="tablist" aria-label="Filter po statusu">
         {STATUS_OPTIONS.map((opt) => (
@@ -517,6 +538,11 @@ export default function PartnerReservationsPage() {
         }
       >
         <div className="partner-formStack">
+          <div className="partner-sheetIntro">
+            <span>Pipeline unos</span>
+            <p>Roditelj, termin, dijete i cijena ostaju vidljivi kao jedan brzi tok za telefonski upis.</p>
+          </div>
+
           <div className="partner-field">
             <span className="partner-field__label">Roditelj</span>
             <div className="partner-segments partner-segments--inline">

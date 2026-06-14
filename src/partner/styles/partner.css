@@ -2728,6 +2728,495 @@
 }
 
 /* ============================================================
+   Partner Console v1 polish: restrained Fresha-clean product UI
+   ============================================================ */
+
+.partner-app {
+  --partner-bg: oklch(0.982 0.006 80);
+  --partner-sidebar-bg: oklch(0.955 0.008 82);
+  --partner-surface: oklch(0.996 0.004 80);
+  --partner-surface-2: oklch(0.972 0.006 82);
+  --partner-border: oklch(0.89 0.012 80);
+  --partner-border-strong: oklch(0.8 0.018 78);
+  --partner-text: oklch(0.23 0.017 72);
+  --partner-muted: oklch(0.43 0.026 72);
+  --partner-soft: oklch(0.58 0.03 72);
+  --partner-accent: oklch(0.54 0.115 52);
+  --partner-accent-soft: oklch(0.94 0.027 58);
+  --partner-accent-strong: oklch(0.4 0.095 48);
+  --partner-ok: oklch(0.43 0.085 155);
+  --partner-warn: oklch(0.55 0.12 75);
+  --partner-danger: oklch(0.48 0.12 30);
+  --partner-info: oklch(0.46 0.075 265);
+  --partner-shadow: 0 1px 2px oklch(0.24 0.018 72 / 0.05), 0 8px 24px -18px oklch(0.24 0.018 72 / 0.2);
+  --partner-elev-raised: 0 1px 2px oklch(0.24 0.018 72 / 0.06), 0 16px 34px -24px oklch(0.24 0.018 72 / 0.26);
+  --partner-elev-spotlight: var(--partner-shadow);
+  --partner-radius-lg: 8px;
+  --partner-radius-md: 8px;
+  --partner-radius-sm: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+.partner-app::before {
+  display: none;
+}
+
+.partner-brand__title,
+.partner-topbar__title,
+.partner-dayhead__date,
+.partner-login__title,
+.partner-calendar__monthLabel,
+.partner-timelineRow__start,
+.partner-priceSummary__value,
+.partner-helpCard__title,
+.partner-settingsAccount__playroom,
+.partner-defList__strong {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.partner-topbar__title {
+  font-size: 1.55rem;
+  line-height: 1.16;
+}
+
+.partner-dayhead {
+  margin-bottom: 1rem;
+}
+
+.partner-dayhead__date {
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.partner-kicker,
+.partner-dayhead__kicker,
+.partner-brand__kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--partner-soft);
+}
+
+.partner-main {
+  padding-top: 1rem;
+}
+
+.partner-content {
+  max-width: 1220px;
+}
+
+.partner-panel,
+.partner-statCard,
+.partner-resCard,
+.partner-timelineRow,
+.partner-calendarDay,
+.partner-calCell,
+.partner-agendaRow,
+.partner-skeletonRow,
+.partner-emptyState {
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.partner-panel,
+.partner-statCard,
+.partner-resCard,
+.partner-timelineRow,
+.partner-calCell {
+  border-color: var(--partner-border);
+}
+
+.partner-panel {
+  padding: 1rem;
+}
+
+.partner-gridStats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.partner-statCard {
+  padding: 0.85rem 0.9rem;
+  background: var(--partner-surface);
+}
+
+.partner-statCard[data-tone='success'] {
+  border-color: color-mix(in oklch, var(--partner-ok) 24%, var(--partner-border));
+}
+
+.partner-statCard[data-tone='warning'] {
+  border-color: color-mix(in oklch, var(--partner-warn) 28%, var(--partner-border));
+}
+
+.partner-statCard[data-tone='danger'] {
+  border-color: color-mix(in oklch, var(--partner-danger) 28%, var(--partner-border));
+}
+
+.partner-statCard__label {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+}
+
+.partner-statCard__value {
+  margin-top: 0.32rem;
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.partner-statCard__helper {
+  margin-top: 0.22rem;
+  font-size: 0.76rem;
+  color: var(--partner-soft);
+}
+
+.partner-opsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20rem;
+  gap: 0.8rem;
+  align-items: start;
+  margin-bottom: 1.25rem;
+}
+
+.partner-triage {
+  margin: 0;
+  padding: 1rem;
+  border-color: var(--partner-border);
+  background: var(--partner-surface);
+  box-shadow: none;
+}
+
+.partner-triage.is-clear {
+  border-color: color-mix(in oklch, var(--partner-ok) 24%, var(--partner-border));
+  background: var(--partner-surface);
+}
+
+.partner-triage__title,
+.partner-profileHealth__title,
+.partner-detailHero__title,
+.partner-clientHero__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.25;
+  color: var(--partner-text);
+}
+
+.partner-triageRow {
+  gap: 0.6rem;
+  padding: 0.58rem 0;
+}
+
+.partner-triageRow .pb-btn,
+.partner-triageRow .pb-btn-sm {
+  min-height: 2rem;
+  padding-inline: 0.7rem;
+}
+
+.partner-profileHealth {
+  padding: 1rem;
+  border: 1px solid var(--partner-border);
+  border-radius: 8px;
+  background: var(--partner-surface);
+}
+
+.partner-profileHealth__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.partner-profileHealth__head strong {
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--partner-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.partner-progress {
+  height: 0.45rem;
+  margin: 0.8rem 0;
+  border-radius: 999px;
+  background: var(--partner-surface-2);
+  overflow: hidden;
+}
+
+.partner-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--partner-accent);
+}
+
+.partner-healthList {
+  list-style: none;
+  margin: 0 0 0.85rem;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.partner-healthList li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.84rem;
+  color: var(--partner-muted);
+}
+
+.partner-healthList svg {
+  color: var(--partner-accent);
+  flex-shrink: 0;
+}
+
+.partner-pipelineSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.partner-pipelineSummary__item {
+  min-height: 3.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.72rem 0.8rem;
+  border: 1px solid var(--partner-border);
+  border-radius: 8px;
+  background: var(--partner-surface);
+  color: var(--partner-muted);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.partner-pipelineSummary__item strong {
+  color: var(--partner-text);
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.partner-pipelineSummary__item:hover,
+.partner-pipelineSummary__item.is-active {
+  border-color: color-mix(in oklch, var(--partner-accent) 45%, var(--partner-border));
+  background: var(--partner-accent-soft);
+  color: var(--partner-accent-strong);
+}
+
+.partner-sheetIntro {
+  padding: 0.75rem;
+  border: 1px solid var(--partner-border);
+  border-radius: 8px;
+  background: var(--partner-surface-2);
+}
+
+.partner-sheetIntro span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--partner-text);
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.partner-sheetIntro p {
+  margin: 0;
+  color: var(--partner-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.partner-detailHero {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.partner-detailHero__head,
+.partner-clientHero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.partner-detailHero__meta {
+  margin: 0.35rem 0 0;
+  color: var(--partner-muted);
+  font-size: 0.86rem;
+}
+
+.partner-checklistGroups {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.partner-checklistGroup {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--partner-border);
+}
+
+.partner-checklistGroup:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.partner-checklistGroup h3 {
+  margin: 0 0 0.5rem;
+  color: var(--partner-text);
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.partner-clientHero {
+  margin-bottom: 1rem;
+}
+
+.partner-clientHero .partner-contactActions {
+  margin-top: 0;
+  min-width: min(22rem, 100%);
+}
+
+.partner-eventRow--link,
+.partner-nextBooking {
+  color: inherit;
+  text-decoration: none;
+  border-radius: 6px;
+  padding-inline: 0.55rem;
+}
+
+.partner-eventRow--link:hover,
+.partner-nextBooking:hover {
+  background: var(--partner-surface-2);
+}
+
+.partner-nextBooking {
+  display: block;
+  padding-block: 0.65rem;
+}
+
+.partner-calEvent,
+.partner-agendaRow {
+  border-left-width: 1px;
+  border-color: color-mix(in oklch, var(--st) 26%, var(--partner-border));
+}
+
+.partner-app .pb-btn {
+  border-radius: 7px;
+}
+
+.partner-app .pb-btn-primary {
+  background: var(--partner-accent);
+  color: var(--partner-surface);
+}
+
+.partner-app .pb-btn-primary:hover {
+  filter: none;
+  background: var(--partner-accent-strong);
+}
+
+.partner-app .pb-btn-ghost {
+  background: var(--partner-surface);
+  border-color: var(--partner-border-strong);
+  color: var(--partner-text);
+}
+
+.partner-app .pb-btn-ghost:hover {
+  background: var(--partner-surface-2);
+}
+
+.partner-statusBadge,
+.partner-chip,
+.partner-seg,
+.partner-triageChip,
+.partner-filterChip,
+.partner-roleBadge {
+  border-radius: 6px;
+}
+
+.partner-chip[data-variant='ok'],
+.partner-statusBadge[data-status='confirmed'] {
+  color: var(--partner-ok);
+}
+
+.partner-chip[data-variant='warn'],
+.partner-statusBadge[data-status='pending_confirmation'] {
+  color: var(--partner-warn);
+}
+
+.partner-chip[data-variant='danger'],
+.partner-statusBadge[data-status='cancelled'] {
+  color: var(--partner-danger);
+}
+
+.partner-chip[data-variant='info'],
+.partner-statusBadge[data-status='animator_assigned'],
+.partner-statusBadge[data-status='preparing'] {
+  color: var(--partner-info);
+}
+
+@media (max-width: 1100px) {
+  .partner-gridStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .partner-opsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .partner-topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .partner-topbar > .partner-statusBadge {
+    align-self: flex-start;
+  }
+
+  .partner-dayhead__date {
+    font-size: 1.55rem;
+  }
+
+  .partner-gridStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .partner-pipelineSummary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .partner-detailHero__head,
+  .partner-clientHero {
+    flex-direction: column;
+  }
+
+  .partner-clientHero .partner-contactActions {
+    width: 100%;
+  }
+}
+
+@media (max-width: 540px) {
+  .partner-gridStats,
+  .partner-pipelineSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .partner-triageRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+/* ============================================================
    Booksy/Fresha-grade additions — skeletons, unified filters,
    bulk actions, command palette, calendar legend
    ============================================================ */

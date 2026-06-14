@@ -23,9 +23,15 @@ function childAllergies(customer: Customer | null, res: BirthdayReservation): st
   return match?.allergies?.trim() ?? ''
 }
 
+function checklistProgress(res: BirthdayReservation): { done: number; total: number } {
+  const values = Object.values(res.checklist)
+  return { done: values.filter(Boolean).length, total: values.length }
+}
+
 function ReadinessChips({ res, customer }: { res: BirthdayReservation; customer: Customer | null }) {
   const hasAnimator = res.assignedAnimatorIds.length > 0
   const allergies = childAllergies(customer, res)
+  const prep = checklistProgress(res)
   return (
     <div className="partner-chips">
       <span className="partner-chip" data-variant="muted">
@@ -45,6 +51,9 @@ function ReadinessChips({ res, customer }: { res: BirthdayReservation; customer:
           Alergije
         </span>
       ) : null}
+      <span className="partner-chip" data-variant={prep.done === prep.total ? 'ok' : 'info'}>
+        {prep.done}/{prep.total} priprema
+      </span>
     </div>
   )
 }
@@ -157,6 +166,8 @@ export default function PartnerDashboardPage() {
   const {
     isReady,
     playroom,
+    packages,
+    addons,
     stats,
     todayReservations,
     tomorrowReservations,
@@ -185,6 +196,17 @@ export default function PartnerDashboardPage() {
 
   const today = useMemo(() => [...todayReservations].sort(bySchedule), [todayReservations])
   const tomorrow = useMemo(() => [...tomorrowReservations].sort(bySchedule), [tomorrowReservations])
+  const readiness = useMemo(() => {
+    const checks = [
+      { key: 'contact', label: 'Kontakt podaci', done: Boolean(playroom.phone && playroom.email && playroom.address) },
+      { key: 'packages', label: 'Aktivni paketi', done: packages.some((pkg) => pkg.isActive) },
+      { key: 'addons', label: 'Dodaci u ponudi', done: addons.some((addon) => addon.isActive) },
+      { key: 'animators', label: 'Animator tim', done: alerts.missingAnimator.length === 0 },
+      { key: 'payments', label: 'Akontacije pod kontrolom', done: alerts.missingDeposit.length === 0 },
+    ]
+    const done = checks.filter((item) => item.done).length
+    return { checks, percent: Math.round((done / checks.length) * 100) }
+  }, [playroom, packages, addons, alerts.missingAnimator.length, alerts.missingDeposit.length])
 
   if (isAnimator) {
     return <AnimatorDashboard />
@@ -230,75 +252,107 @@ export default function PartnerDashboardPage() {
       {header}
 
       <div className="partner-gridStats">
-        <StatCard label="Danas" value={stats.todayCount} />
-        <StatCard label="Ovaj tjedan" value={stats.weekCount} />
-        <StatCard label="Čeka potvrdu" value={stats.pendingConfirmationCount} />
-        <StatCard label="Prihod ovaj mjesec" value={formatPrice(stats.monthRevenue, playroom.currency)} />
+        <StatCard label="Danas" value={stats.todayCount} helper="rođendana u rasporedu" />
+        <StatCard label="Ovaj tjedan" value={stats.weekCount} helper="aktivnih termina" />
+        <StatCard
+          label="Čeka potvrdu"
+          value={stats.pendingConfirmationCount}
+          helper="novi upiti"
+          tone={stats.pendingConfirmationCount > 0 ? 'warning' : 'success'}
+        />
+        <StatCard label="Prihod ovaj mjesec" value={formatPrice(stats.monthRevenue, playroom.currency)} helper="završeni eventi" />
       </div>
 
-      <section className={`partner-triage${allClear ? ' is-clear' : ''}`} aria-labelledby="triage-title">
-        <div className="partner-triage__head">
-          <h2 className="partner-triage__title" id="triage-title">
-            {allClear ? 'Sve je pod kontrolom' : 'Treba te'}
-          </h2>
-          {!allClear ? (
-            <div className="partner-triage__chips">
-              {chips.map((chip) => (
-                <Link key={chip.key} to={`/partner/reservations?need=${chip.need}`} className="partner-triageChip">
-                  <strong>{chip.count}</strong>
-                  <span>{chip.label}</span>
-                </Link>
-              ))}
+      <div className="partner-opsGrid">
+        <section className={`partner-triage${allClear ? ' is-clear' : ''}`} aria-labelledby="triage-title">
+          <div className="partner-triage__head">
+            <div>
+              <p className="partner-kicker">Operativni inbox</p>
+              <h2 className="partner-triage__title" id="triage-title">
+                {allClear ? 'Sve je pod kontrolom' : 'Treba riješiti'}
+              </h2>
             </div>
-          ) : null}
-        </div>
-
-        {allClear ? (
-          <p className="partner-triage__clearText">
-            Nema otvorenih zadataka. Potvrde, akontacije i animatori su posloženi.
-          </p>
-        ) : (
-          <ul className="partner-triage__list">
-            {triage.slice(0, 6).map(({ res, kind }) => {
-              const meta = TRIAGE_META[kind]
-              const customer = getCustomer(res.customerId)
-              return (
-                <li key={res.id} className="partner-triageRow">
-                  <div className="partner-triageRow__main">
-                    <Link to={`/partner/reservations/${res.id}`} className="partner-triageRow__title">
-                      {res.childName}
-                    </Link>
-                    <span className="partner-triageRow__meta">
-                      {formatTimeRange(res.startTime, res.endTime)} · {customer?.fullName ?? '—'}
-                    </span>
-                  </div>
-                  <span className="partner-chip" data-variant={meta.variant}>
-                    {kind === 'confirm' ? 'Čeka potvrdu' : kind === 'deposit' ? 'Bez akontacije' : 'Bez animatora'}
-                  </span>
-                  {kind === 'confirm' ? (
-                    <Button size="sm" type="button" onClick={() => confirmReservation(res.id)}>
-                      Potvrdi
-                    </Button>
-                  ) : kind === 'deposit' ? (
-                    <Button size="sm" type="button" onClick={() => markDepositPaid(res.id)}>
-                      Plaćeno
-                    </Button>
-                  ) : (
-                    <Link to={`/partner/reservations/${res.id}`} className="pb-btn pb-btn-ghost pb-btn-sm">
-                      Dodijeli
-                    </Link>
-                  )}
-                </li>
-              )
-            })}
-            {triage.length > 6 ? (
-              <li className="partner-triageRow partner-triageRow--more">
-                <Link to="/partner/reservations">Još {triage.length - 6} za riješiti →</Link>
-              </li>
+            {!allClear ? (
+              <div className="partner-triage__chips">
+                {chips.map((chip) => (
+                  <Link key={chip.key} to={`/partner/reservations?need=${chip.need}`} className="partner-triageChip">
+                    <strong>{chip.count}</strong>
+                    <span>{chip.label}</span>
+                  </Link>
+                ))}
+              </div>
             ) : null}
+          </div>
+
+          {allClear ? (
+            <p className="partner-triage__clearText">
+              Nema otvorenih zadataka. Potvrde, akontacije i animatori su posloženi.
+            </p>
+          ) : (
+            <ul className="partner-triage__list">
+              {triage.slice(0, 6).map(({ res, kind }) => {
+                const meta = TRIAGE_META[kind]
+                const customer = getCustomer(res.customerId)
+                return (
+                  <li key={res.id} className="partner-triageRow">
+                    <div className="partner-triageRow__main">
+                      <Link to={`/partner/reservations/${res.id}`} className="partner-triageRow__title">
+                        {res.childName}
+                      </Link>
+                      <span className="partner-triageRow__meta">
+                        {formatTimeRange(res.startTime, res.endTime)} · {customer?.fullName ?? '—'}
+                      </span>
+                    </div>
+                    <span className="partner-chip" data-variant={meta.variant}>
+                      {kind === 'confirm' ? 'Čeka potvrdu' : kind === 'deposit' ? 'Bez akontacije' : 'Bez animatora'}
+                    </span>
+                    {kind === 'confirm' ? (
+                      <Button size="sm" type="button" onClick={() => confirmReservation(res.id)}>
+                        Potvrdi
+                      </Button>
+                    ) : kind === 'deposit' ? (
+                      <Button size="sm" type="button" onClick={() => markDepositPaid(res.id)}>
+                        Plaćeno
+                      </Button>
+                    ) : (
+                      <Link to={`/partner/reservations/${res.id}`} className="pb-btn pb-btn-ghost pb-btn-sm">
+                        Dodijeli
+                      </Link>
+                    )}
+                  </li>
+                )
+              })}
+              {triage.length > 6 ? (
+                <li className="partner-triageRow partner-triageRow--more">
+                  <Link to="/partner/reservations">Još {triage.length - 6} za riješiti</Link>
+                </li>
+              ) : null}
+            </ul>
+          )}
+        </section>
+
+        <aside className="partner-profileHealth" aria-labelledby="profile-health-title">
+          <div className="partner-profileHealth__head">
+            <div>
+              <p className="partner-kicker">VidimoSe profil</p>
+              <h2 id="profile-health-title" className="partner-profileHealth__title">Spremnost profila</h2>
+            </div>
+            <strong>{readiness.percent}%</strong>
+          </div>
+          <div className="partner-progress" aria-hidden="true">
+            <span style={{ width: `${readiness.percent}%` }} />
+          </div>
+          <ul className="partner-healthList">
+            {readiness.checks.map((item) => (
+              <li key={item.key}>
+                <PartnerIcon name={item.done ? 'check' : 'alert'} size={15} />
+                <span>{item.label}</span>
+              </li>
+            ))}
           </ul>
-        )}
-      </section>
+          <Link to="/partner/settings" className="partner-section__link">Uredi postavke</Link>
+        </aside>
+      </div>
 
       <section className="partner-section">
         <div className="partner-section__head">

@@ -11,14 +11,29 @@ import type { ReservationChecklist } from '../types'
 import StatusBadge from '../components/ui/StatusBadge'
 import PartnerIcon from '../components/ui/PartnerIcon'
 
-const CHECKLIST_FIELDS: Array<[keyof ReservationChecklist, string]> = [
-  ['spaceReady', 'Prostor pripremljen'],
-  ['decorationReady', 'Dekoracija spremna'],
-  ['foodConfirmed', 'Hrana potvrđena'],
-  ['childrenCountConfirmed', 'Broj djece potvrđen'],
-  ['allergiesChecked', 'Alergije provjerene'],
-  ['animatorConfirmed', 'Animator potvrđen'],
-  ['paymentChecked', 'Uplata provjerena'],
+const CHECKLIST_GROUPS: Array<{ title: string; fields: Array<[keyof ReservationChecklist, string]> }> = [
+  {
+    title: 'Uplata i brojke',
+    fields: [
+      ['paymentChecked', 'Uplata provjerena'],
+      ['childrenCountConfirmed', 'Broj djece potvrđen'],
+    ],
+  },
+  {
+    title: 'Tim i sigurnost',
+    fields: [
+      ['animatorConfirmed', 'Animator potvrđen'],
+      ['allergiesChecked', 'Alergije provjerene'],
+    ],
+  },
+  {
+    title: 'Prostor',
+    fields: [
+      ['spaceReady', 'Prostor pripremljen'],
+      ['decorationReady', 'Dekoracija spremna'],
+      ['foodConfirmed', 'Hrana potvrđena'],
+    ],
+  },
 ]
 
 const PIPELINE_STEPS = STATUS_ORDER.filter((s) => s !== 'cancelled' && s !== 'new_request')
@@ -163,8 +178,19 @@ export default function PartnerReservationDetailPage() {
 
       <div className="partner-detailGrid">
         <div className="partner-detailMain">
-          <section className="partner-panel">
-            <h2 className="partner-panel__title">Tijek</h2>
+          <section className="partner-panel partner-detailHero">
+            <div className="partner-detailHero__head">
+              <div>
+                <p className="partner-kicker">Command center</p>
+                <h2 className="partner-detailHero__title">
+                  {nextAction ? nextAction.label : isClosed ? 'Rezervacija je zaključena' : 'Rezervacija je spremna'}
+                </h2>
+                <p className="partner-detailHero__meta">
+                  {customer?.fullName ?? 'Nepoznat roditelj'} · {pkg?.name ?? 'Bez paketa'} · {formatPrice(reservation.totalPrice, playroom.currency)}
+                </p>
+              </div>
+              <StatusBadge status={reservation.status} />
+            </div>
             <div className="partner-pipeline">
               {PIPELINE_STEPS.map((step) => {
                 const currentIdx = STATUS_ORDER.indexOf(reservation.status)
@@ -210,16 +236,23 @@ export default function PartnerReservationDetailPage() {
 
           <section className="partner-panel">
             <h2 className="partner-panel__title">Checklist priprema</h2>
-            <div className="partner-checklist">
-              {CHECKLIST_FIELDS.map(([key, label]) => (
-                <label key={key}>
-                  <input
-                    type="checkbox"
-                    checked={reservation.checklist[key]}
-                    onChange={(e) => setChecklistField(key, e.target.checked)}
-                  />
-                  {label}
-                </label>
+            <div className="partner-checklistGroups">
+              {CHECKLIST_GROUPS.map((group) => (
+                <div key={group.title} className="partner-checklistGroup">
+                  <h3>{group.title}</h3>
+                  <div className="partner-checklist">
+                    {group.fields.map(([key, label]) => (
+                      <label key={key}>
+                        <input
+                          type="checkbox"
+                          checked={reservation.checklist[key]}
+                          onChange={(e) => setChecklistField(key, e.target.checked)}
+                        />
+                        {label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </section>

@@ -1,7 +1,7 @@
 import type { TemporaryWebIdentity } from './tempWebIdentity'
 import { buildTemporaryIdentityHeaders, readStoredTemporaryIdentity } from './tempWebIdentity'
 import { readStoredHostToken } from './hostWebSession'
-import { readStoredSession, type VidimoseSession } from './vidimoseSession'
+import { invalidateStoredSession, readStoredSession, type VidimoseSession } from './vidimoseSession'
 
 /**
  * U devu: prazan base → zahtjevi na isti origin (Vite proxy šalje /api na backend).
@@ -401,6 +401,9 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const data = parseJsonResponse(text) as (ApiErrorPayload & T) | null
 
   if (!response.ok) {
+    if (response.status === 401 && sessionToken && headers.get('Authorization') === `Bearer ${sessionToken}`) {
+      invalidateStoredSession()
+    }
     throw new ApiError(response.status, data?.error || `HTTP_${response.status}`)
   }
 

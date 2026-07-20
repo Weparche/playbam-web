@@ -1,12 +1,17 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import {
   readStoredTemporaryIdentity,
   writeStoredTemporaryIdentity,
   type TemporaryWebIdentity,
 } from '../lib/tempWebIdentity'
-import { readStoredSession, writeStoredSession, type VidimoseSession } from '../lib/vidimoseSession'
+import {
+  readStoredSession,
+  VIDIMOSE_SESSION_INVALIDATED_EVENT,
+  writeStoredSession,
+  type VidimoseSession,
+} from '../lib/vidimoseSession'
 import { authLogout } from '../lib/invitationApi'
 
 type AuthContextValue = {
@@ -44,6 +49,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (sess) return sessionToIdentity(sess)
     return readStoredTemporaryIdentity()
   })
+
+  useEffect(() => {
+    const clearInvalidSession = () => {
+      setSession(null)
+      setUser(null)
+      writeStoredTemporaryIdentity(null)
+    }
+    const syncSessionFromAnotherTab = (event: StorageEvent) => {
+      if (event.key !== 'vidimose-session' || event.newValue !== null) return
+      clearInvalidSession()
+    }
+
+    window.addEventListener(VIDIMOSE_SESSION_INVALIDATED_EVENT, clearInvalidSession)
+    window.addEventListener('storage', syncSessionFromAnotherTab)
+    return () => {
+      window.removeEventListener(VIDIMOSE_SESSION_INVALIDATED_EVENT, clearInvalidSession)
+      window.removeEventListener('storage', syncSessionFromAnotherTab)
+    }
+  }, [])
 
   const login = useCallback((identity: TemporaryWebIdentity) => {
     const next = {

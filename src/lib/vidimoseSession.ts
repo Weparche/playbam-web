@@ -5,6 +5,7 @@ export type VidimoseSession = {
 }
 
 const SESSION_STORAGE_KEY = 'vidimose-session'
+export const VIDIMOSE_SESSION_INVALIDATED_EVENT = 'vidimose-session-invalidated'
 
 export function readStoredSession(): VidimoseSession | null {
   if (typeof window === 'undefined') return null
@@ -26,4 +27,10 @@ export function writeStoredSession(session: VidimoseSession | null): void {
     return
   }
   window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session))
+}
+
+export function invalidateStoredSession(): void {
+  if (typeof window === 'undefined') return
+  writeStoredSession(null)
+  window.dispatchEvent(new Event(VIDIMOSE_SESSION_INVALIDATED_EVENT))
 }

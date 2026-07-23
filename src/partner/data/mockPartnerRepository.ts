@@ -17,7 +17,21 @@ function loadStore(): PartnerDataStore {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (raw) {
-      return JSON.parse(raw) as PartnerDataStore
+      const stored = JSON.parse(raw) as PartnerDataStore
+      if (stored.playroom.name === 'Jogica') {
+        const migrated = {
+          ...stored,
+          playroom: {
+            ...stored.playroom,
+            name: 'PlayBam',
+            slug: 'playbam-zagreb',
+            email: stored.playroom.email === 'info@jogica.com.hr' ? 'partner@playbam.hr' : stored.playroom.email,
+          },
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated))
+        return migrated
+      }
+      return stored
     }
   } catch {
     // fall through

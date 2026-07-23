@@ -1,4 +1,4 @@
--- Demo seed: igraonica Jogica (sinkronizirano s src/partner/data/mock/seed.ts)
+-- Demo seed: PlayBam partner konzola (sinkronizirano s src/partner/data/mock/seed.ts)
 
 DELETE FROM reservation_animators;
 DELETE FROM reservation_addons;
@@ -18,12 +18,12 @@ INSERT INTO playrooms (
 ) VALUES (
   'playroom_jogica',
   'user_owner_1',
-  'Jogica',
-  'jogica-zagreb',
+  'PlayBam',
+  'playbam-zagreb',
   'Vojakovačka ulica 39, Gajevo',
   'Zagreb',
   '+385 91 514 1926',
-  'info@jogica.com.hr',
+  'partner@playbam.hr',
   '{"mon":{"open":"09:00","close":"20:00"},"tue":{"open":"09:00","close":"20:00"},"wed":{"open":"09:00","close":"20:00"},"thu":{"open":"09:00","close":"20:00"},"fri":{"open":"09:00","close":"21:00"},"sat":{"open":"08:00","close":"21:00"},"sun":{"open":"09:00","close":"19:00"}}',
   120,
   30,
@@ -35,8 +35,8 @@ INSERT INTO playrooms (
 );
 
 INSERT INTO partner_users (id, playroom_id, role, name, email, animator_id) VALUES
-  ('user_owner_1', 'playroom_jogica', 'owner', 'Ana Horvat', 'ana@jogica.com.hr', NULL),
-  ('user_animator_1', 'playroom_jogica', 'animator', 'Marko Ivić', 'marko@jogica.com.hr', 'animator_marko');
+  ('user_owner_1', 'playroom_jogica', 'owner', 'Ana Horvat', 'ana@playbam.hr', NULL),
+  ('user_animator_1', 'playroom_jogica', 'animator', 'Marko Ivić', 'marko@playbam.hr', 'animator_marko');
 
 INSERT INTO birthday_packages (id, playroom_id, name, description, duration_minutes, base_price, included_children, extra_child_price, includes_animator, is_active, sort_order) VALUES
   ('pkg_mini', 'playroom_jogica', 'Basic Party', '2h igranje, 2 animatora, pizza, torta, snacks, sokovi, fotografije', 120, 250, 15, 12, 0, 1, 1),
@@ -52,10 +52,10 @@ INSERT INTO booking_addons (id, playroom_id, name, description, price, is_active
   ('addon_baloni', 'playroom_jogica', 'Balon dekor', 'Arka od balona u odabranoj boji', 40, 1, 'Dekoracija');
 
 INSERT INTO animators (id, playroom_id, name, phone, email, skills_json, available_days_json, max_events_per_day, hourly_rate, is_active) VALUES
-  ('animator_marko', 'playroom_jogica', 'Marko Ivić', '+385 98 111 2222', 'marko@jogica.com.hr', '["igre","pjesme","face paint"]', '["sat","sun"]', 2, 15, 1),
-  ('animator_petra', 'playroom_jogica', 'Petra Novak', '+385 99 333 4444', 'petra@jogica.com.hr', '["ples","craft","storytelling"]', '["fri","sat","sun"]', 3, 14, 1),
-  ('animator_luka', 'playroom_jogica', 'Luka Marić', '+385 91 555 6666', 'luka@jogica.com.hr', '["sport","igre","magic"]', '["wed","sat"]', 2, 13, 1),
-  ('animator_sara', 'playroom_jogica', 'Sara Bilić', '+385 92 777 8888', 'sara@jogica.com.hr', '["glazba","ples","igre"]', '["thu","fri","sat","sun"]', 2, 15, 1);
+  ('animator_marko', 'playroom_jogica', 'Marko Ivić', '+385 98 111 2222', 'marko@playbam.hr', '["igre","pjesme","face paint"]', '["sat","sun"]', 2, 15, 1),
+  ('animator_petra', 'playroom_jogica', 'Petra Novak', '+385 99 333 4444', 'petra@playbam.hr', '["ples","craft","storytelling"]', '["fri","sat","sun"]', 3, 14, 1),
+  ('animator_luka', 'playroom_jogica', 'Luka Marić', '+385 91 555 6666', 'luka@playbam.hr', '["sport","igre","magic"]', '["wed","sat"]', 2, 13, 1),
+  ('animator_sara', 'playroom_jogica', 'Sara Bilić', '+385 92 777 8888', 'sara@playbam.hr', '["glazba","ples","igre"]', '["thu","fri","sat","sun"]', 2, 15, 1);
 
 INSERT INTO customers (id, playroom_id, full_name, phone, email, notes) VALUES
   ('cust_1', 'playroom_jogica', 'Ivana Kovač', '+385 91 100 2001', 'ivana.kovac@gmail.com', 'Preferira jutarnje termine'),

@@ -107,8 +107,10 @@ function PartnerChrome() {
     (item) => location.pathname === item.to || location.pathname.startsWith(`${item.to}/`),
   )
 
-  // Hide the FAB on the reservation detail route (it has its own sticky action bar)
-  const hideFab = /^\/partner\/reservations\/[^/]+$/.test(location.pathname)
+  // Detail pages and Help already expose their primary action in context.
+  const hideFab =
+    /^\/partner\/reservations\/[^/]+$/.test(location.pathname) ||
+    location.pathname === '/partner/pomoc'
   const showFab = nav.showFab && !hideFab
 
   return (

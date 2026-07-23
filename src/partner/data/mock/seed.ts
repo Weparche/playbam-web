@@ -19,7 +19,7 @@ export const MOCK_OWNER: PartnerUser = {
   role: 'owner',
   playroomId: PLAYROOM_ID,
   name: 'Ana Horvat',
-  email: 'ana@jogica.com.hr',
+  email: 'ana@playbam.hr',
 }
 
 export const MOCK_ANIMATOR_USER: PartnerUser = {
@@ -27,7 +27,7 @@ export const MOCK_ANIMATOR_USER: PartnerUser = {
   role: 'animator',
   playroomId: PLAYROOM_ID,
   name: 'Marko Ivić',
-  email: 'marko@jogica.com.hr',
+  email: 'marko@playbam.hr',
   animatorId: 'animator_marko',
 }
 
@@ -41,12 +41,12 @@ export function createSeedStore(): PartnerDataStore {
     playroom: {
       id: PLAYROOM_ID,
       ownerId: MOCK_OWNER.id,
-      name: 'Jogica',
-      slug: 'jogica-zagreb',
+      name: 'PlayBam',
+      slug: 'playbam-zagreb',
       address: 'Vojakovačka ulica 39, Gajevo',
       city: 'Zagreb',
       phone: '+385 91 514 1926',
-      email: 'info@jogica.com.hr',
+      email: 'partner@playbam.hr',
       openingHours: defaultHours,
       slotDurationMinutes: 120,
       cleanupBufferMinutes: 30,
@@ -106,10 +106,10 @@ export function createSeedStore(): PartnerDataStore {
       { id: 'addon_baloni', playroomId: PLAYROOM_ID, name: 'Balon dekor', description: 'Arka od balona u odabranoj boji', price: 40, isActive: true, category: 'Dekoracija' },
     ],
     animators: [
-      { id: 'animator_marko', playroomId: PLAYROOM_ID, name: 'Marko Ivić', phone: '+385 98 111 2222', email: 'marko@jogica.com.hr', skills: ['igre', 'pjesme', 'face paint'], availableDays: ['sat', 'sun'], maxEventsPerDay: 2, hourlyRate: 15, isActive: true },
-      { id: 'animator_petra', playroomId: PLAYROOM_ID, name: 'Petra Novak', phone: '+385 99 333 4444', email: 'petra@jogica.com.hr', skills: ['ples', 'craft', 'storytelling'], availableDays: ['fri', 'sat', 'sun'], maxEventsPerDay: 3, hourlyRate: 14, isActive: true },
-      { id: 'animator_luka', playroomId: PLAYROOM_ID, name: 'Luka Marić', phone: '+385 91 555 6666', email: 'luka@jogica.com.hr', skills: ['sport', 'igre', 'magic'], availableDays: ['wed', 'sat'], maxEventsPerDay: 2, hourlyRate: 13, isActive: true },
-      { id: 'animator_sara', playroomId: PLAYROOM_ID, name: 'Sara Bilić', phone: '+385 92 777 8888', email: 'sara@jogica.com.hr', skills: ['glazba', 'ples', 'igre'], availableDays: ['thu', 'fri', 'sat', 'sun'], maxEventsPerDay: 2, hourlyRate: 15, isActive: true },
+      { id: 'animator_marko', playroomId: PLAYROOM_ID, name: 'Marko Ivić', phone: '+385 98 111 2222', email: 'marko@playbam.hr', skills: ['igre', 'pjesme', 'face paint'], availableDays: ['sat', 'sun'], maxEventsPerDay: 2, hourlyRate: 15, isActive: true },
+      { id: 'animator_petra', playroomId: PLAYROOM_ID, name: 'Petra Novak', phone: '+385 99 333 4444', email: 'petra@playbam.hr', skills: ['ples', 'craft', 'storytelling'], availableDays: ['fri', 'sat', 'sun'], maxEventsPerDay: 3, hourlyRate: 14, isActive: true },
+      { id: 'animator_luka', playroomId: PLAYROOM_ID, name: 'Luka Marić', phone: '+385 91 555 6666', email: 'luka@playbam.hr', skills: ['sport', 'igre', 'magic'], availableDays: ['wed', 'sat'], maxEventsPerDay: 2, hourlyRate: 13, isActive: true },
+      { id: 'animator_sara', playroomId: PLAYROOM_ID, name: 'Sara Bilić', phone: '+385 92 777 8888', email: 'sara@playbam.hr', skills: ['glazba', 'ples', 'igre'], availableDays: ['thu', 'fri', 'sat', 'sun'], maxEventsPerDay: 2, hourlyRate: 15, isActive: true },
     ],
     customers: [
       {

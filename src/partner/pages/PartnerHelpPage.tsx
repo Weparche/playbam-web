@@ -4,171 +4,319 @@ import { usePartnerAuth } from '../context/PartnerAuthContext'
 import { usePartnerData } from '../context/PartnerDataContext'
 import PartnerIcon, { type IconName } from '../components/ui/PartnerIcon'
 
-type HelpSection = {
+type FlowStep = {
   icon: IconName
   title: string
-  steps: string[]
+  description: string
+  action?: string
+  to?: string
 }
 
-function HelpSections({ sections }: { sections: HelpSection[] }) {
+type HelpGuide = {
+  icon: IconName
+  title: string
+  summary: string
+  steps: string[]
+  action?: string
+  to?: string
+}
+
+const OWNER_FLOW: FlowStep[] = [
+  {
+    icon: 'plus',
+    title: 'Upiši rezervaciju',
+    description: 'Roditelj, dijete, paket i termin — dovoljno je za početak.',
+    action: 'Nova rezervacija',
+    to: '/partner/reservations?new=1',
+  },
+  {
+    icon: 'check',
+    title: 'Potvrdi upit',
+    description: 'Provjeri detalje i potvrdi roditelju da termin vrijedi.',
+    action: 'Otvori rezervacije',
+    to: '/partner/reservations',
+  },
+  {
+    icon: 'reservations',
+    title: 'Evidentiraj akontaciju',
+    description: 'Kad uplata sjedne, označi je plaćenom na detalju rezervacije.',
+  },
+  {
+    icon: 'animators',
+    title: 'Dodijeli animatora',
+    description: 'Odaberi slobodnu osobu i potvrdi tko vodi rođendan.',
+    action: 'Pregled animatora',
+    to: '/partner/animators',
+  },
+  {
+    icon: 'today',
+    title: 'Pripremi i završi',
+    description: 'Provjeri alergije i checklistu, a nakon eventa označi završeno.',
+    action: 'Nadzorna ploča',
+    to: '/partner',
+  },
+]
+
+const OWNER_GUIDES: HelpGuide[] = [
+  {
+    icon: 'today',
+    title: 'Što prvo provjeriti svaki dan?',
+    summary: 'Tri kratke provjere prije nego krene gužva.',
+    steps: [
+      'Na Nadzornoj ploči prvo otvori stavke u bloku “Treba te”.',
+      'Provjeri današnje i sutrašnje evente, posebno akontaciju, animatora i alergije.',
+      'Riješi stavke redom; brojke o prihodu mogu pričekati.',
+    ],
+    action: 'Idi na Nadzornu ploču',
+    to: '/partner',
+  },
+  {
+    icon: 'plus',
+    title: 'Kako upisati novu rezervaciju?',
+    summary: 'Od poziva roditelja do spremljenog termina.',
+    steps: [
+      'Otvori “Nova rezervacija”. Na mobitelu koristi plutajući gumb +.',
+      'Odaberi postojećeg roditelja ili upiši ime i mobitel novog roditelja.',
+      'Odaberi paket, datum i slobodan termin te upiši podatke o djetetu.',
+      'Dodaj tortu, balone ili napomenu. Cijena i akontacija računaju se automatski.',
+    ],
+    action: 'Upiši rezervaciju',
+    to: '/partner/reservations?new=1',
+  },
+  {
+    icon: 'calendar',
+    title: 'Kako brzo odgovoriti: “Imate li termin?”',
+    summary: 'Najbrži put do točnog slobodnog vremena.',
+    steps: [
+      'Otvori Kalendar i prebaci se na prikaz Dan.',
+      'Odaberi datum koji roditelju odgovara i pogledaj “Slobodni termini”.',
+      'Dodirni slobodan termin; nova rezervacija otvorit će se s već ispunjenim vremenom.',
+    ],
+    action: 'Provjeri kalendar',
+    to: '/partner/calendar',
+  },
+  {
+    icon: 'reservations',
+    title: 'Gdje mijenjam status rezervacije?',
+    summary: 'Detalj rezervacije uvijek predlaže sljedeću radnju.',
+    steps: [
+      'U Rezervacijama pronađi roditelja ili dijete i otvori detalj.',
+      'Koristi glavnu ponuđenu akciju: potvrdi, označi akontaciju ili dodijeli animatora.',
+      'Na mobitelu je glavna akcija uvijek dostupna u traci pri dnu zaslona.',
+      'Poziv i SMS roditelju dostupni su na istom ekranu.',
+    ],
+    action: 'Otvori rezervacije',
+    to: '/partner/reservations',
+  },
+  {
+    icon: 'settings',
+    title: 'Kako urediti ponudu i pravila?',
+    summary: 'Paketi, dodaci, radno vrijeme i akontacija na jednom mjestu.',
+    steps: [
+      'U Paketima i Dodacima uredi što roditelj može rezervirati i po kojoj cijeni.',
+      'U Animatorima održavaj dostupnost i maksimalan broj evenata po danu.',
+      'U Postavkama podesi trajanje termina, pauzu za čišćenje i zadanu akontaciju.',
+    ],
+    action: 'Otvori postavke',
+    to: '/partner/settings',
+  },
+]
+
+const ANIMATOR_FLOW: FlowStep[] = [
+  {
+    icon: 'today',
+    title: 'Provjeri event',
+    description: 'Vrijeme, lokacija, broj djece, alergije i napomene.',
+    action: 'Moji eventi',
+    to: '/partner',
+  },
+  {
+    icon: 'clock',
+    title: 'Označi “Krećem”',
+    description: 'Vlasnik odmah vidi da si na putu prema igraonici.',
+  },
+  {
+    icon: 'check',
+    title: 'Završi event',
+    description: 'Nakon rođendana označi “Event završen”.',
+  },
+]
+
+const ANIMATOR_GUIDES: HelpGuide[] = [
+  {
+    icon: 'today',
+    title: 'Prije polaska',
+    summary: 'Sve bitno stane u jednu kratku provjeru.',
+    steps: [
+      'Otvori današnji event i provjeri vrijeme, adresu i broj djece.',
+      'Obavezno pročitaj alergije i posebne napomene.',
+      'Kad kreneš prema igraonici, pritisni “Krećem”.',
+    ],
+  },
+  {
+    icon: 'calendar',
+    title: 'Moj raspored',
+    summary: 'Pregled svih dodijeljenih evenata.',
+    steps: [
+      'U Kalendaru prebacuj prikaz između dana, tjedna i mjeseca.',
+      'Gumb “Danas” vraća te na aktualni datum.',
+    ],
+    action: 'Otvori kalendar',
+    to: '/partner/calendar',
+  },
+]
+
+function HelpFlow({ steps }: { steps: FlowStep[] }) {
   return (
-    <div className="partner-help">
-      {sections.map((section) => (
-        <section key={section.title} className="partner-panel partner-helpCard">
-          <div className="partner-helpCard__head">
-            <span className="partner-helpCard__icon">
-              <PartnerIcon name={section.icon} size={20} />
-            </span>
-            <h2 className="partner-helpCard__title">{section.title}</h2>
+    <ol className={`partner-helpFlow${steps.length <= 3 ? ' partner-helpFlow--compact' : ''}`}>
+      {steps.map((step, index) => (
+        <li key={step.title} className="partner-helpFlow__step">
+          <div className="partner-helpFlow__marker" aria-hidden="true">
+            <span>{index + 1}</span>
+            <PartnerIcon name={step.icon} size={18} />
           </div>
-          <ol className="partner-helpSteps">
-            {section.steps.map((step, i) => (
-              <li key={i} className="partner-helpStep">
-                {step}
-              </li>
-            ))}
-          </ol>
-        </section>
+          <div className="partner-helpFlow__body">
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+            {step.to && step.action ? (
+              <Link to={step.to} className="partner-helpLink">
+                {step.action}
+                <PartnerIcon name="chevronRight" size={16} />
+              </Link>
+            ) : null}
+          </div>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+function HelpGuides({ guides }: { guides: HelpGuide[] }) {
+  return (
+    <div className="partner-helpGuides">
+      {guides.map((guide) => (
+        <details key={guide.title} className="partner-helpGuide">
+          <summary>
+            <span className="partner-helpGuide__icon">
+              <PartnerIcon name={guide.icon} size={20} />
+            </span>
+            <span className="partner-helpGuide__copy">
+              <strong>{guide.title}</strong>
+              <small>{guide.summary}</small>
+            </span>
+            <span className="partner-helpGuide__chevron">
+              <PartnerIcon name="chevronRight" size={18} />
+            </span>
+          </summary>
+          <div className="partner-helpGuide__content">
+            <ol>
+              {guide.steps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+            {guide.to && guide.action ? (
+              <Link to={guide.to} className="partner-helpLink">
+                {guide.action}
+                <PartnerIcon name="chevronRight" size={16} />
+              </Link>
+            ) : null}
+          </div>
+        </details>
       ))}
     </div>
   )
 }
 
-const OWNER_SECTIONS: HelpSection[] = [
-  {
-    icon: 'today',
-    title: 'Danas - tvoja polazna točka',
-    steps: [
-      'Blok "Treba te" prikazuje što čeka tebe: potvrde, akontacije i evente bez animatora. Klikni stavku da je odmah riješiš.',
-      'Ispod je raspored za danas i sutra. Oznake na svakom redu pokazuju je li sve spremno: animator, akontacija i alergije.',
-      'Brojke o prihodu i tjednu su tu samo za pregled - fokus je na onome što treba napraviti.',
-    ],
-  },
-  {
-    icon: 'plus',
-    title: 'Upis nove rezervacije',
-    steps: [
-      'Pritisni "Nova rezervacija" (gumb u kutu ili plutajući + na mobitelu).',
-      'Za novog roditelja prebaci na "Novi roditelj" i upiši samo ime i mobitel - ostalo možeš kasnije.',
-      'Odaberi paket, datum i slobodan termin, upiši ime i dob djeteta te broj djece.',
-      'Po želji označi dodatke (torta, baloni...) i upiši napomenu. Ukupna cijena i akontacija računaju se same.',
-    ],
-  },
-  {
-    icon: 'reservations',
-    title: 'Rezervacije i detalj',
-    steps: [
-      'U "Rezervacije" filtriraj po statusu (čeka potvrdu, potvrđeno...) ili pretraži po roditelju i djetetu.',
-      'Otvori rezervaciju za detalje. Konzola predlaže JEDNU sljedeću akciju - npr. "Potvrdi", pa "Akontacija plaćena", pa "Dodijeli animatora".',
-      'Roditelja nazoveš ili pošalješ SMS jednim dodirom. Na dnu (mobitel) je traka s glavnom akcijom.',
-      'Checklist pripreme i bilješke drže sve na jednom mjestu.',
-    ],
-  },
-  {
-    icon: 'calendar',
-    title: 'Kalendar i dostupnost',
-    steps: [
-      'Prebacuj prikaz između Dan / Tjedan / Mjesec; gumb "Danas" te vraća na današnji dan.',
-      'Kad te roditelj pita "imate li slobodno?", otvori Dan i pogledaj "Slobodni termini".',
-      'Klik na slobodan termin otvara upis rezervacije s već ispunjenim datumom i vremenom.',
-    ],
-  },
-  {
-    icon: 'settings',
-    title: 'Ponuda i postavke',
-    steps: [
-      'Pod "Ponuda i postavke" uređuješ pakete, dodatke, animatore i kupce - svaka izmjena je u skočnom obrascu.',
-      'U Postavkama podesi trajanje slota, pauzu za čišćenje, broj paralelnih rođendana, zadanu akontaciju i valutu.',
-      'Brisanje uvijek traži potvrdu, a spremanje javlja kratku poruku da je sve sačuvano.',
-    ],
-  },
-  {
-    icon: 'check',
-    title: 'Tijek rezervacije ukratko',
-    steps: [
-      'Potvrdi novi upit.',
-      'Naplati akontaciju i označi je plaćenom.',
-      'Dodijeli animatora (predloženi su oni slobodni za taj termin).',
-      'Nakon rođendana označi "Završeno".',
-    ],
-  },
-]
-
-const ANIMATOR_SECTIONS: HelpSection[] = [
-  {
-    icon: 'today',
-    title: 'Moji eventi (Danas)',
-    steps: [
-      'Na početnoj vidiš svoje evente za danas: vrijeme, ime i dob djeteta, broj djece i adresu igraonice.',
-      'Ako dijete ima alergije ili postoji napomena, jasno su istaknute - pročitaj ih prije dolaska.',
-    ],
-  },
-  {
-    icon: 'check',
-    title: 'Tijek tvog eventa',
-    steps: [
-      'Kad krećeš prema igraonici, pritisni "Krećem" da vlasnik zna da si na putu.',
-      'Kad rođendan završi, pritisni "Event završen".',
-    ],
-  },
-  {
-    icon: 'calendar',
-    title: 'Kalendar',
-    steps: [
-      'U Kalendaru pregledaj svoj raspored po danu, tjednu ili mjesecu.',
-      'Gumb "Danas" te uvijek vraća na današnji dan.',
-    ],
-  },
-  {
-    icon: 'settings',
-    title: 'Postavke i odjava',
-    steps: [
-      'U Postavkama su tvoji osnovni podaci i podaci igraonice.',
-      'Tu se i odjaviš kad završiš.',
-    ],
-  },
-]
-
 export default function PartnerHelpPage() {
   const { isAnimator } = usePartnerAuth()
   const { playroom } = usePartnerData()
-
-  const sections = isAnimator ? ANIMATOR_SECTIONS : OWNER_SECTIONS
+  const flow = isAnimator ? ANIMATOR_FLOW : OWNER_FLOW
+  const guides = isAnimator ? ANIMATOR_GUIDES : OWNER_GUIDES
 
   return (
-    <>
-      <header className="partner-topbar">
-        <div>
-          <h1 className="partner-topbar__title">Pomoć</h1>
-          <p className="partner-topbar__meta">
-            {isAnimator ? 'Kratke upute za animatore' : 'Kratke upute za vlasnika'} · {playroom.name}
+    <div className="partner-helpPage">
+      <header className="partner-helpHero">
+        <div className="partner-helpHero__copy">
+          <p className="partner-helpHero__context">{playroom.name} · {isAnimator ? 'za animatore' : 'za vlasnike igraonica'}</p>
+          <h1>{isAnimator ? 'Tvoj event, bez nagađanja.' : 'Od upita do gotovog rođendana.'}</h1>
+          <p>
+            {isAnimator
+              ? 'Provjeri detalje, javi da krećeš i zatvori event — sve na jednom mjestu.'
+              : 'PlayBam te vodi kroz svaku rezervaciju. Kreni od sljedeće radnje, a detalje otvori tek kad ih zatrebaš.'}
           </p>
+          {!isAnimator ? (
+            <div className="partner-helpHero__actions">
+              <Link to="/partner/reservations?new=1" className="pb-btn pb-btn-primary">
+                <PartnerIcon name="plus" size={18} />
+                Nova rezervacija
+              </Link>
+              <a href="#brzi-vodici" className="pb-btn pb-btn-ghost">
+                Pronađi odgovor
+              </a>
+            </div>
+          ) : null}
+        </div>
+        <div className="partner-helpHero__visual" aria-hidden="true">
+          <img
+            src="/partner/help-flow.jpg"
+            alt=""
+            width={1440}
+            height={769}
+            decoding="async"
+          />
         </div>
       </header>
 
-      <p className="partner-help__lead">
-        {isAnimator
-          ? 'Sve što trebaš za rad na rođendanu - na jednom mjestu.'
-          : 'Brzi vodič kroz svakodnevni rad u konzoli. Sve je posloženo tako da rezervaciju upišeš i središ u par dodira.'}
-      </p>
-
-      <HelpSections sections={sections} />
-
-      <section className="partner-panel partner-helpCard">
-        <div className="partner-helpCard__head">
-          <span className="partner-helpCard__icon">
-            <PartnerIcon name="home" size={20} />
-          </span>
-          <h2 className="partner-helpCard__title">Trebaš još pomoći?</h2>
+      <section className="partner-helpSection" aria-labelledby="help-flow-title">
+        <div className="partner-helpSection__head">
+          <div>
+            <h2 id="help-flow-title">{isAnimator ? 'Tijek tvog eventa' : 'Tijek rezervacije'}</h2>
+            <p>{isAnimator ? 'Tri koraka koja ponavljaš za svaki rođendan.' : 'Pet koraka koji drže svaki rođendan pod kontrolom.'}</p>
+          </div>
         </div>
-        <p className="partner-fieldHelp" style={{ marginBottom: 0 }}>
-          Za dodatna pitanja javi se timu VidimoSe.hr. Možeš se uvijek{' '}
-          <Link to="/" className="partner-section__link">
-            vratiti na VidimoSe.hr
-          </Link>
-          .
-        </p>
+        <HelpFlow steps={flow} />
       </section>
-    </>
+
+      {!isAnimator ? (
+        <aside className="partner-helpPrep" aria-labelledby="help-prep-title">
+          <div className="partner-helpPrep__icon">
+            <PartnerIcon name="alert" size={22} />
+          </div>
+          <div>
+            <h2 id="help-prep-title">Prije svakog rođendana provjeri 4 stvari</h2>
+            <ul>
+              <li>akontacija evidentirana</li>
+              <li>animator potvrđen</li>
+              <li>alergije pročitane</li>
+              <li>torta i dodaci spremni</li>
+            </ul>
+          </div>
+          <Link to="/partner" className="partner-helpLink">
+            Današnji eventi
+            <PartnerIcon name="chevronRight" size={16} />
+          </Link>
+        </aside>
+      ) : null}
+
+      <section id="brzi-vodici" className="partner-helpSection" aria-labelledby="help-guides-title">
+        <div className="partner-helpSection__head">
+          <div>
+            <h2 id="help-guides-title">Brzi vodiči</h2>
+            <p>Otvori samo pitanje koje trenutno rješavaš.</p>
+          </div>
+        </div>
+        <HelpGuides guides={guides} />
+      </section>
+
+      <section className="partner-helpSupport">
+        <div>
+          <h2>Trebaš još pomoći?</h2>
+          <p>Javi se PlayBam timu i napiši na kojem si koraku zapeo/la.</p>
+        </div>
+        <Link to="/" className="pb-btn pb-btn-ghost">
+          Natrag na PlayBam
+        </Link>
+      </section>
+    </div>
   )
 }

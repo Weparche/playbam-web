@@ -35,6 +35,7 @@ const OWNER_NAV: NavConfig = {
     { to: '/partner/animators', label: 'Animatori', icon: 'animators' },
     { to: '/partner/settings', label: 'Postavke', icon: 'settings' },
     { to: '/partner/pomoc', label: 'Pomoć', icon: 'help' },
+    { to: '/partner/prezentacija', label: 'Prezentacija', icon: 'presentation' },
   ],
   mobilePrimary: [
     { to: '/partner', label: 'Nadzorna ploča', icon: 'today', end: true },
@@ -110,7 +111,8 @@ function PartnerChrome() {
   // Detail pages and Help already expose their primary action in context.
   const hideFab =
     /^\/partner\/reservations\/[^/]+$/.test(location.pathname) ||
-    location.pathname === '/partner/pomoc'
+    location.pathname === '/partner/pomoc' ||
+    location.pathname === '/partner/prezentacija'
   const showFab = nav.showFab && !hideFab
 
   return (

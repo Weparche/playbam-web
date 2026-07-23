@@ -19,7 +19,7 @@ const BENEFITS = [
   {
     icon: 'today' as const,
     title: 'Mirniji radni dan',
-    text: 'PlayBam izdvaja što treba riješiti prije nego nastane problem.',
+    text: 'VidimoSe.hr izdvaja što treba riješiti prije nego nastane problem.',
   },
 ]
 
@@ -39,11 +39,11 @@ export default function PartnerPresentationPage() {
       <header className="partner-presentationToolbar">
         <div>
           <h1>Prezentacija za vlasnika igraonice</h1>
-          <p>Kratki A4 pregled onoga što PlayBam donosi poslovanju.</p>
+          <p>Kratki A4 pregled onoga što VidimoSe.hr donosi poslovanju.</p>
         </div>
         <div className="partner-presentationToolbar__actions">
           <a
-            href="/partner/presentation/playbam-prezentacija-a4.pdf"
+            href="/partner/presentation/vidimose-prezentacija-a4.pdf"
             className="pb-btn pb-btn-primary"
             download
           >
@@ -57,7 +57,7 @@ export default function PartnerPresentationPage() {
       </header>
 
       <div className="partner-presentationStage">
-        <article className="partner-a4" aria-label="PlayBam prezentacija za vlasnike igraonica">
+        <article className="partner-a4" aria-label="VidimoSe.hr prezentacija za vlasnike igraonica">
           <header className="partner-a4__brand">
             <img src="/logo.png" alt="VidimoSe.hr" width={1128} height={462} />
             <span>Partner za igraonice</span>
@@ -69,14 +69,14 @@ export default function PartnerPresentationPage() {
               <h2>Manje poruka.<br />Manje propusta.<br /><strong>Više kontrole.</strong></h2>
             </div>
             <p className="partner-a4__heroText">
-              PlayBam vodi svaku rezervaciju od prvog upita do završenog rođendana — jasno, na jednom mjestu i dostupno na mobitelu.
+              VidimoSe.hr vodi svaku rezervaciju od prvog upita do završenog rođendana — jasno, na jednom mjestu i dostupno na mobitelu.
             </p>
           </section>
 
           <figure className="partner-a4__visual">
             <img
-              src="/partner/presentation/playbam-owner-value.jpg"
-              alt="Rasute poruke i papirnati kalendar prelaze u organiziran PlayBam pregled rezervacija."
+              src="/partner/presentation/vidimose-owner-value.jpg"
+              alt="Rasute poruke i papirnati kalendar prelaze u organiziran VidimoSe.hr pregled rezervacija."
               width={1600}
               height={901}
             />
@@ -84,7 +84,7 @@ export default function PartnerPresentationPage() {
 
           <section className="partner-a4__benefits" aria-labelledby="presentation-benefits">
             <div className="partner-a4__sectionTitle">
-              <h3 id="presentation-benefits">Što dobivaš s PlayBamom?</h3>
+              <h3 id="presentation-benefits">Što dobivaš uz VidimoSe.hr?</h3>
               <p>Jedan operativni pregled umjesto poruka, papira i pamćenja.</p>
             </div>
             <div className="partner-a4__benefitList">
@@ -127,7 +127,7 @@ export default function PartnerPresentationPage() {
               </ul>
             </div>
             <blockquote>
-              <p>PlayBam ne dodaje administraciju.</p>
+              <p>VidimoSe.hr ne dodaje administraciju.</p>
               <strong>Zamjenjuje rasute poruke jednim jasnim tokom.</strong>
             </blockquote>
           </section>

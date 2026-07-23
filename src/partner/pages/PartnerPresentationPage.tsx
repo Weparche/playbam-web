@@ -59,7 +59,7 @@ export default function PartnerPresentationPage() {
       <div className="partner-presentationStage">
         <article className="partner-a4" aria-label="PlayBam prezentacija za vlasnike igraonica">
           <header className="partner-a4__brand">
-            <img src="/playbam-logo.png" alt="Playbam.hr" width={730} height={221} />
+            <img src="/logo.png" alt="VidimoSe.hr" width={1128} height={462} />
             <span>Partner za igraonice</span>
           </header>
 

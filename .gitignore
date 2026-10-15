@@ -32,3 +32,6 @@ tools/last-scan-social.json
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Private/local documents
+public/nalaz_*.pdf

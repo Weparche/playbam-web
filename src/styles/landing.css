@@ -4718,3 +4718,66 @@ button.ew-navbar__auth-btn { font-family: inherit; }
     transition: none;
   }
 }
+
+.ew-house-ad {
+  padding: 0 0 48px;
+}
+
+.ew-house-ad__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 16px;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+}
+
+.ew-house-ad h2 {
+  margin: 0;
+  font-family: var(--font-work-sans);
+  font-size: 1.05rem;
+}
+
+.ew-house-ad p {
+  margin: 4px 0 0;
+  color: var(--color-text-secondary);
+}
+
+.ew-house-ad a {
+  color: var(--color-accent);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.ew-house-ad a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ew-house-ad a:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.ew-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (min-width: 720px) {
+  .ew-house-ad__inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+}
